@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/silenceper/wechat/context"
-	"github.com/silenceper/wechat/log"
 	"github.com/silenceper/wechat/server"
 )
 
@@ -23,13 +22,6 @@ type Config struct {
 
 //NewWechat init
 func NewWechat(cfg *Config) *Wechat {
-
-	channelLen := int64(10000)
-	adapterName := "console"
-	config := ""
-	logLevel := log.LevelDebug
-	log.InitLogger(channelLen, adapterName, config, logLevel)
-
 	context := new(context.Context)
 	copyConfigToContext(cfg, context)
 	return &Wechat{context}

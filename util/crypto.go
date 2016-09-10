@@ -4,12 +4,73 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
-	"errors"
 	"fmt"
 )
 
+//EncryptMsg 加密消息
+func EncryptMsg(random, rawXMLMsg []byte, appID, aesKey string) (encrtptMsg []byte, err error) {
+	defer func() {
+		if e := recover(); e != nil {
+			err = fmt.Errorf("panic error: err=%v", e)
+			return
+		}
+	}()
+	var key []byte
+	key, err = aesKeyDecode(aesKey)
+	if err != nil {
+		panic(err)
+	}
+	ciphertext := AESEncryptMsg(random, rawXMLMsg, appID, key)
+	encrtptMsg = []byte(base64.StdEncoding.EncodeToString(ciphertext))
+	return
+}
+
+//AESEncryptMsg ciphertext = AES_Encrypt[random(16B) + msg_len(4B) + rawXMLMsg + appId]
+//参考：github.com/chanxuehong/wechat.v2
+func AESEncryptMsg(random, rawXMLMsg []byte, appID string, aesKey []byte) (ciphertext []byte) {
+	const (
+		BlockSize = 32            // PKCS#7
+		BlockMask = BlockSize - 1 // BLOCK_SIZE 为 2^n 时, 可以用 mask 获取针对 BLOCK_SIZE 的余数
+	)
+
+	appIDOffset := 20 + len(rawXMLMsg)
+	contentLen := appIDOffset + len(appID)
+	amountToPad := BlockSize - contentLen&BlockMask
+	plaintextLen := contentLen + amountToPad
+
+	plaintext := make([]byte, plaintextLen)
+
+	// 拼接
+	copy(plaintext[:16], random)
+	encodeNetworkByteOrder(plaintext[16:20], uint32(len(rawXMLMsg)))
+	copy(plaintext[20:], rawXMLMsg)
+	copy(plaintext[appIDOffset:], appID)
+
+	// PKCS#7 补位
+	for i := contentLen; i < plaintextLen; i++ {
+		plaintext[i] = byte(amountToPad)
+	}
+
+	// 加密
+	block, err := aes.NewCipher(aesKey[:])
+	if err != nil {
+		panic(err)
+	}
+	mode := cipher.NewCBCEncrypter(block, aesKey[:16])
+	mode.CryptBlocks(plaintext, plaintext)
+
+	ciphertext = plaintext
+	return
+}
+
 //DecryptMsg 消息解密
-func DecryptMsg(appID, encryptedMsg, aesKey string) (rawMsgXMLBytes []byte, err error) {
+func DecryptMsg(appID, encryptedMsg, aesKey string) (random, rawMsgXMLBytes []byte, err error) {
+	defer func() {
+		if e := recover(); e != nil {
+			err = fmt.Errorf("panic error: err=%v", e)
+			return
+		}
+	}()
 	var encryptedMsgBytes, key, getAppIDBytes []byte
 	encryptedMsgBytes, err = base64.StdEncoding.DecodeString(encryptedMsg)
 	if err != nil {
@@ -17,9 +78,9 @@ func DecryptMsg(appID, encryptedMsg, aesKey string) (rawMsgXMLBytes []byte, err 
 	}
 	key, err = aesKeyDecode(aesKey)
 	if err != nil {
-		return
+		panic(err)
 	}
-	_, rawMsgXMLBytes, getAppIDBytes, err = AESDecryptMsg(encryptedMsgBytes, key)
+	random, rawMsgXMLBytes, getAppIDBytes, err = AESDecryptMsg(encryptedMsgBytes, key)
 	if err != nil {
 		err = fmt.Errorf("消息解密失败,%v", err)
 		return
@@ -33,7 +94,7 @@ func DecryptMsg(appID, encryptedMsg, aesKey string) (rawMsgXMLBytes []byte, err 
 
 func aesKeyDecode(encodedAESKey string) (key []byte, err error) {
 	if len(encodedAESKey) != 43 {
-		err = errors.New("the length of encodedAESKey must be equal to 43")
+		err = fmt.Errorf("the length of encodedAESKey must be equal to 43")
 		return
 	}
 	key, err = base64.StdEncoding.DecodeString(encodedAESKey + "=")
@@ -41,13 +102,14 @@ func aesKeyDecode(encodedAESKey string) (key []byte, err error) {
 		return
 	}
 	if len(key) != 32 {
-		err = errors.New("encodingAESKey invalid")
+		err = fmt.Errorf("encodingAESKey invalid")
 		return
 	}
 	return
 }
 
 // AESDecryptMsg ciphertext = AES_Encrypt[random(16B) + msg_len(4B) + rawXMLMsg + appId]
+//参考：github.com/chanxuehong/wechat.v2
 func AESDecryptMsg(ciphertext []byte, aesKey []byte) (random, rawXMLMsg, appID []byte, err error) {
 	const (
 		BlockSize = 32            // PKCS#7
@@ -102,6 +164,14 @@ func AESDecryptMsg(ciphertext []byte, aesKey []byte) (random, rawXMLMsg, appID [
 	rawXMLMsg = plaintext[20:appIDOffset:appIDOffset]
 	appID = plaintext[appIDOffset:]
 	return
+}
+
+// 把整数 n 格式化成 4 字节的网络字节序
+func encodeNetworkByteOrder(orderBytes []byte, n uint32) {
+	orderBytes[0] = byte(n >> 24)
+	orderBytes[1] = byte(n >> 16)
+	orderBytes[2] = byte(n >> 8)
+	orderBytes[3] = byte(n)
 }
 
 // 从 4 字节的网络字节序里解析出整数

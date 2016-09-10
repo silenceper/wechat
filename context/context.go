@@ -17,12 +17,6 @@ func (ctx *Context) getAccessToken() {
 
 }
 
-func (ctx *Context) String(str string) error {
-	ctx.Writer.WriteHeader(200)
-	_, err := ctx.Writer.Write([]byte(str))
-	return err
-}
-
 // Query returns the keyed url query value if it exists
 func (ctx *Context) Query(key string) string {
 	value, _ := ctx.GetQuery(key)
