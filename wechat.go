@@ -2,7 +2,9 @@ package wechat
 
 import (
 	"net/http"
+	"sync"
 
+	"github.com/silenceper/wechat/cache"
 	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/server"
 )
@@ -18,6 +20,7 @@ type Config struct {
 	AppSecret      string
 	Token          string
 	EncodingAESKey string
+	Cache          cache.Cache
 }
 
 //NewWechat init
@@ -32,6 +35,8 @@ func copyConfigToContext(cfg *Config, context *context.Context) {
 	context.AppSecret = cfg.AppSecret
 	context.Token = cfg.Token
 	context.EncodingAESKey = cfg.EncodingAESKey
+	context.Cache = cfg.Cache
+	context.SetAccessTokenLock(new(sync.RWMutex))
 }
 
 //GetServer init

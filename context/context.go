@@ -1,6 +1,11 @@
 package context
 
-import "net/http"
+import (
+	"net/http"
+	"sync"
+
+	"github.com/silenceper/wechat/cache"
+)
 
 //Context struct
 type Context struct {
@@ -9,12 +14,13 @@ type Context struct {
 	Token          string
 	EncodingAESKey string
 
+	Cache cache.Cache
+
 	Writer  http.ResponseWriter
 	Request *http.Request
-}
 
-func (ctx *Context) getAccessToken() {
-
+	//accessTokenLock 读写锁 同一个AppID一个
+	accessTokenLock *sync.RWMutex
 }
 
 // Query returns the keyed url query value if it exists
