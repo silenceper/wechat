@@ -23,7 +23,7 @@
 
 		//回复消息：演示回复用户发送的消息
 		text := message.NewText(msg.Content)
-		return &message.Reply{message.MsgTypeText, text}
+		return &message.Reply{message.MsgText, text}
 	})
 
 	server.Serve()
@@ -37,10 +37,10 @@
 
 ## 已实现的微信平台接口
 
-- 消息接收（包含事件的推送）
-- 消息回复（文本,图片，语音，视频，音乐，图文）
-- 网页授权Oauth2 
-- 网页Js-SDK
+- 消息管理（事件推送）
+- 网页授权Oauth2 ，Js-SDK
+- 菜单管理
+- 用户管理
 - 素材管理
 
 持续完善中...
