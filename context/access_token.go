@@ -16,11 +16,10 @@ const (
 
 //ResAccessToken struct
 type ResAccessToken struct {
-	ErrorCode int32  `json:"errcode"`
-	ErrorMsg  string `json:"errmsg"`
+	util.CommonError
 
 	AccessToken string `json:"access_token"`
-	ExpiresIn   int32  `json:"expires_in"`
+	ExpiresIn   int64  `json:"expires_in"`
 }
 
 //SetAccessTokenLock 设置读写锁（一个appID一个读写锁）
@@ -60,12 +59,13 @@ func (ctx *Context) GetAccessTokenFromServer() (resAccessToken ResAccessToken, e
 	if err != nil {
 		return
 	}
-	if resAccessToken.ErrorMsg != "" {
-		err = fmt.Errorf("get access_token error : errcode=%v , errormsg=%v", resAccessToken.ErrorCode, resAccessToken.ErrorMsg)
+	if resAccessToken.ErrMsg != "" {
+		err = fmt.Errorf("get access_token error : errcode=%v , errormsg=%v", resAccessToken.ErrCode, resAccessToken.ErrMsg)
 		return
 	}
 
 	accessTokenCacheKey := fmt.Sprintf("access_token_%s", ctx.AppID)
-	err = ctx.Cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(resAccessToken.ExpiresIn)-1500/time.Second)
+	expires := resAccessToken.ExpiresIn - 1500
+	err = ctx.Cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
 	return
 }

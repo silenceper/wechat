@@ -46,6 +46,34 @@ const (
 	EventView EventType = "VIEW"
 )
 
+//MixMessage 存放所有微信发送过来的消息和事件
+type MixMessage struct {
+	CommonToken
+
+	//基本消息
+	MsgID        int64   `xml:"MsgId"`
+	Content      string  `xml:"Content"`
+	PicURL       string  `xml:"PicUrl"`
+	MediaID      string  `xml:"MediaId"`
+	Format       string  `xml:"Format"`
+	ThumbMediaID string  `xml:"ThumbMediaId"`
+	LocationX    float64 `xml:"Location_X"`
+	LocationY    float64 `xml:"Location_Y"`
+	Scale        float64 `xml:"Scale"`
+	Label        string  `xml:"Label"`
+	Title        string  `xml:"Title"`
+	Description  string  `xml:"Description"`
+	URL          string  `xml:"Url"`
+
+	//事件相关
+	Event     string `xml:"Event"`
+	EventKey  string `xml:"EventKey"`
+	Ticket    string `xml:"Ticket"`
+	Latitude  string `xml:"Latitude"`
+	Longitude string `xml:"Longitude"`
+	Precision string `xml:"Precision"`
+}
+
 //EncryptedXMLMsg 安全模式下的消息体
 type EncryptedXMLMsg struct {
 	XMLName      struct{} `xml:"xml" json:"-"`
@@ -89,32 +117,4 @@ func (msg *CommonToken) SetCreateTime(createTime int64) {
 //SetMsgType set MsgType
 func (msg *CommonToken) SetMsgType(msgType MsgType) {
 	msg.MsgType = msgType
-}
-
-//MixMessage 存放所有微信发送过来的消息和事件
-type MixMessage struct {
-	CommonToken
-
-	//基本消息
-	MsgID        int64   `xml:"MsgId"`
-	Content      string  `xml:"Content"`
-	PicURL       string  `xml:"PicUrl"`
-	MediaID      string  `xml:"MediaId"`
-	Format       string  `xml:"Format"`
-	ThumbMediaID string  `xml:"ThumbMediaId"`
-	LocationX    float64 `xml:"Location_X"`
-	LocationY    float64 `xml:"Location_Y"`
-	Scale        float64 `xml:"Scale"`
-	Label        string  `xml:"Label"`
-	Title        string  `xml:"Title"`
-	Description  string  `xml:"Description"`
-	URL          string  `xml:"Url"`
-
-	//事件相关
-	Event     string `xml:"Event"`
-	EventKey  string `xml:"EventKey"`
-	Ticket    string `xml:"Ticket"`
-	Latitude  string `xml:"Latitude"`
-	Longitude string `xml:"Longitude"`
-	Precision string `xml:"Precision"`
 }
