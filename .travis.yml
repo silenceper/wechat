@@ -1,1 +1,12 @@
 language: go
+
+go:
+  - 1.6
+  - 1.5.3
+  - 1.4.3
+
+services:
+  - memcached
+
+script:
+    - go test -v ./...
