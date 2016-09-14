@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"reflect"
+	"runtime/debug"
 	"strconv"
 	"strings"
 
@@ -57,8 +58,10 @@ func (srv *Server) Serve() error {
 		return err
 	}
 
-	srv.buildResponse(response)
-	return nil
+	//debug
+	//fmt.Println("request msg = ", string(srv.requestRawXMLMsg))
+
+	return srv.buildResponse(response)
 }
 
 //Validate 校验请求是否合法
@@ -155,7 +158,7 @@ func (srv *Server) SetMessageHandler(handler func(message.MixMessage) *message.R
 func (srv *Server) buildResponse(reply *message.Reply) (err error) {
 	defer func() {
 		if e := recover(); e != nil {
-			err = fmt.Errorf("panic error: %v", err)
+			err = fmt.Errorf("panic error: %v\n%s", e, debug.Stack())
 		}
 	}()
 	if reply == nil {
@@ -223,6 +226,8 @@ func (srv *Server) Send() (err error) {
 			Nonce:        srv.nonce,
 		}
 	}
-	srv.XML(replyMsg)
+	if replyMsg != nil {
+		srv.XML(replyMsg)
+	}
 	return
 }
