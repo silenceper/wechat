@@ -38,8 +38,8 @@ server.Send()
 
 主要是request和responseWriter在不同框架中获取方式可能不一样：
 
-- Beego配合使用 [./examples/beego/beego.go](./examples/beego/beego.go)
-- GinFrameworks [./examples/gin/gin.go](./examples/gin/gin.go)
+- Beego: [./examples/beego/beego.go](./examples/beego/beego.go)
+- Gin Framework: [./examples/gin/gin.go](./examples/gin/gin.go)
 
 ## 基本配置
 
