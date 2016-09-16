@@ -15,6 +15,7 @@ config := &wechat.Config{
 	AppSecret:      "xxxx",
 	Token:          "xxxx",
 	EncodingAESKey: "xxxx",
+	Cache:          memCache
 }
 wc := wechat.NewWechat(config)
 
@@ -40,7 +41,57 @@ server.Send()
 - Beego配合使用 [./examples/beego/beego.go](./examples/beego/beego.go)
 - GinFrameworks [./examples/gin/gin.go](./examples/gin/gin.go)
 
+#### 基本配置
+```go
+memcache := cache.NewMemcache("127.0.0.1:11211")
+
+wcConfig := &wechat.Config{
+	AppID:          cfg.AppID,
+	AppSecret:      cfg.AppSecret,
+	Token:          cfg.Token,
+	EncodingAESKey: cfg.EncodingAESKey,//消息加解密时用到
+	Cache:          memcache,
+}
+```
+
+
+
+**Cache 设置**
+ 
+Cache主要用来保存全局access_token以及js-sdk中的ticket：
+默认采用memcache存储。当然也可以直接实现`cache/cache.go`中的接口
+
+
 ## 基本API使用
+
+- [消息管理](#消息管理)
+	- 接收普通消息
+	- 接收事件推送
+	- 被动回复消息
+		- 回复文本消息
+		- 回复图片消息
+		- 回复视频消息
+		- 回复音乐消息
+		- 回复图文消息 
+- [自定义菜单](#自定义菜单)
+	- 自定义菜单创建接口
+	- 自定义菜单查询接口
+	- 自定义菜单删除接口
+	- 自定义菜单事件推送
+	- 个性化菜单接口
+		- 添加个性化菜单
+		- 删除个性化菜单
+		- 测试个性化菜单匹配结果
+	- 获取公众号菜单配置
+- [微信网页开发](#微信网页开发)
+	- Oauth2 授权
+		- 发起授权
+		- 通过code换取access_token
+		- 拉取用户信息
+		- 刷新access_token
+		- 检验access_token是否有效
+	- 获取js-sdk配置	
+- [素材管理](#素材管理)
 
 ## 消息管理
 
@@ -352,7 +403,7 @@ resMenu,err:=mu.GetMenu()
 ```
 >返回结果 resMenu 结构参考 ./menu/menu.go 中ResMenu 结构体
 
-### 自定义菜单删除
+### 自定义菜单删除接口
 
 ```go
 mu := wc.GetMenu(c.Request, c.Writer)
@@ -386,7 +437,7 @@ func (menu *Menu) MenuTryMatch(userID string) (buttons []Button, err error) {
 
 ```
 
-**获取公众号菜单配置**
+### 获取公众号菜单配置
 
 ```go
 //获取自定义菜单配置接口
