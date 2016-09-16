@@ -8,7 +8,6 @@ import (
 	"reflect"
 	"runtime/debug"
 	"strconv"
-	"strings"
 
 	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/message"
@@ -183,7 +182,7 @@ func (srv *Server) buildResponse(reply *message.Reply) (err error) {
 	value := reflect.ValueOf(msgData)
 	//msgData must be a ptr
 	kind := value.Kind().String()
-	if 0 != strings.Compare("ptr", kind) {
+	if "ptr" != kind {
 		return message.ErrUnsupportReply
 	}
 
