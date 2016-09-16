@@ -72,6 +72,30 @@ type MixMessage struct {
 	Latitude  string `xml:"Latitude"`
 	Longitude string `xml:"Longitude"`
 	Precision string `xml:"Precision"`
+	MenuID    string `xml:"MenuId"`
+
+	ScanCodeInfo struct {
+		ScanType   string `xml:"ScanType"`
+		ScanResult string `xml:"ScanResult"`
+	} `xml:"ScanCodeInfo"`
+
+	SendPicsInfo struct {
+		Count   int32      `xml:"Count"`
+		PicList []EventPic `xml:"PicList>item"`
+	} `xml:"SendPicsInfo"`
+
+	SendLocationInfo struct {
+		LocationX float64 `xml:"Location_X"`
+		LocationY float64 `xml:"Location_Y"`
+		Scale     float64 `xml:"Scale"`
+		Label     string  `xml:"Label"`
+		Poiname   string  `xml:"Poiname"`
+	}
+}
+
+//EventPic 发图事件推送
+type EventPic struct {
+	PicMd5Sum string `xml:PicMd5Sum`
 }
 
 //EncryptedXMLMsg 安全模式下的消息体

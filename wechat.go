@@ -8,6 +8,7 @@ import (
 	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/js"
 	"github.com/silenceper/wechat/material"
+	"github.com/silenceper/wechat/menu"
 	"github.com/silenceper/wechat/oauth"
 	"github.com/silenceper/wechat/server"
 )
@@ -67,4 +68,11 @@ func (wc *Wechat) GetJs(req *http.Request, writer http.ResponseWriter) *js.Js {
 	wc.Context.Request = req
 	wc.Context.Writer = writer
 	return js.NewJs(wc.Context)
+}
+
+//GetMenu init
+func (wc *Wechat) GetMenu(req *http.Request, writer http.ResponseWriter) *menu.Menu {
+	wc.Context.Request = req
+	wc.Context.Writer = writer
+	return menu.NewMenu(wc.Context)
 }
