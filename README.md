@@ -1,5 +1,5 @@
 # WeChat SDK for Go
-[![Build Status](https://travis-ci.org/silenceper/wechat.svg?branch=develop)](https://travis-ci.org/silenceper/wechat)
+[![Build Status](https://travis-ci.org/silenceper/wechat.svg?branch=master)](https://travis-ci.org/silenceper/wechat)
 
 使用Golang开发的微信SDK，简单、易用。
 
@@ -17,7 +17,7 @@ config := &wechat.Config{
 }
 wc := wechat.NewWechat(config)
 
-// 传入request和responseWriter 
+// 传入request和responseWriter
 server := wc.GetServer(request, responseWriter)
 server.SetMessageHandler(func(msg message.MixMessage) *message.Reply {
 
@@ -74,9 +74,9 @@ type MixMessage struct {
 	Latitude  string `xml:"Latitude"`
 	Longitude string `xml:"Longitude"`
 	Precision string `xml:"Precision"`
-	
+
 	MenuID    string `xml:"MenuId"`
-	
+
 	//扫码事件
 	ScanCodeInfo struct {
 		ScanType   string `xml:"ScanType"`
@@ -88,7 +88,7 @@ type MixMessage struct {
 		Count   int32      `xml:"Count"`
 		PicList []EventPic `xml:"PicList>item"`
 	} `xml:"SendPicsInfo"`
-	
+
 	//发送地理位置事件
 	SendLocationInfo struct {
 		LocationX float64 `xml:"Location_X"`
@@ -144,7 +144,7 @@ server.SetMessageHandler(func(v message.MixMessage) *message.Reply {
 
 
 ```
- 
+
 
 ### 接收事件推送
 ```go
@@ -154,51 +154,51 @@ case message.MsgTypeEvent:
 		//EventSubscribe 订阅
 		case message.EventSubscribe:
 			//do something
-	
+
 			//取消订阅
 		case message.EventUnsubscribe:
 			//do something
-	
+
 			//用户已经关注公众号，则微信会将带场景值扫描事件推送给开发者
 		case message.EventScan:
 			//do something
-	
+
 			// 上报地理位置事件
 		case message.EventLocation:
 			//do something
-	
+
 			// 点击菜单拉取消息时的事件推送
 		case message.EventClick:
 			//do something
-	
+
 			// 点击菜单跳转链接时的事件推送
 		case message.EventView:
 			//do something
-	
+
 			// 扫码推事件的事件推送
 		case message.EventScancodePush:
 			//do something
-	
+
 			// 扫码推事件且弹出“消息接收中”提示框的事件推送
 		case message.EventScancodeWaitmsg:
 			//do something
-	
+
 			// 弹出系统拍照发图的事件推送
 		case message.EventPicSysphoto:
 			//do something
-	
+
 			// 弹出拍照或者相册发图的事件推送
 		case message.EventPicPhotoOrAlbum:
 			//do something
-	
+
 			// 弹出微信相册发图器的事件推送
 		case message.EventPicWeixin:
 			//do something
-	
+
 			// 弹出地理位置选择器的事件推送
 		case message.EventLocationSelect:
 			//do something
-	
+
 	}
 
 
@@ -287,10 +287,10 @@ Url	：点击图文消息跳转链接
 
 ```go
 mu := wc.GetMenu(c.Request, c.Writer)
-	
+
 buttons := make([]*menu.Button, 1)
 btn := new(menu.Button)
-	
+
 //创建click类型菜单
 btn.SetClickButton("name", "key123")
 buttons[0] = btn
@@ -301,7 +301,7 @@ btn2.SetSubButton("subButton", buttons)
 
 buttons2 := make([]*menu.Button, 1)
 buttons2[0] = btn2
-	
+
 //发送请求
 err := mu.SetMenu(buttons2)
 if err != nil {
@@ -318,10 +318,10 @@ if err != nil {
 func (btn *Button) SetViewButton(name, url string)
 
 // SetScanCodePushButton 扫码推事件
-func (btn *Button) SetScanCodePushButton(name, key string) 
+func (btn *Button) SetScanCodePushButton(name, key string)
 
 //SetScanCodeWaitMsgButton 设置 扫码推事件且弹出"消息接收中"提示框
-func (btn *Button) SetScanCodeWaitMsgButton(name, key string) 
+func (btn *Button) SetScanCodeWaitMsgButton(name, key string)
 
 //SetPicSysPhotoButton 设置弹出系统拍照发图按钮
 func (btn *Button) SetPicSysPhotoButton(name, key string)
@@ -330,13 +330,13 @@ func (btn *Button) SetPicSysPhotoButton(name, key string)
 func (btn *Button) SetPicPhotoOrAlbumButton(name, key string) {
 
 // SetPicWeixinButton 设置弹出微信相册发图器类型按钮
-func (btn *Button) SetPicWeixinButton(name, key string) 
+func (btn *Button) SetPicWeixinButton(name, key string)
 
 // SetLocationSelectButton 设置 弹出地理位置选择器 类型按钮
-func (btn *Button) SetLocationSelectButton(name, key string) 
+func (btn *Button) SetLocationSelectButton(name, key string)
 
 //SetMediaIDButton  设置 下发消息(除文本消息) 类型按钮
-func (btn *Button) SetMediaIDButton(name, mediaID string) 
+func (btn *Button) SetMediaIDButton(name, mediaID string)
 
 //SetViewLimitedButton  设置 跳转图文消息URL 类型按钮
 func (btn *Button) SetViewLimitedButton(name, mediaID string) {
@@ -360,21 +360,21 @@ err:=mu.DeleteMenu()
 
 ### 自定义菜单事件推送
 
- 请参考 消息管理 - 事件推送 
- 
+ 请参考 消息管理 - 事件推送
+
 ### 个性化菜单接口
 **添加个性化菜单**
 
 ```go
 
-func (menu *Menu) AddConditional(buttons []*Button, matchRule *MatchRule) error 
+func (menu *Menu) AddConditional(buttons []*Button, matchRule *MatchRule) error
 ```
 
 **删除个性化菜单**
 
 ```go
 //删除个性化菜单
-func (menu *Menu) DeleteConditional(menuID int64) error 
+func (menu *Menu) DeleteConditional(menuID int64) error
 
 ```
 **测试个性化菜单匹配结果**
@@ -389,7 +389,7 @@ func (menu *Menu) MenuTryMatch(userID string) (buttons []Button, err error) {
 
 ```go
 //获取自定义菜单配置接口
-func (menu *Menu) GetCurrentSelfMenuInfo() (resSelfMenuInfo ResSelfMenuInfo, err error) 
+func (menu *Menu) GetCurrentSelfMenuInfo() (resSelfMenuInfo ResSelfMenuInfo, err error)
 
 ```
 
@@ -437,7 +437,7 @@ fmt.Println(userInfo)
 **刷新access_token**
 
 ```go
-func (oauth *Oauth) RefreshAccessToken(refreshToken string) (result ResAccessToken, err error) 
+func (oauth *Oauth) RefreshAccessToken(refreshToken string) (result ResAccessToken, err error)
 
 ```
 **检验access_token是否有效**
@@ -475,7 +475,7 @@ type Config struct {
 
 
 更多API使用请参考 godoc ：
-[https://godoc.org/github.com/silenceper/wechat](https://godoc.org/github.com/silenceper/wechat) 
+[https://godoc.org/github.com/silenceper/wechat](https://godoc.org/github.com/silenceper/wechat)
 
 ## License
 
