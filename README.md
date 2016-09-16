@@ -41,7 +41,8 @@ server.Send()
 - Beego配合使用 [./examples/beego/beego.go](./examples/beego/beego.go)
 - GinFrameworks [./examples/gin/gin.go](./examples/gin/gin.go)
 
-#### 基本配置
+## 基本配置
+
 ```go
 memcache := cache.NewMemcache("127.0.0.1:11211")
 
@@ -53,8 +54,6 @@ wcConfig := &wechat.Config{
 	Cache:          memcache,
 }
 ```
-
-
 
 **Cache 设置**
  
