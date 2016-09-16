@@ -44,33 +44,33 @@ func copyConfigToContext(cfg *Config, context *context.Context) {
 	context.SetJsApiTicketLock(new(sync.RWMutex))
 }
 
-//GetServer init
+//GetServer 消息管理
 func (wc *Wechat) GetServer(req *http.Request, writer http.ResponseWriter) *server.Server {
 	wc.Context.Request = req
 	wc.Context.Writer = writer
 	return server.NewServer(wc.Context)
 }
 
-//GetMaterial init
+//GetMaterial 素材管理
 func (wc *Wechat) GetMaterial() *material.Material {
 	return material.NewMaterial(wc.Context)
 }
 
-//GetOauth init
+//GetOauth oauth2网页授权
 func (wc *Wechat) GetOauth(req *http.Request, writer http.ResponseWriter) *oauth.Oauth {
 	wc.Context.Request = req
 	wc.Context.Writer = writer
 	return oauth.NewOauth(wc.Context)
 }
 
-//GetJs init
+//GetJs js-sdk配置
 func (wc *Wechat) GetJs(req *http.Request, writer http.ResponseWriter) *js.Js {
 	wc.Context.Request = req
 	wc.Context.Writer = writer
 	return js.NewJs(wc.Context)
 }
 
-//GetMenu init
+//GetMenu 菜单管理接口
 func (wc *Wechat) GetMenu(req *http.Request, writer http.ResponseWriter) *menu.Menu {
 	wc.Context.Request = req
 	wc.Context.Writer = writer
