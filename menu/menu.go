@@ -15,6 +15,7 @@ const (
 	menuAddConditionalURL    = "https://api.weixin.qq.com/cgi-bin/menu/addconditional"
 	menuDeleteConditionalURL = "https://api.weixin.qq.com/cgi-bin/menu/delconditional"
 	menuTryMatchURL          = "https://api.weixin.qq.com/cgi-bin/menu/trymatch"
+	menuSelfMenuInfoURL      = "https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info"
 )
 
 //Menu struct
@@ -61,6 +62,42 @@ type ResMenu struct {
 		MenuID int64    `json:"menuid"`
 	} `json:"menu"`
 	conditionalmenu []resConditionalMenu `json:"conditionalmenu"`
+}
+
+//ResSelfMenuInfo 自定义菜单配置返回结果
+type ResSelfMenuInfo struct {
+	util.CommonError
+
+	IsMenuOpen   int32 `json:"is_menu_open"`
+	SelfMenuInfo struct {
+		Button []SelfMenuButton `json:"button"`
+	} `json:"selfmenu_info"`
+}
+
+//SelfMenuButton 自定义菜单配置详情
+type SelfMenuButton struct {
+	Type      string `json:"type"`
+	Name      string `json:"name"`
+	Key       string `json:"key"`
+	URL       string `json:"url,omitempty"`
+	Value     string `json:"value,omitempty"`
+	SubButton struct {
+		List []SelfMenuButton `json:"list"`
+	} `json:"sub_button,omitempty"`
+	NewsInfo struct {
+		List []ButtonNew `json:"list"`
+	} `json:"news_info,omitempty"`
+}
+
+//ButtonNew 图文消息菜单
+type ButtonNew struct {
+	Title      string `json:"title"`
+	Author     string `json:"author"`
+	Digest     string `json:"digest"`
+	ShowCover  int32  `json:"show_cover"`
+	CoverURL   string `json:"cover_url"`
+	ContentURL string `json:"content_url"`
+	SourceURL  string `json:"source_url"`
 }
 
 //MatchRule 个性化菜单规则
@@ -233,5 +270,30 @@ func (menu *Menu) MenuTryMatch(userID string) (buttons []Button, err error) {
 		return
 	}
 	buttons = resMenuTryMatch.Button
+	return
+}
+
+//GetCurrentSelfMenuInfo 获取自定义菜单配置接口
+func (menu *Menu) GetCurrentSelfMenuInfo() (resSelfMenuInfo ResSelfMenuInfo, err error) {
+	var accessToken string
+	accessToken, err = menu.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", menuSelfMenuInfoURL, accessToken)
+	var response []byte
+	response, err = util.HTTPGet(uri)
+	if err != nil {
+		return
+	}
+	fmt.Println(string(response))
+	err = json.Unmarshal(response, &resSelfMenuInfo)
+	if err != nil {
+		return
+	}
+	if resSelfMenuInfo.ErrCode != 0 {
+		err = fmt.Errorf("GetCurrentSelfMenuInfo Error , errcode=%d , errmsg=%s", resSelfMenuInfo.ErrCode, resSelfMenuInfo.ErrMsg)
+		return
+	}
 	return
 }
