@@ -41,7 +41,7 @@ func copyConfigToContext(cfg *Config, context *context.Context) {
 	context.EncodingAESKey = cfg.EncodingAESKey
 	context.Cache = cfg.Cache
 	context.SetAccessTokenLock(new(sync.RWMutex))
-	context.SetJsApiTicketLock(new(sync.RWMutex))
+	context.SetJsAPITicketLock(new(sync.RWMutex))
 }
 
 //GetServer 消息管理
