@@ -13,12 +13,12 @@ import (
 	"github.com/silenceper/wechat/server"
 )
 
-//Wechat struct
+// Wechat struct
 type Wechat struct {
 	Context *context.Context
 }
 
-//Config for user
+// Config for user
 type Config struct {
 	AppID          string
 	AppSecret      string
@@ -27,7 +27,7 @@ type Config struct {
 	Cache          cache.Cache
 }
 
-//NewWechat init
+// NewWechat init
 func NewWechat(cfg *Config) *Wechat {
 	context := new(context.Context)
 	copyConfigToContext(cfg, context)
@@ -44,33 +44,33 @@ func copyConfigToContext(cfg *Config, context *context.Context) {
 	context.SetJsAPITicketLock(new(sync.RWMutex))
 }
 
-//GetServer 消息管理
+// GetServer 消息管理
 func (wc *Wechat) GetServer(req *http.Request, writer http.ResponseWriter) *server.Server {
 	wc.Context.Request = req
 	wc.Context.Writer = writer
 	return server.NewServer(wc.Context)
 }
 
-//GetMaterial 素材管理
+// GetMaterial 素材管理
 func (wc *Wechat) GetMaterial() *material.Material {
 	return material.NewMaterial(wc.Context)
 }
 
-//GetOauth oauth2网页授权
+// GetOauth oauth2网页授权
 func (wc *Wechat) GetOauth(req *http.Request, writer http.ResponseWriter) *oauth.Oauth {
 	wc.Context.Request = req
 	wc.Context.Writer = writer
 	return oauth.NewOauth(wc.Context)
 }
 
-//GetJs js-sdk配置
+// GetJs js-sdk配置
 func (wc *Wechat) GetJs(req *http.Request, writer http.ResponseWriter) *js.Js {
 	wc.Context.Request = req
 	wc.Context.Writer = writer
 	return js.NewJs(wc.Context)
 }
 
-//GetMenu 菜单管理接口
+// GetMenu 菜单管理接口
 func (wc *Wechat) GetMenu(req *http.Request, writer http.ResponseWriter) *menu.Menu {
 	wc.Context.Request = req
 	wc.Context.Writer = writer

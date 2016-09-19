@@ -11,12 +11,12 @@ import (
 
 const getTicketURL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi"
 
-//Js struct
+// Js struct
 type Js struct {
 	*context.Context
 }
 
-//Config 返回给用户jssdk配置信息
+// Config 返回给用户jssdk配置信息
 type Config struct {
 	AppID     string
 	TimeStamp int64
@@ -24,7 +24,7 @@ type Config struct {
 	Signature string
 }
 
-//resTicket 请求jsapi_tikcet返回结果
+// resTicket 请求jsapi_tikcet返回结果
 type resTicket struct {
 	util.CommonError
 

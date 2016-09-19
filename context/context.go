@@ -7,7 +7,7 @@ import (
 	"github.com/silenceper/wechat/cache"
 )
 
-//Context struct
+// Context struct
 type Context struct {
 	AppID          string
 	AppSecret      string
@@ -41,12 +41,12 @@ func (ctx *Context) GetQuery(key string) (string, bool) {
 	return "", false
 }
 
-//SetJsAPITicketLock 设置jsAPITicket的lock
+// SetJsAPITicketLock 设置jsAPITicket的lock
 func (ctx *Context) SetJsAPITicketLock(lock *sync.RWMutex) {
 	ctx.jsAPITicketLock = lock
 }
 
-//GetJsAPITicketLock 获取jsAPITicket 的lock
+// GetJsAPITicketLock 获取jsAPITicket 的lock
 func (ctx *Context) GetJsAPITicketLock() *sync.RWMutex {
 	return ctx.jsAPITicketLock
 }
