@@ -2,10 +2,10 @@ package message
 
 import "encoding/xml"
 
-//MsgType 基本消息类型
+// MsgType 基本消息类型
 type MsgType string
 
-//EventType 事件类型
+// EventType 事件类型
 type EventType string
 
 const (
