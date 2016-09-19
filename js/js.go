@@ -63,8 +63,8 @@ func (js *Js) GetConfig(uri string) (config *Config, err error) {
 
 //getTicket 获取jsapi_tocket全局缓存
 func (js *Js) getTicket() (ticketStr string, err error) {
-	js.GetJsApiTicketLock().Lock()
-	defer js.GetJsApiTicketLock().Unlock()
+	js.GetJsAPITicketLock().Lock()
+	defer js.GetJsAPITicketLock().Unlock()
 
 	//先从cache中取
 	jsAPITicketCacheKey := fmt.Sprintf("jsapi_ticket_%s", js.AppID)

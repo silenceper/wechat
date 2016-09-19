@@ -38,7 +38,7 @@ type Article struct {
 
 //reqArticles 永久性图文素材请求信息
 type reqArticles struct {
-	articles []*Article `json:"articles"`
+	Articles []*Article `json:"articles"`
 }
 
 //resArticles 永久性图文素材返回结果

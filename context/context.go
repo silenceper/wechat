@@ -22,8 +22,8 @@ type Context struct {
 	//accessTokenLock 读写锁 同一个AppID一个
 	accessTokenLock *sync.RWMutex
 
-	//jsapiTicket 读写锁 同一个AppID一个
-	jsApiTicketLock *sync.RWMutex
+	//jsAPITicket 读写锁 同一个AppID一个
+	jsAPITicketLock *sync.RWMutex
 }
 
 // Query returns the keyed url query value if it exists
@@ -41,11 +41,12 @@ func (ctx *Context) GetQuery(key string) (string, bool) {
 	return "", false
 }
 
-//SetJsApiTicket 设置jsApiTicket的lock
-func (ctx *Context) SetJsApiTicketLock(lock *sync.RWMutex) {
-	ctx.jsApiTicketLock = lock
+//SetJsAPITicketLock 设置jsAPITicket的lock
+func (ctx *Context) SetJsAPITicketLock(lock *sync.RWMutex) {
+	ctx.jsAPITicketLock = lock
 }
 
-func (ctx *Context) GetJsApiTicketLock() *sync.RWMutex {
-	return ctx.jsApiTicketLock
+//GetJsAPITicketLock 获取jsAPITicket 的lock
+func (ctx *Context) GetJsAPITicketLock() *sync.RWMutex {
+	return ctx.jsAPITicketLock
 }

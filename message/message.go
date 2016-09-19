@@ -80,13 +80,13 @@ type MixMessage struct {
 	URL          string  `xml:"Url"`
 
 	//事件相关
-	Event     string `xml:"Event"`
-	EventKey  string `xml:"EventKey"`
-	Ticket    string `xml:"Ticket"`
-	Latitude  string `xml:"Latitude"`
-	Longitude string `xml:"Longitude"`
-	Precision string `xml:"Precision"`
-	MenuID    string `xml:"MenuId"`
+	Event     EventType `xml:"Event"`
+	EventKey  string    `xml:"EventKey"`
+	Ticket    string    `xml:"Ticket"`
+	Latitude  string    `xml:"Latitude"`
+	Longitude string    `xml:"Longitude"`
+	Precision string    `xml:"Precision"`
+	MenuID    string    `xml:"MenuId"`
 
 	ScanCodeInfo struct {
 		ScanType   string `xml:"ScanType"`
@@ -109,7 +109,7 @@ type MixMessage struct {
 
 //EventPic 发图事件推送
 type EventPic struct {
-	PicMd5Sum string `xml:PicMd5Sum`
+	PicMd5Sum string `xml:"PicMd5Sum"`
 }
 
 //EncryptedXMLMsg 安全模式下的消息体
