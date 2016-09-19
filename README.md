@@ -1,8 +1,8 @@
 # WeChat SDK for Go
-[![Build Status](https://travis-ci.org/silenceper/wechat.svg?branch=master)](https://travis-ci.org/silenceper/wechat) 
+[![Build Status](https://travis-ci.org/silenceper/wechat.svg?branch=master)](https://travis-ci.org/silenceper/wechat)
 [![Go Report Card](https://goreportcard.com/badge/github.com/silenceper/wechat)](https://goreportcard.com/report/github.com/silenceper/wechat)
 [![GoDoc]
-(http://godoc.org/github.com/silenceper/wechat?status.svg)](http://godoc.org/github.com/silenceper/wechat) 
+(http://godoc.org/github.com/silenceper/wechat?status.svg)](http://godoc.org/github.com/silenceper/wechat)
 
 
 使用Golang开发的微信SDK，简单、易用。
@@ -59,7 +59,7 @@ wcConfig := &wechat.Config{
 ```
 
 **Cache 设置**
- 
+
 Cache主要用来保存全局access_token以及js-sdk中的ticket：
 默认采用memcache存储。当然也可以直接实现`cache/cache.go`中的接口
 
@@ -74,7 +74,7 @@ Cache主要用来保存全局access_token以及js-sdk中的ticket：
 		- 回复图片消息
 		- 回复视频消息
 		- 回复音乐消息
-		- 回复图文消息 
+		- 回复图文消息
 - [自定义菜单](#自定义菜单)
 	- 自定义菜单创建接口
 	- 自定义菜单查询接口
@@ -92,7 +92,7 @@ Cache主要用来保存全局access_token以及js-sdk中的ticket：
 		- 拉取用户信息
 		- 刷新access_token
 		- 检验access_token是否有效
-	- 获取js-sdk配置	
+	- 获取js-sdk配置
 - [素材管理](#素材管理)
 
 ## 消息管理
@@ -167,7 +167,7 @@ server.SetMessageHandler(func(v message.MixMessage) *message.Reply {
 			//do something
 
 			//图片消息
-		case mesage.MsgTypeImage:
+		case message.MsgTypeImage:
 			//do something
 
 			//语音消息
@@ -183,7 +183,7 @@ server.SetMessageHandler(func(v message.MixMessage) *message.Reply {
 			//do something
 
 			//地理位置消息
-		case message.MsgTypeShortVideo:
+		case message.MsgTypeLocation:
 			//do something
 
 			//链接消息
