@@ -46,43 +46,6 @@ func PostJSON(uri string, obj interface{}) ([]byte, error) {
 
 //PostFile 上传文件
 func PostFile(fieldname, filename, uri string) ([]byte, error) {
-	/*
-		bodyBuf := &bytes.Buffer{}
-		bodyWriter := multipart.NewWriter(bodyBuf)
-
-		fileWriter, err := bodyWriter.CreateFormFile(fieldname, filename)
-		if err != nil {
-			return nil, fmt.Errorf("error writing to buffer")
-		}
-
-		fh, err := os.Open(filename)
-		if err != nil {
-			return nil, fmt.Errorf("error opening file")
-		}
-		defer fh.Close()
-
-		_, err = io.Copy(fileWriter, fh)
-		if err != nil {
-			return nil, err
-		}
-
-		contentType := bodyWriter.FormDataContentType()
-		bodyWriter.Close()
-
-		resp, err := http.Post(uri, contentType, bodyBuf)
-		if err != nil {
-			return nil, err
-		}
-		defer resp.Body.Close()
-		if resp.StatusCode != http.StatusOK {
-			return nil, err
-		}
-		respBody, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return nil, err
-		}
-		return respBody, nil
-	*/
 	fields := []MultipartFormField{
 		{
 			IsFile:    true,
