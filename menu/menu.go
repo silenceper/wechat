@@ -61,7 +61,7 @@ type ResMenu struct {
 		Button []Button `json:"button"`
 		MenuID int64    `json:"menuid"`
 	} `json:"menu"`
-	conditionalmenu []resConditionalMenu `json:"conditionalmenu"`
+	Conditionalmenu []resConditionalMenu `json:"conditionalmenu"`
 }
 
 //ResSelfMenuInfo 自定义菜单配置返回结果

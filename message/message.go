@@ -109,7 +109,7 @@ type MixMessage struct {
 
 //EventPic 发图事件推送
 type EventPic struct {
-	PicMd5Sum string `xml:PicMd5Sum`
+	PicMd5Sum string `xml:"PicMd5Sum"`
 }
 
 //EncryptedXMLMsg 安全模式下的消息体
