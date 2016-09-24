@@ -12,6 +12,7 @@ import (
 const (
 	addNewsURL     = "https://api.weixin.qq.com/cgi-bin/material/add_news"
 	addMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/add_material"
+	delMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/del_material"
 )
 
 //Material 素材管理
@@ -28,6 +29,7 @@ func NewMaterial(context *context.Context) *Material {
 
 //Article 永久图文素材
 type Article struct {
+	Title            string `json:"title"`
 	ThumbMediaID     string `json:"thumb_media_id"`
 	Author           string `json:"author"`
 	Digest           string `json:"digest"`
@@ -164,4 +166,31 @@ func (material *Material) AddVideo(filename, title, introduction string) (mediaI
 	mediaID = resMaterial.MediaID
 	url = resMaterial.URL
 	return
+}
+
+type reqDeleteMaterial struct {
+	MediaID string `json:"media_id"`
+}
+
+//DeleteMaterial 删除永久素材
+func (material *Material) DeleteMaterial(mediaID string) error {
+	accessToken, err := material.GetAccessToken()
+	if err != nil {
+		return err
+	}
+
+	uri := fmt.Sprintf("%s?access_token=%s", delMaterialURL, accessToken)
+	response, err := util.PostJSON(uri, reqDeleteMaterial{mediaID})
+	if err != nil {
+		return err
+	}
+	var resDeleteMaterial util.CommonError
+	err = json.Unmarshal(response, &resDeleteMaterial)
+	if err != nil {
+		return err
+	}
+	if resDeleteMaterial.ErrCode != 0 {
+		return fmt.Errorf("DeleteMaterial error : errcode=%v , errmsg=%v", resDeleteMaterial.ErrCode, resDeleteMaterial.ErrMsg)
+	}
+	return nil
 }
