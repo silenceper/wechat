@@ -1,0 +1,120 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "ZZ4FL7s5f8QK4RysjZObSBYGOLY=",
+			"path": "github.com/astaxie/beego",
+			"revision": "2d87d4feafeea0a133d217a82e6e02df0348fed5",
+			"revisionTime": "2016-09-22T15:18:45Z"
+		},
+		{
+			"checksumSHA1": "LwEiQ/Hyb7Ul28TSlwowN9cpWDY=",
+			"path": "github.com/astaxie/beego/config",
+			"revision": "2d87d4feafeea0a133d217a82e6e02df0348fed5",
+			"revisionTime": "2016-09-22T15:18:45Z"
+		},
+		{
+			"checksumSHA1": "s+gj1rES9SvvCIyF8W2tzlziSPE=",
+			"path": "github.com/astaxie/beego/context",
+			"revision": "2d87d4feafeea0a133d217a82e6e02df0348fed5",
+			"revisionTime": "2016-09-22T15:18:45Z"
+		},
+		{
+			"checksumSHA1": "PDNn16w89zWODshT9zlPzSmWZFA=",
+			"path": "github.com/astaxie/beego/grace",
+			"revision": "2d87d4feafeea0a133d217a82e6e02df0348fed5",
+			"revisionTime": "2016-09-22T15:18:45Z"
+		},
+		{
+			"checksumSHA1": "Iz/p1UTvFNe5HFeohX7cvKEOQW0=",
+			"path": "github.com/astaxie/beego/logs",
+			"revision": "2d87d4feafeea0a133d217a82e6e02df0348fed5",
+			"revisionTime": "2016-09-22T15:18:45Z"
+		},
+		{
+			"checksumSHA1": "R797q1pCbp086SraUETxX1rsJYw=",
+			"path": "github.com/astaxie/beego/session",
+			"revision": "2d87d4feafeea0a133d217a82e6e02df0348fed5",
+			"revisionTime": "2016-09-22T15:18:45Z"
+		},
+		{
+			"checksumSHA1": "rxxln8GHFToVnaEJz4JMv0WbaKc=",
+			"path": "github.com/astaxie/beego/toolbox",
+			"revision": "2d87d4feafeea0a133d217a82e6e02df0348fed5",
+			"revisionTime": "2016-09-22T15:18:45Z"
+		},
+		{
+			"checksumSHA1": "fRJk3RZPPz6ovbautfsfxAk+CrI=",
+			"path": "github.com/astaxie/beego/utils",
+			"revision": "2d87d4feafeea0a133d217a82e6e02df0348fed5",
+			"revisionTime": "2016-09-22T15:18:45Z"
+		},
+		{
+			"checksumSHA1": "fNAC4qgZDqF3kxq74/yyk3PWdy8=",
+			"path": "github.com/bradfitz/gomemcache/memcache",
+			"revision": "fb1f79c6b65acda83063cbc69f6bba1522558bfc",
+			"revisionTime": "2016-01-17T19:21:50Z"
+		},
+		{
+			"checksumSHA1": "RsNwOto8G8aXIiRrlFn4dtU9q/g=",
+			"path": "github.com/gin-gonic/gin",
+			"revision": "e2212d40c62a98b388a5eb48ecbdcf88534688ba",
+			"revisionTime": "2016-12-04T22:13:08Z"
+		},
+		{
+			"checksumSHA1": "UsILDoIB2S7ra+w2fMdb85mX3HM=",
+			"path": "github.com/gin-gonic/gin/binding",
+			"revision": "e2212d40c62a98b388a5eb48ecbdcf88534688ba",
+			"revisionTime": "2016-12-04T22:13:08Z"
+		},
+		{
+			"checksumSHA1": "PHv9FNb7YavJWtAHcY6ZgXmkmHs=",
+			"path": "github.com/gin-gonic/gin/render",
+			"revision": "e2212d40c62a98b388a5eb48ecbdcf88534688ba",
+			"revisionTime": "2016-12-04T22:13:08Z"
+		},
+		{
+			"checksumSHA1": "kBeNcaKk56FguvPSUCEaH6AxpRc=",
+			"path": "github.com/golang/protobuf/proto",
+			"revision": "8ee79997227bf9b34611aee7946ae64735e6fd93",
+			"revisionTime": "2016-11-17T03:31:26Z"
+		},
+		{
+			"checksumSHA1": "b0T0Hzd+zYk+OCDTFMps+jwa/nY=",
+			"path": "github.com/manucorporat/sse",
+			"revision": "ee05b128a739a0fb76c7ebd3ae4810c1de808d6d",
+			"revisionTime": "2016-01-26T18:01:36Z"
+		},
+		{
+			"checksumSHA1": "xZuhljnmBysJPta/lMyYmJdujCg=",
+			"path": "github.com/mattn/go-isatty",
+			"revision": "30a891c33c7cde7b02a981314b4228ec99380cca",
+			"revisionTime": "2016-11-23T14:36:37Z"
+		},
+		{
+			"checksumSHA1": "pancewZW3HwGvpDwfH5Imrbadc4=",
+			"path": "golang.org/x/net/context",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "8fD/im5Kwvy3JgmxulDTambmE8w=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "a646d33e2ee3172a661fc09bca23bb4889a41bc8",
+			"revisionTime": "2016-07-15T05:43:45Z"
+		},
+		{
+			"checksumSHA1": "39V1idWER42Lmcmg2Uy40wMzOlo=",
+			"path": "gopkg.in/go-playground/validator.v8",
+			"revision": "5f57d2222ad794d0dffb07e664ea05e2ee07d60c",
+			"revisionTime": "2016-07-18T13:41:25Z"
+		},
+		{
+			"checksumSHA1": "12GqsW8PiRPnezDDy0v4brZrndM=",
+			"path": "gopkg.in/yaml.v2",
+			"revision": "a5b47d31c556af34a302ce5d659e6fea44d90de0",
+			"revisionTime": "2016-09-28T15:37:09Z"
+		}
+	],
+	"rootPath": "github.com/silenceper/wechat"
+}
