@@ -27,12 +27,16 @@ func HTTPGet(uri string) ([]byte, error) {
 
 //PostJSON post json 数据请求
 func PostJSON(uri string, obj interface{}) ([]byte, error) {
-	jsonData, err := json.Marshal(obj)
+	jsonBuf := new(bytes.Buffer)
+	enc := json.NewEncoder(jsonBuf)
+	enc.SetEscapeHTML(false)
+	err := enc.Encode(obj)
+
 	if err != nil {
 		return nil, err
 	}
-	body := bytes.NewBuffer(jsonData)
-	response, err := http.Post(uri, "application/json;charset=utf-8", body)
+
+	response, err := http.Post(uri, "application/json;charset=utf-8", jsonBuf)
 	if err != nil {
 		return nil, err
 	}
