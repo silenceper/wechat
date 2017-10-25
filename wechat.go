@@ -11,6 +11,7 @@ import (
 	"github.com/silenceper/wechat/menu"
 	"github.com/silenceper/wechat/oauth"
 	"github.com/silenceper/wechat/server"
+	"github.com/silenceper/wechat/template"
 	"github.com/silenceper/wechat/user"
 )
 
@@ -80,4 +81,9 @@ func (wc *Wechat) GetMenu() *menu.Menu {
 // GetUser 用户管理接口
 func (wc *Wechat) GetUser() *user.User {
 	return user.NewUser(wc.Context)
+}
+
+// GetTemplate 模板消息接口
+func (wc *Wechat) GetTemplate() *template.Template {
+	return template.NewTemplate(wc.Context)
 }
