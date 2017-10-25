@@ -98,7 +98,7 @@ func (js *Js) getTicketFromServer() (ticket resTicket, err error) {
 		return
 	}
 	if ticket.ErrCode != 0 {
-		err = fmt.Errorf("getTicket Error : errcode=%s , errmsg=%s", ticket.ErrCode, ticket.ErrMsg)
+		err = fmt.Errorf("getTicket Error : errcode=%d , errmsg=%s", ticket.ErrCode, ticket.ErrMsg)
 		return
 	}
 
