@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	userInfoURL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN"
+	userInfoURL = "https://api.weixin.qq.com/cgi-bin/user/info"
 )
 
 //User 用户管理
@@ -52,7 +52,7 @@ func (user *User) GetUserInfo(openID string) (userInfo *Info, err error) {
 		return
 	}
 
-	uri := fmt.Sprintf(userInfoURL, accessToken, openID)
+	uri := fmt.Sprintf("%s?access_token=%s&openid=%s&lang=zh_CN", userInfoURL, accessToken, openID)
 	var response []byte
 	response, err = util.HTTPGet(uri)
 	if err != nil {
