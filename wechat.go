@@ -45,11 +45,6 @@ func copyConfigToContext(cfg *Config, context *context.Context) {
 	context.SetJsAPITicketLock(new(sync.RWMutex))
 }
 
-//GetAccessToken 获取access_token
-func (wc *Wechat) GetAccessToken() (string, error) {
-	return wc.Context.GetAccessToken()
-}
-
 // GetServer 消息管理
 func (wc *Wechat) GetServer(req *http.Request, writer http.ResponseWriter) *server.Server {
 	wc.Context.Request = req
@@ -57,35 +52,32 @@ func (wc *Wechat) GetServer(req *http.Request, writer http.ResponseWriter) *serv
 	return server.NewServer(wc.Context)
 }
 
+//GetAccessToken 获取access_token
+func (wc *Wechat) GetAccessToken() (string, error) {
+	return wc.Context.GetAccessToken()
+}
+
+// GetOauth oauth2网页授权
+func (wc *Wechat) GetOauth() *oauth.Oauth {
+	return oauth.NewOauth(wc.Context)
+}
+
 // GetMaterial 素材管理
 func (wc *Wechat) GetMaterial() *material.Material {
 	return material.NewMaterial(wc.Context)
 }
 
-// GetOauth oauth2网页授权
-func (wc *Wechat) GetOauth(req *http.Request, writer http.ResponseWriter) *oauth.Oauth {
-	wc.Context.Request = req
-	wc.Context.Writer = writer
-	return oauth.NewOauth(wc.Context)
-}
-
 // GetJs js-sdk配置
-func (wc *Wechat) GetJs(req *http.Request, writer http.ResponseWriter) *js.Js {
-	wc.Context.Request = req
-	wc.Context.Writer = writer
+func (wc *Wechat) GetJs() *js.Js {
 	return js.NewJs(wc.Context)
 }
 
 // GetMenu 菜单管理接口
-func (wc *Wechat) GetMenu(req *http.Request, writer http.ResponseWriter) *menu.Menu {
-	wc.Context.Request = req
-	wc.Context.Writer = writer
+func (wc *Wechat) GetMenu() *menu.Menu {
 	return menu.NewMenu(wc.Context)
 }
 
-// GetUser 菜单管理接口
-func (wc *Wechat) GetUser(req *http.Request, writer http.ResponseWriter) *user.User {
-	wc.Context.Request = req
-	wc.Context.Writer = writer
+// GetUser 用户管理接口
+func (wc *Wechat) GetUser() *user.User {
 	return user.NewUser(wc.Context)
 }
