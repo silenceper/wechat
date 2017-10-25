@@ -18,10 +18,10 @@ type Js struct {
 
 // Config 返回给用户jssdk配置信息
 type Config struct {
-	AppID     string
-	TimeStamp int64
-	NonceStr  string
-	Signature string
+	AppID     string `json:"app_id"`
+	Timestamp int64  `json:"timestamp"`
+	NonceStr  string `json:"nonce_str"`
+	Signature string `json:"signature"`
 }
 
 // resTicket 请求jsapi_tikcet返回结果
@@ -56,7 +56,7 @@ func (js *Js) GetConfig(uri string) (config *Config, err error) {
 
 	config.AppID = js.AppID
 	config.NonceStr = nonceStr
-	config.TimeStamp = timestamp
+	config.Timestamp = timestamp
 	config.Signature = sigStr
 	return
 }
