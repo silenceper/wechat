@@ -514,10 +514,10 @@ fmt.Println(cfg)
 
 ```go
 type Config struct {
-	AppID     string
-	TimeStamp int64
-	NonceStr  string
-	Signature string
+	AppID     string `json:"app_id"`
+	Timestamp int64  `json:"timestamp"`
+	NonceStr  string `json:"nonce_str"`
+	Signature string `json:"signature"`
 }
 
 ```
