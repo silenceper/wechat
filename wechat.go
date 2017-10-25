@@ -11,6 +11,7 @@ import (
 	"github.com/silenceper/wechat/menu"
 	"github.com/silenceper/wechat/oauth"
 	"github.com/silenceper/wechat/server"
+	"github.com/silenceper/wechat/user"
 )
 
 // Wechat struct
@@ -44,6 +45,11 @@ func copyConfigToContext(cfg *Config, context *context.Context) {
 	context.SetJsAPITicketLock(new(sync.RWMutex))
 }
 
+//GetAccessToken 获取access_token
+func (wc *Wechat) GetAccessToken() (string, error) {
+	return wc.Context.GetAccessToken()
+}
+
 // GetServer 消息管理
 func (wc *Wechat) GetServer(req *http.Request, writer http.ResponseWriter) *server.Server {
 	wc.Context.Request = req
@@ -75,4 +81,11 @@ func (wc *Wechat) GetMenu(req *http.Request, writer http.ResponseWriter) *menu.M
 	wc.Context.Request = req
 	wc.Context.Writer = writer
 	return menu.NewMenu(wc.Context)
+}
+
+// GetUser 菜单管理接口
+func (wc *Wechat) GetUser(req *http.Request, writer http.ResponseWriter) *user.User {
+	wc.Context.Request = req
+	wc.Context.Writer = writer
+	return user.NewUser(wc.Context)
 }
