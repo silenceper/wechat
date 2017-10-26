@@ -18,9 +18,9 @@ type Js struct {
 
 // Config 返回给用户jssdk配置信息
 type Config struct {
-	AppID     string `json:"app_id"`
+	AppID     string `json:"appId"`
 	Timestamp int64  `json:"timestamp"`
-	NonceStr  string `json:"nonce_str"`
+	NonceStr  string `json:"nonceStr"`
 	Signature string `json:"signature"`
 }
 
