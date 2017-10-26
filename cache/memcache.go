@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"errors"
+	"encoding/json"
 	"time"
 
 	"github.com/bradfitz/gomemcache/memcache"
@@ -20,28 +20,34 @@ func NewMemcache(server ...string) *Memcache {
 
 //Get return cached value
 func (mem *Memcache) Get(key string) interface{} {
-	if item, err := mem.conn.Get(key); err == nil {
-		return string(item.Value)
+	var err error
+	var item *memcache.Item
+	if item, err = mem.conn.Get(key); err != nil {
+		return nil
 	}
-	return nil
+	var result interface{}
+	if err = json.Unmarshal(item.Value, &result); err != nil {
+		return nil
+	}
+	return result
 }
 
 // IsExist check value exists in memcache.
 func (mem *Memcache) IsExist(key string) bool {
-	_, err := mem.conn.Get(key)
-	if err != nil {
+	if _, err := mem.conn.Get(key); err != nil {
 		return false
 	}
 	return true
 }
 
 //Set cached value with key and expire time.
-func (mem *Memcache) Set(key string, val interface{}, timeout time.Duration) error {
-	v, ok := val.(string)
-	if !ok {
-		return errors.New("val must string")
+func (mem *Memcache) Set(key string, val interface{}, timeout time.Duration) (err error) {
+	var data []byte
+	if data, err = json.Marshal(val); err != nil {
+		return err
 	}
-	item := &memcache.Item{Key: key, Value: []byte(v), Expiration: int32(timeout / time.Second)}
+
+	item := &memcache.Item{Key: key, Value: data, Expiration: int32(timeout / time.Second)}
 	return mem.conn.Set(item)
 }
 
