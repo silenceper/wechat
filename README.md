@@ -11,6 +11,9 @@
 以下是一个处理消息接收以及回复的例子：
 
 ```go
+//使用memcache保存access_token，也可选择redis或自定义cache
+memCache=cache.NewMemcache("127.0.0.1:11211")
+
 //配置微信参数
 config := &wechat.Config{
 	AppID:          "xxxx",
@@ -27,7 +30,7 @@ server.SetMessageHandler(func(msg message.MixMessage) *message.Reply {
 
 	//回复消息：演示回复用户发送的消息
 	text := message.NewText(msg.Content)
-	return &message.Reply{message.MsgText, text}
+	return &message.Reply{message.MsgTypeText, text}
 })
 
 server.Serve()
