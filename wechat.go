@@ -13,6 +13,7 @@ import (
 	"github.com/silenceper/wechat/server"
 	"github.com/silenceper/wechat/template"
 	"github.com/silenceper/wechat/user"
+	"github.com/silenceper/wechat/pay"
 )
 
 // Wechat struct
@@ -26,6 +27,9 @@ type Config struct {
 	AppSecret      string
 	Token          string
 	EncodingAESKey string
+	PayMchID       string
+	PayNotifyURL   string  //支付的通知接口
+	PayKey         string  //商家后台设置的支付 key
 	Cache          cache.Cache
 }
 
@@ -86,4 +90,9 @@ func (wc *Wechat) GetUser() *user.User {
 // GetTemplate 模板消息接口
 func (wc *Wechat) GetTemplate() *template.Template {
 	return template.NewTemplate(wc.Context)
+}
+
+// GetPay 返回支付消息的实例
+func (wc *Wechat) GetPay() *pay.Pay {
+	return pay.NewPay(wc.Context)
 }

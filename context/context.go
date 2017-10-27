@@ -13,6 +13,8 @@ type Context struct {
 	AppSecret      string
 	Token          string
 	EncodingAESKey string
+	PayMchID       string
+	PayNotifyURL   string
 
 	Cache cache.Cache
 

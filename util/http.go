@@ -3,6 +3,7 @@ package util
 import (
 	"bytes"
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -119,4 +120,24 @@ func PostMultipartForm(fields []MultipartFormField, uri string) (respBody []byte
 	}
 	respBody, err = ioutil.ReadAll(resp.Body)
 	return
+}
+
+//PostXML perform a HTTP/POST request with XML body
+func PostXML(uri string, obj interface{}) ([]byte, error) {
+	xmlData, err := xml.Marshal(obj)
+	if err != nil {
+		return nil, err
+	}
+
+	body := bytes.NewBuffer(xmlData)
+	response, err := http.Post(uri, "application/xml;charset=utf-8", body)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("http get error : uri=%v , statusCode=%v", uri, response.StatusCode)
+	}
+	return ioutil.ReadAll(response.Body)
 }
