@@ -15,6 +15,7 @@ type Context struct {
 	EncodingAESKey string
 	PayMchID       string
 	PayNotifyURL   string
+	PayKey         string
 
 	Cache cache.Cache
 

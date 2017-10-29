@@ -1,13 +1,16 @@
 package pay
 
 import (
-	"crypto/md5"	
+	"errors"
+	"crypto/md5"
+	"encoding/xml"
+	"fmt"	
 	"strings"
 	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/util"
 )
 
-var payGateway := "https://api.mch.weixin.qq.com/pay/unifiedorder"
+var payGateway = "https://api.mch.weixin.qq.com/pay/unifiedorder"
 
 // Pay struct extends context
 type Pay struct {
@@ -20,14 +23,26 @@ type PayParams struct {
 	CreateIP    string
 	Body        string
 	OutTradeNo  string
+	OpenID      string
 }
 
-type PayResult struct {
-	Success     bool
-	PrePayID    string
+// payResult 是 unifie order 接口的返回
+type payResult struct {
+	ReturnCode      string `xml:"return_code"`
+	ReturnMsg       string `xml:"return_msg"`
+	AppID           string `xml:"appid,omitempty"`
+	MchID           string `xml:"mch_id,omitempty"`
+	NonceStr        string `xml:"nonce_str,omitempty"`
+	Sign            string `xml:"sign,omitempty"`
+	ResultCode      string `xml:"result_code,omitempty"`
+	TradeType       string `xml:"trade_type,omitempty"`
+	PrePayID        string `xml:"prepay_id,omitempty"`
+	CodeURL         string `xml:"code_url,omitempty"`
+	ErrCode         string `xml:"err_code,omitempty"`
+	ErrCodeDes      string `xml:"err_code_des,omitempty"`
 }
 
-//PayRequest
+//payRequest 接口请求参数
 type payRequest struct {
 	AppID           string `xml:"appid"`
 	MchID           string `xml:"mch_id"`
@@ -53,10 +68,6 @@ type payRequest struct {
 	SceneInfo       string `xml:"scene_info,omitempty"` //场景信息	
 }
 
-type payResponse struct {
-	
-}
-
 // NewPay return an instance of Pay package
 func NewPay(ctx *context.Context) *Pay {
 	pay := Pay{Context: ctx}
@@ -64,28 +75,43 @@ func NewPay(ctx *context.Context) *Pay {
 }
 
 // PrePayId will request wechat merchant api and request for a pre payment order id
-func (pcf *Pay) PrePayId(p *PayParams) payResult *PayResult {
+func (pcf *Pay) PrePayId(p *PayParams) (prePayID string, err error) {
 	nonceStr := util.RandomStr(32)
-	pType = "JSAPI"
+	pType := "JSAPI"
 	template := "appid=%s&body=%s&mch_id=%s&nonce_str=%s&notify_url=%s&out_trade_no=%s&spbill_create_ip=%s&total_fee=%s&trade_type"
-	stringA := fmt.Sprintf(template, pcf.AppID, p.Body, pcf.MchID, nonceStr, pcf.NotifyUrl, p.OutTradeNo, p.CreateIP, p.TotalFee, pType)
-	signature := md5.Sum(stringA + pcf.PayKey)
+	str := fmt.Sprintf(template, pcf.AppID, p.Body, pcf.PayMchID, nonceStr, pcf.PayNotifyURL, p.OutTradeNo, p.CreateIP, p.TotalFee, pType)
+	str += pcf.PayKey
+	sum := md5.Sum([]byte(str))
+	signature := string(sum[:])
 	sign := strings.ToUpper(signature)
 	request := payRequest{
 		AppID: pcf.AppID,
-		MchID: pcf.MchID,
-		NotifyUrl: pcf.NotifyUrl,
+		MchID: pcf.PayMchID,
+		NotifyUrl: pcf.PayNotifyURL,
 		NonceStr: util.RandomStr(32),
 		Sign: sign,
 		Body: p.Body,
 		OutTradeNo: p.OutTradeNo,
 		TotalFee: p.TotalFee,
-		SpbillCreateIp: params.CreateIP,
-		OpenID: params.OpenID,
+		SpbillCreateIp: p.CreateIP,
+		OpenID: p.OpenID,
 	}
-	ret, err := util.PostXML(payGateway, request)
+	rawRet, err := util.PostXML(payGateway, request)
 	if err != nil {
-
+		return "", err
 	}
-	fmt.Println(string(ret))
+	payRet := payResult{}
+	err = xml.Unmarshal(rawRet, &payRet)
+	if err != nil {
+		return "", errors.New(err.Error())
+	}
+	if payRet.ReturnCode == "SUCCESS" {
+		//pay success
+		if payRet.ResultCode == "SUCCESS" {
+			return payRet.PrePayID, nil
+		}
+		return "", errors.New(payRet.ErrCode + payRet.ErrCodeDes)
+	} else {
+		return "", errors.New("xml unmarshal err : raw - " + string(rawRet))		
+	}
 }

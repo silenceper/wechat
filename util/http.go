@@ -137,7 +137,7 @@ func PostXML(uri string, obj interface{}) ([]byte, error) {
 	defer response.Body.Close()
 
 	if response.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("http get error : uri=%v , statusCode=%v", uri, response.StatusCode)
+		return nil, fmt.Errorf("http code error : uri=%v , statusCode=%v", uri, response.StatusCode)
 	}
 	return ioutil.ReadAll(response.Body)
 }
