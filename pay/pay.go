@@ -17,6 +17,7 @@ type Pay struct {
 	*context.Context
 }
 
+// 传入的参数，用于生成 prepay_id 的必需参数
 // PayParams was NEEDED when request unifiedorder
 type PayParams struct {
 	TotalFee    string
@@ -24,6 +25,15 @@ type PayParams struct {
 	Body        string
 	OutTradeNo  string
 	OpenID      string
+}
+
+// PayConfig 是传出用于 jsdk 用的参数
+type PayConfig struct {
+	Timestamp       int64
+	NonceStr        string
+	PrePayID        string
+	SignType        string
+	Sign            string
 }
 
 // payResult 是 unifie order 接口的返回
