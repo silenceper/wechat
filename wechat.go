@@ -45,6 +45,9 @@ func copyConfigToContext(cfg *Config, context *context.Context) {
 	context.AppSecret = cfg.AppSecret
 	context.Token = cfg.Token
 	context.EncodingAESKey = cfg.EncodingAESKey
+	context.PayMchID = cfg.PayMchID
+	context.PayKey = cfg.PayKey
+	context.PayNotifyURL = cfg.PayNotifyURL
 	context.Cache = cfg.Cache
 	context.SetAccessTokenLock(new(sync.RWMutex))
 	context.SetJsAPITicketLock(new(sync.RWMutex))
