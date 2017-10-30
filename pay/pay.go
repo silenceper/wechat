@@ -88,7 +88,7 @@ func NewPay(ctx *context.Context) *Pay {
 func (pcf *Pay) PrePayId(p *PayParams) (prePayID string, err error) {
 	nonceStr := util.RandomStr(32)
 	pType := "JSAPI"
-	template := "appid=%s&body=%s&mch_id=%s&nonce_str=%s&notify_url=%s&out_trade_no=%s&spbill_create_ip=%s&total_fee=%s&trade_type"
+	template := "appid=%s&body=%s&mch_id=%s&nonce_str=%s&notify_url=%s&out_trade_no=%s&spbill_create_ip=%s&total_fee=%s&trade_type=%s"
 	str := fmt.Sprintf(template, pcf.AppID, p.Body, pcf.PayMchID, nonceStr, pcf.PayNotifyURL, p.OutTradeNo, p.CreateIP, p.TotalFee, pType)
 	str += pcf.PayKey
 	sum := md5.Sum([]byte(str))
@@ -108,7 +108,7 @@ func (pcf *Pay) PrePayId(p *PayParams) (prePayID string, err error) {
 	}
 	rawRet, err := util.PostXML(payGateway, request)
 	if err != nil {
-		return "", err
+		return "", errors.New(err.Error() + " parameters : " + str)
 	}
 	payRet := payResult{}
 	err = xml.Unmarshal(rawRet, &payRet)
