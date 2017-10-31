@@ -87,10 +87,10 @@ func NewPay(ctx *context.Context) *Pay {
 // PrePayId will request wechat merchant api and request for a pre payment order id
 func (pcf *Pay) PrePayId(p *PayParams) (prePayID string, err error) {
 	nonceStr := util.RandomStr(32)
-	pType := "JSAPI"
+	tradeType := "JSAPI"
 	template := "appid=%s&body=%s&mch_id=%s&nonce_str=%s&notify_url=%s&out_trade_no=%s&spbill_create_ip=%s&total_fee=%s&trade_type=%s"
-	str := fmt.Sprintf(template, pcf.AppID, p.Body, pcf.PayMchID, nonceStr, pcf.PayNotifyURL, p.OutTradeNo, p.CreateIP, p.TotalFee, pType)
-	str += pcf.PayKey
+	str := fmt.Sprintf(template, pcf.AppID, p.Body, pcf.PayMchID, nonceStr, pcf.PayNotifyURL, p.OutTradeNo, p.CreateIP, p.TotalFee, tradeType)
+	str += "&key="pcf.PayKey
 	sum := md5.Sum([]byte(str))
 	signature := string(sum[:])
 	sign := strings.ToUpper(signature)
@@ -98,13 +98,14 @@ func (pcf *Pay) PrePayId(p *PayParams) (prePayID string, err error) {
 		AppID: pcf.AppID,
 		MchID: pcf.PayMchID,
 		NotifyUrl: pcf.PayNotifyURL,
-		NonceStr: util.RandomStr(32),
+		NonceStr: nonceStr,
 		Sign: sign,
 		Body: p.Body,
 		OutTradeNo: p.OutTradeNo,
 		TotalFee: p.TotalFee,
 		SpbillCreateIp: p.CreateIP,
 		OpenID: p.OpenID,
+		TradeType: tradeType,
 	}
 	rawRet, err := util.PostXML(payGateway, request)
 	if err != nil {
