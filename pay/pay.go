@@ -54,7 +54,6 @@ type payResult struct {
 type payRequest struct {
 	AppID           string `xml:"appid"`
 	MchID           string `xml:"mch_id"`
-	NotifyUrl       string `xml:"notify_url"` //通知地址
 	DeviceInfo      string `xml:"device_info,omitempty"`
 	NonceStr        string `xml:"nonce_str"`
 	Sign            string `xml:"sign"`
@@ -69,6 +68,7 @@ type payRequest struct {
 	TimeStart       string `xml:"time_start,omitempty"`  //交易起始时间
 	TimeExpire      string `xml:"time_expire,omitempty"`  //交易结束时间
 	GoodsTag        string `xml:"goods_tag,omitempty"`  //订单优惠标记
+	NotifyUrl       string `xml:"notify_url"` //通知地址	
 	TradeType       string `xml:"trade_type"` //交易类型
 	ProductId       string `xml:"product_id,omitempty"`  //商品ID
 	LimitPay        string `xml:"limit_pay,omitempty"` //
@@ -92,14 +92,13 @@ func (pcf *Pay) PrePayId(p *PayParams) (prePayID string, err error) {
 	request := payRequest{
 		AppID: pcf.AppID,
 		MchID: pcf.PayMchID,
-		NotifyUrl: pcf.PayNotifyURL,
 		NonceStr: nonceStr,
 		Sign: sign,
 		Body: p.Body,
 		OutTradeNo: p.OutTradeNo,
 		TotalFee: p.TotalFee,
 		SpbillCreateIp: p.CreateIP,
-		OpenID: p.OpenID,
+		NotifyUrl: pcf.PayNotifyURL,		
 		TradeType: tradeType,
 	}
 	rawRet, err := util.PostXML(payGateway, request)
