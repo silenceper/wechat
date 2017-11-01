@@ -86,8 +86,8 @@ func NewPay(ctx *context.Context) *Pay {
 func (pcf *Pay) PrePayId(p *PayParams) (prePayID string, err error) {
 	nonceStr := util.RandomStr(32)
 	tradeType := "JSAPI"
-	template := "appid=%s&body=%s&mch_id=%s&nonce_str=%s&notify_url=%s&out_trade_no=%s&spbill_create_ip=%s&total_fee=%s&trade_type=%s&key=%s"
-	str := fmt.Sprintf(template, pcf.AppID, p.Body, pcf.PayMchID, nonceStr, pcf.PayNotifyURL, p.OutTradeNo, p.CreateIP, p.TotalFee, tradeType, pcf.PayKey)
+	template := "appid=%s&body=%s&mch_id=%s&nonce_str=%s&notify_url=%s&openid=%s&out_trade_no=%s&spbill_create_ip=%s&total_fee=%s&trade_type=%s&key=%s"
+	str := fmt.Sprintf(template, pcf.AppID, p.Body, pcf.PayMchID, nonceStr, pcf.PayNotifyURL, p.OpenID, p.OutTradeNo, p.CreateIP, p.TotalFee, tradeType, pcf.PayKey)
 	sign := util.Md5Sum(str)
 	request := payRequest{
 		AppID: pcf.AppID,
@@ -100,6 +100,7 @@ func (pcf *Pay) PrePayId(p *PayParams) (prePayID string, err error) {
 		SpbillCreateIp: p.CreateIP,
 		NotifyUrl: pcf.PayNotifyURL,		
 		TradeType: tradeType,
+		OpenID: p.OpenID,
 	}
 	rawRet, err := util.PostXML(payGateway, request)
 	if err != nil {
