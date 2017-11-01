@@ -86,10 +86,9 @@ func NewPay(ctx *context.Context) *Pay {
 func (pcf *Pay) PrePayId(p *PayParams) (prePayID string, err error) {
 	nonceStr := util.RandomStr(32)
 	tradeType := "JSAPI"
-	template := "appid=%s&body=%s&mch_id=%s&nonce_str=%s&notify_url=%s&openid=%s&out_trade_no=%s&sign_type=%s&spbill_create_ip=%s&total_fee=%s&trade_type=%s&key=%s"
-	str := fmt.Sprintf(template, pcf.AppID, p.Body, pcf.PayMchID, nonceStr, pcf.PayNotifyURL, p.OpenID, p.OutTradeNo, "HMAC-SHA256", p.CreateIP, p.TotalFee, tradeType, pcf.PayKey)
-	// sign := util.Md5Sum(str)
-	sign := util.Signature(str)
+	template := "appid=%s&body=%s&mch_id=%s&nonce_str=%s&notify_url=%s&openid=%s&out_trade_no=%s&spbill_create_ip=%s&total_fee=%s&trade_type=%s&key=%s"
+	str := fmt.Sprintf(template, pcf.AppID, p.Body, pcf.PayMchID, nonceStr, pcf.PayNotifyURL, p.OpenID, p.OutTradeNo, p.CreateIP, p.TotalFee, tradeType, pcf.PayKey)
+	sign := util.MD5Sum(str)
 	request := payRequest{
 		AppID: pcf.AppID,
 		MchID: pcf.PayMchID,

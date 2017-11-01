@@ -187,7 +187,7 @@ func decodeNetworkByteOrder(orderBytes []byte) (n uint32) {
 }
 
 // 计算 32 位长度的 MD5 sum
-func Md5Sum(txt string) (sum string) {
+func MD5Sum(txt string) (sum string) {
 	h := md5.New()
 	buf := bufio.NewWriterSize(h, 128)
 	buf.WriteString(txt)
