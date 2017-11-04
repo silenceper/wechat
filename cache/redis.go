@@ -14,12 +14,12 @@ type Redis struct {
 
 //RedisOpts redis 连接属性
 type RedisOpts struct {
-	Host        string
-	Password    string
-	Database    int
-	MaxIdle     int
-	MaxActive   int
-	IdleTimeout time.Duration //second
+	Host        string `yml:"host" json:"host"`
+	Password    string `yml:"password" json:"password"`
+	Database    int    `yml:"database" json:"database"`
+	MaxIdle     int    `yml:"max_idle" json:"max_idle"`
+	MaxActive   int    `yml:"max_active" json:"max_active"`
+	IdleTimeout int32  `yml:"idle_timeout" json:"idle_timeout"` //second
 }
 
 //NewRedis 实例化
@@ -27,7 +27,7 @@ func NewRedis(opts *RedisOpts) *Redis {
 	pool := &redis.Pool{
 		MaxActive:   opts.MaxActive,
 		MaxIdle:     opts.MaxIdle,
-		IdleTimeout: opts.IdleTimeout,
+		IdleTimeout: time.Second * time.Duration(opts.IdleTimeout),
 		Dial: func() (redis.Conn, error) {
 			return redis.Dial("tcp", opts.Host,
 				redis.DialDatabase(opts.Database),
