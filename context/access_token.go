@@ -55,6 +55,9 @@ func (ctx *Context) GetAccessTokenFromServer() (resAccessToken ResAccessToken, e
 	url := fmt.Sprintf("%s?grant_type=client_credential&appid=%s&secret=%s", AccessTokenURL, ctx.AppID, ctx.AppSecret)
 	var body []byte
 	body, err = util.HTTPGet(url)
+	if err != nil {
+		return
+	}
 	err = json.Unmarshal(body, &resAccessToken)
 	if err != nil {
 		return
