@@ -47,11 +47,11 @@ type DataItem struct {
 type resTemplateSend struct {
 	util.CommonError
 
-	MsgID int32 `json:"msgid"`
+	MsgID int64 `json:"msgid"`
 }
 
 //Send 发送模板消息
-func (tpl *Template) Send(msg *Message) (msgID int32, err error) {
+func (tpl *Template) Send(msg *Message) (msgID int64, err error) {
 	var accessToken string
 	accessToken, err = tpl.GetAccessToken()
 	if err != nil {
