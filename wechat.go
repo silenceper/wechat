@@ -6,6 +6,7 @@ import (
 
 	"github.com/silenceper/wechat/cache"
 	"github.com/silenceper/wechat/context"
+	"github.com/silenceper/wechat/group"
 	"github.com/silenceper/wechat/js"
 	"github.com/silenceper/wechat/material"
 	"github.com/silenceper/wechat/menu"
@@ -76,6 +77,11 @@ func (wc *Wechat) GetJs() *js.Js {
 // GetMenu 菜单管理接口
 func (wc *Wechat) GetMenu() *menu.Menu {
 	return menu.NewMenu(wc.Context)
+}
+
+// GetMenu 用户分组管理接口
+func (wc *Wechat) GetGroup() *group.Group {
+	return group.NewGroup(wc.Context)
 }
 
 // GetUser 用户管理接口
