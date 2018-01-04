@@ -29,10 +29,7 @@ func NewRedis(opts *RedisOpts) *Redis {
 		MaxIdle:     opts.MaxIdle,
 		IdleTimeout: time.Second * time.Duration(opts.IdleTimeout),
 		Dial: func() (redis.Conn, error) {
-			return redis.Dial("tcp", opts.Host,
-				redis.DialDatabase(opts.Database),
-				redis.DialPassword(opts.Password),
-			)
+			return redis.Dial("tcp", opts.Host)
 		},
 		TestOnBorrow: func(conn redis.Conn, t time.Time) error {
 			if time.Since(t) < time.Minute {

@@ -67,12 +67,20 @@ func (js *Js) GetTicket() (ticketStr string, err error) {
 	defer js.GetJsAPITicketLock().Unlock()
 
 	//先从cache中取
-	jsAPITicketCacheKey := fmt.Sprintf("jsapi_ticket_%s", js.AppID)
-	val := js.Cache.Get(jsAPITicketCacheKey)
-	if val != nil {
-		ticketStr = val.(string)
+	if js.Cache != nil {
+		jsAPITicketCacheKey := fmt.Sprintf("jsapi_ticket_%s", js.AppID)
+		val := js.Cache.Get(jsAPITicketCacheKey)
+		if val != nil {
+			ticketStr = val.(string)
+			return
+		}
+	}
+
+	if js.Strategy.GetJsTicket != nil {
+		ticketStr, err = js.Strategy.GetJsTicket(js.AppID)
 		return
 	}
+
 	var ticket resTicket
 	ticket, err = js.getTicketFromServer()
 	if err != nil {
@@ -101,9 +109,10 @@ func (js *Js) getTicketFromServer() (ticket resTicket, err error) {
 		err = fmt.Errorf("getTicket Error : errcode=%d , errmsg=%s", ticket.ErrCode, ticket.ErrMsg)
 		return
 	}
-
-	jsAPITicketCacheKey := fmt.Sprintf("jsapi_ticket_%s", js.AppID)
-	expires := ticket.ExpiresIn - 1500
-	err = js.Cache.Set(jsAPITicketCacheKey, ticket.Ticket, time.Duration(expires)*time.Second)
+	if js.Cache != nil {
+		jsAPITicketCacheKey := fmt.Sprintf("jsapi_ticket_%s", js.AppID)
+		expires := ticket.ExpiresIn - 1500
+		err = js.Cache.Set(jsAPITicketCacheKey, ticket.Ticket, time.Duration(expires)*time.Second)
+	}
 	return
 }
