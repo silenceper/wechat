@@ -90,6 +90,7 @@ type MixMessage struct {
 	Precision string    `xml:"Precision"`
 	MenuID    string    `xml:"MenuId"`
 	Status    string    `xml:"Status"`
+	SessionFrom string  `xml:"SessionFrom"`
 
 	ScanCodeInfo struct {
 		ScanType   string `xml:"ScanType"`
