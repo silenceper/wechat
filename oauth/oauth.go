@@ -38,13 +38,12 @@ func (oauth *Oauth) GetRedirectURL(redirectURI, scope, state string) (string, er
 }
 
 //Redirect 跳转到网页授权
-func (oauth *Oauth) Redirect(writer http.ResponseWriter, redirectURI, scope, state string) error {
+func (oauth *Oauth) Redirect(writer http.ResponseWriter, req *http.Request, redirectURI, scope, state string) error {
 	location, err := oauth.GetRedirectURL(redirectURI, scope, state)
 	if err != nil {
 		return err
 	}
-	//location 为完整地址，所以不需要request
-	http.Redirect(writer, nil, location, 302)
+	http.Redirect(writer, req, location, 302)
 	return nil
 }
 
