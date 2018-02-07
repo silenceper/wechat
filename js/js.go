@@ -61,7 +61,7 @@ func (js *Js) GetConfig(uri string) (config *Config, err error) {
 	return
 }
 
-//GetTicket 获取jsapi_tocket
+//GetTicket 获取jsapi_ticket
 func (js *Js) GetTicket() (ticketStr string, err error) {
 	js.GetJsAPITicketLock().Lock()
 	defer js.GetJsAPITicketLock().Unlock()
