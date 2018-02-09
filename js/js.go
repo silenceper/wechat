@@ -44,7 +44,7 @@ func NewJs(context *context.Context) *Js {
 func (js *Js) GetConfig(uri string) (config *Config, err error) {
 	config = new(Config)
 	var ticketStr string
-	ticketStr, err = js.getTicket()
+	ticketStr, err = js.GetTicket()
 	if err != nil {
 		return
 	}
@@ -61,8 +61,8 @@ func (js *Js) GetConfig(uri string) (config *Config, err error) {
 	return
 }
 
-//getTicket 获取jsapi_tocket全局缓存
-func (js *Js) getTicket() (ticketStr string, err error) {
+//GetTicket 获取jsapi_ticket
+func (js *Js) GetTicket() (ticketStr string, err error) {
 	js.GetJsAPITicketLock().Lock()
 	defer js.GetJsAPITicketLock().Unlock()
 
