@@ -1,11 +1,10 @@
 language: go
 
 go:
-  - 1.10
-  - 1.9
-  - 1.8
-  - 1.7
-  - 1.6
+  - 1.9.x
+  - 1.8.x
+  - 1.7.x
+  - 1.6.x
 
 services:
   - memcached
@@ -16,7 +15,6 @@ before_script:
   - go get github.com/golang/lint/golint
     
 script:
-  - test -z $(gofmt -s -l $GO_FILES)
   - go test -v -race ./...
   - go vet ./...
   - golint -set_exit_status $(go list ./...)
