@@ -26,7 +26,7 @@ func hello(ctx *context.Context) {
 
 		//回复消息：演示回复用户发送的消息
 		text := message.NewText(msg.Content)
-		return &message.Reply{message.MsgTypeText, text}
+		return &message.Reply{MsgType: message.MsgTypeText, MsgData: text}
 	})
 
 	//处理消息接收以及回复
