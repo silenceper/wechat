@@ -13,6 +13,7 @@ import (
 	"github.com/silenceper/wechat/server"
 	"github.com/silenceper/wechat/template"
 	"github.com/silenceper/wechat/user"
+	"github.com/silenceper/wechat/pay"
 )
 
 // Wechat struct
@@ -26,6 +27,9 @@ type Config struct {
 	AppSecret      string
 	Token          string
 	EncodingAESKey string
+	PayMchID       string  //支付 - 商户 ID
+	PayNotifyURL   string  //支付 - 接受微信支付结果通知的接口地址
+	PayKey         string  //支付 - 商户后台设置的支付 key
 	Cache          cache.Cache
 }
 
@@ -41,6 +45,9 @@ func copyConfigToContext(cfg *Config, context *context.Context) {
 	context.AppSecret = cfg.AppSecret
 	context.Token = cfg.Token
 	context.EncodingAESKey = cfg.EncodingAESKey
+	context.PayMchID = cfg.PayMchID
+	context.PayKey = cfg.PayKey
+	context.PayNotifyURL = cfg.PayNotifyURL
 	context.Cache = cfg.Cache
 	context.SetAccessTokenLock(new(sync.RWMutex))
 	context.SetJsAPITicketLock(new(sync.RWMutex))
@@ -86,4 +93,9 @@ func (wc *Wechat) GetUser() *user.User {
 // GetTemplate 模板消息接口
 func (wc *Wechat) GetTemplate() *template.Template {
 	return template.NewTemplate(wc.Context)
+}
+
+// GetPay 返回支付消息的实例
+func (wc *Wechat) GetPay() *pay.Pay {
+	return pay.NewPay(wc.Context)
 }
