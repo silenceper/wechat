@@ -1,8 +1,8 @@
 package util
 
 import (
-	"bytes"
 	"bufio"
+	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/md5"
@@ -186,7 +186,7 @@ func decodeNetworkByteOrder(orderBytes []byte) (n uint32) {
 		uint32(orderBytes[3])
 }
 
-// 计算 32 位长度的 MD5 sum
+// MD5Sum 计算 32 位长度的 MD5 sum
 func MD5Sum(txt string) (sum string) {
 	h := md5.New()
 	buf := bufio.NewWriterSize(h, 128)
