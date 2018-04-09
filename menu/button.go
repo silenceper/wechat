@@ -129,7 +129,7 @@ func (btn *Button) SetViewLimitedButton(name, mediaID string) {
 	btn.SubButtons = nil
 }
 
-//SetViewLimitedButton  设置 跳转小程序 类型按钮 (公众号后台必须已经关联小程序)
+//SetMiniprogramButton  设置 跳转小程序 类型按钮 (公众号后台必须已经关联小程序)
 func (btn *Button) SetMiniprogramButton(name, url, appID, pagePath string) {
 	btn.Type = "miniprogram"
 	btn.Name = name
