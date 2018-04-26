@@ -1,6 +1,8 @@
 package comment
 
-import "context"
+import (
+	"github.com/swxctx/wechat/context"
+)
 
 // Comment 评论、留言管理
 type Comment struct {
