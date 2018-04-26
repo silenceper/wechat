@@ -9,8 +9,8 @@ type Account struct {
 	*context.Context
 }
 
-// NewComment 实例化
-func NewComment(context *context.Context) *Account {
+// NewAccount 实例化
+func NewAccount(context *context.Context) *Account {
 	account := new(Account)
 	account.Context = context
 	return account
