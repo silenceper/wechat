@@ -3,30 +3,11 @@ package js
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 	"time"
 
+	"github.com/domego/gokits"
 	"github.com/swxctx/wechat/util"
 )
-
-// GetJsSign 获取js请求所需的签名
-func (js *Js) GetJsSign(url string) (sign string, err error) {
-	jsSign := &JsSign{}
-	config, err := js.GetConfig(url)
-	if err != nil {
-		return
-	}
-	jsSign.Appid = config.AppID
-	jsSign.Noncestr = config.NonceStr
-	jsSign.Signature = config.Signature
-	jsSign.Timestamp = config.Timestamp
-
-	//url 取出# 之后的部分
-	urlArr := strings.Split(url, "#")
-	jsSign.Url = urlArr[0]
-	sign, err = marshalJsSign(jsSign)
-	return
-}
 
 /*
 	1. 从缓存获取
@@ -73,7 +54,7 @@ func (js *Js) GetTicket() (ticket string, err error) {
 	// 从redis中获取
 	jsAPITicketKey := fmt.Sprintf("jsapi_ticket_%s", js.AppID)
 	val := js.Cache.Get(jsAPITicketKey)
-	if val != nil {
+	if !utils.IsEmpty(val) {
 		ticket = val.(string)
 		return
 	}
@@ -120,12 +101,4 @@ func (js *Js) GetTicketFromServer() (ticket resTicket, err error) {
 	}
 	err = js.Cache.Set(jsAPITicketKey, ticket.Ticket, time.Duration(expire)*time.Second)
 	return
-}
-
-func marshalJsSign(data *JsSign) (string, error) {
-	resource, err := json.Marshal(data)
-	if err != nil {
-		return "", err
-	}
-	return string(resource), nil
 }

@@ -20,15 +20,6 @@ type Config struct {
 	Signature string `json:"signature"`
 }
 
-// JsSign JsSign
-type JsSign struct {
-	Appid     string `json:"appid"`
-	Noncestr  string `json:"noncestr"`
-	Timestamp int64  `json:"timestamp"`
-	Url       string `json:"url"`
-	Signature string `json:"signature"`
-}
-
 // resTicket 请求jsapi_tikcet返回结果
 type resTicket struct {
 	util.CommonError
