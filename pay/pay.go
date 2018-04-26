@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/silenceper/wechat/context"
-	"github.com/silenceper/wechat/util"
+	"github.com/swxctx/wechat/context"
+	"github.com/swxctx/wechat/util"
 )
 
 var payGateway = "https://api.mch.weixin.qq.com/pay/unifiedorder"

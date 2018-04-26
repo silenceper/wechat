@@ -9,9 +9,9 @@ import (
 	"runtime/debug"
 	"strconv"
 
-	"github.com/silenceper/wechat/context"
-	"github.com/silenceper/wechat/message"
-	"github.com/silenceper/wechat/util"
+	"github.com/swxctx/wechat/context"
+	"github.com/swxctx/wechat/message"
+	"github.com/swxctx/wechat/util"
 )
 
 //Server struct
@@ -46,8 +46,8 @@ func (srv *Server) Serve() error {
 		return fmt.Errorf("请求校验失败")
 	}
 
-	echostr, exists := srv.GetQuery("echostr")
-	if exists {
+	echostr := srv.Query("echostr")
+	if len(echostr) > 0 {
 		srv.String(echostr)
 		return nil
 	}

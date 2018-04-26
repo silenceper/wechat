@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/silenceper/wechat/cache"
+	"github.com/swxctx/wechat/cache"
 )
 
 // Context struct
@@ -29,19 +29,10 @@ type Context struct {
 	jsAPITicketLock *sync.RWMutex
 }
 
-// Query returns the keyed url query value if it exists
+// Query req url get value(query)
 func (ctx *Context) Query(key string) string {
-	value, _ := ctx.GetQuery(key)
-	return value
-}
-
-// GetQuery is like Query(), it returns the keyed url query value
-func (ctx *Context) GetQuery(key string) (string, bool) {
 	req := ctx.Request
-	if values, ok := req.URL.Query()[key]; ok && len(values) > 0 {
-		return values[0], true
-	}
-	return "", false
+	return req.URL.Query().Get(key)
 }
 
 // SetJsAPITicketLock 设置jsAPITicket的lock

@@ -272,7 +272,7 @@ type Reply struct {
 }
 
 ```
-注意：`retrun nil`表示什么也不做
+注意：`return nil`表示什么也不做
 
 ####  回复文本消息
 ```go
