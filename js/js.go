@@ -27,3 +27,10 @@ type resTicket struct {
 	Ticket    string `json:"ticket"`
 	ExpiresIn int64  `json:"expires_in"`
 }
+
+// NewJs init
+func NewJs(context *context.Context) *Js {
+	js := new(Js)
+	js.Context = context
+	return js
+}

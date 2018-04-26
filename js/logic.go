@@ -6,16 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/swxctx/wechat/context"
 	"github.com/swxctx/wechat/util"
 )
-
-//NewJs init
-func NewJs(context *context.Context) *Js {
-	js := new(Js)
-	js.Context = context
-	return js
-}
 
 // GetJsSign 获取js请求所需的签名
 func (js *Js) GetJsSign(url string) (sign string, err error) {
