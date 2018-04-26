@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/swxctx/wechat/util"
+
+	"github.com/domego/gokits"
 )
 
 const (
@@ -34,7 +36,7 @@ func (ctx *Context) GetAccessToken() (accessToken string, err error) {
 
 	accessTokenCacheKey := fmt.Sprintf("access_token_%s", ctx.AppID)
 	val := ctx.Cache.Get(accessTokenCacheKey)
-	if val != nil {
+	if !utils.IsEmpty(val) {
 		accessToken = val.(string)
 		return
 	}
