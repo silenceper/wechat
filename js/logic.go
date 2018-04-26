@@ -72,8 +72,9 @@ func (js *Js) GetTicket() (ticket string, err error) {
 
 	// 从redis中获取
 	jsAPITicketKey := fmt.Sprintf("jsapi_ticket_%s", js.AppID)
-	ticket = js.Cache.Get(jsAPITicketKey)
-	if len(ticket) > 0 {
+	val := js.Cache.Get(jsAPITicketKey)
+	if val != nil {
+		ticket = val.(string)
 		return
 	}
 
