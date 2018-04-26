@@ -4,16 +4,16 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/silenceper/wechat/cache"
-	"github.com/silenceper/wechat/context"
-	"github.com/silenceper/wechat/js"
-	"github.com/silenceper/wechat/material"
-	"github.com/silenceper/wechat/menu"
-	"github.com/silenceper/wechat/oauth"
-	"github.com/silenceper/wechat/server"
-	"github.com/silenceper/wechat/template"
-	"github.com/silenceper/wechat/user"
-	"github.com/silenceper/wechat/pay"
+	"github.com/swxctx/wechat/cache"
+	"github.com/swxctx/wechat/context"
+	"github.com/swxctx/wechat/js"
+	"github.com/swxctx/wechat/material"
+	"github.com/swxctx/wechat/menu"
+	"github.com/swxctx/wechat/oauth"
+	"github.com/swxctx/wechat/pay"
+	"github.com/swxctx/wechat/server"
+	"github.com/swxctx/wechat/template"
+	"github.com/swxctx/wechat/user"
 )
 
 // Wechat struct
@@ -27,9 +27,9 @@ type Config struct {
 	AppSecret      string
 	Token          string
 	EncodingAESKey string
-	PayMchID       string  //支付 - 商户 ID
-	PayNotifyURL   string  //支付 - 接受微信支付结果通知的接口地址
-	PayKey         string  //支付 - 商户后台设置的支付 key
+	PayMchID       string //支付 - 商户 ID
+	PayNotifyURL   string //支付 - 接受微信支付结果通知的接口地址
+	PayKey         string //支付 - 商户后台设置的支付 key
 	Cache          cache.Cache
 }
 
