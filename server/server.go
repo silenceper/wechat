@@ -46,8 +46,8 @@ func (srv *Server) Serve() error {
 		return fmt.Errorf("请求校验失败")
 	}
 
-	echostr, exists := srv.GetQuery("echostr")
-	if exists {
+	echostr := srv.Query("echostr")
+	if len(echostr) > 0 {
 		srv.String(echostr)
 		return nil
 	}

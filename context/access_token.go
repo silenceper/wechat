@@ -52,8 +52,10 @@ func (ctx *Context) GetAccessToken() (accessToken string, err error) {
 
 //GetAccessTokenFromServer 强制从微信服务器获取token
 func (ctx *Context) GetAccessTokenFromServer() (resAccessToken ResAccessToken, err error) {
+	var (
+		body []byte
+	)
 	url := fmt.Sprintf("%s?grant_type=client_credential&appid=%s&secret=%s", AccessTokenURL, ctx.AppID, ctx.AppSecret)
-	var body []byte
 	body, err = util.HTTPGet(url)
 	if err != nil {
 		return
@@ -62,13 +64,20 @@ func (ctx *Context) GetAccessTokenFromServer() (resAccessToken ResAccessToken, e
 	if err != nil {
 		return
 	}
-	if resAccessToken.ErrMsg != "" {
+	if len(resAccessToken.ErrMsg) > 0 {
 		err = fmt.Errorf("get access_token error : errcode=%v , errormsg=%v", resAccessToken.ErrCode, resAccessToken.ErrMsg)
 		return
 	}
 
 	accessTokenCacheKey := fmt.Sprintf("access_token_%s", ctx.AppID)
-	expires := resAccessToken.ExpiresIn - 1500
+
+	// 时间缓冲
+	expires := resAccessToken.ExpiresIn
+	if expires < 1 {
+		expires = 3600
+	} else {
+		expires -= 150
+	}
 	err = ctx.Cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
 	return
 }
