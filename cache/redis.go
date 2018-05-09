@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 )
 
 //Redis redis cache
@@ -43,6 +43,11 @@ func NewRedis(opts *RedisOpts) *Redis {
 		},
 	}
 	return &Redis{pool}
+}
+
+//SetConn 设置conn
+func (r *Redis) SetConn(conn *redis.Pool) {
+	r.conn = conn	
 }
 
 //Get 获取一个值
