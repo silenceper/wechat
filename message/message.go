@@ -69,6 +69,7 @@ type MixMessage struct {
 	//基本消息
 	MsgID        int64   `xml:"MsgId"`
 	Content      string  `xml:"Content"`
+	Recognition  string  `xml:"Recognition"`
 	PicURL       string  `xml:"PicUrl"`
 	MediaID      string  `xml:"MediaId"`
 	Format       string  `xml:"Format"`
