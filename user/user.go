@@ -83,7 +83,7 @@ func (user *User) GetUserInfo(openID string) (userInfo *Info, err error) {
 }
 
 //GetUserLists 获取用户列表
-func (user *User) GetUserLists(nextOpenID string) (userList *UserList, err error) {
+func (user *User) GetUserList(nextOpenID string) (userList *UserList, err error) {
 	var accessToken string
 	accessToken, err = user.GetAccessToken()
 	if err != nil {
