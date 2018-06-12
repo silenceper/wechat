@@ -5,14 +5,17 @@ import (
 	"errors"
 	"fmt"
 
+	"time"
+
 	"github.com/sankeyou/wechat/context"
 	"github.com/sankeyou/wechat/util"
 )
 
 const (
-	addNewsURL     = "https://api.weixin.qq.com/cgi-bin/material/add_news"
-	addMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/add_material"
-	delMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/del_material"
+	addNewsURL          = "https://api.weixin.qq.com/cgi-bin/material/add_news"
+	addMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/add_material"
+	delMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/del_material"
+	batchGetMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/batchget_material"
 )
 
 //Material 素材管理
@@ -193,4 +196,62 @@ func (material *Material) DeleteMaterial(mediaID string) error {
 		return fmt.Errorf("DeleteMaterial error : errcode=%v , errmsg=%v", resDeleteMaterial.ErrCode, resDeleteMaterial.ErrMsg)
 	}
 	return nil
+}
+
+type reqGetMaterialList struct {
+	Type   string `json:"type"`
+	Offset int    `json:"offset"`
+	Count  int    `json:"count"`
+}
+
+//UserList 用户列表
+type MaterialList struct {
+	util.CommonError
+	TotalCount int64 `json:"total_count"`
+	ItemCount  int64 `json:"item_count"`
+	Item       []struct {
+		MediaId string `json:"media_id"`
+		Context struct {
+			NewsItem []struct {
+				Title            string `json:"title"`
+				ThumbMediaId     string `json:"thumb_media_id"`
+				ShowCoverPic     string `json:"show_cover_pic"`
+				Author           string `json:"author"`
+				Digest           string `json:"digest"`
+				Content          string `json:"content"`
+				Url              string `json:"url"`
+				ContentSourceUrl string `json:"content_source_url"`
+			} `json:"news_item"`
+		} `json:"context"`
+		UpdateTime time.Time `json:"update_time"`
+	} `json:"item"`
+	NextOpenID string `json:"next_openid"`
+}
+
+//GetMaterialLists 获取素材列表
+func (material *Material) GetMaterialList(material_type string, offset, count int) (materialList *MaterialList, err error) {
+	accessToken, err := material.GetAccessToken()
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf("%s?access_token=%s", batchGetMaterialURL, accessToken)
+	response, err := util.PostJSON(uri, reqGetMaterialList{
+		Type:   material_type,
+		Offset: offset,
+		Count:  count,
+	})
+	if err != nil {
+		return
+	}
+	materialList = new(MaterialList)
+	err = json.Unmarshal(response, materialList)
+	if err != nil {
+		return
+	}
+	if materialList.ErrCode != 0 {
+		err = fmt.Errorf("GetUserInfo Error , errcode=%d , errmsg=%s", materialList.ErrCode, materialList.ErrMsg)
+		return
+	}
+	return
 }
