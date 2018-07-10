@@ -286,7 +286,6 @@ func (menu *Menu) GetCurrentSelfMenuInfo() (resSelfMenuInfo ResSelfMenuInfo, err
 	if err != nil {
 		return
 	}
-	fmt.Println(string(response))
 	err = json.Unmarshal(response, &resSelfMenuInfo)
 	if err != nil {
 		return
