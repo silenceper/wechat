@@ -24,10 +24,12 @@ type Params struct {
 	Body       string
 	OutTradeNo string
 	OpenID     string
+	Attach     string
 }
 
 // Config 是传出用于 jsdk 用的参数
 type Config struct {
+	AppId     string
 	Timestamp int64
 	NonceStr  string
 	PrePayID  string
@@ -87,8 +89,8 @@ func NewPay(ctx *context.Context) *Pay {
 func (pcf *Pay) PrePayID(p *Params) (prePayID string, err error) {
 	nonceStr := util.RandomStr(32)
 	tradeType := "JSAPI"
-	template := "appid=%s&body=%s&mch_id=%s&nonce_str=%s&notify_url=%s&openid=%s&out_trade_no=%s&spbill_create_ip=%s&total_fee=%s&trade_type=%s&key=%s"
-	str := fmt.Sprintf(template, pcf.AppID, p.Body, pcf.PayMchID, nonceStr, pcf.PayNotifyURL, p.OpenID, p.OutTradeNo, p.CreateIP, p.TotalFee, tradeType, pcf.PayKey)
+	template := "appid=%s&attach=%s&body=%s&mch_id=%s&nonce_str=%s&notify_url=%s&openid=%s&out_trade_no=%s&spbill_create_ip=%s&total_fee=%s&trade_type=%s&key=%s"
+	str := fmt.Sprintf(template, pcf.AppID, p.Attach, p.Body, pcf.PayMchID, nonceStr, pcf.PayNotifyURL, p.OpenID, p.OutTradeNo, p.CreateIP, p.TotalFee, tradeType, pcf.PayKey)
 	sign := util.MD5Sum(str)
 	request := payRequest{
 		AppID:          pcf.AppID,
@@ -102,6 +104,7 @@ func (pcf *Pay) PrePayID(p *Params) (prePayID string, err error) {
 		NotifyURL:      pcf.PayNotifyURL,
 		TradeType:      tradeType,
 		OpenID:         p.OpenID,
+		Attach:         p.Attach,
 	}
 	rawRet, err := util.PostXML(payGateway, request)
 	if err != nil {
@@ -120,4 +123,21 @@ func (pcf *Pay) PrePayID(p *Params) (prePayID string, err error) {
 		return "", errors.New(payRet.ErrCode + payRet.ErrCodeDes)
 	}
 	return "", errors.New("[msg : xmlUnmarshalError] [rawReturn : " + string(rawRet) + "] [params : " + str + "] [sign : " + sign + "]")
+}
+
+// 获取js配置
+func (pcf *Pay) GetPayJsConf(prePayID string) (config *Config) {
+	config = new(Config)
+	nonceStr := util.RandomStr(32)
+	timeStamp := util.GetCurrTs()
+	config.NonceStr = nonceStr
+	config.Timestamp = timeStamp
+	config.PrePayID = prePayID
+	config.SignType = "MD5"
+	config.AppId = pcf.AppID
+	template := "appId=%s&nonceStr=%s&package=%s&signType=%s&timeStamp=%d&key=%s"
+	str := fmt.Sprintf(template, pcf.AppID, nonceStr, "prepay_id="+prePayID, "MD5", timeStamp, pcf.PayKey)
+	sign := util.MD5Sum(str)
+	config.Sign = sign
+	return
 }
