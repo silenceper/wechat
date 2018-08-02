@@ -67,7 +67,7 @@ func (tpl *Template) Send(msg *Message) (msgID int64, err error) {
 	}
 	if result.ErrCode != 0 {
 		err = fmt.Errorf("template msg send error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return
+		return msgID, err
 	}
 	msgID = result.MsgID
 	return msgID, err
