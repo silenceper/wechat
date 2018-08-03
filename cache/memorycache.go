@@ -12,13 +12,13 @@ type MemoryCache struct {
 	stopGc            chan bool       //停止gc管道标识
 }
 
-// chche item
+// Item Cache
 type Item struct {
 	Object 			interface{}
 	Expiration  	int64
 
 }
-//new memory cache
+//NewMemoryCache
 func NewMemoryCache() *MemoryCache {
 	data := make(map[string]Item)
 	gcInterval, _ := time.ParseDuration("3s")
@@ -60,7 +60,7 @@ func (mem *MemoryCache) Delete(key string)(error) {
 	delete(mem.Data, key)
 	return nil
 }
-//check isExpired
+//IsExpired check
 func (item Item) IsExpired() bool {
 	if item.Expiration == 0 {
 		return false
