@@ -18,7 +18,7 @@ type Item struct {
 	Expiration  	int64
 
 }
-//NewMemoryCache
+//NewMemoryCache  create new MemoryCache
 func NewMemoryCache() *MemoryCache {
 	data := make(map[string]Item)
 	gcInterval, _ := time.ParseDuration("3s")
@@ -68,7 +68,7 @@ func (item Item) IsExpired() bool {
 	return time.Now().UnixNano() > item.Expiration //如果当前时间超则过期
 }
 
-//循环gc
+//gcLoop 循环gc
 func (mem *MemoryCache) gcLoop() {
 	ticker := time.NewTicker(mem.gcInterval) //初始化一个定时器
 	for {
@@ -82,7 +82,7 @@ func (mem *MemoryCache) gcLoop() {
 	}
 }
 
-// remove keys
+//clearItems remove keys
 func (mem *MemoryCache) clearItems() {
 	mem.mu.Lock()
 	defer mem.mu.Unlock()
