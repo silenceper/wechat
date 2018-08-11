@@ -7,6 +7,8 @@ type Button struct {
 	Key        string    `json:"key,omitempty"`
 	URL        string    `json:"url,omitempty"`
 	MediaID    string    `json:"media_id,omitempty"`
+	APPID        string    `json:"appid,omitempty"`
+	PagePath        string    `json:"pagepath,omitempty"`
 	SubButtons []*Button `json:"sub_button,omitempty"`
 }
 
