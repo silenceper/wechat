@@ -31,10 +31,10 @@ const (
 type Media struct {
 	util.CommonError
 
-	Type      MediaType `json:"type"`
-	MediaID   string    `json:"media_id"`
-	ThumbMediaID string `json:"thumb_media_id"`
-	CreatedAt int64     `json:"created_at"`
+	Type         MediaType `json:"type"`
+	MediaID      string    `json:"media_id"`
+	ThumbMediaID string    `json:"thumb_media_id"`
+	CreatedAt    int64     `json:"created_at"`
 }
 
 //MediaUpload 临时素材上传
