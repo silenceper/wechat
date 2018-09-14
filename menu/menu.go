@@ -134,15 +134,8 @@ func (menu *Menu) SetMenu(buttons []*Button) error {
 	if err != nil {
 		return err
 	}
-	var commError util.CommonError
-	err = json.Unmarshal(response, &commError)
-	if err != nil {
-		return err
-	}
-	if commError.ErrCode != 0 {
-		return fmt.Errorf("SetMenu Error , errcode=%d , errmsg=%s", commError.ErrCode, commError.ErrMsg)
-	}
-	return nil
+
+	return util.DecodeWithCommonError(response, "SetMenu")
 }
 
 //GetMenu 获取菜单配置
@@ -180,15 +173,8 @@ func (menu *Menu) DeleteMenu() error {
 	if err != nil {
 		return err
 	}
-	var commError util.CommonError
-	err = json.Unmarshal(response, &commError)
-	if err != nil {
-		return err
-	}
-	if commError.ErrCode != 0 {
-		return fmt.Errorf("GetMenu Error , errcode=%d , errmsg=%s", commError.ErrCode, commError.ErrMsg)
-	}
-	return nil
+
+	return util.DecodeWithCommonError(response, "GetMenu")
 }
 
 //AddConditional 添加个性化菜单
@@ -208,15 +194,8 @@ func (menu *Menu) AddConditional(buttons []*Button, matchRule *MatchRule) error 
 	if err != nil {
 		return err
 	}
-	var commError util.CommonError
-	err = json.Unmarshal(response, &commError)
-	if err != nil {
-		return err
-	}
-	if commError.ErrCode != 0 {
-		return fmt.Errorf("AddConditional Error , errcode=%d , errmsg=%s", commError.ErrCode, commError.ErrMsg)
-	}
-	return nil
+
+	return util.DecodeWithCommonError(response, "AddConditional")
 }
 
 //DeleteConditional 删除个性化菜单
@@ -235,15 +214,8 @@ func (menu *Menu) DeleteConditional(menuID int64) error {
 	if err != nil {
 		return err
 	}
-	var commError util.CommonError
-	err = json.Unmarshal(response, &commError)
-	if err != nil {
-		return err
-	}
-	if commError.ErrCode != 0 {
-		return fmt.Errorf("DeleteConditional Error , errcode=%d , errmsg=%s", commError.ErrCode, commError.ErrMsg)
-	}
-	return nil
+
+	return util.DecodeWithCommonError(response, "DeleteConditional")
 }
 
 //MenuTryMatch 菜单匹配
