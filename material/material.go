@@ -184,13 +184,6 @@ func (material *Material) DeleteMaterial(mediaID string) error {
 	if err != nil {
 		return err
 	}
-	var resDeleteMaterial util.CommonError
-	err = json.Unmarshal(response, &resDeleteMaterial)
-	if err != nil {
-		return err
-	}
-	if resDeleteMaterial.ErrCode != 0 {
-		return fmt.Errorf("DeleteMaterial error : errcode=%v , errmsg=%v", resDeleteMaterial.ErrCode, resDeleteMaterial.ErrMsg)
-	}
-	return nil
+
+	return util.DecodeWithCommonError(response, "DeleteMaterial")
 }

@@ -47,7 +47,7 @@ func NewRedis(opts *RedisOpts) *Redis {
 
 //SetConn 设置conn
 func (r *Redis) SetConn(conn *redis.Pool) {
-	r.conn = conn	
+	r.conn = conn
 }
 
 //Get 获取一个值
