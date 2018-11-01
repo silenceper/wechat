@@ -18,6 +18,8 @@ import (
 type Server struct {
 	*context.Context
 
+	debug bool
+
 	openID string
 
 	messageHandler func(message.MixMessage) *message.Reply
@@ -38,6 +40,11 @@ func NewServer(context *context.Context) *Server {
 	srv := new(Server)
 	srv.Context = context
 	return srv
+}
+
+// SetDebug set debug field
+func (srv *Server) SetDebug(debug bool) {
+	srv.debug = debug
 }
 
 //Serve 处理微信的请求消息
@@ -65,6 +72,9 @@ func (srv *Server) Serve() error {
 
 //Validate 校验请求是否合法
 func (srv *Server) Validate() bool {
+	if srv.debug {
+		return true
+	}
 	timestamp := srv.Query("timestamp")
 	nonce := srv.Query("nonce")
 	signature := srv.Query("signature")

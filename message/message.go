@@ -69,6 +69,7 @@ type MixMessage struct {
 	//基本消息
 	MsgID        int64   `xml:"MsgId"`
 	Content      string  `xml:"Content"`
+	Recognition  string  `xml:"Recognition"`
 	PicURL       string  `xml:"PicUrl"`
 	MediaID      string  `xml:"MediaId"`
 	Format       string  `xml:"Format"`
@@ -82,15 +83,15 @@ type MixMessage struct {
 	URL          string  `xml:"Url"`
 
 	//事件相关
-	Event     EventType `xml:"Event"`
-	EventKey  string    `xml:"EventKey"`
-	Ticket    string    `xml:"Ticket"`
-	Latitude  string    `xml:"Latitude"`
-	Longitude string    `xml:"Longitude"`
-	Precision string    `xml:"Precision"`
-	MenuID    string    `xml:"MenuId"`
-	Status    string    `xml:"Status"`
-	SessionFrom string  `xml:"SessionFrom"`
+	Event       EventType `xml:"Event"`
+	EventKey    string    `xml:"EventKey"`
+	Ticket      string    `xml:"Ticket"`
+	Latitude    string    `xml:"Latitude"`
+	Longitude   string    `xml:"Longitude"`
+	Precision   string    `xml:"Precision"`
+	MenuID      string    `xml:"MenuId"`
+	Status      string    `xml:"Status"`
+	SessionFrom string    `xml:"SessionFrom"`
 
 	ScanCodeInfo struct {
 		ScanType   string `xml:"ScanType"`
