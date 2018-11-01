@@ -7,6 +7,8 @@ type Button struct {
 	Key        string    `json:"key,omitempty"`
 	URL        string    `json:"url,omitempty"`
 	MediaID    string    `json:"media_id,omitempty"`
+	AppID      string    `json:"appid,omitempty"`
+	PagePath   string    `json:"pagepath,omitempty"`
 	SubButtons []*Button `json:"sub_button,omitempty"`
 }
 
@@ -124,5 +126,18 @@ func (btn *Button) SetViewLimitedButton(name, mediaID string) {
 
 	btn.Key = ""
 	btn.URL = ""
+	btn.SubButtons = nil
+}
+
+//SetMiniprogramButton  设置 跳转小程序 类型按钮 (公众号后台必须已经关联小程序)
+func (btn *Button) SetMiniprogramButton(name, url, appID, pagePath string) {
+	btn.Type = "miniprogram"
+	btn.Name = name
+	btn.URL = url
+	btn.AppID = appID
+	btn.PagePath = pagePath
+
+	btn.Key = ""
+	btn.MediaID = ""
 	btn.SubButtons = nil
 }
