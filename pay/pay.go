@@ -35,8 +35,8 @@ type Config struct {
 	Sign      string
 }
 
-// payResult 是 unifie order 接口的返回
-type payResult struct {
+// PreOrder 是 unifie order 接口的返回
+type PreOrder struct {
 	ReturnCode string `xml:"return_code"`
 	ReturnMsg  string `xml:"return_msg"`
 	AppID      string `xml:"appid,omitempty"`
@@ -83,8 +83,8 @@ func NewPay(ctx *context.Context) *Pay {
 	return &pay
 }
 
-// PrePayID will request wechat merchant api and request for a pre payment order id
-func (pcf *Pay) PrePayID(p *Params) (prePayID string, err error) {
+// PrePayOrder return data for invoke wechat payment
+func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	nonceStr := util.RandomStr(32)
 	tradeType := "JSAPI"
 	template := "appid=%s&body=%s&mch_id=%s&nonce_str=%s&notify_url=%s&openid=%s&out_trade_no=%s&spbill_create_ip=%s&total_fee=%s&trade_type=%s&key=%s"
@@ -105,19 +105,34 @@ func (pcf *Pay) PrePayID(p *Params) (prePayID string, err error) {
 	}
 	rawRet, err := util.PostXML(payGateway, request)
 	if err != nil {
-		return "", errors.New(err.Error() + " parameters : " + str)
+		return
 	}
-	payRet := payResult{}
-	err = xml.Unmarshal(rawRet, &payRet)
+	err = xml.Unmarshal(rawRet, &payOrder)
 	if err != nil {
-		return "", errors.New(err.Error())
+		return
 	}
-	if payRet.ReturnCode == "SUCCESS" {
+	if payOrder.ReturnCode == "SUCCESS" {
 		//pay success
-		if payRet.ResultCode == "SUCCESS" {
-			return payRet.PrePayID, nil
+		if payOrder.ResultCode == "SUCCESS" {
+			err = nil
+			return
 		}
-		return "", errors.New(payRet.ErrCode + payRet.ErrCodeDes)
+		err = errors.New(payOrder.ErrCode + payOrder.ErrCodeDes)
+		return
 	}
-	return "", errors.New("[msg : xmlUnmarshalError] [rawReturn : " + string(rawRet) + "] [params : " + str + "] [sign : " + sign + "]")
+	err = errors.New("[msg : xmlUnmarshalError] [rawReturn : " + string(rawRet) + "] [params : " + str + "] [sign : " + sign + "]")
+	return
+}
+
+// PrePayID will request wechat merchant api and request for a pre payment order id
+func (pcf *Pay) PrePayID(p *Params) (prePayID string, err error) {
+	order, err := pcf.PrePayOrder(p)
+	if err != nil {
+		return
+	}
+	if order.PrePayID == "" {
+		err = errors.New("empty prepayid")
+	}
+	prePayID = order.PrePayID
+	return
 }
