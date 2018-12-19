@@ -24,6 +24,7 @@ type Params struct {
 	Body       string
 	OutTradeNo string
 	OpenID     string
+	TradeType  string
 }
 
 // Config 是传出用于 jsdk 用的参数
@@ -86,9 +87,8 @@ func NewPay(ctx *context.Context) *Pay {
 // PrePayOrder return data for invoke wechat payment
 func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	nonceStr := util.RandomStr(32)
-	tradeType := "JSAPI"
 	template := "appid=%s&body=%s&mch_id=%s&nonce_str=%s&notify_url=%s&openid=%s&out_trade_no=%s&spbill_create_ip=%s&total_fee=%s&trade_type=%s&key=%s"
-	str := fmt.Sprintf(template, pcf.AppID, p.Body, pcf.PayMchID, nonceStr, pcf.PayNotifyURL, p.OpenID, p.OutTradeNo, p.CreateIP, p.TotalFee, tradeType, pcf.PayKey)
+	str := fmt.Sprintf(template, pcf.AppID, p.Body, pcf.PayMchID, nonceStr, pcf.PayNotifyURL, p.OpenID, p.OutTradeNo, p.CreateIP, p.TotalFee, p.TradeType, pcf.PayKey)
 	sign := util.MD5Sum(str)
 	request := payRequest{
 		AppID:          pcf.AppID,
@@ -100,7 +100,7 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		TotalFee:       p.TotalFee,
 		SpbillCreateIP: p.CreateIP,
 		NotifyURL:      pcf.PayNotifyURL,
-		TradeType:      tradeType,
+		TradeType:      p.TradeType,
 		OpenID:         p.OpenID,
 	}
 	rawRet, err := util.PostXML(payGateway, request)
