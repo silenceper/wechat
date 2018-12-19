@@ -8,6 +8,9 @@ type MsgType string
 // EventType 事件类型
 type EventType string
 
+// InfoType 第三方平台授权事件类型
+type InfoType string
+
 const (
 	//MsgTypeText 表示文本消息
 	MsgTypeText MsgType = "text"
@@ -62,6 +65,17 @@ const (
 	EventTemplateSendJobFinish = "TEMPLATESENDJOBFINISH"
 )
 
+const (
+	// InfoTypeVerifyTicket 返回ticket
+	InfoTypeVerifyTicket InfoType = "component_verify_ticket"
+	// InfoTypeAuthorized 授权
+	InfoTypeAuthorized = "authorized"
+	// InfoTypeUnauthorized 取消授权
+	InfoTypeUnauthorized = "unauthorized"
+	// InfoTypeUpdateAuthorized 更新授权
+	InfoTypeUpdateAuthorized = "updateauthorized"
+)
+
 //MixMessage 存放所有微信发送过来的消息和事件
 type MixMessage struct {
 	CommonToken
@@ -110,6 +124,15 @@ type MixMessage struct {
 		Label     string  `xml:"Label"`
 		Poiname   string  `xml:"Poiname"`
 	}
+
+	// 第三方平台相关
+	InfoType                     InfoType `xml:"InfoType"`
+	AppID                        string   `xml:"AppId"`
+	ComponentVerifyTicket        string   `xml:"ComponentVerifyTicket"`
+	AuthorizerAppid              string   `xml:"AuthorizerAppid"`
+	AuthorizationCode            string   `xml:"AuthorizationCode"`
+	AuthorizationCodeExpiredTime int64    `xml:"AuthorizationCodeExpiredTime"`
+	PreAuthCode                  string   `xml:"PreAuthCode"`
 }
 
 //EventPic 发图事件推送
