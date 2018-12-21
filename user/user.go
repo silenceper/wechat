@@ -3,6 +3,7 @@ package user
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 
 	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/util"
@@ -11,6 +12,7 @@ import (
 const (
 	userInfoURL     = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN"
 	updateRemarkURL = "https://api.weixin.qq.com/cgi-bin/user/info/updateremark?access_token=%s"
+	userListURL     = "https://api.weixin.qq.com/cgi-bin/user/get"
 )
 
 //User 用户管理
@@ -43,6 +45,16 @@ type Info struct {
 	Remark        string  `json:"remark"`
 	GroupID       int32   `json:"groupid"`
 	TagidList     []int32 `json:"tagid_list"`
+}
+
+// OpenidList 用户列表
+type OpenidList struct {
+	Total int `json:"total"`
+	Count int `json:"count"`
+	Data  struct {
+		OpenIDs []string `json:"openid"`
+	} `json:"data"`
+	NextOpenID string `json:"next_openid"`
 }
 
 //GetUserInfo 获取用户基本信息
@@ -87,4 +99,53 @@ func (user *User) UpdateRemark(openID, remark string) (err error) {
 	}
 
 	return util.DecodeWithCommonError(response, "UpdateRemark")
+}
+
+// ListUserOpenIDs 返回用户列表
+func (user *User) ListUserOpenIDs(nextOpenid ...string) (*OpenidList, error) {
+	accessToken, err := user.GetAccessToken()
+	if err != nil {
+		return nil, err
+	}
+
+	uri, _ := url.Parse(userListURL)
+	q := uri.Query()
+	q.Set("access_token", accessToken)
+	if len(nextOpenid) > 0 && nextOpenid[0] != "" {
+		q.Set("next_openid", nextOpenid[0])
+	}
+	uri.RawQuery = q.Encode()
+
+	response, err := util.HTTPGet(uri.String())
+	if err != nil {
+		return nil, err
+	}
+
+	userlist := new(OpenidList)
+	err = json.Unmarshal(response, userlist)
+	if err != nil {
+		return nil, err
+	}
+
+	return userlist, nil
+}
+
+// ListAllUserOpenIDs 返回所有用户OpenID列表
+func (user *User) ListAllUserOpenIDs() ([]string, error) {
+	nextOpenid := ""
+	openids := []string{}
+	count := 0
+	for {
+		ul, err := user.ListUserOpenIDs(nextOpenid)
+		if err != nil {
+			return nil, err
+		}
+		openids = append(openids, ul.Data.OpenIDs...)
+		count += ul.Count
+		if ul.Total > count {
+			nextOpenid = ul.NextOpenID
+		} else {
+			return openids, nil
+		}
+	}
 }
