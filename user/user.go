@@ -2,6 +2,7 @@ package user
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/silenceper/wechat/context"
@@ -9,8 +10,9 @@ import (
 )
 
 const (
-	userInfoURL     = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN"
-	updateRemarkURL = "https://api.weixin.qq.com/cgi-bin/user/info/updateremark?access_token=%s"
+	userInfoURL     	= "https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN"
+	batchGetUserInfoURL = "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=%s"
+	updateRemarkURL 	= "https://api.weixin.qq.com/cgi-bin/user/info/updateremark?access_token=%s"
 )
 
 //User 用户管理
@@ -45,6 +47,12 @@ type Info struct {
 	TagidList     []int32 `json:"tagid_list"`
 }
 
+// BatchUserQuery 待查询的用户列表
+type BatchUserQuery struct {
+	OpenId 		string		`json:"openid"`
+	Lang 		string		`json:"lang"`
+}
+
 //GetUserInfo 获取用户基本信息
 func (user *User) GetUserInfo(openID string) (userInfo *Info, err error) {
 	var accessToken string
@@ -69,6 +77,36 @@ func (user *User) GetUserInfo(openID string) (userInfo *Info, err error) {
 		return
 	}
 	return
+}
+
+// BatchGetUser 批量获取用户基本信息
+func (user *User) BatchGetUser(batchUserQuery ... *BatchUserQuery)([]*Info,error){
+	if len(batchUserQuery)>100{
+		return nil,errors.New("最多支持一次拉取100条")
+	}
+	var accessToken string
+	accessToken, err := user.GetAccessToken()
+	if err != nil {
+		return nil,err
+	}
+
+	requestMap := make(map[string]interface{})
+	requestMap["user_list"] = batchUserQuery
+	uri := fmt.Sprintf(batchGetUserInfoURL, accessToken)
+	response, err := util.PostJSON(uri, requestMap)
+	if err != nil {
+		return nil,err
+	}
+	//	batchUserQueryResponse 批量查询返回值
+	type batchUserQueryResponse struct {
+		List    []*Info		`json:"user_info_list"`
+	}
+	userList := &batchUserQueryResponse{}
+	err = json.Unmarshal(response, userList)
+	if err != nil {
+		return nil,err
+	}
+	return userList.List,nil
 }
 
 // UpdateRemark 设置用户备注名
