@@ -49,7 +49,7 @@ type Info struct {
 
 // BatchUserQuery 待查询的用户列表
 type BatchUserQuery struct {
-	OpenId 		string		`json:"openid"`
+	OpenID 		string		`json:"openid"`
 	Lang 		string		`json:"lang"`
 }
 
