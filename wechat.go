@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/JefferyWang/wechat/miniprogram"
 	"github.com/silenceper/wechat/cache"
 	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/js"
@@ -98,4 +99,9 @@ func (wc *Wechat) GetTemplate() *template.Template {
 // GetPay 返回支付消息的实例
 func (wc *Wechat) GetPay() *pay.Pay {
 	return pay.NewPay(wc.Context)
+}
+
+// GetMiniProgram 获取小程序的实例
+func (wc *Wechat) GetMiniProgram() *miniprogram.MiniProgram {
+	return miniprogram.NewMiniProgram(wc.Context)
 }
