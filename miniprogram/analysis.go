@@ -87,7 +87,7 @@ func (wxa *MiniProgram) GetAnalysisMonthlyRetain(beginDate, endDate string) (res
 	return wxa.getAnalysisRetain(getAnalysisMonthlyRetainURL, beginDate, endDate)
 }
 
-// GetAnalysisWeeklyRetain 获取用户访问小程序日留存
+// GetAnalysisWeeklyRetain 获取用户访问小程序周留存
 func (wxa *MiniProgram) GetAnalysisWeeklyRetain(beginDate, endDate string) (result ResAnalysisRetain, err error) {
 	return wxa.getAnalysisRetain(getAnalysisWeeklyRetainURL, beginDate, endDate)
 }
@@ -166,12 +166,12 @@ func (wxa *MiniProgram) GetAnalysisDailyVisitTrend(beginDate, endDate string) (r
 	return wxa.getAnalysisVisitTrend(getAnalysisDailyVisitTrendURL, beginDate, endDate)
 }
 
-// GetAnalysisMonthlyVisitTrend 获取用户访问小程序数据日趋势
+// GetAnalysisMonthlyVisitTrend 获取用户访问小程序数据月趋势
 func (wxa *MiniProgram) GetAnalysisMonthlyVisitTrend(beginDate, endDate string) (result ResAnalysisVisitTrend, err error) {
 	return wxa.getAnalysisVisitTrend(getAnalysisMonthlyVisitTrendURL, beginDate, endDate)
 }
 
-// GetAnalysisWeeklyVisitTrend 获取用户访问小程序数据日趋势
+// GetAnalysisWeeklyVisitTrend 获取用户访问小程序数据周趋势
 func (wxa *MiniProgram) GetAnalysisWeeklyVisitTrend(beginDate, endDate string) (result ResAnalysisVisitTrend, err error) {
 	return wxa.getAnalysisVisitTrend(getAnalysisWeeklyVisitTrendURL, beginDate, endDate)
 }
