@@ -12,15 +12,15 @@ import (
 	"net/url"
 	"os"
 )
-// proxyUrl 代理URL
-var proxyUrl string
+// proxyURL 代理URL
+var proxyURL string
 
 // proxy 是否开启代理
 var proxy bool
 
 // SetProxy 设置代理URL
 func SetProxy(url string){
-	proxyUrl = url
+	proxyURL = url
 	proxy = len(url)>0
 }
 // OpenProxy 打开代理
@@ -88,7 +88,7 @@ func PostFile(fieldname, filename, uri string) ([]byte, error) {
 func GetHTTPClient()(httpClient *http.Client){
 	if proxy {
 		proxy := func(_ *http.Request) (*url.URL, error) {
-			return url.Parse(proxyUrl)
+			return url.Parse(proxyURL)
 		}
 		httpTransport := &http.Transport{
 			Proxy: proxy,
