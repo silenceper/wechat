@@ -8,9 +8,9 @@ import (
 
 var refundGateway = "https://api.mch.weixin.qq.com/secapi/pay/refund"
 
-//Refund Parameter
+//RefundParams 调用参数
 type RefundParams struct {
-	TransactionId string
+	TransactionID string
 	OutRefundNo   string
 	TotalFee      string
 	RefundFee     string
@@ -18,14 +18,14 @@ type RefundParams struct {
 	RootCa        string //ca证书
 }
 
-//Refund request
+//refundRequest 接口请求参数
 type refundRequest struct {
 	AppID         string `xml:"appid"`
 	MchID         string `xml:"mch_id"`
 	NonceStr      string `xml:"nonce_str"`
 	Sign          string `xml:"sign"`
 	SignType      string `xml:"sign_type,omitempty"`
-	TransactionId string `xml:"transaction_id"`
+	TransactionID string `xml:"transaction_id"`
 	OutRefundNo   string `xml:"out_refund_no"`
 	TotalFee      string `xml:"total_fee"`
 	RefundFee     string `xml:"refund_fee"`
@@ -33,7 +33,7 @@ type refundRequest struct {
 	//NotifyUrl     string `xml:"notify_url,omitempty"`
 }
 
-//Refund Response
+//RefundResponse 接口返回
 type RefundResponse struct {
 	ReturnCode          string `xml:"return_code"`
 	ReturnMsg           string `xml:"return_msg"`
@@ -44,10 +44,10 @@ type RefundResponse struct {
 	ResultCode          string `xml:"result_code,omitempty"`
 	ErrCode             string `xml:"err_code,omitempty"`
 	ErrCodeDes          string `xml:"err_code_des,omitempty"`
-	TransactionId       string `xml:"transaction_id,omitempty"`
+	TransactionID       string `xml:"transaction_id,omitempty"`
 	OutTradeNo          string `xml:"out_trade_no,omitempty"`
 	OutRefundNo         string `xml:"out_refund_no,omitempty"`
-	RefundId            string `xml:"refund_id,omitempty"`
+	RefundID            string `xml:"refund_id,omitempty"`
 	RefundFee           string `xml:"refund_fee,omitempty"`
 	SettlementRefundFee string `xml:"settlement_refund_fee,omitempty"`
 	TotalFee            string `xml:"total_fee,omitempty"`
@@ -57,7 +57,7 @@ type RefundResponse struct {
 	CashFeeType         string `xml:"cash_fee_type,omitempty"`
 }
 
-//退款申请
+//Refund 退款申请
 func (pcf *Pay) Refund(p *RefundParams) (rsp RefundResponse, err error) {
 	nonceStr := util.RandomStr(32)
 	param := make(map[string]interface{})
@@ -69,7 +69,7 @@ func (pcf *Pay) Refund(p *RefundParams) (rsp RefundResponse, err error) {
 	param["refund_fee"] = p.RefundFee
 	param["total_fee"] = p.TotalFee
 	param["sign_type"] = "MD5"
-	param["transaction_id"] = p.TransactionId
+	param["transaction_id"] = p.TransactionID
 
 	bizKey := "&key=" + pcf.PayKey
 	str := orderParam(param, bizKey)
@@ -80,7 +80,7 @@ func (pcf *Pay) Refund(p *RefundParams) (rsp RefundResponse, err error) {
 		NonceStr:      nonceStr,
 		Sign:          sign,
 		SignType:      "MD5",
-		TransactionId: p.TransactionId,
+		TransactionID: p.TransactionID,
 		OutRefundNo:   p.OutRefundNo,
 		TotalFee:      p.TotalFee,
 		RefundFee:     p.RefundFee,

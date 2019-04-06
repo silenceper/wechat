@@ -146,7 +146,7 @@ func PostXML(uri string, obj interface{}) ([]byte, error) {
 	return ioutil.ReadAll(response.Body)
 }
 
-//http TLS
+//httpWithTLS CA证书
 func httpWithTLS(rootCa, key string) (*http.Client, error) {
 	var client *http.Client
 	certData, err := ioutil.ReadFile(rootCa)
@@ -165,7 +165,7 @@ func httpWithTLS(rootCa, key string) (*http.Client, error) {
 	return client, nil
 }
 
-//将Pkcs12转成Pem
+//pkcs12ToPem 将Pkcs12转成Pem
 func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
 	blocks, err := pkcs12.ToPEM(p12, password)
 	defer func() {
@@ -187,7 +187,7 @@ func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
 	return cert
 }
 
-//Post XML with TLS
+//PostXMLWithTLS:Post XML with TLS
 func PostXMLWithTLS(uri string, obj interface{}, ca, key string) ([]byte, error) {
 	xmlData, err := xml.Marshal(obj)
 	if err != nil {
