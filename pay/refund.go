@@ -1,16 +1,9 @@
 package pay
 
 import (
-	"bytes"
-	"crypto/tls"
-	"encoding/pem"
 	"encoding/xml"
 	"fmt"
 	"github.com/akikistyle/wechat/util"
-	"golang.org/x/crypto/pkcs12"
-	"io/ioutil"
-	"log"
-	"net/http"
 )
 
 var refundGateway = "https://api.mch.weixin.qq.com/secapi/pay/refund"
@@ -93,7 +86,7 @@ func (pcf *Pay) Refund(p *RefundParams) (rsp RefundResponse, err error) {
 		RefundFee:     p.RefundFee,
 		RefundDesc:    p.RefundDesc,
 	}
-	rawRet, err := postXMLWithTLS(refundGateway, request, p.RootCa, pcf.PayMchID)
+	rawRet, err := util.PostXMLWithTLS(refundGateway, request, p.RootCa, pcf.PayMchID)
 	if err != nil {
 		return
 	}
@@ -112,69 +105,4 @@ func (pcf *Pay) Refund(p *RefundParams) (rsp RefundResponse, err error) {
 	err = fmt.Errorf("[msg : xmlUnmarshalError] [rawReturn : %s] [params : %s] [sign : %s]",
 		string(rawRet), str, sign)
 	return
-}
-
-//http TLS
-func httpWithTLS(rootCa, key string) (*http.Client, error) {
-	var client *http.Client
-	certData, err := ioutil.ReadFile(rootCa)
-	if err != nil {
-		return nil, fmt.Errorf("unable to find cert path=%s, error=%v", rootCa, err)
-	}
-	cert := pkcs12ToPem(certData, key)
-	config := &tls.Config{
-		Certificates: []tls.Certificate{cert},
-	}
-	tr := &http.Transport{
-		TLSClientConfig:    config,
-		DisableCompression: true,
-	}
-	client = &http.Client{Transport: tr}
-	return client, nil
-}
-
-//将Pkcs12转成Pem
-func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
-	blocks, err := pkcs12.ToPEM(p12, password)
-	defer func() {
-		if x := recover(); x != nil {
-			log.Print(x)
-		}
-	}()
-	if err != nil {
-		panic(err)
-	}
-	var pemData []byte
-	for _, b := range blocks {
-		pemData = append(pemData, pem.EncodeToMemory(b)...)
-	}
-	cert, err := tls.X509KeyPair(pemData, pemData)
-	if err != nil {
-		panic(err)
-	}
-	return cert
-}
-
-//Post XML with TLS
-func postXMLWithTLS(uri string, obj interface{}, ca, key string) ([]byte, error) {
-	xmlData, err := xml.Marshal(obj)
-	if err != nil {
-		return nil, err
-	}
-
-	body := bytes.NewBuffer(xmlData)
-	client, err := httpWithTLS(ca, key)
-	if err != nil {
-		return nil, err
-	}
-	response, err := client.Post(uri, "application/xml;charset=utf-8", body)
-	if err != nil {
-		return nil, err
-	}
-	defer response.Body.Close()
-
-	if response.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("http code error : uri=%v , statusCode=%v", uri, response.StatusCode)
-	}
-	return ioutil.ReadAll(response.Body)
 }
