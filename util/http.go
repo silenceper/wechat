@@ -187,7 +187,7 @@ func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
 	return cert
 }
 
-//PostXMLWithTLS:Post XML with TLS
+//PostXMLWithTLS perform a HTTP/POST request with XML body and TLS
 func PostXMLWithTLS(uri string, obj interface{}, ca, key string) ([]byte, error) {
 	xmlData, err := xml.Marshal(obj)
 	if err != nil {
