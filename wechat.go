@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/JefferyWang/wechat/miniprogram"
 	"github.com/silenceper/wechat/cache"
 	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/js"
@@ -104,4 +105,9 @@ func (wc *Wechat) GetPay() *pay.Pay {
 // GetQR 返回二维码的实例
 func (wc *Wechat) GetQR() *qr.QR {
 	return qr.NewQR(wc.Context)
+}
+
+// GetMiniProgram 获取小程序的实例
+func (wc *Wechat) GetMiniProgram() *miniprogram.MiniProgram {
+	return miniprogram.NewMiniProgram(wc.Context)
 }
