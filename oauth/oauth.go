@@ -56,6 +56,10 @@ type ResAccessToken struct {
 	RefreshToken string `json:"refresh_token"`
 	OpenID       string `json:"openid"`
 	Scope        string `json:"scope"`
+
+	// UnionID 只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。
+	// 公众号文档 https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842
+	UnionID string `json:"unionid"`
 }
 
 // GetUserAccessToken 通过网页授权的code 换取access_token(区别于context中的access_token)
