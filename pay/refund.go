@@ -3,7 +3,8 @@ package pay
 import (
 	"encoding/xml"
 	"fmt"
-	"github.com/akikistyle/wechat/util"
+
+	"github.com/silenceper/wechat/util"
 )
 
 var refundGateway = "https://api.mch.weixin.qq.com/secapi/pay/refund"
