@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/JefferyWang/wechat/util"
+	"github.com/silenceper/wechat/util"
 )
 
 const (

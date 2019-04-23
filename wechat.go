@@ -4,12 +4,12 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/JefferyWang/wechat/miniprogram"
 	"github.com/silenceper/wechat/cache"
 	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/js"
 	"github.com/silenceper/wechat/material"
 	"github.com/silenceper/wechat/menu"
+	"github.com/silenceper/wechat/miniprogram"
 	"github.com/silenceper/wechat/oauth"
 	"github.com/silenceper/wechat/pay"
 	"github.com/silenceper/wechat/qr"
