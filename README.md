@@ -96,6 +96,7 @@ Cache主要用来保存全局access_token以及js-sdk中的ticket：
 		- 检验access_token是否有效
 	- 获取js-sdk配置
 - [素材管理](#素材管理)
+- [小程序开发](#小程序开发)
 
 ## 消息管理
 
@@ -528,6 +529,110 @@ type Config struct {
 ## 素材管理
 
 [素材管理API](https://godoc.org/github.com/silenceper/wechat/material#Material)
+
+## 小程序开发
+
+获取小程序操作对象
+
+``` go
+memCache=cache.NewMemcache("127.0.0.1:11211")
+config := &wechat.Config{
+	AppID:     "xxx",
+	AppSecret: "xxx",
+	Cache:     memCache=cache.NewMemcache("127.0.0.1:11211"),
+}
+wc := wechat.NewWechat(config)
+
+wxa := wc.GetMiniProgram()
+```
+
+### 小程序登录凭证校验
+
+``` go
+func (wxa *MiniProgram) Code2Session(jsCode string) (result ResCode2Session, err error)
+```
+
+### 小程序数据统计
+
+**获取用户访问小程序日留存**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisDailyRetain(beginDate, endDate string) (result ResAnalysisRetain, err error)
+```
+
+**获取用户访问小程序月留存**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisMonthlyRetain(beginDate, endDate string) (result ResAnalysisRetain, err error)
+```
+
+**获取用户访问小程序周留存**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisWeeklyRetain(beginDate, endDate string) (result ResAnalysisRetain, err error)
+```
+
+**获取用户访问小程序数据概况**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisDailySummary(beginDate, endDate string) (result ResAnalysisDailySummary, err error)
+```
+
+**获取用户访问小程序数据日趋势**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisDailyVisitTrend(beginDate, endDate string) (result ResAnalysisVisitTrend, err error)
+```
+
+**获取用户访问小程序数据月趋势**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisMonthlyVisitTrend(beginDate, endDate string) (result ResAnalysisVisitTrend, err error)
+```
+
+**获取用户访问小程序数据周趋势**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisWeeklyVisitTrend(beginDate, endDate string) (result ResAnalysisVisitTrend, err error)
+```
+
+**获取小程序新增或活跃用户的画像分布数据**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisUserPortrait(beginDate, endDate string) (result ResAnalysisUserPortrait, err error)
+```
+
+**获取用户小程序访问分布数据**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisVisitDistribution(beginDate, endDate string) (result ResAnalysisVisitDistribution, err error)
+```
+
+**获取小程序页面访问数据**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisVisitPage(beginDate, endDate string) (result ResAnalysisVisitPage, err error)
+```
+
+### 小程序二维码生成
+
+**获取小程序二维码，适用于需要的码数量较少的业务场景**
+
+``` go
+func (wxa *MiniProgram) CreateWXAQRCode(coderParams QRCoder) (response []byte, err error)
+```
+
+**获取小程序码，适用于需要的码数量较少的业务场景**
+
+``` go
+func (wxa *MiniProgram) GetWXACode(coderParams QRCoder) (response []byte, err error)
+```
+
+**获取小程序码，适用于需要的码数量极多的业务场景**
+
+``` go
+func (wxa *MiniProgram) GetWXACodeUnlimit(coderParams QRCoder) (response []byte, err error)
+```
 
 
 更多API使用请参考 godoc ：
