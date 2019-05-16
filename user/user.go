@@ -31,20 +31,23 @@ func NewUser(context *context.Context) *User {
 type Info struct {
 	util.CommonError
 
-	Subscribe     int32   `json:"subscribe"`
-	OpenID        string  `json:"openid"`
-	Nickname      string  `json:"nickname"`
-	Sex           int32   `json:"sex"`
-	City          string  `json:"city"`
-	Country       string  `json:"country"`
-	Province      string  `json:"province"`
-	Language      string  `json:"language"`
-	Headimgurl    string  `json:"headimgurl"`
-	SubscribeTime int32   `json:"subscribe_time"`
-	UnionID       string  `json:"unionid"`
-	Remark        string  `json:"remark"`
-	GroupID       int32   `json:"groupid"`
-	TagidList     []int32 `json:"tagid_list"`
+	Subscribe      int32   `json:"subscribe"`
+	OpenID         string  `json:"openid"`
+	Nickname       string  `json:"nickname"`
+	Sex            int32   `json:"sex"`
+	City           string  `json:"city"`
+	Country        string  `json:"country"`
+	Province       string  `json:"province"`
+	Language       string  `json:"language"`
+	Headimgurl     string  `json:"headimgurl"`
+	SubscribeTime  int32   `json:"subscribe_time"`
+	UnionID        string  `json:"unionid"`
+	Remark         string  `json:"remark"`
+	GroupID        int32   `json:"groupid"`
+	TagidList      []int32 `json:"tagid_list"`
+	SubscribeScene string  `json:"subscribe_scene"`
+	QrScene        int     `json:"qr_scene"`
+	QrSceneStr     string  `json:"qr_scene_str"`
 }
 
 // OpenidList 用户列表
