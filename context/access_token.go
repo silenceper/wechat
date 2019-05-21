@@ -22,7 +22,8 @@ type ResAccessToken struct {
 	ExpiresIn   int64  `json:"expires_in"`
 }
 
-type CustomGetAccessToken func(ctx *Context) (accessToken string, err error)
+//GetAccessTokenFunc 获取 access token 的函数签名
+type GetAccessTokenFunc func(ctx *Context) (accessToken string, err error)
 
 //SetAccessTokenLock 设置读写锁（一个appID一个读写锁）
 func (ctx *Context) SetAccessTokenLock(l *sync.RWMutex) {
@@ -30,7 +31,7 @@ func (ctx *Context) SetAccessTokenLock(l *sync.RWMutex) {
 }
 
 //SetGetAccessTokenFunc 设置自定义获取accessToken的方式, 需要自己实现缓存
-func (ctx *Context) SetGetAccessTokenFunc(f CustomGetAccessToken) {
+func (ctx *Context) SetGetAccessTokenFunc(f GetAccessTokenFunc) {
 	ctx.accessTokenFunc = f
 }
 
