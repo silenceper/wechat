@@ -27,6 +27,9 @@ type Context struct {
 
 	//jsAPITicket 读写锁 同一个AppID一个
 	jsAPITicketLock *sync.RWMutex
+
+	//自定义获取 access token 的方法
+	accessTokenFunc CustomGetAccessToken
 }
 
 // Query returns the keyed url query value if it exists
