@@ -336,14 +336,14 @@ Url	：点击图文消息跳转链接
 
 ## 自定义菜单
 
-通过` wechat.GetMenu(req, writer)`获取menu的实例
+通过` wechat.GetMenu()`获取menu的实例
 
 ### 自定义菜单创建接口
 
 以下是一个创建二级菜单的例子
 
 ```go
-mu := wc.GetMenu(c.Request, c.Writer)
+mu := wc.GetMenu()
 
 buttons := make([]*menu.Button, 1)
 btn := new(menu.Button)
@@ -403,7 +403,7 @@ func (btn *Button) SetViewLimitedButton(name, mediaID string) {
 ### 自定义菜单查询接口
 
 ```go
-mu := wc.GetMenu(c.Request, c.Writer)
+mu := wc.GetMenu()
 resMenu,err:=mu.GetMenu()
 ```
 >返回结果 resMenu 结构参考 ./menu/menu.go 中ResMenu 结构体
@@ -411,7 +411,7 @@ resMenu,err:=mu.GetMenu()
 ### 自定义菜单删除接口
 
 ```go
-mu := wc.GetMenu(c.Request, c.Writer)
+mu := wc.GetMenu()
 err:=mu.DeleteMenu()
 ```
 
@@ -459,7 +459,7 @@ func (menu *Menu) GetCurrentSelfMenuInfo() (resSelfMenuInfo ResSelfMenuInfo, err
 **1.发起授权**
 
 ```go
-oauth := wc.GetOauth(c.Request, c.Writer)
+oauth := wc.GetOauth()
 err := oauth.Redirect("跳转的绝对地址", "snsapi_userinfo", "123dd123")
 if err != nil {
 	fmt.Println(err)
@@ -506,7 +506,7 @@ func (oauth *Oauth) CheckAccessToken(accessToken, openID string) (b bool, err er
 ### 获取js-sdk配置
 
 ```go
-js := wc.GetJs(c.Request, c.Writer)
+js := wc.GetJs()
 cfg, err := js.GetConfig("传入需要的调用js-sdk的url地址")
 if err != nil {
 	fmt.Println(err)
