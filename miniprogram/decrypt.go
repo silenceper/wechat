@@ -36,6 +36,17 @@ type UserInfo struct {
 	} `json:"watermark"`
 }
 
+// UserPhoneNumber 用户手机号
+type UserPhoneNumber struct {
+	PhoneNumber     string `json:"phoneNumber"`
+	PurePhoneNumber string `json:"purePhoneNumber"`
+	CountryCode     string `json:"countryCode"`
+	Watermark       struct {
+		Timestamp int64  `json:"timestamp"`
+		AppID     string `json:"appid"`
+	} `json:"watermark"`
+}
+
 // pkcs7Unpad returns slice of the original data without padding
 func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
 	if blockSize <= 0 {
@@ -57,8 +68,47 @@ func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
 	return data[:len(data)-n], nil
 }
 
-// Decrypt 解密数据
+// Decrypt 解密用户信息数据
 func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*UserInfo, error) {
+	cipherText, err := wxa.DecryptData(sessionKey, encryptedData, iv)
+	if err != nil {
+		return nil, err
+	}
+	var userInfo UserInfo
+	err = json.Unmarshal(cipherText, &userInfo)
+	if err != nil {
+		return nil, err
+	}
+	if userInfo.Watermark.AppID != wxa.AppID {
+		return nil, ErrAppIDNotMatch
+	}
+	return &userInfo, nil
+}
+
+// DecryptUserInfo 解密用户信息数据，命名上用于替换 Decrypt
+func (wxa *MiniProgram) DecryptUserInfo(sessionKey, encryptedData, iv string) (*UserInfo, error) {
+	return wxa.Decrypt(sessionKey, encryptedData, iv)
+}
+
+// DecryptUserPhoneNumber 解密手机号
+func (wxa *MiniProgram) DecryptUserPhoneNumber(sessionKey, encryptedData, iv string) (*UserPhoneNumber, error) {
+	cipherText, err := wxa.DecryptData(sessionKey, encryptedData, iv)
+	if err != nil {
+		return nil, err
+	}
+	var phoneNumber UserPhoneNumber
+	err = json.Unmarshal(cipherText, &phoneNumber)
+	if err != nil {
+		return nil, err
+	}
+	if phoneNumber.Watermark.AppID != wxa.AppID {
+		return nil, ErrAppIDNotMatch
+	}
+	return &phoneNumber, nil
+}
+
+// DecryptData 只解密数据
+func (wxa *MiniProgram) DecryptData(sessionKey, encryptedData, iv string) ([]byte, error) {
 	aesKey, err := base64.StdEncoding.DecodeString(sessionKey)
 	if err != nil {
 		return nil, err
@@ -81,13 +131,5 @@ func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*UserInfo
 	if err != nil {
 		return nil, err
 	}
-	var userInfo UserInfo
-	err = json.Unmarshal(cipherText, &userInfo)
-	if err != nil {
-		return nil, err
-	}
-	if userInfo.Watermark.AppID != wxa.AppID {
-		return nil, ErrAppIDNotMatch
-	}
-	return &userInfo, nil
+	return cipherText, nil
 }
