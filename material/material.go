@@ -63,7 +63,7 @@ func (material *Material) AddNews(articles []*Article) (mediaID string, err erro
 	uri := fmt.Sprintf("%s?access_token=%s", addNewsURL, accessToken)
 	responseBytes, err := util.PostJSON(uri, req)
 	var res resArticles
-	err = json.Unmarshal(responseBytes, res)
+	err = json.Unmarshal(responseBytes, &res)
 	if err != nil {
 		return
 	}
