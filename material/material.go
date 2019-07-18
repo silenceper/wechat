@@ -13,6 +13,7 @@ const (
 	addNewsURL     = "https://api.weixin.qq.com/cgi-bin/material/add_news"
 	addMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/add_material"
 	delMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/del_material"
+	batchgetMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/batchget_material"
 )
 
 //Material 素材管理
@@ -186,4 +187,70 @@ func (material *Material) DeleteMaterial(mediaID string) error {
 	}
 
 	return util.DecodeWithCommonError(response, "DeleteMaterial")
+}
+
+// 获取的永久图文素材
+type News struct {
+	Article
+	Url string `json:"url"`
+	ThumbURL string `json:"thumb_url"`
+	NeedOpenComment int `json:"need_open_comment"`
+	OnlyFansCanComment int `json:"only_fans_can_comment"`
+}
+
+type reqBatchgetMaterial struct {
+	Type string `json:"type"`
+	Offset int `json:"offset"`
+	Count int `json:"count"`
+}
+
+type resNewsContent struct {
+	NewsItem []News `json:"news_item"`
+	CreateTime int `json:"create_time"`
+	UpdateTime int `json:"update_time"`
+}
+
+type resNewsItem struct {
+	MediaID string `json:"media_id"`
+	Content resNewsContent `json:"content"`
+	UpdateTime int `json:"update_time"`
+}
+
+// 获取永久图文素材返回结果
+type resBatchgetNewsMaterial struct {
+	util.CommonError
+	TotalCount int `json:"total_count"`
+	ItemCount int `json:"item_count"`
+	Item []resNewsItem `json:"item"`
+}
+
+// 获取永久图文素材
+func (material *Material) BatchgetMaterial(materialType string, offset int, count int) (resBatchgetNM resBatchgetNewsMaterial, err error) {
+	var accessToken string
+	accessToken, err = material.GetAccessToken()
+	if err != nil {
+		return
+	}
+
+	reqBatchgetM := reqBatchgetMaterial{
+		Type: materialType,
+		Offset: offset,
+		Count: count,
+	}
+
+	uri := fmt.Sprintf("%s?access_token=%s", batchgetMaterialURL, accessToken)
+	var response []byte
+	response, err = util.PostJSON(uri, reqBatchgetM)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(response, &resBatchgetNM)
+	if err != nil {
+		return
+	}
+	if resBatchgetNM.ErrCode != 0 {
+		err = fmt.Errorf("GetMaterial Error , errcode=%d , errmsg=%s", resBatchgetNM.ErrCode, resBatchgetNM.ErrMsg)
+		return
+	}
+	return
 }
