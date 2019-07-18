@@ -189,10 +189,10 @@ func (material *Material) DeleteMaterial(mediaID string) error {
 	return util.DecodeWithCommonError(response, "DeleteMaterial")
 }
 
-// 获取的永久图文素材
+//News 获取的永久图文素材
 type News struct {
 	Article
-	Url string `json:"url"`
+	URL string `json:"url"`
 	ThumbURL string `json:"thumb_url"`
 	NeedOpenComment int `json:"need_open_comment"`
 	OnlyFansCanComment int `json:"only_fans_can_comment"`
@@ -216,16 +216,16 @@ type resNewsItem struct {
 	UpdateTime int `json:"update_time"`
 }
 
-// 获取永久图文素材返回结果
-type resBatchgetNewsMaterial struct {
+//ResBatchgetNewsMaterial 获取永久图文素材返回结果
+type ResBatchgetNewsMaterial struct {
 	util.CommonError
 	TotalCount int `json:"total_count"`
 	ItemCount int `json:"item_count"`
 	Item []resNewsItem `json:"item"`
 }
 
-// 获取永久图文素材
-func (material *Material) BatchgetMaterial(materialType string, offset int, count int) (resBatchgetNM resBatchgetNewsMaterial, err error) {
+//BatchgetMaterial 获取永久图文素材
+func (material *Material) BatchgetMaterial(materialType string, offset int, count int) (resBatchgetNM ResBatchgetNewsMaterial, err error) {
 	var accessToken string
 	accessToken, err = material.GetAccessToken()
 	if err != nil {
