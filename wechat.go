@@ -9,8 +9,10 @@ import (
 	"github.com/silenceper/wechat/js"
 	"github.com/silenceper/wechat/material"
 	"github.com/silenceper/wechat/menu"
+	"github.com/silenceper/wechat/miniprogram"
 	"github.com/silenceper/wechat/oauth"
 	"github.com/silenceper/wechat/pay"
+	"github.com/silenceper/wechat/qr"
 	"github.com/silenceper/wechat/server"
 	"github.com/silenceper/wechat/template"
 	"github.com/silenceper/wechat/user"
@@ -98,4 +100,14 @@ func (wc *Wechat) GetTemplate() *template.Template {
 // GetPay 返回支付消息的实例
 func (wc *Wechat) GetPay() *pay.Pay {
 	return pay.NewPay(wc.Context)
+}
+
+// GetQR 返回二维码的实例
+func (wc *Wechat) GetQR() *qr.QR {
+	return qr.NewQR(wc.Context)
+}
+
+// GetMiniProgram 获取小程序的实例
+func (wc *Wechat) GetMiniProgram() *miniprogram.MiniProgram {
+	return miniprogram.NewMiniProgram(wc.Context)
 }
