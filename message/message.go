@@ -133,6 +133,17 @@ type MixMessage struct {
 	AuthorizationCode            string   `xml:"AuthorizationCode"`
 	AuthorizationCodeExpiredTime int64    `xml:"AuthorizationCodeExpiredTime"`
 	PreAuthCode                  string   `xml:"PreAuthCode"`
+
+	// 卡券相关
+	CardID              string `xml:"CardId"`
+	RefuseReason        string `xml:"RefuseReason"`
+	IsGiveByFriend      int32  `xml:"IsGiveByFriend"`
+	FriendUserName      string `xml:"FriendUserName"`
+	UserCardCode        string `xml:"UserCardCode"`
+	OldUserCardCode     string `xml:"OldUserCardCode"`
+	OuterStr            string `xml:"OuterStr"`
+	IsRestoreMemberCard int32  `xml:"IsRestoreMemberCard"`
+	UnionID             string `xml:"UnionId"`
 }
 
 //EventPic 发图事件推送
