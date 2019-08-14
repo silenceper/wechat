@@ -77,6 +77,9 @@ Cache主要用来保存全局access_token以及js-sdk中的ticket：
 		- 回复视频消息
 		- 回复音乐消息
 		- 回复图文消息
+	- 主动发送消息
+	  - 发送模板消息
+	  - 发送客服消息
 - [自定义菜单](#自定义菜单)
 	- 自定义菜单创建接口
 	- 自定义菜单查询接口
@@ -95,6 +98,8 @@ Cache主要用来保存全局access_token以及js-sdk中的ticket：
 		- 刷新access_token
 		- 检验access_token是否有效
 	- 获取js-sdk配置
+- [用户管理](#用户管理)
+	- 查询已关注用户信息
 - [素材管理](#素材管理)
 - [小程序开发](#小程序开发)
 
@@ -334,6 +339,94 @@ PicUrl	：图片链接，支持JPG、PNG格式，较好的效果为大图360*200
 Url	：点击图文消息跳转链接
 
 
+### 主动发送消息
+
+
+#### 发送模板消息
+需要先申请模板ID后使用，详见 [《官方文档-模板消息》](https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html)
+
+```go
+tpl := wc.GetTemplate()
+msgId, err := tpl.Send(&msg)
+if err != nil {
+	fmt.Println(err)
+}
+```
+其中，msg的结构为
+
+```go
+//Message 发送的模板消息内容
+type Message struct {
+	ToUser     string               `json:"touser"`          // 必须, 接受者OpenID
+	TemplateID string               `json:"template_id"`     // 必须, 模版ID
+	URL        string               `json:"url,omitempty"`   // 可选, 用户点击后跳转的URL, 该URL必须处于开发者在公众平台网站中设置的域中
+	Color      string               `json:"color,omitempty"` // 可选, 整个消息的颜色, 可以不设置
+	Data       map[string]*DataItem `json:"data"`            // 必须, 模板数据
+
+	MiniProgram struct {
+		AppID    string `json:"appid"`    //所需跳转到的小程序appid（该小程序appid必须与发模板消息的公众号是绑定关联关系）
+		PagePath string `json:"pagepath"` //所需跳转到小程序的具体页面路径，支持带参数,（示例index?foo=bar）
+	} `json:"miniprogram"` //可选,跳转至小程序地址
+}
+```
+
+#### 发送客服消息
+需要用户在48小时内与公众号有过互动，才可使用此接口，详见 [《官方文档-客服消息》](https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Service_Center_messages.html)
+
+```go
+custom := wc.GetCustom()
+err := custom.Send(&msg)
+if err != nil {
+    fmt.Println(err)
+}
+```
+其中，msg的结构为
+
+```go
+//Message 发送的模板消息内容
+type CustomMsg struct {
+	ToUser     string               `json:"touser"`          // 必须, 接受者OpenID
+	MsgType string               `json:"msgtype"`     // 必须, 消息类型
+	Text struct {
+		Content    string `json:"content"`
+	} `json:"text"` //可选, 文本
+	Image struct {
+		MediaId    string `json:"media_id"`
+	} `json:"image"` //可选, 图片
+	Voice struct {
+		MediaId    string `json:"media_id"`
+	} `json:"voice"` //可选, 语音
+	Video struct {
+		MediaId    string `json:"media_id"`
+	} `json:"video"` //可选, 视频
+	Music struct {
+		Title       string `json:"title"`
+		Description string `json:"description"`
+		MusicURL      string `json:"musicurl"`
+		HQMusicURL      string `json:"hqmusicurl"`
+		ThumbMediaId    string `json:"thumb_media_id"`
+	} `json:"music"` //可选, 音乐
+	News struct {
+		Articles     []*CustomArticle `json:"articles"`
+	} `json:"news"` //可选, 图文
+	MpNews struct {
+		MediaId    string `json:"media_id"`
+	} `json:"mpnews"` //可选, 公众号图文
+	MsgMenu struct {
+		HeadContent string `json:"head_content"`
+		List []*CustomMenuList `json:"list"`
+		TailContent string `json:"tail_content"`
+	} `json:"msgmenu"` //可选, 菜单消息
+	MiniProgramPage struct {
+		Title       string `json:"title"`
+		Appid string `json:"appid"`
+		PagePath       string `json:"pagepath"`
+		ThumbMediaId    string `json:"thumb_media_id"`
+	} `json:"miniprogrampage"` //可选, 小程序卡片
+}
+```
+
+
 ## 自定义菜单
 
 通过` wechat.GetMenu()`获取menu的实例
@@ -524,6 +617,45 @@ type Config struct {
 	Signature string `json:"signature"`
 }
 
+```
+
+## 用户管理
+
+通过`wechat.GetUser()`获取user的实例
+
+### 查询已关注用户信息
+```go
+wechatUser := wc.GetUser()
+userInfo,err := wechatUser.GetUserInfo(openId)
+if err != nil {
+   fmt.Println(err)
+}
+```
+其中返回的userInfo结构体如下：
+
+```go
+//Info 用户基本信息
+type Info struct {
+	util.CommonError
+
+	Subscribe      int32   `json:"subscribe"`
+	OpenID         string  `json:"openid"`
+	Nickname       string  `json:"nickname"`
+	Sex            int32   `json:"sex"`
+	City           string  `json:"city"`
+	Country        string  `json:"country"`
+	Province       string  `json:"province"`
+	Language       string  `json:"language"`
+	Headimgurl     string  `json:"headimgurl"`
+	SubscribeTime  int32   `json:"subscribe_time"`
+	UnionID        string  `json:"unionid"`
+	Remark         string  `json:"remark"`
+	GroupID        int32   `json:"groupid"`
+	TagidList      []int32 `json:"tagid_list"`
+	SubscribeScene string  `json:"subscribe_scene"`
+	QrScene        int     `json:"qr_scene"`
+	QrSceneStr     string  `json:"qr_scene_str"`
+}
 ```
 
 ## 素材管理

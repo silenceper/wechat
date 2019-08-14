@@ -16,6 +16,7 @@ import (
 	"github.com/silenceper/wechat/server"
 	"github.com/silenceper/wechat/template"
 	"github.com/silenceper/wechat/user"
+	"github.com/silenceper/wechat/message"
 )
 
 // Wechat struct
@@ -110,4 +111,9 @@ func (wc *Wechat) GetQR() *qr.QR {
 // GetMiniProgram 获取小程序的实例
 func (wc *Wechat) GetMiniProgram() *miniprogram.MiniProgram {
 	return miniprogram.NewMiniProgram(wc.Context)
+}
+
+// GetCustom 客服消息接口
+func (wc *Wechat) GetCustom() *message.Custom {
+	return message.NewCustom(wc.Context)
 }
