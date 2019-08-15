@@ -391,26 +391,26 @@ type CustomMsg struct {
 		Content    string `json:"content"`
 	} `json:"text"` //可选, 文本
 	Image struct {
-		MediaId    string `json:"media_id"`
+		MediaID    string `json:"media_id"`
 	} `json:"image"` //可选, 图片
 	Voice struct {
-		MediaId    string `json:"media_id"`
+		MediaID    string `json:"media_id"`
 	} `json:"voice"` //可选, 语音
 	Video struct {
-		MediaId    string `json:"media_id"`
+		MediaID    string `json:"media_id"`
 	} `json:"video"` //可选, 视频
 	Music struct {
 		Title       string `json:"title"`
 		Description string `json:"description"`
 		MusicURL      string `json:"musicurl"`
 		HQMusicURL      string `json:"hqmusicurl"`
-		ThumbMediaId    string `json:"thumb_media_id"`
+		ThumbMediaID    string `json:"thumb_media_id"`
 	} `json:"music"` //可选, 音乐
 	News struct {
 		Articles     []*CustomArticle `json:"articles"`
 	} `json:"news"` //可选, 图文
 	MpNews struct {
-		MediaId    string `json:"media_id"`
+		MediaID    string `json:"media_id"`
 	} `json:"mpnews"` //可选, 公众号图文
 	MsgMenu struct {
 		HeadContent string `json:"head_content"`
@@ -421,7 +421,7 @@ type CustomMsg struct {
 		Title       string `json:"title"`
 		Appid string `json:"appid"`
 		PagePath       string `json:"pagepath"`
-		ThumbMediaId    string `json:"thumb_media_id"`
+		ThumbMediaID    string `json:"thumb_media_id"`
 	} `json:"miniprogrampage"` //可选, 小程序卡片
 }
 ```
