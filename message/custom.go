@@ -32,13 +32,13 @@ type CustomArticle struct {
 	URL         string `json:"url"`
 }
 
-// CustomArticle 单篇文章
+// CustomMenuList 单篇文章
 type CustomMenuList struct {
 	ID       string `json:"id"`
 	Content string `json:"content"`
 }
 
-//Message 发送的模板消息内容
+//CustomMsg 发送的模板消息内容
 type CustomMsg struct {
 	ToUser     string               `json:"touser"`          // 必须, 接受者OpenID
 	MsgType string               `json:"msgtype"`     // 必须, 消息类型
