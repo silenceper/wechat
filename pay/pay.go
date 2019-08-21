@@ -91,10 +91,19 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	nonceStr := util.RandomStr(32)
 	param := make(map[string]interface{})
 	param["appid"] = pcf.AppID
+	if len(p.Body) > 128 {
+		err = errors.New("body参数长度有误")
+		return
+	}
 	param["body"] = p.Body
 	param["mch_id"] = pcf.PayMchID
 	param["nonce_str"] = nonceStr
 	param["notify_url"] = pcf.PayNotifyURL
+
+	if len(p.OutTradeNo) > 32 {
+		err = errors.New("out_trade_no参数长度有误")
+		return
+	}
 	param["out_trade_no"] = p.OutTradeNo
 	param["spbill_create_ip"] = p.CreateIP
 	param["total_fee"] = p.TotalFee
