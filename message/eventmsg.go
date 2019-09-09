@@ -12,13 +12,13 @@ const (
 )
 
 
-//Text 文本消息
+//EventMsg 文本消息
 type EventMsg struct {
 	CommonToken
 	Content string `xml:"Content"`
 }
 
-//NewText 初始化文本消息
+//NewEventMsg 初始化文本消息
 func NewEventMsg(content string) *EventMsg {
 	eventmsg := new(EventMsg)
 	eventmsg.Content = content
@@ -26,7 +26,7 @@ func NewEventMsg(content string) *EventMsg {
 }
 
 
-//客服消息
+//Kfcustomer 客服消息
 type Kfcustomer struct {
 	*context.Context
 }
@@ -38,25 +38,7 @@ func NewKfcustomer(context *context.Context) *Kfcustomer {
 	return kf
 }
 
-//{
-//	"touser": "OPENID"
-//	"msgtype": "msgmenu",
-//	"msgmenu": {
-//		"head_content": "您对本次服务是否满意呢? "
-//		"list": [
-//			{
-//				"id": "101",
-//				"content": "满意"
-//			},
-//			{
-//			"id": "102",
-//			"content": "不满意"
-//			}
-//		],
-//		"tail_content": "欢迎再次光临"
-//	}
-//}
-//msgmenu 客服menu消息
+//KfMsg 客服menu消息
 type KfMsg struct {
 	Touser string	`json:"touser"`
 	Msgtype	string	`json:"msgtype"`
@@ -76,15 +58,6 @@ type resKfSend struct {
 }
 
 
-//发送图片消息
-//{
-//	"touser":"OPENID",
-//	"msgtype":"image",
-//	"image":
-//	{
-//		"media_id":"MEDIA_ID"
-//	}
-//}
 type KfImgMsg struct {
 	Touser string	`json:"touser"`
 	Msgtype	string	`json:"msgtype"`
@@ -95,19 +68,7 @@ type KfImgMsg struct {
 
 
 
-//NewNews 初始化客服menu消息
-//func NewKfMsg(singlelist []SingleList,headcontent string,tailcontent string,touser string,msgtype string) *KfMsg {
-//	kfmsg := new(KfMsg)
-//	kfmsg.Msgmenu.List = singlelist
-//	kfmsg.Msgmenu.Headcontent = headcontent
-//	kfmsg.Msgmenu.Tailcontent = tailcontent
-//	kfmsg.Touser = touser
-//	kfmsg.Msgtype = msgtype
-//	return kfmsg
-//}
-
-
-//Send 发送客服菜单模板消息
+//KfSend 发送客服菜单模板消息
 func (kf *Kfcustomer) KfSend(msg *KfMsg) (err error) {
 	var accessToken string
 	accessToken, err = kf.GetAccessToken()
@@ -128,7 +89,7 @@ func (kf *Kfcustomer) KfSend(msg *KfMsg) (err error) {
 	return
 }
 
-//Send 发送客服图片消息
+//KfImgSend 发送客服图片消息
 func (kf *Kfcustomer) KfImgSend(msg *KfImgMsg) (err error) {
 	var accessToken string
 	accessToken, err = kf.GetAccessToken()
