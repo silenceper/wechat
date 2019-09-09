@@ -95,7 +95,7 @@ type MixMessage struct {
 	Title        string  `xml:"Title"`
 	Description  string  `xml:"Description"`
 	URL          string  `xml:"Url"`
-	BizMsgMenuId int64  `xml:"bizmsgmenuid"`
+	BizMsgMenuID int64  `xml:"bizmsgmenuid"`
 
 	//事件相关
 	Event       EventType `xml:"Event"`

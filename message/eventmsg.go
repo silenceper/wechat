@@ -48,16 +48,17 @@ type KfMsg struct {
 		Tailcontent	string	`json:"tail_content"`
 	}	`json:"msgmenu"`
 }
+//SingleList 菜单消息
 type SingleList struct {
-	Id string	`json:"id"`
+	ID string	`json:"id"`
 	Content	string	`json:"content"`
 }
-
+//resKfSend kf消息发送
 type resKfSend struct {
 	util.CommonError
 }
 
-
+//KfImgMsg kf图片消息
 type KfImgMsg struct {
 	Touser string	`json:"touser"`
 	Msgtype	string	`json:"msgtype"`
