@@ -4,7 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 
-	"github.com/machao520/wechat/util"
+	"github.com/silencepe/wechat/util"
 )
 
 var refundGateway = "https://api.mch.weixin.qq.com/secapi/pay/refund"

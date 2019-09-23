@@ -5,7 +5,7 @@ package context
 //	"fmt"
 //	"time"
 //
-//	"github.com/machao520/wechat/util"
+//	"github.com/silencepe/wechat/util"
 //)
 //
 //const (

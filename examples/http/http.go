@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/machao520/wechat"
-	"github.com/machao520/wechat/message"
+	"github.com/silencepe/wechat"
+	"github.com/silencepe/wechat/message"
 )
 
 func hello(rw http.ResponseWriter, req *http.Request) {

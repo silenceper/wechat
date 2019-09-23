@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/machao520/wechat/util"
-	"github.com/machao520/wechat/wechat"
+	"github.com/silencepe/wechat/util"
+	"github.com/silencepe/wechat/wechat"
 )
 
 const (

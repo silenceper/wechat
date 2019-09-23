@@ -1,7 +1,7 @@
 package miniprogram
 
 import (
-	"github.com/machao520/wechat/wechat"
+	"github.com/silencepe/wechat/wechat"
 )
 
 // MiniProgram struct extends context
