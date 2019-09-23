@@ -4,16 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
-
-	"github.com/silenceper/wechat/context"
-	"github.com/silenceper/wechat/util"
+	"github.com/machao520/wechat/util"
+	"github.com/machao520/wechat/wechat"
 )
 
 const getTicketURL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi"
 
 // Js struct
 type Js struct {
-	*context.Context
+	*wechat.Wechat
 }
 
 // Config 返回给用户jssdk配置信息
@@ -33,9 +32,9 @@ type resTicket struct {
 }
 
 //NewJs init
-func NewJs(context *context.Context) *Js {
+func NewJs( wc *wechat.Wechat) *Js {
 	js := new(Js)
-	js.Context = context
+	js.Wechat = wc
 	return js
 }
 
@@ -63,7 +62,7 @@ func (js *Js) GetConfig(uri string) (config *Config, err error) {
 
 //GetTicket 获取jsapi_ticket
 func (js *Js) GetTicket() (ticketStr string, err error) {
-	js.GetJsAPITicketLock().Lock()
+	js.Wechat.GetJsAPITicketLock().Lock()
 	defer js.GetJsAPITicketLock().Unlock()
 
 	//先从cache中取

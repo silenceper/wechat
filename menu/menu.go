@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/silenceper/wechat/context"
-	"github.com/silenceper/wechat/util"
+	"github.com/machao520/wechat/util"
+	"github.com/machao520/wechat/wechat"
 )
 
 const (
@@ -20,7 +20,7 @@ const (
 
 //Menu struct
 type Menu struct {
-	*context.Context
+	*wechat.Wechat
 }
 
 //reqMenu 设置菜单请求数据
@@ -112,9 +112,9 @@ type MatchRule struct {
 }
 
 //NewMenu 实例
-func NewMenu(context *context.Context) *Menu {
+func NewMenu( wc *wechat.Wechat) *Menu {
 	menu := new(Menu)
-	menu.Context = context
+	menu.Wechat = wc
 	return menu
 }
 

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/silenceper/wechat/context"
-	"github.com/silenceper/wechat/util"
+	"github.com/machao520/wechat/util"
+	"github.com/machao520/wechat/wechat"
 )
 
 const (
@@ -14,13 +14,13 @@ const (
 
 //Template 模板消息
 type Template struct {
-	*context.Context
+	*wechat.Wechat
 }
 
 //NewTemplate 实例化
-func NewTemplate(context *context.Context) *Template {
+func NewTemplate(wc *wechat.Wechat) *Template {
 	tpl := new(Template)
-	tpl.Context = context
+	tpl.Wechat = wc
 	return tpl
 }
 

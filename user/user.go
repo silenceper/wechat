@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/silenceper/wechat/context"
-	"github.com/silenceper/wechat/util"
+	"github.com/machao520/wechat/util"
+	"github.com/machao520/wechat/wechat"
 )
 
 const (
@@ -17,13 +17,13 @@ const (
 
 //User 用户管理
 type User struct {
-	*context.Context
+	*wechat.Wechat
 }
 
 //NewUser 实例化
-func NewUser(context *context.Context) *User {
+func NewUser(wc *wechat.Wechat) *User {
 	user := new(User)
-	user.Context = context
+	user.Wechat = wc
 	return user
 }
 

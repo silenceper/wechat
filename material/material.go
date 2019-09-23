@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/silenceper/wechat/context"
-	"github.com/silenceper/wechat/util"
+	"github.com/machao520/wechat/util"
+	"github.com/machao520/wechat/wechat"
 )
 
 const (
@@ -17,13 +17,13 @@ const (
 
 //Material 素材管理
 type Material struct {
-	*context.Context
+	*wechat.Wechat
 }
 
 //NewMaterial init
-func NewMaterial(context *context.Context) *Material {
+func NewMaterial(wc *wechat.Wechat) *Material {
 	material := new(Material)
-	material.Context = context
+	material.Wechat = wc
 	return material
 }
 

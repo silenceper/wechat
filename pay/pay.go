@@ -7,15 +7,15 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/silenceper/wechat/context"
-	"github.com/silenceper/wechat/util"
+	"github.com/machao520/wechat/util"
+	"github.com/machao520/wechat/wechat"
 )
 
 var payGateway = "https://api.mch.weixin.qq.com/pay/unifiedorder"
 
 // Pay struct extends context
 type Pay struct {
-	*context.Context
+	*wechat.Wechat
 }
 
 // Params was NEEDED when request unifiedorder
@@ -81,8 +81,8 @@ type payRequest struct {
 }
 
 // NewPay return an instance of Pay package
-func NewPay(ctx *context.Context) *Pay {
-	pay := Pay{Context: ctx}
+func NewPay(wc *wechat.Wechat) *Pay {
+	pay := Pay{Wechat: wc}
 	return &pay
 }
 

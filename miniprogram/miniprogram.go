@@ -1,17 +1,17 @@
 package miniprogram
 
 import (
-	"github.com/silenceper/wechat/context"
+	"github.com/machao520/wechat/wechat"
 )
 
 // MiniProgram struct extends context
 type MiniProgram struct {
-	*context.Context
+	*wechat.Wechat
 }
 
 // NewMiniProgram 实例化小程序接口
-func NewMiniProgram(context *context.Context) *MiniProgram {
+func NewMiniProgram(wc *wechat.Wechat) *MiniProgram {
 	miniProgram := new(MiniProgram)
-	miniProgram.Context = context
+	miniProgram.Wechat = wc
 	return miniProgram
 }

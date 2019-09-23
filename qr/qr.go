@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/silenceper/wechat/context"
-	"github.com/silenceper/wechat/util"
+	"github.com/machao520/wechat/util"
+	"github.com/machao520/wechat/wechat"
 )
 
 const (
@@ -25,13 +25,13 @@ const (
 
 // QR 二维码
 type QR struct {
-	*context.Context
+	*wechat.Wechat
 }
 
 //NewQR 二维码实例
-func NewQR(context *context.Context) *QR {
+func NewQR(wc *wechat.Wechat) *QR {
 	q := new(QR)
-	q.Context = context
+	q.Wechat = wc
 	return q
 }
 

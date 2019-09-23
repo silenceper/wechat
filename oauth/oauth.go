@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/silenceper/wechat/context"
-	"github.com/silenceper/wechat/util"
+	"github.com/machao520/wechat/util"
+	"github.com/machao520/wechat/wechat"
 )
 
 const (
@@ -21,13 +21,13 @@ const (
 
 //Oauth 保存用户授权信息
 type Oauth struct {
-	*context.Context
+	*wechat.Wechat
 }
 
 //NewOauth 实例化授权信息
-func NewOauth(context *context.Context) *Oauth {
+func NewOauth( wc *wechat.Wechat) *Oauth {
 	auth := new(Oauth)
-	auth.Context = context
+	auth.Wechat = wc
 	return auth
 }
 
