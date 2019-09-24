@@ -1,7 +1,7 @@
 # WeChat SDK for Go
-[![Build Status](https://travis-ci.org/silenceper/wechat.svg?branch=master)](https://travis-ci.org/silenceper/wechat)
-[![Go Report Card](https://goreportcard.com/badge/github.com/silenceper/wechat)](https://goreportcard.com/report/github.com/silenceper/wechat)
-[![GoDoc](http://godoc.org/github.com/silenceper/wechat?status.svg)](http://godoc.org/github.com/silenceper/wechat)
+[![Build Status](https://travis-ci.org/machao520r/wechat.svg?branch=master)](https://travis-ci.org/machao520r/wechat)
+[![Go Report Card](https://goreportcard.com/badge/github.com/machao520r/wechat)](https://goreportcard.com/report/github.com/machao520r/wechat)
+[![GoDoc](http://godoc.org/github.com/machao520r/wechat?status.svg)](http://godoc.org/github.com/machao520r/wechat)
 
 
 使用Golang开发的微信SDK，简单、易用。
@@ -317,7 +317,7 @@ article := new(message.Article)
 article.Title = "标题"
 article.Description = "描述信息信息信息"
 article.PicURL = "http://ww1.sinaimg.cn/large/65209136gw1f7vhjw95eqj20wt0zk40z.jpg"
-article.URL = "https://github.com/silenceper/wechat"
+article.URL = "https://github.com/machao520r/wechat"
 articles[0] = article
 
 news := message.NewNews(articles)
@@ -528,7 +528,7 @@ type Config struct {
 
 ## 素材管理
 
-[素材管理API](https://godoc.org/github.com/silenceper/wechat/material#Material)
+[素材管理API](https://godoc.org/github.com/machao520r/wechat/material#Material)
 
 ## 小程序开发
 
@@ -636,7 +636,7 @@ func (wxa *MiniProgram) GetWXACodeUnlimit(coderParams QRCoder) (response []byte,
 
 
 更多API使用请参考 godoc ：
-[https://godoc.org/github.com/silenceper/wechat](https://godoc.org/github.com/silenceper/wechat)
+[https://godoc.org/github.com/machao520r/wechat](https://godoc.org/github.com/machao520r/wechat)
 
 ## License
 

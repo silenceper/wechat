@@ -6,7 +6,7 @@ package context
 //	"sync"
 //	"time"
 //
-//	"github.com/silencepe/wechat/util"
+//	"github.com/machao520/wechat/util"
 //)
 //
 //const (
