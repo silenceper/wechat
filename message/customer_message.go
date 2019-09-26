@@ -26,11 +26,6 @@ type CustomerMessage struct {
 	Miniprogrampage MediaMiniprogrampage `json:"miniprogrampage"` //可选
 }
 
-//MediaText 文本消息的文字
-type MediaText struct {
-	Content string `json:"content"`
-}
-
 //NewCustomerTextMessage 文本消息结构体构造方法
 func NewCustomerTextMessage(toUser, text string) *CustomerMessage {
 	return &CustomerMessage{
@@ -62,6 +57,11 @@ func NewCustomerVoiceMessage(toUser, mediaID string) *CustomerMessage {
 			mediaID,
 		},
 	}
+}
+
+//MediaText 文本消息的文字
+type MediaText struct {
+	Content string `json:"content"`
 }
 
 //MediaResource 图片消息的资源id
@@ -125,7 +125,7 @@ type MediaMiniprogrampage struct {
 	ThumbMediaID string `json:"thumb_media_id"`
 }
 
-//发送客服消息
+//SendWithToken 发送客服消息
 func (msg *CustomerMessage) SendWithToken(accessToken string) (err error) {
 
 	uri := fmt.Sprintf("%s?access_token=%s", customerSendMessage, accessToken)
