@@ -14,16 +14,16 @@ const (
 type CustomerMessage struct {
 	ToUser          string               `json:"touser"`          //接受者OpenID
 	Msgtype         MsgType              `json:"msgtype"`         //客服消息类型
-	Text            MediaText            `json:"text"`            //可选
-	Image           MediaResource        `json:"image"`           //可选
-	Voice           MediaResource        `json:"voice"`           //可选
-	Video           MediaVideo           `json:"video"`           //可选
-	Music           MediaMusic           `json:"music"`           //可选
-	News            MediaNews            `json:"news"`            //可选
-	Mpnews          MediaResource        `json:"mpnews"`          //可选
-	Wxcard          MediaWxcard          `json:"wxcard"`          //可选
-	Msgmenu         MediaMsgmenu         `json:"msgmenu"`         //可选
-	Miniprogrampage MediaMiniprogrampage `json:"miniprogrampage"` //可选
+	Text            MediaText            `json:"text,omitempty"`            //可选
+	Image           MediaResource        `json:"image,omitempty"`           //可选
+	Voice           MediaResource        `json:"voice,omitempty"`           //可选
+	Video           MediaVideo           `json:"video,omitempty"`           //可选
+	Music           MediaMusic           `json:"music,omitempty"`           //可选
+	News            MediaNews            `json:"news,omitempty"`            //可选
+	Mpnews          MediaResource        `json:"mpnews,omitempty"`          //可选
+	Wxcard          MediaWxcard          `json:"wxcard,omitempty"`          //可选
+	Msgmenu         MediaMsgmenu         `json:"msgmenu,omitempty"`         //可选
+	Miniprogrampage MediaMiniprogrampage `json:"miniprogrampage,omitempty"` //可选
 }
 
 //NewCustomerTextMessage 文本消息结构体构造方法
