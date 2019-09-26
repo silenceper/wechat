@@ -10,11 +10,20 @@ const (
 	customerSendMessage = "https://api.weixin.qq.com/cgi-bin/message/custom/send"
 )
 
-//CustomerMessageText 文本类型客服消息
-type CustomerMessageText struct {
-	ToUser  string    `json:"touser"` //接受者OpenID
-	Msgtype MsgType   `json:"msgtype"`
-	Text    MediaText `json:"text"`
+//CustomerMessage 文本类型客服消息
+type CustomerMessage struct {
+	ToUser          string               `json:"touser"`          //接受者OpenID
+	Msgtype         MsgType              `json:"msgtype"`         //客服消息类型
+	Text            MediaText            `json:"text"`            //可选
+	Image           MediaResource        `json:"image"`           //可选
+	Voice           MediaResource        `json:"voice"`           //可选
+	Video           MediaVideo           `json:"video"`           //可选
+	Music           MediaMusic           `json:"music"`           //可选
+	News            MediaNews            `json:"news"`            //可选
+	Mpnews          MediaResource        `json:"mpnews"`          //可选
+	Wxcard          MediaWxcard          `json:"wxcard"`          //可选
+	Msgmenu         MediaMsgmenu         `json:"msgmenu"`         //可选
+	Miniprogrampage MediaMiniprogrampage `json:"miniprogrampage"` //可选
 }
 
 //MediaText 文本消息的文字
@@ -23,8 +32,8 @@ type MediaText struct {
 }
 
 //NewCustomerTextMessage 文本消息结构体构造方法
-func NewCustomerTextMessage(toUser, text string) *CustomerMessageText {
-	return &CustomerMessageText{
+func NewCustomerTextMessage(toUser, text string) *CustomerMessage {
+	return &CustomerMessage{
 		ToUser:  toUser,
 		Msgtype: MsgTypeText,
 		Text: MediaText{
@@ -33,26 +42,9 @@ func NewCustomerTextMessage(toUser, text string) *CustomerMessageText {
 	}
 }
 
-//SendWithToken 发送文本类型客服消息
-func (msg *CustomerMessageText) SendWithToken(accessToken string) (err error) {
-	return sendCustomerMessage(accessToken, msg)
-}
-
-//CustomerMessageImg 图片类型客服消息
-type CustomerMessageImg struct {
-	ToUser  string        `json:"touser"` //接受者OpenID
-	Msgtype string        `json:"msgtype"`
-	Image   MediaResource `json:"image"`
-}
-
-//MediaResource 图片消息的资源id
-type MediaResource struct {
-	MediaID string `json:"media_id"`
-}
-
 //NewCustomerImgMessage 图片消息的构造方法
-func NewCustomerImgMessage(toUser, mediaID string) *CustomerMessageImg {
-	return &CustomerMessageImg{
+func NewCustomerImgMessage(toUser, mediaID string) *CustomerMessage {
+	return &CustomerMessage{
 		ToUser:  toUser,
 		Msgtype: MsgTypeImage,
 		Image: MediaResource{
@@ -61,21 +53,9 @@ func NewCustomerImgMessage(toUser, mediaID string) *CustomerMessageImg {
 	}
 }
 
-//SendWithToken 发送图片类型客服消息
-func (msg *CustomerMessageImg) SendWithToken(accessToken string) (err error) {
-	return sendCustomerMessage(accessToken, msg)
-}
-
-//CustomerMessageVoice 语音类型客服消息
-type CustomerMessageVoice struct {
-	ToUser  string        `json:"touser"` //接受者OpenID
-	Msgtype string        `json:"msgtype"`
-	Voice   MediaResource `json:"voice"`
-}
-
 //NewCustomerVoiceMessage 语音消息的构造方法
-func NewCustomerVoiceMessage(toUser, mediaID string) *CustomerMessageVoice {
-	return &CustomerMessageVoice{
+func NewCustomerVoiceMessage(toUser, mediaID string) *CustomerMessage {
+	return &CustomerMessage{
 		ToUser:  toUser,
 		Msgtype: MsgTypeVoice,
 		Voice: MediaResource{
@@ -84,16 +64,9 @@ func NewCustomerVoiceMessage(toUser, mediaID string) *CustomerMessageVoice {
 	}
 }
 
-//SendWithToken 语音类型客服消息
-func (msg *CustomerMessageVoice) SendWithToken(accessToken string) (err error) {
-	return sendCustomerMessage(accessToken, msg)
-}
-
-//CustomerMessageVideo 视频类型客服消息 ，
-type CustomerMessageVideo struct {
-	ToUser  string     `json:"touser"` //接受者OpenID
-	Msgtype string     `json:"msgtype"`
-	Video   MediaVideo `json:"video"`
+//MediaResource 图片消息的资源id
+type MediaResource struct {
+	MediaID string `json:"media_id"`
 }
 
 //MediaVideo 视频消息包含的内容
@@ -104,18 +77,6 @@ type MediaVideo struct {
 	Description  string `json:"description"`
 }
 
-//SendWithToken 视频类型客服消息
-func (msg *CustomerMessageVideo) SendWithToken(accessToken string) (err error) {
-	return sendCustomerMessage(accessToken, msg)
-}
-
-//CustomerMessageMusic 音乐类型客服消息
-type CustomerMessageMusic struct {
-	ToUser  string     `json:"touser"` //接受者OpenID
-	Msgtype string     `json:"msgtype"`
-	Music   MediaMusic `json:"music"`
-}
-
 //MediaMusic 音乐消息包括的内容
 type MediaMusic struct {
 	Title        string `json:"title"`
@@ -123,18 +84,6 @@ type MediaMusic struct {
 	Musicurl     string `json:"musicurl"`
 	Hqmusicurl   string `json:"hqmusicurl"`
 	ThumbMediaID string `json:"thumb_media_id"`
-}
-
-//SendWithToken 音乐类型客服消息
-func (msg *CustomerMessageMusic) SendWithToken(accessToken string) (err error) {
-	return sendCustomerMessage(accessToken, msg)
-}
-
-//CustomerMessageNews 图文消息类型客服消息，点击跳转到外链
-type CustomerMessageNews struct {
-	ToUser  string    `json:"touser"` //接受者OpenID
-	Msgtype MsgType   `json:"msgtype"`
-	News    MediaNews `json:"articles"`
 }
 
 //MediaNews 图文消息的内容
@@ -150,30 +99,6 @@ type MediaArticles struct {
 	Picurl      string `json:"picurl"`
 }
 
-//SendWithToken 图文消息类型客服消息，点击跳转到外链
-func (msg *CustomerMessageNews) SendWithToken(accessToken string) (err error) {
-	return sendCustomerMessage(accessToken, msg)
-}
-
-//CustomerMessageInnerNews 图文消息类型客服消息,点击跳转到图文消息页面
-type CustomerMessageInnerNews struct {
-	ToUser  string        `json:"touser"` //接受者OpenID
-	Msgtype string        `json:"msgtype"`
-	News    MediaResource `json:"mpnews"`
-}
-
-//SendWithToken 图文消息类型客服消息,点击跳转到图文消息页面
-func (msg *CustomerMessageInnerNews) SendWithToken(accessToken string) (err error) {
-	return sendCustomerMessage(accessToken, msg)
-}
-
-//CustomerMessageMsgmenu 菜单类型客服消息
-type CustomerMessageMsgmenu struct {
-	ToUser  string       `json:"touser"` //接受者OpenID
-	Msgtype MsgType      `json:"msgtype"`
-	News    MediaMsgmenu `json:"msgmenu"`
-}
-
 //MediaMsgmenu 菜单消息的内容
 type MediaMsgmenu struct {
 	HeadContent string        `json:"head_content"`
@@ -187,33 +112,9 @@ type MsgmenuItem struct {
 	Content string `json:"content"`
 }
 
-//SendWithToken 发送菜单类型客服消息
-func (msg *CustomerMessageMsgmenu) SendWithToken(accessToken string) (err error) {
-	return sendCustomerMessage(accessToken, msg)
-}
-
-//CustomerMessageWxcard 卡券类型客服消息
-type CustomerMessageWxcard struct {
-	ToUser  string      `json:"touser"` //接受者OpenID
-	Msgtype MsgType     `json:"msgtype"`
-	Wxcard  MediaWxcard `json:"wxcard"`
-}
-
 //MediaWxcard 卡券的id
 type MediaWxcard struct {
 	CardID string `json:"card_id"`
-}
-
-//SendWithToken 发送卡券类型客服消息
-func (msg *CustomerMessageWxcard) SendWithToken(accessToken string) (err error) {
-	return sendCustomerMessage(accessToken, msg)
-}
-
-//CustomerMessageMiniprogrampage 卡券类型客服消息
-type CustomerMessageMiniprogrampage struct {
-	ToUser          string               `json:"touser"` // 接受者OpenID
-	Msgtype         MsgType              `json:"msgtype"`
-	Miniprogrampage MediaMiniprogrampage `json:"miniprogrampage"` //
 }
 
 //MediaMiniprogrampage 小程序消息
@@ -224,13 +125,8 @@ type MediaMiniprogrampage struct {
 	ThumbMediaID string `json:"thumb_media_id"`
 }
 
-//SendWithToken 发送卡券类型客服消息
-func (msg *CustomerMessageMiniprogrampage) SendWithToken(accessToken string) (err error) {
-	return sendCustomerMessage(accessToken, msg)
-}
-
-//sendCustomerMessage 发送客服消息
-func sendCustomerMessage(accessToken string, msg interface{}) (err error) {
+//发送客服消息
+func (msg *CustomerMessage) SendWithToken(accessToken string) (err error) {
 
 	uri := fmt.Sprintf("%s?access_token=%s", customerSendMessage, accessToken)
 	response, err := util.PostJSON(uri, msg)
