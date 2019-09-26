@@ -12,13 +12,13 @@ const (
 
 //文本类型客服消息
 type CustomerMessageText struct {
-	ToUser  string    `json:"touser"`  // 必须, 接受者OpenID
-	Msgtype MsgType    `json:"msgtype"` //
-	Text    MediaText `json:"text"`    //
+	ToUser  string    `json:"touser"`  //接受者OpenID
+	Msgtype MsgType    `json:"msgtype"`
+	Text    MediaText `json:"text"`
 }
 
 type MediaText struct {
-	Content string `json:"content"` //
+	Content string `json:"content"`
 }
 
 func NewCustomerTextMessage(toUser, text string) *CustomerMessageText {
@@ -38,13 +38,13 @@ func (msg *CustomerMessageText) SendWithToken(accessToken string) (err error) {
 
 //图片类型客服消息
 type CustomerMessageImg struct {
-	ToUser  string        `json:"touser"`  // 必须, 接受者OpenID
-	Msgtype string        `json:"msgtype"` //
-	Image   MediaResource `json:"image"`   //
+	ToUser  string        `json:"touser"`  //接受者OpenID
+	Msgtype string        `json:"msgtype"`
+	Image   MediaResource `json:"image"`
 }
 
 type MediaResource struct {
-	MediaId string `json:"media_id"` //
+	MediaId string `json:"media_id"`
 }
 
 func NewCustomerImgMessage(toUser, mediaId string) *CustomerMessageImg {
@@ -64,9 +64,9 @@ func (msg *CustomerMessageImg) SendWithToken(accessToken string) (err error) {
 
 //语音类型客服消息
 type CustomerMessageVoice struct {
-	ToUser  string        `json:"touser"`  // 必须, 接受者OpenID
-	Msgtype string        `json:"msgtype"` //
-	Voice   MediaResource `json:"voice"`   //
+	ToUser  string        `json:"touser"`  //接受者OpenID
+	Msgtype string        `json:"msgtype"`
+	Voice   MediaResource `json:"voice"`
 }
 
 func NewCustomerVoiceMessage(toUser, mediaId string) *CustomerMessageVoice {
@@ -85,9 +85,9 @@ func (msg *CustomerMessageVoice) SendWithToken(accessToken string) (err error) {
 
 //视频类型客服消息 ，
 type CustomerMessageVideo struct {
-	ToUser  string     `json:"touser"`  // 必须, 接受者OpenID
-	Msgtype string     `json:"msgtype"` //
-	Video   MediaVideo `json:"video"`   //
+	ToUser  string     `json:"touser"`  //接受者OpenID
+	Msgtype string     `json:"msgtype"`
+	Video   MediaVideo `json:"video"`
 }
 
 type MediaVideo struct {
@@ -104,9 +104,9 @@ func (msg *CustomerMessageVideo) SendWithToken(accessToken string) (err error) {
 
 //音乐类型客服消息
 type CustomerMessageMusic struct {
-	ToUser  string     `json:"touser"`  // 必须, 接受者OpenID
-	Msgtype string     `json:"msgtype"` //
-	Music   MediaMusic `json:"music"`   //
+	ToUser  string     `json:"touser"`  //接受者OpenID
+	Msgtype string     `json:"msgtype"`
+	Music   MediaMusic `json:"music"`
 }
 
 type MediaMusic struct {
@@ -124,13 +124,13 @@ func (msg *CustomerMessageMusic) SendWithToken(accessToken string) (err error) {
 
 //图文消息类型客服消息，点击跳转到外链
 type CustomerMessageNews struct {
-	ToUser  string    `json:"touser"`   // 必须, 接受者OpenID
-	Msgtype MsgType    `json:"msgtype"`  //
-	News    MediaNews `json:"articles"` //
+	ToUser  string    `json:"touser"`   //接受者OpenID
+	Msgtype MsgType    `json:"msgtype"`
+	News    MediaNews `json:"articles"`
 }
 
 type MediaNews struct {
-	Articles []MediaArticles `json:"articles"` //
+	Articles []MediaArticles `json:"articles"`
 }
 
 type MediaArticles struct {
@@ -147,9 +147,9 @@ func (msg *CustomerMessageNews) SendWithToken(accessToken string) (err error) {
 
 //图文消息类型客服消息,点击跳转到图文消息页面
 type CustomerMessageInnerNews struct {
-	ToUser  string        `json:"touser"`  // 必须, 接受者OpenID
-	Msgtype string        `json:"msgtype"` //
-	News    MediaResource `json:"mpnews"`  //
+	ToUser  string        `json:"touser"`  //接受者OpenID
+	Msgtype string        `json:"msgtype"`
+	News    MediaResource `json:"mpnews"`
 }
 
 //图文消息类型客服消息,点击跳转到图文消息页面
@@ -162,9 +162,9 @@ func (msg *CustomerMessageInnerNews) SendWithToken(accessToken string) (err erro
 
 //菜单类型客服消息
 type CustomerMessageMsgmenu struct {
-	ToUser  string    `json:"touser"`   // 必须, 接受者OpenID
-	Msgtype MsgType    `json:"msgtype"`  //
-	News    MediaMsgmenu `json:"msgmenu"` //
+	ToUser  string    `json:"touser"`   //接受者OpenID
+	Msgtype MsgType    `json:"msgtype"`
+	News    MediaMsgmenu `json:"msgmenu"`
 }
 
 type MediaMsgmenu struct {
@@ -185,9 +185,9 @@ func (msg *CustomerMessageMsgmenu) SendWithToken(accessToken string) (err error)
 
 //卡券类型客服消息
 type CustomerMessageWxcard struct {
-	ToUser  string    `json:"touser"`   // 必须, 接受者OpenID
-	Msgtype MsgType    `json:"msgtype"`  //
-	Wxcard    MediaWxcard `json:"wxcard"` //
+	ToUser  string    `json:"touser"`   //接受者OpenID
+	Msgtype MsgType    `json:"msgtype"`
+	Wxcard    MediaWxcard `json:"wxcard"`
 }
 
 type MediaWxcard struct {
@@ -201,8 +201,8 @@ func (msg *CustomerMessageWxcard) SendWithToken(accessToken string) (err error) 
 
 //卡券类型客服消息
 type CustomerMessageMiniprogrampage struct {
-	ToUser  string    `json:"touser"`   // 必须, 接受者OpenID
-	Msgtype MsgType    `json:"msgtype"`  //
+	ToUser  string    `json:"touser"`   // 接受者OpenID
+	Msgtype MsgType    `json:"msgtype"`
 	Miniprogrampage    MediaMiniprogrampage `json:"miniprogrampage"` //
 }
 
