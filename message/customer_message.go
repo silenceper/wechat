@@ -10,7 +10,7 @@ const (
 	customerSendMessage = "https://api.weixin.qq.com/cgi-bin/message/custom/send"
 )
 
-//CustomerMessage 文本类型客服消息
+//CustomerMessage  客服消息
 type CustomerMessage struct {
 	ToUser          string                `json:"touser"`                    //接受者OpenID
 	Msgtype         MsgType               `json:"msgtype"`                   //客服消息类型
@@ -64,7 +64,7 @@ type MediaText struct {
 	Content string `json:"content"`
 }
 
-//MediaResource 图片消息的资源id
+//MediaResource  消息使用的永久素材id
 type MediaResource struct {
 	MediaID string `json:"media_id"`
 }
