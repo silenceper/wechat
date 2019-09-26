@@ -12,18 +12,18 @@ const (
 
 //CustomerMessage 文本类型客服消息
 type CustomerMessage struct {
-	ToUser          string               `json:"touser"`          //接受者OpenID
-	Msgtype         MsgType              `json:"msgtype"`         //客服消息类型
-	Text            MediaText            `json:"text,omitempty"`            //可选
-	Image           MediaResource        `json:"image,omitempty"`           //可选
-	Voice           MediaResource        `json:"voice,omitempty"`           //可选
-	Video           MediaVideo           `json:"video,omitempty"`           //可选
-	Music           MediaMusic           `json:"music,omitempty"`           //可选
-	News            MediaNews            `json:"news,omitempty"`            //可选
-	Mpnews          MediaResource        `json:"mpnews,omitempty"`          //可选
-	Wxcard          MediaWxcard          `json:"wxcard,omitempty"`          //可选
-	Msgmenu         MediaMsgmenu         `json:"msgmenu,omitempty"`         //可选
-	Miniprogrampage MediaMiniprogrampage `json:"miniprogrampage,omitempty"` //可选
+	ToUser          string                `json:"touser"`                    //接受者OpenID
+	Msgtype         MsgType               `json:"msgtype"`                   //客服消息类型
+	Text            *MediaText            `json:"text,omitempty"`            //可选
+	Image           *MediaResource        `json:"image,omitempty"`           //可选
+	Voice           *MediaResource        `json:"voice,omitempty"`           //可选
+	Video           *MediaVideo           `json:"video,omitempty"`           //可选
+	Music           *MediaMusic           `json:"music,omitempty"`           //可选
+	News            *MediaNews            `json:"news,omitempty"`            //可选
+	Mpnews          *MediaResource        `json:"mpnews,omitempty"`          //可选
+	Wxcard          *MediaWxcard          `json:"wxcard,omitempty"`          //可选
+	Msgmenu         *MediaMsgmenu         `json:"msgmenu,omitempty"`         //可选
+	Miniprogrampage *MediaMiniprogrampage `json:"miniprogrampage,omitempty"` //可选
 }
 
 //NewCustomerTextMessage 文本消息结构体构造方法
@@ -31,7 +31,7 @@ func NewCustomerTextMessage(toUser, text string) *CustomerMessage {
 	return &CustomerMessage{
 		ToUser:  toUser,
 		Msgtype: MsgTypeText,
-		Text: MediaText{
+		Text: &MediaText{
 			text,
 		},
 	}
@@ -42,7 +42,7 @@ func NewCustomerImgMessage(toUser, mediaID string) *CustomerMessage {
 	return &CustomerMessage{
 		ToUser:  toUser,
 		Msgtype: MsgTypeImage,
-		Image: MediaResource{
+		Image: &MediaResource{
 			mediaID,
 		},
 	}
@@ -53,7 +53,7 @@ func NewCustomerVoiceMessage(toUser, mediaID string) *CustomerMessage {
 	return &CustomerMessage{
 		ToUser:  toUser,
 		Msgtype: MsgTypeVoice,
-		Voice: MediaResource{
+		Voice: &MediaResource{
 			mediaID,
 		},
 	}
