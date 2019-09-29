@@ -130,14 +130,13 @@ func (msg *CustomerMessage) SendWithToken(accessToken string) (err error) {
 
 	uri := fmt.Sprintf("%s?access_token=%s", customerSendMessage, accessToken)
 	response, err := util.PostJSON(uri, msg)
-	fmt.Println("SendTem uri", uri)
-	var result util.CommonError
+ 	var result util.CommonError
 	err = json.Unmarshal(response, &result)
 	if err != nil {
 		return
 	}
 	if result.ErrCode != 0 {
-		err = fmt.Errorf("template msg send error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
+		err = fmt.Errorf("customer msg send error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return
 	}
 
