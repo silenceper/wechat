@@ -4,11 +4,24 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/silenceper/wechat/util"
+	"github.com/silenceper/wechat/context"
 )
 
 const (
 	customerSendMessage = "https://api.weixin.qq.com/cgi-bin/message/custom/send"
 )
+
+//MessageManager 消息管理者，可以发送消息
+type MessageManager struct {
+	*context.Context
+}
+
+//NewMessageManager 实例化消息管理者
+func NewMessageManager(context *context.Context) *MessageManager {
+	return &MessageManager{
+		context,
+	}
+}
 
 //CustomerMessage  客服消息
 type CustomerMessage struct {
@@ -126,18 +139,21 @@ type MediaMiniprogrampage struct {
 }
 
 //SendWithToken 发送客服消息
-func (msg *CustomerMessage) SendWithToken(accessToken string) (err error) {
-
+func (manager *MessageManager) Send(msg  *CustomerMessage) error {
+	accessToken,err:=manager.Context.GetAccessToken()
+	if err!=nil {
+		return err
+	}
 	uri := fmt.Sprintf("%s?access_token=%s", customerSendMessage, accessToken)
 	response, err := util.PostJSON(uri, msg)
  	var result util.CommonError
 	err = json.Unmarshal(response, &result)
 	if err != nil {
-		return
+		return err
 	}
 	if result.ErrCode != 0 {
 		err = fmt.Errorf("customer msg send error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return
+		return err
 	}
 
 	return nil
