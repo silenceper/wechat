@@ -11,8 +11,8 @@ const (
 	customerSendMessage = "https://api.weixin.qq.com/cgi-bin/message/custom/send"
 )
 
-//MessageManager 消息管理者，可以发送消息
-type MessageManager struct {
+//Manager 消息管理者，可以发送消息
+type Manager struct {
 	*context.Context
 }
 
