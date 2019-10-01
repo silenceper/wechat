@@ -17,8 +17,8 @@ type Manager struct {
 }
 
 //NewMessageManager 实例化消息管理者
-func NewMessageManager(context *context.Context) *MessageManager {
-	return &MessageManager{
+func NewMessageManager(context *context.Context) *Manager {
+	return &Manager{
 		context,
 	}
 }
@@ -139,7 +139,7 @@ type MediaMiniprogrampage struct {
 }
 
 //Send 发送客服消息
-func (manager *MessageManager) Send(msg  *CustomerMessage) error {
+func (manager *Manager) Send(msg  *CustomerMessage) error {
 	accessToken,err:=manager.Context.GetAccessToken()
 	if err!=nil {
 		return err
