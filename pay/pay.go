@@ -27,6 +27,8 @@ type Params struct {
 	OutTradeNo string
 	OpenID     string
 	TradeType  string
+	SceneInfo  string
+	LimitPay   string
 }
 
 // Config 是传出用于 jsdk 用的参数
@@ -50,6 +52,7 @@ type PreOrder struct {
 	TradeType  string `xml:"trade_type,omitempty"`
 	PrePayID   string `xml:"prepay_id,omitempty"`
 	CodeURL    string `xml:"code_url,omitempty"`
+	MWebURL    string `xml:"mweb_url,omitempty"`
 	ErrCode    string `xml:"err_code,omitempty"`
 	ErrCodeDes string `xml:"err_code_des,omitempty"`
 }
@@ -100,6 +103,8 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	param["total_fee"] = p.TotalFee
 	param["trade_type"] = p.TradeType
 	param["openid"] = p.OpenID
+	param["scene_info"] = p.SceneInfo
+	param["limit_pay"] = p.LimitPay
 
 	bizKey := "&key=" + pcf.PayKey
 	str := orderParam(param, bizKey)
@@ -116,6 +121,8 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		NotifyURL:      pcf.PayNotifyURL,
 		TradeType:      p.TradeType,
 		OpenID:         p.OpenID,
+		SceneInfo:		p.SceneInfo,
+		LimitPay:		p.LimitPay,
 	}
 	rawRet, err := util.PostXML(payGateway, request)
 	if err != nil {

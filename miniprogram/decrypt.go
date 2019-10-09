@@ -19,23 +19,36 @@ var (
 	ErrInvalidPKCS7Padding = errors.New("invalid padding on input")
 )
 
-// UserInfo 用户信息
-type UserInfo struct {
-	OpenID    string `json:"openId"`
-	UnionID   string `json:"unionId"`
-	NickName  string `json:"nickName"`
-	Gender    int    `json:"gender"`
-	City      string `json:"city"`
-	Province  string `json:"province"`
-	Country   string `json:"country"`
-	AvatarURL string `json:"avatarUrl"`
-	Language  string `json:"language"`
+// DecryptedData 解密信息
+type DecryptedData struct {
+	// 用户授权
+	OpenID    string `json:"openId,omitempty"`
+	UnionID   string `json:"unionId,omitempty"`
+	NickName  string `json:"nickName,omitempty"`
+	Gender    int    `json:"gender,omitempty"`
+	City      string `json:"city,omitempty"`
+	Province  string `json:"province,omitempty"`
+	Country   string `json:"country,omitempty"`
+	AvatarURL string `json:"avatarUrl,omitempty"`
+	Language  string `json:"language,omitempty"`
 	Watermark struct {
 		Timestamp int64  `json:"timestamp"`
 		AppID     string `json:"appid"`
-	} `json:"watermark"`
+	} `json:"watermark,omitempty"`
+	// 手机授权
+	PhoneNumber     	string 			`json:"phoneNumber,omitempty"`
+	PurePhoneNumber 	string 			`json:"purePhoneNumber,omitempty"`
+	CountryCode     	string 			`json:"countryCode,omitempty"`
+	// 运动步数
+	StepInfoList 		[]StepInfo 		`json:"stepInfoList,omitempty"`
 }
 
+// StepInfo 用户微信运动步数(单条)
+type StepInfo struct {
+	Timestamp 	int64 	`json:"timestamp"`
+	Step 		int 	`json:"step"`
+}
+	
 // pkcs7Unpad returns slice of the original data without padding
 func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
 	if blockSize <= 0 {
@@ -58,7 +71,7 @@ func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
 }
 
 // Decrypt 解密数据
-func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*UserInfo, error) {
+func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*DecryptedData, error) {
 	aesKey, err := base64.StdEncoding.DecodeString(sessionKey)
 	if err != nil {
 		return nil, err
@@ -81,12 +94,12 @@ func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*UserInfo
 	if err != nil {
 		return nil, err
 	}
-	var userInfo UserInfo
+	var userInfo DecryptedData
 	err = json.Unmarshal(cipherText, &userInfo)
 	if err != nil {
 		return nil, err
 	}
-	if userInfo.Watermark.AppID != wxa.AppID {
+	if userInfo.Watermark.AppID != "" && userInfo.Watermark.AppID != wxa.AppID {
 		return nil, ErrAppIDNotMatch
 	}
 	return &userInfo, nil
