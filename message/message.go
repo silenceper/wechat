@@ -81,7 +81,7 @@ type MixMessage struct {
 	CommonToken
 
 	//基本消息
-	MsgID        int64   `xml:"MsgId"`
+	MsgID        int64   `xml:"MsgID"`
 	Content      string  `xml:"Content"`
 	Recognition  string  `xml:"Recognition"`
 	PicURL       string  `xml:"PicUrl"`
