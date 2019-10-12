@@ -47,27 +47,6 @@ type PhoneInfo struct {
 	} `json:"watermark"`
 }
 
-// pkcs7Unpad returns slice of the original data without padding
-func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
-	if blockSize <= 0 {
-		return nil, ErrInvalidBlockSize
-	}
-	if len(data)%blockSize != 0 || len(data) == 0 {
-		return nil, ErrInvalidPKCS7Data
-	}
-	c := data[len(data)-1]
-	n := int(c)
-	if n == 0 || n > len(data) {
-		return nil, ErrInvalidPKCS7Padding
-	}
-	for i := 0; i < n; i++ {
-		if data[len(data)-n+i] != c {
-			return nil, ErrInvalidPKCS7Padding
-		}
-	}
-	return data[:len(data)-n], nil
-}
-
 // get cipherText
 func getCipherText(sessionKey, encryptedData, iv string) ([]byte, error) {
 	aesKey, err := base64.StdEncoding.DecodeString(sessionKey)
@@ -95,7 +74,28 @@ func getCipherText(sessionKey, encryptedData, iv string) ([]byte, error) {
 	return cipherText, nil
 }
 
-// Decrypt 解密数据(用户)
+// pkcs7Unpad returns slice of the original data without padding
+func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
+	if blockSize <= 0 {
+		return nil, ErrInvalidBlockSize
+	}
+	if len(data)%blockSize != 0 || len(data) == 0 {
+		return nil, ErrInvalidPKCS7Data
+	}
+	c := data[len(data)-1]
+	n := int(c)
+	if n == 0 || n > len(data) {
+		return nil, ErrInvalidPKCS7Padding
+	}
+	for i := 0; i < n; i++ {
+		if data[len(data)-n+i] != c {
+			return nil, ErrInvalidPKCS7Padding
+		}
+	}
+	return data[:len(data)-n], nil
+}
+
+// Decrypt 解密数据
 func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*UserInfo, error) {
 	cipherText, err := getCipherText(sessionKey, encryptedData, iv)
 	if err != nil {
@@ -113,7 +113,7 @@ func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*UserInfo
 }
 
 // DecryptPhone 解密数据(手机)
-func (wxa *MiniProgram) DecryptPHone(sessionKey, encryptedData, iv string) (*PhoneInfo, error) {
+func (wxa *MiniProgram) DecryptPhone(sessionKey, encryptedData, iv string) (*PhoneInfo, error) {
 	cipherText, err := getCipherText(sessionKey, encryptedData, iv)
 	if err != nil {
 		return nil, err
