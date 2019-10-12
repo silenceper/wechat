@@ -36,7 +36,7 @@ type UserInfo struct {
 	} `json:"watermark"`
 }
 
-// 用户手机号
+// PhoneInfo 用户手机号
 type PhoneInfo struct {
 	PhoneNumber     string `json:"phoneNumber"`
 	PurePhoneNumber string `json:"purePhoneNumber"`
@@ -47,7 +47,28 @@ type PhoneInfo struct {
 	} `json:"watermark"`
 }
 
-// get cipherText
+// pkcs7Unpad returns slice of the original data without padding
+func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
+	if blockSize <= 0 {
+		return nil, ErrInvalidBlockSize
+	}
+	if len(data)%blockSize != 0 || len(data) == 0 {
+		return nil, ErrInvalidPKCS7Data
+	}
+	c := data[len(data)-1]
+	n := int(c)
+	if n == 0 || n > len(data) {
+		return nil, ErrInvalidPKCS7Padding
+	}
+	for i := 0; i < n; i++ {
+		if data[len(data)-n+i] != c {
+			return nil, ErrInvalidPKCS7Padding
+		}
+	}
+	return data[:len(data)-n], nil
+}
+
+// getCipherText returns slice of the cipher text
 func getCipherText(sessionKey, encryptedData, iv string) ([]byte, error) {
 	aesKey, err := base64.StdEncoding.DecodeString(sessionKey)
 	if err != nil {
@@ -72,27 +93,6 @@ func getCipherText(sessionKey, encryptedData, iv string) ([]byte, error) {
 		return nil, err
 	}
 	return cipherText, nil
-}
-
-// pkcs7Unpad returns slice of the original data without padding
-func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
-	if blockSize <= 0 {
-		return nil, ErrInvalidBlockSize
-	}
-	if len(data)%blockSize != 0 || len(data) == 0 {
-		return nil, ErrInvalidPKCS7Data
-	}
-	c := data[len(data)-1]
-	n := int(c)
-	if n == 0 || n > len(data) {
-		return nil, ErrInvalidPKCS7Padding
-	}
-	for i := 0; i < n; i++ {
-		if data[len(data)-n+i] != c {
-			return nil, ErrInvalidPKCS7Padding
-		}
-	}
-	return data[:len(data)-n], nil
 }
 
 // Decrypt 解密数据
