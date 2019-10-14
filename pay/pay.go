@@ -2,10 +2,17 @@ package pay
 
 import (
 	"bytes"
+	"crypto/hmac"
+	"crypto/md5"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/xml"
 	"errors"
+	"hash"
 	"sort"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/util"
@@ -27,15 +34,17 @@ type Params struct {
 	OutTradeNo string
 	OpenID     string
 	TradeType  string
+	SignType   string
 }
 
-// Config 是传出用于 jsdk 用的参数
+// Config 是传出用于 js sdk 用的参数
 type Config struct {
-	Timestamp int64
-	NonceStr  string
-	PrePayID  string
-	SignType  string
-	Sign      string
+	Timestamp string `json:"timestamp"`
+	NonceStr  string `json:"nonceStr"`
+	PrePayID  string `json:"prePayId"`
+	SignType  string `json:"signType"`
+	Package   string `json:"package"`
+	PaySign   string `json:"paySign"`
 }
 
 // PreOrder 是 unifie order 接口的返回
@@ -84,6 +93,48 @@ type payRequest struct {
 func NewPay(ctx *context.Context) *Pay {
 	pay := Pay{Context: ctx}
 	return &pay
+}
+
+// BridgeConfig get js bridge config
+func (pcf *Pay) BridgeConfig(p *Params) (cfg Config, err error) {
+	var (
+		buffer    strings.Builder
+		h         hash.Hash
+		timestamp = strconv.FormatInt(time.Now().Unix(), 10)
+	)
+	order, err := pcf.PrePayOrder(p)
+	if err != nil {
+		return
+	}
+	if p.SignType == "" {
+		p.SignType = "MD5"
+	}
+	buffer.WriteString("appId=")
+	buffer.WriteString(order.AppID)
+	buffer.WriteString("&nonceStr=")
+	buffer.WriteString(order.NonceStr)
+	buffer.WriteString("&package=")
+	buffer.WriteString("prepay_id=" + order.PrePayID)
+	buffer.WriteString("&signType=")
+	buffer.WriteString(p.SignType)
+	buffer.WriteString("&timeStamp=")
+	buffer.WriteString(timestamp)
+	buffer.WriteString("&key=")
+	buffer.WriteString(pcf.PayKey)
+	if p.SignType == "MD5" {
+		h = md5.New()
+	} else {
+		h = hmac.New(sha256.New, []byte(pcf.PayKey))
+	}
+	h.Write([]byte(buffer.String()))
+	// 签名
+	cfg.PaySign = strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
+	cfg.NonceStr = order.NonceStr
+	cfg.Timestamp = timestamp
+	cfg.PrePayID = order.PrePayID
+	cfg.SignType = p.SignType
+	cfg.Package = "prepay_id=" + order.PrePayID
+	return
 }
 
 // PrePayOrder return data for invoke wechat payment
