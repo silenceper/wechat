@@ -38,7 +38,7 @@ type Params struct {
 	Detail     string
 	Attach     string
 	GoodsTag   string
-	NotifyUrl  string
+	NotifyURL  string
 }
 
 // Config 是传出用于 js sdk 用的参数
@@ -67,7 +67,7 @@ type PreOrder struct {
 	ErrCodeDes string `xml:"err_code_des,omitempty"`
 }
 
-//payRequest 接口请求参数
+// payRequest 接口请求参数
 type payRequest struct {
 	AppID          string `xml:"appid"`
 	MchID          string `xml:"mch_id"`
@@ -77,20 +77,20 @@ type payRequest struct {
 	SignType       string `xml:"sign_type,omitempty"`
 	Body           string `xml:"body"`
 	Detail         string `xml:"detail,omitempty"`
-	Attach         string `xml:"attach,omitempty"`      //附加数据
-	OutTradeNo     string `xml:"out_trade_no"`          //商户订单号
-	FeeType        string `xml:"fee_type,omitempty"`    //标价币种
-	TotalFee       string `xml:"total_fee"`             //标价金额
-	SpbillCreateIP string `xml:"spbill_create_ip"`      //终端IP
-	TimeStart      string `xml:"time_start,omitempty"`  //交易起始时间
-	TimeExpire     string `xml:"time_expire,omitempty"` //交易结束时间
-	GoodsTag       string `xml:"goods_tag,omitempty"`   //订单优惠标记
-	NotifyURL      string `xml:"notify_url"`            //通知地址
-	TradeType      string `xml:"trade_type"`            //交易类型
-	ProductID      string `xml:"product_id,omitempty"`  //商品ID
+	Attach         string `xml:"attach,omitempty"`      // 附加数据
+	OutTradeNo     string `xml:"out_trade_no"`          // 商户订单号
+	FeeType        string `xml:"fee_type,omitempty"`    // 标价币种
+	TotalFee       string `xml:"total_fee"`             // 标价金额
+	SpbillCreateIP string `xml:"spbill_create_ip"`      // 终端IP
+	TimeStart      string `xml:"time_start,omitempty"`  // 交易起始时间
+	TimeExpire     string `xml:"time_expire,omitempty"` // 交易结束时间
+	GoodsTag       string `xml:"goods_tag,omitempty"`   // 订单优惠标记
+	NotifyURL      string `xml:"notify_url"`            // 通知地址
+	TradeType      string `xml:"trade_type"`            // 交易类型
+	ProductID      string `xml:"product_id,omitempty"`  // 商品ID
 	LimitPay       string `xml:"limit_pay,omitempty"`   //
-	OpenID         string `xml:"openid,omitempty"`      //用户标识
-	SceneInfo      string `xml:"scene_info,omitempty"`  //场景信息
+	OpenID         string `xml:"openid,omitempty"`      // 用户标识
+	SceneInfo      string `xml:"scene_info,omitempty"`  // 场景信息
 }
 
 // NewPay return an instance of Pay package
@@ -153,7 +153,7 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	param["spbill_create_ip"] = p.CreateIP
 	param["total_fee"] = p.TotalFee
 	param["trade_type"] = p.TradeType
-	param["openid"] = p.OpenID
+	param["openid"] = p.OpenIDÒ
 	param["detail"] = p.Detail
 	param["attach"] = p.Attach
 	param["goods_tag"] = p.GoodsTag
@@ -192,7 +192,7 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		return
 	}
 	if payOrder.ReturnCode == "SUCCESS" {
-		//pay success
+		// pay success
 		if payOrder.ResultCode == "SUCCESS" {
 			err = nil
 			return
