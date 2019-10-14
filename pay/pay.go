@@ -160,6 +160,7 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	param["total_fee"] = p.TotalFee
 	param["trade_type"] = p.TradeType
 	param["openid"] = p.OpenID
+	param["sign_type"] = p.SignType
 	param["detail"] = p.Detail
 	param["attach"] = p.Attach
 	param["goods_tag"] = p.GoodsTag
