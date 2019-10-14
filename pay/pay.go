@@ -163,8 +163,8 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		param["sign_type"] = p.SignType
 	}
 	// 通知地址
-	if p.NotifyUrl != "" {
-		param["notify_url"] = p.NotifyUrl
+	if p.NotifyURL != "" {
+		param["notify_url"] = p.NotifyURL
 	}
 
 	bizKey := "&key=" + pcf.PayKey
