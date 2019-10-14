@@ -110,9 +110,6 @@ func (pcf *Pay) BridgeConfig(p *Params) (cfg Config, err error) {
 	if err != nil {
 		return
 	}
-	if p.SignType == "" {
-		p.SignType = "MD5"
-	}
 	buffer.WriteString("appId=")
 	buffer.WriteString(order.AppID)
 	buffer.WriteString("&nonceStr=")
@@ -144,6 +141,15 @@ func (pcf *Pay) BridgeConfig(p *Params) (cfg Config, err error) {
 // PrePayOrder return data for invoke wechat payment
 func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	nonceStr := util.RandomStr(32)
+	notifyURL := pcf.PayNotifyURL
+	// 签名类型
+	if p.SignType == "" {
+		p.SignType = "MD5"
+	}
+	// 通知地址
+	if p.NotifyURL != "" {
+		notifyURL = p.NotifyURL
+	}
 	param := make(map[string]interface{})
 	param["appid"] = pcf.AppID
 	param["body"] = p.Body
@@ -153,19 +159,11 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	param["spbill_create_ip"] = p.CreateIP
 	param["total_fee"] = p.TotalFee
 	param["trade_type"] = p.TradeType
-	param["openid"] = p.OpenIDÒ
+	param["openid"] = p.OpenID
 	param["detail"] = p.Detail
 	param["attach"] = p.Attach
 	param["goods_tag"] = p.GoodsTag
-	param["notify_url"] = pcf.PayNotifyURL
-	// 签名类型
-	if p.SignType != "" {
-		param["sign_type"] = p.SignType
-	}
-	// 通知地址
-	if p.NotifyURL != "" {
-		param["notify_url"] = p.NotifyURL
-	}
+	param["notify_url"] = notifyURL
 
 	bizKey := "&key=" + pcf.PayKey
 	str := orderParam(param, bizKey)
@@ -179,9 +177,13 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		OutTradeNo:     p.OutTradeNo,
 		TotalFee:       p.TotalFee,
 		SpbillCreateIP: p.CreateIP,
-		NotifyURL:      pcf.PayNotifyURL,
+		NotifyURL:      notifyURL,
 		TradeType:      p.TradeType,
 		OpenID:         p.OpenID,
+		SignType:       p.SignType,
+		Detail:         p.Detail,
+		Attach:         p.Attach,
+		GoodsTag:       p.GoodsTag,
 	}
 	rawRet, err := util.PostXML(payGateway, request)
 	if err != nil {
