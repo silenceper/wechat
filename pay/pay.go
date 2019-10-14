@@ -35,6 +35,10 @@ type Params struct {
 	OpenID     string
 	TradeType  string
 	SignType   string
+	Detail     string
+	Attach     string
+	GoodsTag   string
+	NotifyUrl  string
 }
 
 // Config 是传出用于 js sdk 用的参数
@@ -145,12 +149,23 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	param["body"] = p.Body
 	param["mch_id"] = pcf.PayMchID
 	param["nonce_str"] = nonceStr
-	param["notify_url"] = pcf.PayNotifyURL
 	param["out_trade_no"] = p.OutTradeNo
 	param["spbill_create_ip"] = p.CreateIP
 	param["total_fee"] = p.TotalFee
 	param["trade_type"] = p.TradeType
 	param["openid"] = p.OpenID
+	param["detail"] = p.Detail
+	param["attach"] = p.Attach
+	param["goods_tag"] = p.GoodsTag
+	param["notify_url"] = pcf.PayNotifyURL
+	// 签名类型
+	if p.SignType != "" {
+		param["sign_type"] = p.SignType
+	}
+	// 通知地址
+	if p.NotifyUrl != "" {
+		param["notify_url"] = p.NotifyUrl
+	}
 
 	bizKey := "&key=" + pcf.PayKey
 	str := orderParam(param, bizKey)
