@@ -63,6 +63,8 @@ const (
 	EventLocationSelect = "location_select"
 	//EventTemplateSendJobFinish 发送模板消息推送通知
 	EventTemplateSendJobFinish = "TEMPLATESENDJOBFINISH"
+	//EventWxaMediaCheck 异步校验图片/音频是否含有违法违规内容推送事件
+	EventWxaMediaCheck = "wxa_media_check"
 )
 
 const (
@@ -144,6 +146,12 @@ type MixMessage struct {
 	OuterStr            string `xml:"OuterStr"`
 	IsRestoreMemberCard int32  `xml:"IsRestoreMemberCard"`
 	UnionID             string `xml:"UnionId"`
+
+	// 内容审核相关
+	IsRisky 		    bool `xml:"isrisky"`
+	ExtraInfoJSON 		string `xml:"extra_info_json"`
+	TraceID 			string `xml:"trace_id"`
+	StatusCode          int `xml:"status_code"`
 }
 
 //EventPic 发图事件推送
