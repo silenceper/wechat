@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/silenceper/wechat/util"
+	"gitee.com/zhimiao/wechat-sdk/util"
 )
 
 const (

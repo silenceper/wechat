@@ -5,8 +5,8 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
-	"github.com/silenceper/wechat"
-	"github.com/silenceper/wechat/message"
+	"gitee.com/zhimiao/wechat-sdk"
+	"gitee.com/zhimiao/wechat-sdk/message"
 )
 
 func hello(ctx *context.Context) {
