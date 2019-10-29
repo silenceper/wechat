@@ -10,5 +10,6 @@ type Text struct {
 func NewText(content string) *Text {
 	text := new(Text)
 	text.Content = content
+	text.MsgType = MsgTypeText
 	return text
 }

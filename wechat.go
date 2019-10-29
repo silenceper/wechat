@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"gitee.com/zhimiao/wechat-sdk/open"
 	"net/http"
 	"sync"
 
@@ -70,6 +71,11 @@ func (wc *Wechat) GetAccessToken() (string, error) {
 // GetOauth oauth2网页授权
 func (wc *Wechat) GetOauth() *oauth.Oauth {
 	return oauth.NewOauth(wc.Context)
+}
+
+// GetOpen 微信开放平台
+func (wc *Wechat) GetOpen() *open.Open {
+	return open.NewOpen(wc.Context)
 }
 
 // GetMaterial 素材管理

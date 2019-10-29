@@ -11,6 +11,14 @@ type EventType string
 // InfoType 第三方平台授权事件类型
 type InfoType string
 
+type ResponseType string
+
+const (
+	ResponseTypeString ResponseType = "string"
+	ResponseTypeXml = "xml"
+	ResponseTypeJson = "json"
+)
+
 const (
 	//MsgTypeText 表示文本消息
 	MsgTypeText MsgType = "text"

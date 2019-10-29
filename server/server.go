@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"reflect"
 	"runtime/debug"
 	"strconv"
 
@@ -26,8 +25,9 @@ type Server struct {
 
 	requestRawXMLMsg  []byte
 	requestMsg        message.MixMessage
-	responseRawXMLMsg []byte
-	responseMsg       interface{}
+
+	responseType message.ResponseType // 返回类型 string xml json
+	responseMsg interface{}
 
 	isSafeMode bool
 	random     []byte
@@ -176,69 +176,32 @@ func (srv *Server) buildResponse(reply *message.Reply) (err error) {
 		//do nothing
 		return nil
 	}
-	msgType := reply.MsgType
-	switch msgType {
-	case message.MsgTypeText:
-	case message.MsgTypeImage:
-	case message.MsgTypeVoice:
-	case message.MsgTypeVideo:
-	case message.MsgTypeMusic:
-	case message.MsgTypeNews:
-	case message.MsgTypeTransfer:
-	default:
-		err = message.ErrUnsupportReply
-		return
+	switch reply.ReplyScene {
+	case message.ReplyTypeKefu:
+		srv.kefu(reply)
+	case message.ReplyTypeOpen:
+		srv.open(reply)
 	}
-
-	msgData := reply.MsgData
-	value := reflect.ValueOf(msgData)
-	//msgData must be a ptr
-	kind := value.Kind().String()
-	if "ptr" != kind {
-		return message.ErrUnsupportReply
-	}
-
-	params := make([]reflect.Value, 1)
-	params[0] = reflect.ValueOf(srv.requestMsg.FromUserName)
-	value.MethodByName("SetToUserName").Call(params)
-
-	params[0] = reflect.ValueOf(srv.requestMsg.ToUserName)
-	value.MethodByName("SetFromUserName").Call(params)
-
-	params[0] = reflect.ValueOf(msgType)
-	value.MethodByName("SetMsgType").Call(params)
-
-	params[0] = reflect.ValueOf(util.GetCurrTs())
-	value.MethodByName("SetCreateTime").Call(params)
-
-	srv.responseMsg = msgData
-	srv.responseRawXMLMsg, err = xml.Marshal(msgData)
 	return
 }
 
 //Send 将自定义的消息发送
 func (srv *Server) Send() (err error) {
-	replyMsg := srv.responseMsg
-	if srv.isSafeMode {
-		//安全模式下对消息进行加密
-		var encryptedMsg []byte
-		encryptedMsg, err = util.EncryptMsg(srv.random, srv.responseRawXMLMsg, srv.AppID, srv.EncodingAESKey)
-		if err != nil {
-			return
-		}
-		//TODO 如果获取不到timestamp nonce 则自己生成
-		timestamp := srv.timestamp
-		timestampStr := strconv.FormatInt(timestamp, 10)
-		msgSignature := util.Signature(srv.Token, timestampStr, srv.nonce, string(encryptedMsg))
-		replyMsg = message.ResponseEncryptedXMLMsg{
-			EncryptedMsg: string(encryptedMsg),
-			MsgSignature: msgSignature,
-			Timestamp:    timestamp,
-			Nonce:        srv.nonce,
-		}
+	if srv.responseMsg == nil {
+		return
 	}
-	if replyMsg != nil {
-		srv.XML(replyMsg)
+	// 检测消息类型
+	switch srv.responseType {
+	case message.ResponseTypeXml:
+		srv.XML(srv.responseMsg)
+		return
+	case message.ResponseTypeString:
+		if v, ok := srv.responseMsg.(string); ok {
+			srv.String(v)
+		}
+		return
+	case message.ResponseTypeJson:
+
 	}
 	return
 }
