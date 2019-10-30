@@ -11,8 +11,8 @@ var ErrUnsupportReply = errors.New("不支持的回复消息")
 type ReplyScene string
 
 const (
-	ReplyTypeKefu ReplyScene = "kefu"
-	ReplyTypeOpen = "open"
+	ReplySceneKefu ReplyScene = "kefu"
+	ReplySceneOpen = "open"
 )
 
 //Reply 消息回复

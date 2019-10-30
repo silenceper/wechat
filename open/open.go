@@ -48,7 +48,3 @@ func (open *Open) Auth(req *http.Request, writer http.ResponseWriter, redirectUR
 	return nil
 }
 
-// SetComponentVerifyTicket 保存每10min一次的微信令牌
-func (open *Open) SetComponentVerifyTicket(ticket string)  {
-	open.Cache.Set(fmt.Sprintf("component_verify_ticket_%s", open.AppID), ticket, 0)
-}

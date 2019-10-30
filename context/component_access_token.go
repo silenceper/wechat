@@ -3,6 +3,7 @@ package context
 import (
 	"encoding/json"
 	"fmt"
+	"gitee.com/zhimiao/wechat-sdk/cache"
 	"time"
 
 	"gitee.com/zhimiao/wechat-sdk/util"
@@ -23,14 +24,49 @@ type ComponentAccessToken struct {
 	ExpiresIn   int64  `json:"expires_in"`
 }
 
+// SetComponentVerifyTicket 保存每10min一次的微信令牌
+func (ctx *Context) SetComponentVerifyTicket(ticket string)  {
+	err := ctx.Cache.Set(fmt.Sprintf(cache.COMPONENT_VERIFY_TICKET, ctx.AppID), ticket, 0)
+	if err != nil {
+		fmt.Println("保存票据报错: %v", err)
+	}
+}
+
+// GetComponentVerifyTicket 获取票据
+func (ctx *Context) GetComponentVerifyTicket() (string, error) {
+	val := ctx.Cache.Get(fmt.Sprintf(cache.COMPONENT_VERIFY_TICKET, ctx.AppID))
+	if val == nil {
+		return "", fmt.Errorf("cann't get component verify ticket")
+	}
+	if v, ok := val.(string); ok {
+		return v, nil
+	}
+	return "", fmt.Errorf("cann't get component verify ticket")
+}
+
 // GetComponentAccessToken 获取 ComponentAccessToken
 func (ctx *Context) GetComponentAccessToken() (string, error) {
-	accessTokenCacheKey := fmt.Sprintf("component_access_token_%s", ctx.AppID)
-	val := ctx.Cache.Get(accessTokenCacheKey)
-	if val == nil {
-		return "", fmt.Errorf("cann't get component access token")
+	accessTokenCacheKey := fmt.Sprintf(cache.COMPONENT_ACCESS_TOKEN, ctx.AppID)
+	var result string
+	t := ctx.Cache.Get(accessTokenCacheKey)
+	if v, ok := t.(string); ok {
+		result = v
 	}
-	return val.(string), nil
+	if result == "" {
+		t, err := ctx.GetComponentVerifyTicket()
+		if err != nil {
+			return "", err
+		}
+		at, err := ctx.SetComponentAccessToken(t)
+		if err != nil {
+			return "", err
+		}
+		result = at.AccessToken
+	}
+	if result == "" {
+		return "", fmt.Errorf("ComponentAccessToken 获取失败")
+	}
+	return result, nil
 }
 
 // SetComponentAccessToken 通过component_verify_ticket 获取 ComponentAccessToken
@@ -50,9 +86,12 @@ func (ctx *Context) SetComponentAccessToken(verifyTicket string) (*ComponentAcce
 		return nil, err
 	}
 
-	accessTokenCacheKey := fmt.Sprintf("component_access_token_%s", ctx.AppID)
+	accessTokenCacheKey := fmt.Sprintf(cache.COMPONENT_ACCESS_TOKEN, ctx.AppID)
 	expires := at.ExpiresIn - 1500
-	ctx.Cache.Set(accessTokenCacheKey, at.AccessToken, time.Duration(expires)*time.Second)
+	err = ctx.Cache.Set(accessTokenCacheKey, at.AccessToken, time.Duration(expires)*time.Second)
+	if err != nil {
+		fmt.Println("Componet access token err ", err.Error())
+	}
 	return at, nil
 }
 
@@ -70,7 +109,7 @@ func (ctx *Context) GetPreCode() (string, error) {
 	if err != nil {
 		return "", err
 	}
-
+	
 	var ret struct {
 		PreCode string `json:"pre_auth_code"`
 	}

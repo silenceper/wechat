@@ -78,6 +78,11 @@ func (r *Redis) Set(key string, val interface{}, timeout time.Duration) (err err
 		return
 	}
 
+	if timeout == 0 {
+		_, err = conn.Do("SET", key, data)
+		return
+	}
+
 	_, err = conn.Do("SETEX", key, int64(timeout/time.Second), data)
 
 	return

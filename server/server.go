@@ -177,9 +177,9 @@ func (srv *Server) buildResponse(reply *message.Reply) (err error) {
 		return nil
 	}
 	switch reply.ReplyScene {
-	case message.ReplyTypeKefu:
+	case message.ReplySceneKefu:
 		srv.kefu(reply)
-	case message.ReplyTypeOpen:
+	case message.ReplySceneOpen:
 		srv.open(reply)
 	}
 	return
@@ -187,6 +187,9 @@ func (srv *Server) buildResponse(reply *message.Reply) (err error) {
 
 //Send 将自定义的消息发送
 func (srv *Server) Send() (err error) {
+	if srv.debug {
+		fmt.Printf("server send => %#v", srv)
+	}
 	if srv.responseMsg == nil {
 		return
 	}
