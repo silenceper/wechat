@@ -148,10 +148,10 @@ type MixMessage struct {
 	UnionID             string `xml:"UnionId"`
 
 	// 内容审核相关
-	IsRisky 		    bool `xml:"isrisky"`
-	ExtraInfoJSON 		string `xml:"extra_info_json"`
-	TraceID 			string `xml:"trace_id"`
-	StatusCode          int `xml:"status_code"`
+	IsRisky       bool   `xml:"isrisky"`
+	ExtraInfoJSON string `xml:"extra_info_json"`
+	TraceID       string `xml:"trace_id"`
+	StatusCode    int    `xml:"status_code"`
 }
 
 //EventPic 发图事件推送
@@ -178,20 +178,28 @@ type ResponseEncryptedXMLMsg struct {
 // CommonToken 消息中通用的结构
 type CommonToken struct {
 	XMLName      xml.Name `xml:"xml"`
-	ToUserName   string   `xml:"ToUserName"`
-	FromUserName string   `xml:"FromUserName"`
+	ToUserName   CDATA    `xml:"ToUserName"`
+	FromUserName CDATA    `xml:"FromUserName"`
 	CreateTime   int64    `xml:"CreateTime"`
 	MsgType      MsgType  `xml:"MsgType"`
 }
 
+type CDATA string
+
+func (c CDATA) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	return e.EncodeElement(struct {
+		string `xml:",cdata"`
+	}{string(c)}, start)
+}
+
 //SetToUserName set ToUserName
 func (msg *CommonToken) SetToUserName(toUserName string) {
-	msg.ToUserName = toUserName
+	msg.ToUserName = CDATA(toUserName)
 }
 
 //SetFromUserName set FromUserName
 func (msg *CommonToken) SetFromUserName(fromUserName string) {
-	msg.FromUserName = fromUserName
+	msg.FromUserName = CDATA(fromUserName)
 }
 
 //SetCreateTime set createTime
