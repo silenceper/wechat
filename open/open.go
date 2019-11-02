@@ -8,11 +8,6 @@ import (
 )
 
 const (
-	// 授权跳转页
-	componentloginpageURL = "https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid=%s&pre_auth_code=%s&redirect_uri=%s&auth_type=%d"
-)
-
-const (
 	SUCCESS string = "success"
 )
 
@@ -27,24 +22,26 @@ func NewOpen(ctx *context.Context) *Open {
 	return open
 }
 
-// AuthURL 获取跳转的url地址
-func (open *Open) AuthURL(redirectURI string, authType int) (string, error) {
-	//url encode
-	urlStr := url.QueryEscape(redirectURI)
-	precode, err := open.GetPreCode()
+// fetchData 拉取统计数据
+func (o *Open) post(urlStr string, body interface{}) (response []byte, err error) {
+	var accessToken string
+	accessToken, err = wxa.GetAccessToken()
 	if err != nil {
-		return "", err
+		return
 	}
-	return fmt.Sprintf(componentloginpageURL, open.AppID, precode, urlStr, authType), nil
+	urlStr = fmt.Sprintf(urlStr, accessToken)
+	response, err = util.PostJSON(urlStr, body)
+	return
 }
 
-// Auth 跳转到网页授权
-func (open *Open) Auth(req *http.Request, writer http.ResponseWriter, redirectURI string, authType int) error {
-	location, err := open.AuthURL(redirectURI, authType)
+// fetchData 拉取统计数据
+func (o *Open) get(urlStr string, param map[string]string) (response []byte, err error) {
+	var accessToken string
+	accessToken, err = wxa.GetAccessToken()
 	if err != nil {
-		return err
+		return
 	}
-	http.Redirect(writer, req, location, 302)
-	return nil
+	urlStr = fmt.Sprintf(urlStr, accessToken, param...)
+	response, err = util.HTTPGet(urlStr)
+	return
 }
-

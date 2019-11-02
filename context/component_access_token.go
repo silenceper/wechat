@@ -116,7 +116,7 @@ func (ctx *Context) GetPreCode() (string, error) {
 	if err := json.Unmarshal(body, &ret); err != nil {
 		return "", err
 	}
-
+	fmt.Println(string(body))
 	return ret.PreCode, nil
 }
 
