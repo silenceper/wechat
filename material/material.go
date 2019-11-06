@@ -138,11 +138,11 @@ func (material *Material) AddVideo(filename, title, introduction string) (mediaI
 	fields := []util.MultipartFormField{
 		{
 			IsFile:    true,
-			Fieldname: "video",
+			Fieldname: "media",
 			Filename:  filename,
 		},
 		{
-			IsFile:    true,
+			IsFile:    false,
 			Fieldname: "description",
 			Value:     fieldValue,
 		},
