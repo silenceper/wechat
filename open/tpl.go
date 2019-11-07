@@ -56,7 +56,7 @@ func (o *Open) DeleteTpl(TemplateId int) (err error) {
 // TplList 获取模板列表
 func (o *Open) TplList() (ret TplResponse, err error) {
 	var body []byte
-	body, err = o.get(TEMPLATE_LIST_URL, map[string]string{})
+	body, err = o.get(TEMPLATE_LIST_URL, nil)
 	if err != nil {
 		return
 	}
@@ -92,7 +92,7 @@ func (o *Open) AddDrafToTpl(draftId int) (err error) {
 // TplDraftList 草稿列表
 func (o *Open) TplDraftList() (ret TplResponse, err error) {
 	var body []byte
-	body, err = o.get(TEMPLATE_DRAFT_LIST_URL, map[string]string{})
+	body, err = o.get(TEMPLATE_DRAFT_LIST_URL, nil)
 	if err != nil {
 		return
 	}

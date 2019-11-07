@@ -4,6 +4,13 @@
 
 ----
 
+> 缓存字典
+
+| key | 备注 |
+|:------|:-------|
+| authorizer_access_token_${appid} | 代小程序accesstoken |
+
+
 # WeChat SDK for Go
 
 使用Golang开发的微信SDK，简单、易用。
