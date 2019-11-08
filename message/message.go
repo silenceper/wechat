@@ -184,6 +184,7 @@ type CommonToken struct {
 	MsgType      MsgType  `xml:"MsgType"`
 }
 
+// CDATA  使用该类型,在序列化为 xml 文本时文本会被解析器忽略
 type CDATA string
 
 func (c CDATA) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
