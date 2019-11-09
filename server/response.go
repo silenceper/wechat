@@ -33,7 +33,7 @@ func (srv *Server) open(reply *message.Reply) (err error) {
 // 客服消息
 func (srv *Server) kefu(reply *message.Reply) (err error) {
 	if reply.ResponseType == "" {
-		reply.ResponseType = message.ResponseTypeXml
+		reply.ResponseType = message.ResponseTypeXML
 	}
 	msgData := reply.MsgData
 	value := reflect.ValueOf(msgData)

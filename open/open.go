@@ -7,23 +7,20 @@ import (
 )
 
 const (
+	// SUCCESS 成功
 	SUCCESS string = "success"
 )
-
-type common struct {
-	ErrCode int    `json:"errcode"`
-	ErrMsg  string `json:"errmsg"`
-}
 
 // Open struct extends context
 type Open struct {
 	*context.Context
 }
 
+// MiniPrograms 代小程序
 type MiniPrograms struct {
 	Open
-	AppId        string
-	RefreshToken string
+	AuthAppID        string
+	AuthRefreshToken string
 }
 
 // NewOpen 创建开放平台句柄
@@ -38,14 +35,14 @@ func (o *Open) NewMiniPrograms(appid string, refrshToken string) *MiniPrograms {
 		return nil
 	}
 	miniPrograms := &MiniPrograms{
-		Open:         *o,
-		AppId:        appid,
-		RefreshToken: refrshToken,
+		Open:             *o,
+		AuthAppID:        appid,
+		AuthRefreshToken: refrshToken,
 	}
 	return miniPrograms
 }
 
-func (o *Open) buildRequest(urlStr string, param map[string]string) (requestUrl string, err error) {
+func (o *Open) buildRequest(urlStr string, param map[string]string) (requestURL string, err error) {
 	accessToken, err := o.GetComponentAccessToken()
 	if err != nil {
 		return
@@ -59,34 +56,35 @@ func (o *Open) buildRequest(urlStr string, param map[string]string) (requestUrl 
 		}
 	}
 	u.RawQuery = qs.Encode()
-	requestUrl = u.String()
+	requestURL = u.String()
 	return
 }
 
 // fetchData 拉取统计数据
 func (o *Open) post(urlStr string, body interface{}) (response []byte, err error) {
-	sendUrl, err := o.buildRequest(urlStr, nil)
+	sendURL, err := o.buildRequest(urlStr, nil)
 	if err != nil {
 		return
 	}
-	response, err = util.PostJSON(sendUrl, body)
+	response, err = util.PostJSON(sendURL, body)
 	return
 }
 
 // fetchData 拉取统计数据
 func (o *Open) get(urlStr string, param map[string]string) (response []byte, err error) {
-	sendUrl, err := o.buildRequest(urlStr, param)
+	sendURL, err := o.buildRequest(urlStr, param)
 	if err != nil {
 		return
 	}
-	response, err = util.HTTPGet(sendUrl)
+	response, err = util.HTTPGet(sendURL)
 	return
 }
 
-func (m *MiniPrograms) buildRequest(urlStr string, param map[string]string) (requestUrl string, err error) {
-	accessToken, err := m.GetAuthrAccessToken(m.AppID)
+func (m *MiniPrograms) buildRequest(urlStr string, param map[string]string) (requestURL string, err error) {
+	accessToken, err := m.GetAuthrAccessToken(m.AuthAppID)
 	if err != nil {
-		ret, err := m.RefreshAuthrToken(m.AppID, m.RefreshToken)
+		var ret *context.AuthrAccessToken
+		ret, err = m.RefreshAuthrToken(m.AuthAppID, m.AuthRefreshToken)
 		if err != nil {
 			return
 		}
@@ -101,26 +99,26 @@ func (m *MiniPrograms) buildRequest(urlStr string, param map[string]string) (req
 		}
 	}
 	u.RawQuery = qs.Encode()
-	requestUrl = u.String()
+	requestURL = u.String()
 	return
 }
 
 // fetchData 拉取统计数据
 func (m *MiniPrograms) post(urlStr string, body interface{}) (response []byte, err error) {
-	sendUrl, err := m.buildRequest(urlStr, nil)
+	sendURL, err := m.buildRequest(urlStr, nil)
 	if err != nil {
 		return
 	}
-	response, err = util.PostJSON(sendUrl, body)
+	response, err = util.PostJSON(sendURL, body)
 	return
 }
 
 // fetchData 拉取统计数据
 func (m *MiniPrograms) get(urlStr string, param map[string]string) (response []byte, err error) {
-	sendUrl, err := m.buildRequest(urlStr, param)
+	sendURL, err := m.buildRequest(urlStr, param)
 	if err != nil {
 		return
 	}
-	response, err = util.HTTPGet(sendUrl)
+	response, err = util.HTTPGet(sendURL)
 	return
 }

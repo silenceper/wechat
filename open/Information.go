@@ -3,14 +3,17 @@ package open
 import (
 	"encoding/json"
 	"fmt"
+	"gitee.com/zhimiao/wechat-sdk/util"
 )
 
 const (
-	GET_ACCOUNT_BASIC_INFO_URL = "https://api.weixin.qq.com/cgi-bin/account/getaccountbasicinfo?"
+	// AccountBasicInfoURL 获取用户信息
+	AccountBasicInfoURL = "https://api.weixin.qq.com/cgi-bin/account/getaccountbasicinfo?"
 )
 
+// AccountBasicInfo 用户信息详情
 type AccountBasicInfo struct {
-	common
+	util.CommonError
 	Appid          string `json:"appid"`
 	AccountType    int    `json:"account_type"`
 	PrincipalType  int    `json:"principal_type"`
@@ -29,7 +32,7 @@ type AccountBasicInfo struct {
 		ModifyQuota     int    `json:"modify_quota"`
 	} `json:"signature_info"`
 	HeadImageInfo struct {
-		HeadImageUrl    string `json:"head_image_url"`
+		HeadImageURL    string `json:"head_image_url"`
 		ModifyUsedCount int    `json:"modify_used_count"`
 		ModifyQuota     int    `json:"modify_quota"`
 	} `json:"head_image_info"`
@@ -38,7 +41,7 @@ type AccountBasicInfo struct {
 // GetAccountBasicInfo 调用本 API 可以获取小程序的基本信息
 func (m *MiniPrograms) GetAccountBasicInfo() (ret AccountBasicInfo, err error) {
 	var body []byte
-	body, err = m.get(GET_ACCOUNT_BASIC_INFO_URL, nil)
+	body, err = m.get(AccountBasicInfoURL, nil)
 	if err != nil {
 		return
 	}

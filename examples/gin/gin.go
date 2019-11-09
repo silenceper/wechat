@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/gin-gonic/gin"
 	"gitee.com/zhimiao/wechat-sdk"
 	"gitee.com/zhimiao/wechat-sdk/message"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -33,7 +33,11 @@ func hello(c *gin.Context) {
 
 		//回复消息：演示回复用户发送的消息
 		text := message.NewText(msg.Content)
-		return &message.Reply{MsgType: message.MsgTypeText, MsgData: text}
+		return &message.Reply{
+			ResponseType: message.ResponseTypeXML,
+			ReplyScene:   message.ReplySceneKefu,
+			MsgData:      text,
+		}
 	})
 
 	//处理消息接收以及回复

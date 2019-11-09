@@ -23,11 +23,11 @@ type Server struct {
 
 	messageHandler func(message.MixMessage) *message.Reply
 
-	requestRawXMLMsg  []byte
-	requestMsg        message.MixMessage
+	requestRawXMLMsg []byte
+	requestMsg       message.MixMessage
 
 	responseType message.ResponseType // 返回类型 string xml json
-	responseMsg interface{}
+	responseMsg  interface{}
 
 	isSafeMode bool
 	random     []byte
@@ -195,7 +195,7 @@ func (srv *Server) Send() (err error) {
 	}
 	// 检测消息类型
 	switch srv.responseType {
-	case message.ResponseTypeXml:
+	case message.ResponseTypeXML:
 		srv.XML(srv.responseMsg)
 		return
 	case message.ResponseTypeString:
@@ -203,7 +203,7 @@ func (srv *Server) Send() (err error) {
 			srv.String(v)
 		}
 		return
-	case message.ResponseTypeJson:
+	case message.ResponseTypeJSON:
 
 	}
 	return

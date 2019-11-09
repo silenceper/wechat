@@ -20,21 +20,22 @@ const (
 
 // ComponentAccessToken 第三方平台
 type ComponentAccessToken struct {
+	util.CommonError
 	AccessToken string `json:"component_access_token"`
 	ExpiresIn   int64  `json:"expires_in"`
 }
 
 // SetComponentVerifyTicket 保存每10min一次的微信令牌
-func (ctx *Context) SetComponentVerifyTicket(ticket string)  {
-	err := ctx.Cache.Set(fmt.Sprintf(cache.COMPONENT_VERIFY_TICKET, ctx.AppID), ticket, 0)
+func (ctx *Context) SetComponentVerifyTicket(ticket string) {
+	err := ctx.Cache.Set(fmt.Sprintf(cache.ComponentVerifyTicket, ctx.AppID), ticket, 0)
 	if err != nil {
-		fmt.Println("保存票据报错: %v", err)
+		fmt.Printf("保存票据报错: %v\n", err)
 	}
 }
 
 // GetComponentVerifyTicket 获取票据
 func (ctx *Context) GetComponentVerifyTicket() (string, error) {
-	val := ctx.Cache.Get(fmt.Sprintf(cache.COMPONENT_VERIFY_TICKET, ctx.AppID))
+	val := ctx.Cache.Get(fmt.Sprintf(cache.ComponentVerifyTicket, ctx.AppID))
 	if val == nil {
 		return "", fmt.Errorf("cann't get component verify ticket")
 	}
@@ -46,7 +47,7 @@ func (ctx *Context) GetComponentVerifyTicket() (string, error) {
 
 // GetComponentAccessToken 获取 ComponentAccessToken
 func (ctx *Context) GetComponentAccessToken() (string, error) {
-	accessTokenCacheKey := fmt.Sprintf(cache.COMPONENT_ACCESS_TOKEN, ctx.AppID)
+	accessTokenCacheKey := fmt.Sprintf(cache.ComponentAccessToken, ctx.AppID)
 	var result string
 	t := ctx.Cache.Get(accessTokenCacheKey)
 	if v, ok := t.(string); ok {
@@ -85,8 +86,10 @@ func (ctx *Context) SetComponentAccessToken(verifyTicket string) (*ComponentAcce
 	if err := json.Unmarshal(respBody, at); err != nil {
 		return nil, err
 	}
-
-	accessTokenCacheKey := fmt.Sprintf(cache.COMPONENT_ACCESS_TOKEN, ctx.AppID)
+	if at.ErrCode != 0 {
+		return nil, fmt.Errorf("Componet access token err  [%d]: %s", at.ErrCode, at.ErrMsg)
+	}
+	accessTokenCacheKey := fmt.Sprintf(cache.ComponentAccessToken, ctx.AppID)
 	expires := at.ExpiresIn - 1500
 	err = ctx.Cache.Set(accessTokenCacheKey, at.AccessToken, time.Duration(expires)*time.Second)
 	if err != nil {
@@ -109,7 +112,7 @@ func (ctx *Context) GetPreCode() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	
+
 	var ret struct {
 		PreCode string `json:"pre_auth_code"`
 	}

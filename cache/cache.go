@@ -3,8 +3,10 @@ package cache
 import "time"
 
 const (
-	COMPONENT_VERIFY_TICKET = "component_verify_ticket_%s"
-	COMPONENT_ACCESS_TOKEN = "component_access_token_%s"
+	// ComponentVerifyTicket 票据
+	ComponentVerifyTicket = "component_verify_ticket_%s"
+	// ComponentAccessToken 开放平台apitoken
+	ComponentAccessToken = "component_access_token_%s"
 )
 
 //Cache interface

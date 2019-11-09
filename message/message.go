@@ -11,12 +11,16 @@ type EventType string
 // InfoType 第三方平台授权事件类型
 type InfoType string
 
+// ResponseType 返回体类型
 type ResponseType string
 
 const (
+	// ResponseTypeString 字符串类型
 	ResponseTypeString ResponseType = "string"
-	ResponseTypeXml = "xml"
-	ResponseTypeJson = "json"
+	// ResponseTypeXML xml类型
+	ResponseTypeXML = "xml"
+	// ResponseTypeJSON json类型
+	ResponseTypeJSON = "json"
 )
 
 const (
@@ -156,10 +160,10 @@ type MixMessage struct {
 	UnionID             string `xml:"UnionId"`
 
 	// 内容审核相关
-	IsRisky 		    bool `xml:"isrisky"`
-	ExtraInfoJSON 		string `xml:"extra_info_json"`
-	TraceID 			string `xml:"trace_id"`
-	StatusCode          int `xml:"status_code"`
+	IsRisky       bool   `xml:"isrisky"`
+	ExtraInfoJSON string `xml:"extra_info_json"`
+	TraceID       string `xml:"trace_id"`
+	StatusCode    int    `xml:"status_code"`
 }
 
 //EventPic 发图事件推送

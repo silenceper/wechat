@@ -3,41 +3,44 @@ package open
 import (
 	"encoding/json"
 	"fmt"
+	"gitee.com/zhimiao/wechat-sdk/util"
 	"strconv"
 )
 
 const (
-	// 草稿箱列表
-	TEMPLATE_DRAFT_LIST_URL = "https://api.weixin.qq.com/wxa/gettemplatedraftlist?"
-	// 添加草稿到模板
-	ADD_DRAFT_TO_TEMPLATE_URL = "https://api.weixin.qq.com/wxa/addtotemplate?"
-	// 获取模板列表
-	TEMPLATE_LIST_URL = "https://api.weixin.qq.com/wxa/gettemplatelist?"
-	// 删除模板
-	DELETE_TEMPLATE_URL = "https://api.weixin.qq.com/wxa/deletetemplate?"
+	// TemplateDraftListURL 草稿箱列表
+	TemplateDraftListURL = "https://api.weixin.qq.com/wxa/gettemplatedraftlist?"
+	// AddDraftToTemplateURL 添加草稿到模板
+	AddDraftToTemplateURL = "https://api.weixin.qq.com/wxa/addtotemplate?"
+	// TemplateListURL 获取模板列表
+	TemplateListURL = "https://api.weixin.qq.com/wxa/gettemplatelist?"
+	// DeleteTemplateURL 删除模板
+	DeleteTemplateURL = "https://api.weixin.qq.com/wxa/deletetemplate?"
 )
 
+// TplDetail 模板详情
 type TplDetail struct {
 	CreateTime             int64  `json:"create_time"`              // 1571730935
 	UserVersion            string `json:"user_version"`             // "1.1.3"
 	UserDesc               string `json:"user_desc"`                // "小子(LT) 在 2019年10月22日下午3点55分 提交上传"
-	DraftId                int    `json:"draft_id"`                 // 145
-	TemplateId             int    `json:"template_id"`              // 145
+	DraftID                int    `json:"draft_id"`                 // 145
+	TemplateID             int    `json:"template_id"`              // 145
 	SourceMiniprogramAppid string `json:"source_miniprogram_appid"` // "wx37625cd1bad0aaa0"
 	SourceMiniprogram      string `json:"source_miniprogram"`       // "易零售"
 	Developer              string `json:"developer"`                // "小子(LT)"
 }
 
+// TplResponse 模板返回体
 type TplResponse struct {
-	common
+	util.CommonError
 	DraftList    []TplDetail `json:"draft_list"`
 	TemplateList []TplDetail `json:"template_list"`
 }
 
 // DeleteTpl 删除模板
-func (o *Open) DeleteTpl(TemplateId int) (err error) {
-	body, err := o.post(DELETE_TEMPLATE_URL, map[string]string{
-		"template_id": strconv.Itoa(TemplateId),
+func (o *Open) DeleteTpl(TemplateID int) (err error) {
+	body, err := o.post(DeleteTemplateURL, map[string]string{
+		"template_id": strconv.Itoa(TemplateID),
 	})
 	if err != nil {
 		return
@@ -56,7 +59,7 @@ func (o *Open) DeleteTpl(TemplateId int) (err error) {
 // TplList 获取模板列表
 func (o *Open) TplList() (ret TplResponse, err error) {
 	var body []byte
-	body, err = o.get(TEMPLATE_LIST_URL, nil)
+	body, err = o.get(TemplateListURL, nil)
 	if err != nil {
 		return
 	}
@@ -71,9 +74,9 @@ func (o *Open) TplList() (ret TplResponse, err error) {
 }
 
 // AddDrafToTpl 添加草稿到模板
-func (o *Open) AddDrafToTpl(draftId int) (err error) {
-	body, err := o.post(ADD_DRAFT_TO_TEMPLATE_URL, map[string]string{
-		"draft_id": strconv.Itoa(draftId),
+func (o *Open) AddDrafToTpl(draftID int) (err error) {
+	body, err := o.post(AddDraftToTemplateURL, map[string]string{
+		"draft_id": strconv.Itoa(draftID),
 	})
 	if err != nil {
 		return
@@ -92,7 +95,7 @@ func (o *Open) AddDrafToTpl(draftId int) (err error) {
 // TplDraftList 草稿列表
 func (o *Open) TplDraftList() (ret TplResponse, err error) {
 	var body []byte
-	body, err = o.get(TEMPLATE_DRAFT_LIST_URL, nil)
+	body, err = o.get(TemplateDraftListURL, nil)
 	if err != nil {
 		return
 	}
