@@ -1,6 +1,10 @@
 package device
 
-import "github.com/silenceper/wechat/util"
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/silenceper/wechat/util"
+)
 
 const (
 	//添加设备标识
@@ -76,12 +80,35 @@ type resDeviceAuthorize struct {
 	Resp []resBaseInfo `json:"resp"`
 }
 
-type resCreateQRCode struct {
-	util.CommonError
-	DeviceNum int         `json:"device_num"`
-	CodeList  []resQRCode `json:"code_list"`
-}
-type resQRCode struct {
-	DeviceId string `json:"device_id"`
-	Ticket   string `json:"ticket"`
+// DeviceAuthorize 设备授权
+func (d *Device) DeviceAuthorize(devices []ReqDevice, opType int, productId string) (res []resBaseInfo, err error) {
+	var accessToken string
+	accessToken, err = d.GetAccessToken()
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf("%s?access_token=%s", uriAuthorize, accessToken)
+	req := reqDeviceAuthorize{
+		DeviceNum:  fmt.Sprintf("%d", len(devices)),
+		DeviceList: devices,
+		OpType:     fmt.Sprintf("%d", opType),
+		ProductId:  productId,
+	}
+	var response []byte
+	response, err = util.PostJSON(uri, req)
+	if err != nil {
+		return nil, err
+	}
+	var result resDeviceAuthorize
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		return
+	}
+	if result.ErrCode != 0 {
+		err = fmt.Errorf("DeviceAuthorize Error , errcode=%d , errmsg=%s", result.ErrCode, result.ErrMsg)
+		return
+	}
+	res = result.Resp
+	return
 }
