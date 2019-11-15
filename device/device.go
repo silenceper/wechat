@@ -14,6 +14,8 @@ const (
 	uriVerifyQRCode = "https://api.weixin.qq.com/device/verify_qrcode"
 	uriBind         = "https://api.weixin.qq.com/device/bind"
 	uriUnbind       = "https://api.weixin.qq.com/device/unbind"
+	uriCompelBind   = "https://api.weixin.qq.com/device/compel_bind"
+	uriCompelUnbind = "https://api.weixin.qq.com/device/compel_unbind"
 	uriState        = "https://api.weixin.qq.com/device/get_stat"
 )
 
