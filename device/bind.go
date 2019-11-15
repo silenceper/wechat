@@ -27,7 +27,7 @@ func (d *Device) Bind(req ReqBind) (err error) {
 		return
 	}
 	var result resBind
-	if err = json.Unmarshal(response, result); err != nil {
+	if err = json.Unmarshal(response, &result); err != nil {
 		return
 	}
 	if result.BaseResp.ErrCode != 0 {
@@ -49,7 +49,7 @@ func (d *Device) Unbind(req ReqBind) (err error) {
 		return
 	}
 	var result resBind
-	if err = json.Unmarshal(response, result); err != nil {
+	if err = json.Unmarshal(response, &result); err != nil {
 		return
 	}
 	if result.BaseResp.ErrCode != 0 {
