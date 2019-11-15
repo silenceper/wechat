@@ -43,7 +43,7 @@ func (d *Device) DeviceAuthorize(devices []ReqDevice, opType int, productId stri
 	if err != nil {
 		return nil, err
 	}
-	var result ResDeviceAuthorize
+	var result resDeviceAuthorize
 	err = json.Unmarshal(response, &result)
 	if err != nil {
 		return
@@ -73,7 +73,7 @@ func (d *Device) CreateQRCode(devices []string) (res []resQRCode, err error) {
 	if err != nil {
 		return
 	}
-	var result ResCreateQRCode
+	var result resCreateQRCode
 	err = json.Unmarshal(response, &result)
 	if err != nil {
 		return

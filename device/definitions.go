@@ -8,14 +8,6 @@ const (
 	//更新设备标识
 	DEVCIE_UPGRADE
 )
-const (
-	//android classic bluetooth
-	PROTOCOL_ANDROID_BLE = iota
-	//ios classic bluetooth
-	PROTOCOL_IOS_BLE
-	PROTOCOL_BLE
-	PROTOCOL_WIFI
-)
 
 type reqDeviceAuthorize struct {
 	// 设备id的个数
@@ -79,12 +71,12 @@ type resBaseInfo struct {
 }
 
 // 授权回调根信息
-type ResDeviceAuthorize struct {
+type resDeviceAuthorize struct {
 	util.CommonError
 	Resp []resBaseInfo `json:"resp"`
 }
 
-type ResCreateQRCode struct {
+type resCreateQRCode struct {
 	util.CommonError
 	DeviceNum int         `json:"device_num"`
 	CodeList  []resQRCode `json:"code_list"`
