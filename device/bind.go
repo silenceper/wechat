@@ -3,13 +3,15 @@ package device
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/silenceper/wechat/util"
 )
 
+// ReqBind 设备绑定解绑共通实体
 type ReqBind struct {
 	Ticket   string `json:"ticket"`
-	DeviceId string `json:"device_id"`
-	OpenId   string `json:"open_id"`
+	DeviceID string `json:"device_id"`
+	OpenID   string `json:"open_id"`
 }
 type resBind struct {
 	BaseResp util.CommonError `json:"base_resp"`
@@ -37,7 +39,7 @@ func (d *Device) Bind(req ReqBind) (err error) {
 	return
 }
 
-// Bind 设备解绑
+// Unbind 设备解绑
 func (d *Device) Unbind(req ReqBind) (err error) {
 	var accessToken string
 	if accessToken, err = d.GetAccessToken(); err != nil {

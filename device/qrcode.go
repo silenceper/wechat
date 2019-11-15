@@ -3,20 +3,22 @@ package device
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/silenceper/wechat/util"
 )
 
-type resCreateQRCode struct {
+//ResCreateQRCode 获取二维码的返回实体
+type ResCreateQRCode struct {
 	util.CommonError
 	DeviceNum int `json:"device_num"`
 	CodeList  []struct {
-		DeviceId string `json:"device_id"`
+		DeviceID string `json:"device_id"`
 		Ticket   string `json:"ticket"`
 	} `json:"code_list"`
 }
 
 // CreateQRCode 获取设备二维码
-func (d *Device) CreateQRCode(devices []string) (res resCreateQRCode, err error) {
+func (d *Device) CreateQRCode(devices []string) (res ResCreateQRCode, err error) {
 	var accessToken string
 	if accessToken, err = d.GetAccessToken(); err != nil {
 		return
@@ -40,15 +42,16 @@ func (d *Device) CreateQRCode(devices []string) (res resCreateQRCode, err error)
 	return
 }
 
-type resVerifyQRCode struct {
+//ResVerifyQRCode 验证授权结果实体
+type ResVerifyQRCode struct {
 	util.CommonError
 	DeviceType string `json:"device_type"`
-	DeviceId   string `json:"device_id"`
+	DeviceID   string `json:"device_id"`
 	Mac        string `json:"mac"`
 }
 
 // VerifyQRCode 验证设备二维码
-func (d *Device) VerifyQRCode(ticket string) (res resVerifyQRCode, err error) {
+func (d *Device) VerifyQRCode(ticket string) (res ResVerifyQRCode, err error) {
 	var accessToken string
 	if accessToken, err = d.GetAccessToken(); err != nil {
 		return

@@ -3,6 +3,7 @@ package device
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/util"
 )
@@ -28,19 +29,20 @@ func NewDevice(context *context.Context) *Device {
 	return device
 }
 
-type resDeviceState struct {
+// ResDeviceState 设备状态响应实体
+type ResDeviceState struct {
 	util.CommonError
 	Status     int    `json:"status"`
 	StatusInfo string `json:"status_info"`
 }
 
 // State 设备状态查询
-func (d *Device) State(deviceId string) (res resDeviceState, err error) {
+func (d *Device) State(device string) (res ResDeviceState, err error) {
 	var accessToken string
 	if accessToken, err = d.GetAccessToken(); err != nil {
 		return
 	}
-	uri := fmt.Sprintf("%s?access_token=%s&device_id=%s", uriState, accessToken, deviceId)
+	uri := fmt.Sprintf("%s?access_token=%s&device_id=%s", uriState, accessToken, device)
 	var response []byte
 	if response, err = util.HTTPGet(uri); err != nil {
 		return

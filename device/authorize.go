@@ -3,14 +3,15 @@ package device
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/silenceper/wechat/util"
 )
 
 const (
-	//添加设备标识
-	DEVICE_ADD = iota
-	//更新设备标识
-	DEVCIE_UPGRADE
+	// DeviceAdd 添加设备标识
+	DeviceAdd = iota
+	// DeviceUpgrade 更新设备标识
+	DeviceUpgrade
 )
 
 type reqDeviceAuthorize struct {
@@ -24,12 +25,13 @@ type reqDeviceAuthorize struct {
 	//当 op_type 为‘0’，product_id 为‘1’时，不要填写 product_id 字段（会引起不必要错误）；
 	//当 op_typy 为‘0’，product_id 不为‘1’时，必须填写 product_id 字段；
 	//当 op_type 为 1 时，不要填写 product_id 字段。
-	ProductId string `json:"product_id,omitempty"`
+	ProductID string `json:"product_id,omitempty"`
 }
 
+//ReqDevice 设备授权实体
 type ReqDevice struct {
 	// 设备的 device id
-	Id string `json:"id"`
+	ID string `json:"id"`
 	// 设备的mac地址 格式采用16进制串的方式（长度为12字节），
 	// 不需要0X前缀，如： 1234567890AB
 	Mac string `json:"mac"`
@@ -66,22 +68,22 @@ type ReqDevice struct {
 	BleSimpleProtocol string `json:"ble_simple_protocol,omitempty"`
 }
 
-// 授权回调实体
-type resBaseInfo struct {
+//ResBaseInfo 授权回调实体
+type ResBaseInfo struct {
 	BaseInfo struct {
 		DeviceType string `json:"device_type"`
-		DeviceId   string `json:"device_id"`
+		DeviceID   string `json:"device_id"`
 	} `json:"base_info"`
 }
 
 // 授权回调根信息
 type resDeviceAuthorize struct {
 	util.CommonError
-	Resp []resBaseInfo `json:"resp"`
+	Resp []ResBaseInfo `json:"resp"`
 }
 
 // DeviceAuthorize 设备授权
-func (d *Device) DeviceAuthorize(devices []ReqDevice, opType int, productId string) (res []resBaseInfo, err error) {
+func (d *Device) DeviceAuthorize(devices []ReqDevice, opType int, product string) (res []ResBaseInfo, err error) {
 	var accessToken string
 	accessToken, err = d.GetAccessToken()
 	if err != nil {
@@ -93,7 +95,7 @@ func (d *Device) DeviceAuthorize(devices []ReqDevice, opType int, productId stri
 		DeviceNum:  fmt.Sprintf("%d", len(devices)),
 		DeviceList: devices,
 		OpType:     fmt.Sprintf("%d", opType),
-		ProductId:  productId,
+		ProductID:  product,
 	}
 	var response []byte
 	response, err = util.PostJSON(uri, req)

@@ -1,9 +1,9 @@
 package device
 
-// 设备消息响应
+//MsgDevice 设备消息响应
 type MsgDevice struct {
 	DeviceType string
 	DeviceID   string
-	SessionId  string
+	SessionID  string
 	OpenID     string
 }
