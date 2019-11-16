@@ -9,6 +9,8 @@ import (
 const (
 	// AccountBasicInfoURL 获取用户信息
 	AccountBasicInfoURL = "https://api.weixin.qq.com/cgi-bin/account/getaccountbasicinfo?"
+	// GetCodePageURL 获取已上传的代码的页面列表
+	GetCodePageURL = "https://api.weixin.qq.com/wxa/get_page"
 )
 
 // AccountBasicInfo 用户信息详情
@@ -38,10 +40,32 @@ type AccountBasicInfo struct {
 	} `json:"head_image_info"`
 }
 
-// GetAccountBasicInfo 调用本 API 可以获取小程序的基本信息
+type CodePageList struct {
+	util.CommonError
+	PageList []string `json:"page_list"`
+}
+
+// GetAccountBasicInfo 调用本 API 可以获取小程序的基本信息 没啥卵用，不知道为啥
 func (m *MiniPrograms) GetAccountBasicInfo() (ret AccountBasicInfo, err error) {
 	var body []byte
 	body, err = m.get(AccountBasicInfoURL, nil)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(body, &ret)
+	if err != nil {
+		return
+	}
+	if ret.ErrCode != 0 {
+		err = fmt.Errorf("[%d]: %s", ret.ErrCode, ret.ErrMsg)
+	}
+	return
+}
+
+// GetCodePage 获取已上传的代码的页面列表
+func (m *MiniPrograms) GetCodePage() (ret CodePageList, err error) {
+	var body []byte
+	body, err = m.get(GetCodePageURL, nil)
 	if err != nil {
 		return
 	}
