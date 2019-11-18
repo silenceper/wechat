@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"github.com/silenceper/wechat/device"
 	"net/http"
 	"sync"
 
@@ -110,4 +111,9 @@ func (wc *Wechat) GetQR() *qr.QR {
 // GetMiniProgram 获取小程序的实例
 func (wc *Wechat) GetMiniProgram() *miniprogram.MiniProgram {
 	return miniprogram.NewMiniProgram(wc.Context)
+}
+
+// GetDevice 获取智能设备的实例
+func (wc *Wechat) GetDevice() *device.Device {
+	return device.NewDevice(wc.Context)
 }

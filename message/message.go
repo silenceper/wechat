@@ -1,6 +1,9 @@
 package message
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+	"github.com/silenceper/wechat/device"
+)
 
 // MsgType 基本消息类型
 type MsgType string
@@ -148,10 +151,13 @@ type MixMessage struct {
 	UnionID             string `xml:"UnionId"`
 
 	// 内容审核相关
-	IsRisky 		    bool `xml:"isrisky"`
-	ExtraInfoJSON 		string `xml:"extra_info_json"`
-	TraceID 			string `xml:"trace_id"`
-	StatusCode          int `xml:"status_code"`
+	IsRisky       bool   `xml:"isrisky"`
+	ExtraInfoJSON string `xml:"extra_info_json"`
+	TraceID       string `xml:"trace_id"`
+	StatusCode    int    `xml:"status_code"`
+
+	//设备相关
+	device.MsgDevice
 }
 
 //EventPic 发图事件推送
