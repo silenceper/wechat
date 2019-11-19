@@ -2,10 +2,17 @@ package pay
 
 import (
 	"bytes"
+	"crypto/hmac"
+	"crypto/md5"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/xml"
 	"errors"
+	"hash"
 	"sort"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/util"
@@ -27,15 +34,21 @@ type Params struct {
 	OutTradeNo string
 	OpenID     string
 	TradeType  string
+	SignType   string
+	Detail     string
+	Attach     string
+	GoodsTag   string
+	NotifyURL  string
 }
 
-// Config 是传出用于 jsdk 用的参数
+// Config 是传出用于 js sdk 用的参数
 type Config struct {
-	Timestamp int64
-	NonceStr  string
-	PrePayID  string
-	SignType  string
-	Sign      string
+	Timestamp string `json:"timestamp"`
+	NonceStr  string `json:"nonceStr"`
+	PrePayID  string `json:"prePayId"`
+	SignType  string `json:"signType"`
+	Package   string `json:"package"`
+	PaySign   string `json:"paySign"`
 }
 
 // PreOrder 是 unifie order 接口的返回
@@ -54,7 +67,7 @@ type PreOrder struct {
 	ErrCodeDes string `xml:"err_code_des,omitempty"`
 }
 
-//payRequest 接口请求参数
+// payRequest 接口请求参数
 type payRequest struct {
 	AppID          string `xml:"appid"`
 	MchID          string `xml:"mch_id"`
@@ -64,20 +77,20 @@ type payRequest struct {
 	SignType       string `xml:"sign_type,omitempty"`
 	Body           string `xml:"body"`
 	Detail         string `xml:"detail,omitempty"`
-	Attach         string `xml:"attach,omitempty"`      //附加数据
-	OutTradeNo     string `xml:"out_trade_no"`          //商户订单号
-	FeeType        string `xml:"fee_type,omitempty"`    //标价币种
-	TotalFee       string `xml:"total_fee"`             //标价金额
-	SpbillCreateIP string `xml:"spbill_create_ip"`      //终端IP
-	TimeStart      string `xml:"time_start,omitempty"`  //交易起始时间
-	TimeExpire     string `xml:"time_expire,omitempty"` //交易结束时间
-	GoodsTag       string `xml:"goods_tag,omitempty"`   //订单优惠标记
-	NotifyURL      string `xml:"notify_url"`            //通知地址
-	TradeType      string `xml:"trade_type"`            //交易类型
-	ProductID      string `xml:"product_id,omitempty"`  //商品ID
+	Attach         string `xml:"attach,omitempty"`      // 附加数据
+	OutTradeNo     string `xml:"out_trade_no"`          // 商户订单号
+	FeeType        string `xml:"fee_type,omitempty"`    // 标价币种
+	TotalFee       string `xml:"total_fee"`             // 标价金额
+	SpbillCreateIP string `xml:"spbill_create_ip"`      // 终端IP
+	TimeStart      string `xml:"time_start,omitempty"`  // 交易起始时间
+	TimeExpire     string `xml:"time_expire,omitempty"` // 交易结束时间
+	GoodsTag       string `xml:"goods_tag,omitempty"`   // 订单优惠标记
+	NotifyURL      string `xml:"notify_url"`            // 通知地址
+	TradeType      string `xml:"trade_type"`            // 交易类型
+	ProductID      string `xml:"product_id,omitempty"`  // 商品ID
 	LimitPay       string `xml:"limit_pay,omitempty"`   //
-	OpenID         string `xml:"openid,omitempty"`      //用户标识
-	SceneInfo      string `xml:"scene_info,omitempty"`  //场景信息
+	OpenID         string `xml:"openid,omitempty"`      // 用户标识
+	SceneInfo      string `xml:"scene_info,omitempty"`  // 场景信息
 }
 
 // NewPay return an instance of Pay package
@@ -86,20 +99,72 @@ func NewPay(ctx *context.Context) *Pay {
 	return &pay
 }
 
+// BridgeConfig get js bridge config
+func (pcf *Pay) BridgeConfig(p *Params) (cfg Config, err error) {
+	var (
+		buffer    strings.Builder
+		h         hash.Hash
+		timestamp = strconv.FormatInt(time.Now().Unix(), 10)
+	)
+	order, err := pcf.PrePayOrder(p)
+	if err != nil {
+		return
+	}
+	buffer.WriteString("appId=")
+	buffer.WriteString(order.AppID)
+	buffer.WriteString("&nonceStr=")
+	buffer.WriteString(order.NonceStr)
+	buffer.WriteString("&package=")
+	buffer.WriteString("prepay_id=" + order.PrePayID)
+	buffer.WriteString("&signType=")
+	buffer.WriteString(p.SignType)
+	buffer.WriteString("&timeStamp=")
+	buffer.WriteString(timestamp)
+	buffer.WriteString("&key=")
+	buffer.WriteString(pcf.PayKey)
+	if p.SignType == "MD5" {
+		h = md5.New()
+	} else {
+		h = hmac.New(sha256.New, []byte(pcf.PayKey))
+	}
+	h.Write([]byte(buffer.String()))
+	// 签名
+	cfg.PaySign = strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
+	cfg.NonceStr = order.NonceStr
+	cfg.Timestamp = timestamp
+	cfg.PrePayID = order.PrePayID
+	cfg.SignType = p.SignType
+	cfg.Package = "prepay_id=" + order.PrePayID
+	return
+}
+
 // PrePayOrder return data for invoke wechat payment
 func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	nonceStr := util.RandomStr(32)
+	notifyURL := pcf.PayNotifyURL
+	// 签名类型
+	if p.SignType == "" {
+		p.SignType = "MD5"
+	}
+	// 通知地址
+	if p.NotifyURL != "" {
+		notifyURL = p.NotifyURL
+	}
 	param := make(map[string]interface{})
 	param["appid"] = pcf.AppID
 	param["body"] = p.Body
 	param["mch_id"] = pcf.PayMchID
 	param["nonce_str"] = nonceStr
-	param["notify_url"] = pcf.PayNotifyURL
 	param["out_trade_no"] = p.OutTradeNo
 	param["spbill_create_ip"] = p.CreateIP
 	param["total_fee"] = p.TotalFee
 	param["trade_type"] = p.TradeType
 	param["openid"] = p.OpenID
+	param["sign_type"] = p.SignType
+	param["detail"] = p.Detail
+	param["attach"] = p.Attach
+	param["goods_tag"] = p.GoodsTag
+	param["notify_url"] = notifyURL
 
 	bizKey := "&key=" + pcf.PayKey
 	str := orderParam(param, bizKey)
@@ -113,9 +178,13 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		OutTradeNo:     p.OutTradeNo,
 		TotalFee:       p.TotalFee,
 		SpbillCreateIP: p.CreateIP,
-		NotifyURL:      pcf.PayNotifyURL,
+		NotifyURL:      notifyURL,
 		TradeType:      p.TradeType,
 		OpenID:         p.OpenID,
+		SignType:       p.SignType,
+		Detail:         p.Detail,
+		Attach:         p.Attach,
+		GoodsTag:       p.GoodsTag,
 	}
 	rawRet, err := util.PostXML(payGateway, request)
 	if err != nil {
@@ -126,7 +195,7 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		return
 	}
 	if payOrder.ReturnCode == "SUCCESS" {
-		//pay success
+		// pay success
 		if payOrder.ResultCode == "SUCCESS" {
 			err = nil
 			return
