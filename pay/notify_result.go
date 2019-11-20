@@ -44,21 +44,24 @@ type NotifyResp struct {
 func (pcf *Pay) VerifySign(notifyRes NotifyResult) bool {
 	// 封装map 请求过来的 map
 	resMap := make(map[string]interface{})
+	// base
 	resMap["appid"] = notifyRes.AppID
-	resMap["bank_type"] = notifyRes.BankType
-	resMap["cash_fee"] = notifyRes.CashFee
-	resMap["fee_type"] = notifyRes.FeeType
-	resMap["is_subscribe"] = notifyRes.IsSubscribe
 	resMap["mch_id"] = notifyRes.MchID
 	resMap["nonce_str"] = notifyRes.NonceStr
-	resMap["openid"] = notifyRes.OpenID
-	resMap["out_trade_no"] = notifyRes.OutTradeNo
-	resMap["result_code"] = notifyRes.ResultCode
+	// NotifyResult
 	resMap["return_code"] = notifyRes.ReturnCode
-	resMap["time_end"] = notifyRes.TimeEnd
-	resMap["total_fee"] = notifyRes.TotalFee
+	resMap["result_code"] = notifyRes.ResultCode
+	resMap["openid"] = notifyRes.OpenID
+	resMap["is_subscribe"] = notifyRes.IsSubscribe
 	resMap["trade_type"] = notifyRes.TradeType
+	resMap["bank_type"] = notifyRes.BankType
+	resMap["total_fee"] = notifyRes.TotalFee
+	resMap["fee_type"] = notifyRes.FeeType
+	resMap["cash_fee"] = notifyRes.CashFee
 	resMap["transaction_id"] = notifyRes.TransactionID
+	resMap["out_trade_no"] = notifyRes.OutTradeNo
+	resMap["attach"] = notifyRes.Attach
+	resMap["time_end"] = notifyRes.TimeEnd
 	// 支付key
 	sortedKeys := make([]string, 0, len(resMap))
 	for k := range resMap {
