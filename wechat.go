@@ -14,6 +14,7 @@ import (
 	"github.com/silenceper/wechat/pay"
 	"github.com/silenceper/wechat/qr"
 	"github.com/silenceper/wechat/server"
+	"github.com/silenceper/wechat/subscribe"
 	"github.com/silenceper/wechat/template"
 	"github.com/silenceper/wechat/user"
 )
@@ -110,4 +111,9 @@ func (wc *Wechat) GetQR() *qr.QR {
 // GetMiniProgram 获取小程序的实例
 func (wc *Wechat) GetMiniProgram() *miniprogram.MiniProgram {
 	return miniprogram.NewMiniProgram(wc.Context)
+}
+
+// GetSubscribe 获取订阅消息的实例
+func (wc *Wechat) GetSubscribe() *subscribe.Subscribe {
+	return subscribe.NewSubscribe(wc.Context)
 }

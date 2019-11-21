@@ -1,9 +1,10 @@
-package template
+package subscribe
 
 import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/silenceper/wechat/context"
 	"github.com/silenceper/wechat/util"
 )
 
@@ -13,18 +14,33 @@ const (
 	subscriptionMessageSendURL = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send"
 )
 
-// SubscriptionMessage 订阅消息
-type SubscriptionMessage struct {
+// Subscribe 订阅消息
+type Subscribe struct {
+	*context.Context
+}
+
+// NewSubscribe 实例化
+func NewSubscribe(ctx *context.Context) *Subscribe {
+	return &Subscribe{Context: ctx}
+}
+
+// Message 订阅消息请求参数
+type Message struct {
 	ToUser     string               `json:"touser"`      //必选，接收者（用户）的 openid
 	TemplateID string               `json:"template_id"` //必选，所需下发的订阅模板id
 	Page       string               `json:"page"`        //可选，点击模板卡片后的跳转页面，仅限本小程序内的页面。支持带参数,（示例index?foo=bar）。该字段不填则模板无跳转。
-	Data       map[string]*DataItem `json:"data"`        // 必须, 模板内容
+	Data       map[string]*DataItem `json:"data"`        //必选, 模板内容
 }
 
-// SendSubscriptionMessage 发送订阅消息
-func (tpl *Template) SendSubscriptionMessage(msg *SubscriptionMessage) (err error) {
+//DataItem 模版内某个 .DATA 的值
+type DataItem struct {
+	Value string `json:"value"`
+}
+
+// Send 发送订阅消息
+func (s *Subscribe) Send(msg *Message) (err error) {
 	var accessToken string
-	accessToken, err = tpl.GetAccessToken()
+	accessToken, err = s.GetAccessToken()
 	if err != nil {
 		return
 	}
