@@ -19,6 +19,8 @@ type Category struct {
 	Quota         int            `json:"quota"`
 	CategoryLimit int            `json:"category_limit"`
 }
+
+// CategoryInfo 小程序类目列表
 type CategoryInfo struct {
 	First       int    `json:"first"`
 	FirstName   string `json:"first_name"`
@@ -28,23 +30,24 @@ type CategoryInfo struct {
 	AuditReason string `json:"audit_reason"`
 }
 
+// AuditCategory 提审类目列表
 type AuditCategory struct {
 	util.CommonError
 	CategoryList []AuditCategoryInfo `json:"category_list"`
 }
 
-// AuditCategory 审核时的类目信息
+// AuditCategoryInfo 审核时的类目信息
 type AuditCategoryInfo struct {
 	FirstClass  string `json:"first_class"`
 	SecondClass string `json:"second_class"`
 	ThirdClass  string `json:"third_class"`
-	FirstId     int    `json:"first_id"`
-	SecondId    int    `json:"second_id"`
-	ThirdId     int    `json:"third_id"`
+	FirstID     int    `json:"first_id"`
+	SecondID    int    `json:"second_id"`
+	ThirdID     int    `json:"third_id"`
 }
 
-// 这个好像只支持通过接口创建的小程序才能调用
 // GetCategory 小程序类目
+// 这个好像只支持通过接口创建的小程序才能调用
 func (m *MiniPrograms) GetCategory() (ret Category, err error) {
 	var body []byte
 	body, err = m.get(getcategoryURL, nil)
