@@ -1,9 +1,8 @@
 package wechat
 
 import (
-
-	"gitee.com/zhimiao/wechat-sdk/open"
 	"gitee.com/zhimiao/wechat-sdk/device"
+	"gitee.com/zhimiao/wechat-sdk/open"
 	"net/http"
 	"sync"
 
