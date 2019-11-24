@@ -1,15 +1,57 @@
 package open
 
 import (
+	"encoding/json"
+	"fmt"
 	"gitee.com/zhimiao/wechat-sdk/context"
 	"gitee.com/zhimiao/wechat-sdk/util"
+	"io/ioutil"
+	"net/http"
 	"net/url"
+	"strings"
 )
 
 const (
 	// SUCCESS 成功
 	SUCCESS string = "success"
 )
+
+// Action 操作项
+type Action string
+
+const (
+	// ActionAdd 添加
+	ActionAdd Action = "add" // ActionAdd 添加
+	// ActionDelete 删除
+	ActionDelete = "delete" // 删除
+	// ActionSet 设置
+	ActionSet = "set" // 设置
+	// ActionGet 获取
+	ActionGet = "get" // 获取
+	// ActionOpen 开启
+	ActionOpen = "open" // 开启
+	// ActionClose 关闭
+	ActionClose = "close" // 关闭
+)
+
+var actionMap = []Action{
+	ActionAdd,
+	ActionDelete,
+	ActionSet,
+	ActionGet,
+	ActionOpen,
+	ActionClose,
+}
+
+// CheckAction 校验Action合法性
+func CheckAction(action Action) bool {
+	for _, v := range actionMap {
+		if v == action {
+			return true
+		}
+	}
+	return false
+}
 
 // Open struct extends context
 type Open struct {
