@@ -7,7 +7,6 @@ import (
 )
 
 const (
-	// AccountBasicInfoURL 获取用户信息
 	getAccountBasicInfoURL   = "https://api.weixin.qq.com/cgi-bin/account/getaccountbasicinfo"
 	setWebViewDomainURL      = "https://api.weixin.qq.com/wxa/setwebviewdomain"
 	modifyDomainURL          = "https://api.weixin.qq.com/wxa/modify_domain"
@@ -15,14 +14,10 @@ const (
 	getwxasearchstatusURL    = "https://api.weixin.qq.com/wxa/getwxasearchstatus"
 )
 
-type Action string
-
-const (
-	ActionAdd    Action = "add"
-	ActionDelete        = "delete"
-	ActionSet           = "set"
-	ActionGet           = "get"
-)
+type dataModel struct {
+	util.CommonError
+	Status int `json:"status"`
+}
 
 // GetWxaSearchStatus 通过本接口可以查询小程序当前的隐私设置，即是否可被搜索
 func (m *MiniPrograms) GetWxaSearchStatus() (ret bool, err error) {
@@ -31,19 +26,20 @@ func (m *MiniPrograms) GetWxaSearchStatus() (ret bool, err error) {
 	if err != nil {
 		return
 	}
-	data := util.CommonError{}
+	var data dataModel
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		return
 	}
 	if data.ErrCode != 0 {
 		err = fmt.Errorf("[%d]: %s", data.ErrCode, data.ErrMsg)
+	} else {
+		ret = data.Status == 1
 	}
-
 	return
 }
 
-// ModifyDomain 设置服务器域名
+// CanSearch 是否开启可搜索
 func (m *MiniPrograms) CanSearch(open bool) (err error) {
 	var body []byte
 	rmap := map[string]int{
