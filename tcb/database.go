@@ -32,16 +32,21 @@ const (
 	//统计集合记录数或统计查询语句对应的结果记录数
 	databaseCountURL = "https://api.weixin.qq.com/tcb/databasecount"
 
-	//冲突处理模式
+	//ConflictModeInster 冲突处理模式 插入
 	ConflictModeInster ConflictMode = 1
+	//ConflictModeUpsert 冲突处理模式 更新
 	ConflictModeUpsert ConflictMode = 2
 
-	//file_type 的合法值
-	FileTypeJson FileType = 1
-	FileTypeCsv  FileType = 2
+	//FileTypeJSON 的合法值 json
+	FileTypeJSON FileType = 1
+	//FileTypeCsv 的合法值 csv
+	FileTypeCsv FileType = 2
 )
 
+//ConflictMode 冲突处理模式
 type ConflictMode int
+
+//FileType 文件上传和导出的允许文件类型
 type FileType int
 
 //ValidDirections 合法的direction值
@@ -71,7 +76,7 @@ type DatabaseMigrateImportReq struct {
 	ConflictMode   ConflictMode `json:"conflict_mode,omitempty"`   //冲突处理模式  1:inster 2:UPSERT
 }
 
-//DatabaseMigrateImportReq 数据库导入 返回结果
+//DatabaseMigrateImportRes 数据库导入 返回结果
 type DatabaseMigrateImportRes struct {
 	util.CommonError
 	JobID int64 `json:"job_id"` //导入任务ID，可使用数据库迁移进度查询 API 查询导入进度及结果
@@ -220,7 +225,7 @@ func (tcb *Tcb) DatabaseMigrateExport(req *DatabaseMigrateExportReq) (*DatabaseM
 	return databaseMigrateExportRes, err
 }
 
-//databaseMigrateQueryInfo 数据库迁移状态查询
+//DatabaseMigrateQueryInfo 数据库迁移状态查询
 //reference:https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-http-api/database/databaseMigrateQueryInfo.html
 func (tcb *Tcb) DatabaseMigrateQueryInfo(env string, jobID int64) (*DatabaseMigrateQueryInfoRes, error) {
 	accessToken, err := tcb.GetAccessToken()
@@ -240,7 +245,7 @@ func (tcb *Tcb) DatabaseMigrateQueryInfo(env string, jobID int64) (*DatabaseMigr
 	return databaseMigrateQueryInfoRes, err
 }
 
-//updateIndex 变更数据库索引
+//UpdateIndex 变更数据库索引
 //https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-http-api/database/updateIndex.html
 func (tcb *Tcb) UpdateIndex(req *UpdateIndexReq) error {
 	accessToken, err := tcb.GetAccessToken()
@@ -255,7 +260,7 @@ func (tcb *Tcb) UpdateIndex(req *UpdateIndexReq) error {
 	return util.DecodeWithCommonError(response, "UpdateIndex")
 }
 
-//databaseCollectionAdd 新增集合
+//DatabaseCollectionAdd 新增集合
 //reference:https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-http-api/database/databaseCollectionAdd.html
 func (tcb *Tcb) DatabaseCollectionAdd(env, collectionName string) error {
 	accessToken, err := tcb.GetAccessToken()
@@ -312,7 +317,7 @@ func (tcb *Tcb) DatabaseCollectionGet(env string, limit, offset int64) (*Databas
 	return databaseCollectionGetRes, err
 }
 
-//databaseAdd 数据库插入记录
+//DatabaseAdd 数据库插入记录
 //reference:https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-http-api/database/databaseAdd.html
 func (tcb *Tcb) DatabaseAdd(env, query string) (*DatabaseAddRes, error) {
 	accessToken, err := tcb.GetAccessToken()
