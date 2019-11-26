@@ -1,21 +1,22 @@
 package wechat
 
 import (
-	"github.com/silenceper/wechat/device"
 	"net/http"
 	"sync"
 
 	"github.com/silenceper/wechat/cache"
 	"github.com/silenceper/wechat/context"
+	"github.com/silenceper/wechat/device"
 	"github.com/silenceper/wechat/js"
 	"github.com/silenceper/wechat/material"
 	"github.com/silenceper/wechat/menu"
+	"github.com/silenceper/wechat/message"
 	"github.com/silenceper/wechat/miniprogram"
 	"github.com/silenceper/wechat/oauth"
 	"github.com/silenceper/wechat/pay"
 	"github.com/silenceper/wechat/qr"
 	"github.com/silenceper/wechat/server"
-	"github.com/silenceper/wechat/template"
+	"github.com/silenceper/wechat/tcb"
 	"github.com/silenceper/wechat/user"
 )
 
@@ -94,8 +95,8 @@ func (wc *Wechat) GetUser() *user.User {
 }
 
 // GetTemplate 模板消息接口
-func (wc *Wechat) GetTemplate() *template.Template {
-	return template.NewTemplate(wc.Context)
+func (wc *Wechat) GetTemplate() *message.Template {
+	return message.NewTemplate(wc.Context)
 }
 
 // GetPay 返回支付消息的实例
@@ -116,4 +117,9 @@ func (wc *Wechat) GetMiniProgram() *miniprogram.MiniProgram {
 // GetDevice 获取智能设备的实例
 func (wc *Wechat) GetDevice() *device.Device {
 	return device.NewDevice(wc.Context)
+}
+
+// GetTcb 获取小程序-云开发的实例
+func (wc *Wechat) GetTcb() *tcb.Tcb {
+	return tcb.NewTcb(wc.Context)
 }
