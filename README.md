@@ -20,8 +20,6 @@
 以下是一个处理消息接收以及回复的例子：
 
 ```go
-//使用memcache保存access_token，也可选择redis或自定义cache
-memCache=cache.NewMemcache("127.0.0.1:11211")
 
 //配置微信参数
 config := &wechat.Config{
@@ -29,7 +27,7 @@ config := &wechat.Config{
 	AppSecret:      "xxxx",
 	Token:          "xxxx",
 	EncodingAESKey: "xxxx",
-	Cache:          memCache
+	Cache:          cache.NewMemory(), // 使用memory保存access_token，也可选择redis或自定义cache
 }
 wc := wechat.NewWechat(config)
 
