@@ -173,13 +173,9 @@ func PostXML(uri string, obj interface{}) ([]byte, error) {
 }
 
 //httpWithTLS CA证书
-func httpWithTLS(rootCa, key string) (*http.Client, error) {
+func httpWithTLS(p12 []byte, key string) (*http.Client, error) {
 	var client *http.Client
-	certData, err := ioutil.ReadFile(rootCa)
-	if err != nil {
-		return nil, fmt.Errorf("unable to find cert path=%s, error=%v", rootCa, err)
-	}
-	cert := pkcs12ToPem(certData, key)
+	cert := pkcs12ToPem(p12, key)
 	config := &tls.Config{
 		Certificates: []tls.Certificate{cert},
 	}
@@ -214,14 +210,14 @@ func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
 }
 
 //PostXMLWithTLS perform a HTTP/POST request with XML body and TLS
-func PostXMLWithTLS(uri string, obj interface{}, ca, key string) ([]byte, error) {
+func PostXMLWithTLS(uri string, obj interface{}, p12 []byte, key string) ([]byte, error) {
 	xmlData, err := xml.Marshal(obj)
 	if err != nil {
 		return nil, err
 	}
 
 	body := bytes.NewBuffer(xmlData)
-	client, err := httpWithTLS(ca, key)
+	client, err := httpWithTLS(p12, key)
 	if err != nil {
 		return nil, err
 	}

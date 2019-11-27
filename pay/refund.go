@@ -9,17 +9,18 @@ import (
 
 var refundGateway = "https://api.mch.weixin.qq.com/secapi/pay/refund"
 
-//RefundParams 调用参数
+// RefundParams 调用参数
 type RefundParams struct {
 	TransactionID string
 	OutRefundNo   string
 	TotalFee      string
 	RefundFee     string
 	RefundDesc    string
-	RootCa        string //ca证书
+	// RootCa        string //ca证书
+	P12 []byte // 微信加密证书
 }
 
-//refundRequest 接口请求参数
+// refundRequest 接口请求参数
 type refundRequest struct {
 	AppID         string `xml:"appid"`
 	MchID         string `xml:"mch_id"`
@@ -31,10 +32,10 @@ type refundRequest struct {
 	TotalFee      string `xml:"total_fee"`
 	RefundFee     string `xml:"refund_fee"`
 	RefundDesc    string `xml:"refund_desc,omitempty"`
-	//NotifyUrl     string `xml:"notify_url,omitempty"`
+	// NotifyUrl     string `xml:"notify_url,omitempty"`
 }
 
-//RefundResponse 接口返回
+// RefundResponse 接口返回
 type RefundResponse struct {
 	ReturnCode          string `xml:"return_code"`
 	ReturnMsg           string `xml:"return_msg"`
@@ -58,7 +59,7 @@ type RefundResponse struct {
 	CashFeeType         string `xml:"cash_fee_type,omitempty"`
 }
 
-//Refund 退款申请
+// Refund 退款申请
 func (pcf *Pay) Refund(p *RefundParams) (rsp RefundResponse, err error) {
 	nonceStr := util.RandomStr(32)
 	param := make(map[string]interface{})
@@ -87,7 +88,7 @@ func (pcf *Pay) Refund(p *RefundParams) (rsp RefundResponse, err error) {
 		RefundFee:     p.RefundFee,
 		RefundDesc:    p.RefundDesc,
 	}
-	rawRet, err := util.PostXMLWithTLS(refundGateway, request, p.RootCa, pcf.PayMchID)
+	rawRet, err := util.PostXMLWithTLS(refundGateway, request, p.P12, pcf.PayMchID)
 	if err != nil {
 		return
 	}
