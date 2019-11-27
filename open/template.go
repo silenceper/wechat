@@ -25,8 +25,8 @@ type TplDetail struct {
 	UserDesc               string `json:"user_desc"`                // "小子(LT) 在 2019年10月22日下午3点55分 提交上传"
 	DraftID                int    `json:"draft_id"`                 // 145
 	TemplateID             int    `json:"template_id"`              // 145
-	SourceMiniprogramAppid string `json:"source_miniprogram_appid"` // "wx37625cd1bad0aaa0"
-	SourceMiniprogram      string `json:"source_miniprogram"`       // "易零售"
+	SourceMiniprogramAppid string `json:"source_miniprogram_appid"` // "wx37625cd1b23423432"
+	SourceMiniprogram      string `json:"source_miniprogram"`       // "纸喵软件"
 	Developer              string `json:"developer"`                // "小子(LT)"
 }
 
