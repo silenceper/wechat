@@ -1,16 +1,15 @@
 package tcb
 
-import "github.com/silenceper/wechat/context"
+import "gitee.com/zhimiao/wechat-sdk/context"
 
 //Tcb Tencent Cloud Base
-type Tcb struct{
+type Tcb struct {
 	*context.Context
 }
 
 //NewTcb new Tencent Cloud Base
-func NewTcb(context *context.Context)*Tcb{
+func NewTcb(context *context.Context) *Tcb {
 	return &Tcb{
 		context,
 	}
 }
-

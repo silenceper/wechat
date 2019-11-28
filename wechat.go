@@ -2,7 +2,9 @@ package wechat
 
 import (
 	"gitee.com/zhimiao/wechat-sdk/device"
+	"gitee.com/zhimiao/wechat-sdk/message"
 	"gitee.com/zhimiao/wechat-sdk/open"
+	"gitee.com/zhimiao/wechat-sdk/tcb"
 	"net/http"
 	"sync"
 
@@ -16,7 +18,6 @@ import (
 	"gitee.com/zhimiao/wechat-sdk/pay"
 	"gitee.com/zhimiao/wechat-sdk/qr"
 	"gitee.com/zhimiao/wechat-sdk/server"
-	"gitee.com/zhimiao/wechat-sdk/template"
 	"gitee.com/zhimiao/wechat-sdk/user"
 )
 
