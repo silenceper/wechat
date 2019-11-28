@@ -24,5 +24,6 @@ _testmain.go
 *.prof
 .DS_Store
 .vscode/
-vendor/*/
+vendor
 .idea/
+examples/tcb/*

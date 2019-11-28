@@ -3,13 +3,13 @@ package message
 //Text 文本消息
 type Text struct {
 	CommonToken
-	Content string `xml:"Content"`
+	Content CDATA `xml:"Content"`
 }
 
 //NewText 初始化文本消息
 func NewText(content string) *Text {
 	text := new(Text)
-	text.Content = content
 	text.MsgType = MsgTypeText
+	text.Content = CDATA(content)
 	return text
 }
