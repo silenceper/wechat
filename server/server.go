@@ -16,23 +16,17 @@ import (
 //Server struct
 type Server struct {
 	*context.Context
-
-	debug bool
-
-	openID string
-
-	messageHandler func(message.MixMessage) *message.Reply
-
-	requestRawXMLMsg []byte
-	requestMsg       message.MixMessage
-
-	responseType message.ResponseType // 返回类型 string xml json
-	responseMsg  interface{}
-
-	isSafeMode bool
-	random     []byte
-	nonce      string
-	timestamp  int64
+	debug            bool // 是否调试模式
+	openID           string
+	messageHandler   func(message.MixMessage) *message.Reply // 消息钩子
+	requestRawXMLMsg []byte                                  // 原始数据
+	requestMsg       message.MixMessage                      // 解析数据
+	responseType     message.ResponseType                    // 返回类型 string xml json
+	responseMsg      interface{}
+	isSafeMode       bool // 是否是加密模式
+	random           []byte
+	nonce            string
+	timestamp        int64
 }
 
 //NewServer init
