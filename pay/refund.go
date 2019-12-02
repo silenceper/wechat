@@ -62,6 +62,12 @@ type RefundResponse struct {
 // Refund 退款申请
 func (pcf *Pay) Refund(p *RefundParams) (rsp RefundResponse, err error) {
 	nonceStr := util.RandomStr(32)
+	var p12 []byte
+	if p.P12 == nil {
+		p12 = pcf.P12
+	} else {
+		p12 = p.P12
+	}
 	param := make(map[string]interface{})
 	param["appid"] = pcf.AppID
 	param["mch_id"] = pcf.PayMchID
@@ -88,7 +94,7 @@ func (pcf *Pay) Refund(p *RefundParams) (rsp RefundResponse, err error) {
 		RefundFee:     p.RefundFee,
 		RefundDesc:    p.RefundDesc,
 	}
-	rawRet, err := util.PostXMLWithTLS(refundGateway, request, p.P12, pcf.PayMchID)
+	rawRet, err := util.PostXMLWithTLS(refundGateway, request, p12, pcf.PayMchID)
 	if err != nil {
 		return
 	}

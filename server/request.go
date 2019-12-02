@@ -1,10 +1,13 @@
 package server
 
 import (
+	"encoding/base64"
 	"encoding/xml"
 	"fmt"
 	"gitee.com/zhimiao/wechat-sdk/message"
+	"gitee.com/zhimiao/wechat-sdk/pay"
 	"gitee.com/zhimiao/wechat-sdk/util"
+	"github.com/siddontang/go/log"
 	"io/ioutil"
 	"strconv"
 )
@@ -53,7 +56,39 @@ func (srv *Server) handleRequest() (reply *message.Reply, err error) {
 
 // getPay 解析支付消息结构
 func (srv *Server) getPay() (reply *message.Reply, err error) {
-	// TODO: 添加支付类型数据的验签、解密操作
+	var notifyResult pay.NotifyResult
+	err = xml.Unmarshal(srv.requestRaw, &notifyResult)
+	if err != nil {
+		return
+	}
+	// 解析结果非正确的，直接跳出
+	if notifyResult.ReturnCode != "SUCCESS" {
+		log.Info(srv.requestRaw)
+		return
+	}
+	// 含有加密数据
+	if notifyResult.ReqInfo != "" {
+		var rawXMLMsg, appID, decryptData []byte
+		decryptData, err = base64.StdEncoding.DecodeString(notifyResult.ReqInfo)
+		if err != nil {
+			return nil, err
+		}
+		key2 := util.MD5(srv.PayKey)
+		srv.random, rawXMLMsg, appID, err = util.AESDecryptMsg(decryptData, []byte(key2))
+		if err != nil || len(rawXMLMsg) == 0 {
+			if srv.debug {
+				log.Warn(srv.random, rawXMLMsg, appID, err)
+			}
+			return
+		}
+		err = xml.Unmarshal(rawXMLMsg, &notifyResult)
+		if err != nil {
+			return
+		}
+	} else if !pay.VerifySign(srv.PayKey, notifyResult) {
+		log.Warn("验签失败", srv.PayKey, notifyResult)
+		return
+	}
 	return
 }
 

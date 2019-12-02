@@ -16,19 +16,20 @@ type Context struct {
 	PayMchID       string
 	PayNotifyURL   string
 	PayKey         string
+	P12            []byte
 
 	Cache cache.Cache
 
 	Writer  http.ResponseWriter
 	Request *http.Request
 
-	//accessTokenLock 读写锁 同一个AppID一个
+	// accessTokenLock 读写锁 同一个AppID一个
 	accessTokenLock *sync.RWMutex
 
-	//jsAPITicket 读写锁 同一个AppID一个
+	// jsAPITicket 读写锁 同一个AppID一个
 	jsAPITicketLock *sync.RWMutex
 
-	//accessTokenFunc 自定义获取 access token 的方法
+	// accessTokenFunc 自定义获取 access token 的方法
 	accessTokenFunc GetAccessTokenFunc
 }
 

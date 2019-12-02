@@ -16,6 +16,8 @@ const (
 	ReplySceneKefu ReplyScene = "kefu"
 	// ReplySceneOpen 开放平台
 	ReplySceneOpen = "open"
+	// 支付
+	ReplyScenePay = "pay"
 )
 
 //Reply 消息回复

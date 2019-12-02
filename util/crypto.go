@@ -197,3 +197,10 @@ func MD5Sum(txt string) (sum string) {
 	sum = string(bytes.ToUpper(sign))
 	return
 }
+
+// MD5
+func MD5(txt string) string {
+	m := md5.New()
+	m.Write([]byte(txt))
+	return hex.EncodeToString(m.Sum(nil))
+}

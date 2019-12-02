@@ -167,6 +167,7 @@ type MixMessage struct {
 	ExtraInfoJSON string `xml:"extra_info_json"`
 	TraceID       string `xml:"trace_id"`
 	StatusCode    int    `xml:"status_code"`
+
 	//设备相关
 	device.MsgDevice
 }

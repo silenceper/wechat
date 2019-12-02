@@ -6,8 +6,22 @@ import (
 	"sort"
 )
 
+const (
+	// PayTypePay 支付回调
+	PayTypePay PayType = "pay"
+	// PayTypeRefund 退款回调
+	PayTypeRefund = "refund"
+)
+
+type PayType string
+
 // Base 公用参数
 type Base struct {
+	PayNotifyInfo PayType `xml:"-"` // 回调类型
+
+	ReturnCode string `xml:"return_code"`
+	ReturnMsg  string `xml:"return_msg"`
+
 	AppID    string `xml:"appid"`
 	MchID    string `xml:"mch_id"`
 	NonceStr string `xml:"nonce_str"`
@@ -18,30 +32,26 @@ type Base struct {
 // NotifyResult 下单回调
 type NotifyResult struct {
 	Base
-	ReturnCode    string `xml:"return_code"`
-	ReturnMsg     string `xml:"return_msg"`
+	OutTradeNo string `xml:"out_trade_no"` // 商户订单号
+	TotalFee   int    `xml:"total_fee"`    // 订单金额
+
+	// 支付成功回调
 	ResultCode    string `xml:"result_code"`
 	OpenID        string `xml:"openid"`
 	IsSubscribe   string `xml:"is_subscribe"`
 	TradeType     string `xml:"trade_type"`
 	BankType      string `xml:"bank_type"`
-	TotalFee      int    `xml:"total_fee"`
 	FeeType       string `xml:"fee_type"`
 	CashFee       int    `xml:"cash_fee"`
 	CashFeeType   string `xml:"cash_fee_type"`
 	TransactionID string `xml:"transaction_id"`
-	OutTradeNo    string `xml:"out_trade_no"`
 	Attach        string `xml:"attach"`
 	TimeEnd       string `xml:"time_end"`
-}
 
-// RefundResult 退款回调
-type RefundResult struct {
+	// 退款相关
 	TransactionId       string `xml:"transaction_id"`        // 微信订单号
-	OutTradeNo          string `xml:"out_trade_no"`          // 商户订单号
 	RefundId            string `xml:"refund_id"`             // 微信退款单号
 	OutRefundNo         string `xml:"out_refund_no"`         // 商户退款单号
-	TotalFee            int    `xml:"total_fee"`             // 订单金额
 	SettlementTotalFee  int    `xml:"settlement_total_fee"`  // 应结订单金额 当该订单有使用非充值券时，返回此字段。应结订单金额=订单金额-非充值代金券金额，应结订单金额<=订单金额。
 	RefundFee           int    `xml:"refund_fee"`            // 申请退款金额
 	SettlementRefundFee int    `xml:"settlement_refund_fee"` // 退款金额
@@ -59,7 +69,7 @@ type NotifyResp struct {
 }
 
 // VerifySign 验签
-func (pcf *Pay) VerifySign(notifyRes NotifyResult) bool {
+func VerifySign(payKey string, notifyRes NotifyResult) bool {
 	// 封装map 请求过来的 map
 	resMap := make(map[string]interface{})
 	// base
@@ -95,7 +105,7 @@ func (pcf *Pay) VerifySign(notifyRes NotifyResult) bool {
 		}
 	}
 	// STEP3, 在键值对的最后加上key=API_KEY
-	signStrings = signStrings + "key=" + pcf.PayKey
+	signStrings = signStrings + "key=" + payKey
 	// STEP4, 进行MD5签名并且将所有字符转为大写.
 	sign := util.MD5Sum(signStrings)
 	if sign != notifyRes.Sign {
