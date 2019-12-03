@@ -87,9 +87,16 @@ func (srv *Server) getPay() (reply *message.Reply, err error) {
 		if err != nil {
 			return
 		}
+
 	} else if !pay.VerifySign(srv.PayKey, srv.requestPayMsg) {
 		log.Warn("验签失败", srv.PayKey, srv.requestPayMsg)
 		return
+	}
+	// 判断支付返回类型
+	if srv.requestPayMsg.RefundFee > 0 {
+		srv.requestPayMsg.PayNotifyInfo = pay.PayTypeRefund
+	} else if srv.requestPayMsg.TotalFee > 0 {
+		srv.requestPayMsg.PayNotifyInfo = pay.PayTypePay
 	}
 	reply = srv.payHandler(srv.requestPayMsg)
 	return
