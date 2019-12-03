@@ -32,24 +32,23 @@ type Base struct {
 // NotifyResult 下单回调
 type NotifyResult struct {
 	Base
-	OutTradeNo string `xml:"out_trade_no"` // 商户订单号
-	TotalFee   int    `xml:"total_fee"`    // 订单金额
+	OutTradeNo    string `xml:"out_trade_no"`   // 商户订单号
+	TotalFee      int    `xml:"total_fee"`      // 订单金额
+	TransactionId string `xml:"transaction_id"` // 微信订单号
 
 	// 支付成功回调
-	ResultCode    string `xml:"result_code"`
-	OpenID        string `xml:"openid"`
-	IsSubscribe   string `xml:"is_subscribe"`
-	TradeType     string `xml:"trade_type"`
-	BankType      string `xml:"bank_type"`
-	FeeType       string `xml:"fee_type"`
-	CashFee       int    `xml:"cash_fee"`
-	CashFeeType   string `xml:"cash_fee_type"`
-	TransactionID string `xml:"transaction_id"`
-	Attach        string `xml:"attach"`
-	TimeEnd       string `xml:"time_end"`
+	ResultCode  string `xml:"result_code"`
+	OpenID      string `xml:"openid"`
+	IsSubscribe string `xml:"is_subscribe"`
+	TradeType   string `xml:"trade_type"`
+	BankType    string `xml:"bank_type"`
+	FeeType     string `xml:"fee_type"`
+	CashFee     int    `xml:"cash_fee"`
+	CashFeeType string `xml:"cash_fee_type"`
+	Attach      string `xml:"attach"`
+	TimeEnd     string `xml:"time_end"`
 
 	// 退款相关
-	TransactionId       string `xml:"transaction_id"`        // 微信订单号
 	RefundId            string `xml:"refund_id"`             // 微信退款单号
 	OutRefundNo         string `xml:"out_refund_no"`         // 商户退款单号
 	SettlementTotalFee  int    `xml:"settlement_total_fee"`  // 应结订单金额 当该订单有使用非充值券时，返回此字段。应结订单金额=订单金额-非充值代金券金额，应结订单金额<=订单金额。
@@ -86,7 +85,7 @@ func VerifySign(payKey string, notifyRes NotifyResult) bool {
 	resMap["total_fee"] = notifyRes.TotalFee
 	resMap["fee_type"] = notifyRes.FeeType
 	resMap["cash_fee"] = notifyRes.CashFee
-	resMap["transaction_id"] = notifyRes.TransactionID
+	resMap["transaction_id"] = notifyRes.TransactionId
 	resMap["out_trade_no"] = notifyRes.OutTradeNo
 	resMap["attach"] = notifyRes.Attach
 	resMap["time_end"] = notifyRes.TimeEnd

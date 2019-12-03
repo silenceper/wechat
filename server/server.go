@@ -88,6 +88,8 @@ func (srv *Server) buildResponse(reply *message.Reply) (err error) {
 		srv.kefu(reply)
 	case message.ReplySceneOpen:
 		srv.open(reply)
+	case message.ReplyScenePay:
+		srv.pay(reply)
 	}
 	return
 }

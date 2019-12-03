@@ -21,7 +21,7 @@ type chooseModel struct {
 
 // IsWechatPay 是否是微信支付
 func (m *chooseModel) IsPay() bool {
-	if m.ReturnCode != "" && m.ReturnMsg != "" && m.MchID != "" {
+	if m.ReturnCode != "" && m.MchID != "" {
 		return true
 	}
 	return false
@@ -56,39 +56,42 @@ func (srv *Server) handleRequest() (reply *message.Reply, err error) {
 
 // getPay 解析支付消息结构
 func (srv *Server) getPay() (reply *message.Reply, err error) {
-	var notifyResult pay.NotifyResult
-	err = xml.Unmarshal(srv.requestRaw, &notifyResult)
+	err = xml.Unmarshal(srv.requestRaw, &srv.requestPayMsg)
 	if err != nil {
 		return
 	}
 	// 解析结果非正确的，直接跳出
-	if notifyResult.ReturnCode != "SUCCESS" {
+	if srv.requestPayMsg.ReturnCode != "SUCCESS" {
 		log.Info(srv.requestRaw)
 		return
 	}
 	// 含有加密数据
-	if notifyResult.ReqInfo != "" {
-		var rawXMLMsg, appID, decryptData []byte
-		decryptData, err = base64.StdEncoding.DecodeString(notifyResult.ReqInfo)
-		if err != nil {
-			return nil, err
-		}
+	if srv.requestPayMsg.ReqInfo != "" {
+		var rawXMLMsg, encryptData []byte
 		key2 := util.MD5(srv.PayKey)
-		srv.random, rawXMLMsg, appID, err = util.AESDecryptMsg(decryptData, []byte(key2))
-		if err != nil || len(rawXMLMsg) == 0 {
+		encryptData, err = base64.StdEncoding.DecodeString(srv.requestPayMsg.ReqInfo)
+		if err != nil {
 			if srv.debug {
-				log.Warn(srv.random, rawXMLMsg, appID, err)
+				log.Warn("返回数据无法识别", srv.requestPayMsg)
 			}
 			return
 		}
-		err = xml.Unmarshal(rawXMLMsg, &notifyResult)
+		rawXMLMsg, err = util.ECBDecrypt(encryptData, []byte(key2))
+		if err != nil || len(rawXMLMsg) == 0 {
+			if srv.debug {
+				log.Warn(srv.random, rawXMLMsg, err)
+			}
+			return
+		}
+		err = xml.Unmarshal(rawXMLMsg, &srv.requestPayMsg)
 		if err != nil {
 			return
 		}
-	} else if !pay.VerifySign(srv.PayKey, notifyResult) {
-		log.Warn("验签失败", srv.PayKey, notifyResult)
+	} else if !pay.VerifySign(srv.PayKey, srv.requestPayMsg) {
+		log.Warn("验签失败", srv.PayKey, srv.requestPayMsg)
 		return
 	}
+	reply = srv.payHandler(srv.requestPayMsg)
 	return
 }
 

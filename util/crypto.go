@@ -11,6 +11,24 @@ import (
 	"fmt"
 )
 
+// ECBDecrypt ECB解密
+func ECBDecrypt(src, key []byte) (plaintext []byte, err error) {
+	//key只能是 16 24 32长度
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+	blockSize := block.BlockSize()
+	//返回加密结果
+	plaintext = make([]byte, len(src))
+	//分组分块加密
+	for index := 0; index < len(src); index += blockSize {
+		block.Decrypt(plaintext[index:index+blockSize], src[index:index+blockSize])
+	}
+	plaintext = PKCS7UnPadding(plaintext)
+	return
+}
+
 //EncryptMsg 加密消息
 func EncryptMsg(random, rawXMLMsg []byte, appID, aesKey string) (encrtptMsg []byte, err error) {
 	defer func() {
@@ -203,4 +221,38 @@ func MD5(txt string) string {
 	m := md5.New()
 	m.Write([]byte(txt))
 	return hex.EncodeToString(m.Sum(nil))
+}
+
+func ZeroPadding(ciphertext []byte, blockSize int) []byte {
+	padding := blockSize - len(ciphertext)%blockSize
+	padtext := bytes.Repeat([]byte{0}, padding)
+	return append(ciphertext, padtext...)
+}
+func ZeroUnPadding(origData []byte) []byte {
+	return bytes.TrimRightFunc(origData, func(r rune) bool {
+		return r == rune(0)
+	})
+}
+func PKCS5Padding(ciphertext []byte, blockSize int) []byte {
+	padding := blockSize - len(ciphertext)%blockSize
+	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(ciphertext, padtext...)
+}
+func PKCS5UnPadding(origData []byte) []byte {
+	length := len(origData)
+	// 去掉最后一个字节 unpadding 次
+	unpadding := int(origData[length-1])
+	return origData[:(length - unpadding)]
+}
+func PKCS7Padding(origData []byte, blockSize int) []byte {
+	//计算需要补几位数
+	padding := blockSize - len(origData)%blockSize
+	//在切片后面追加char数量的byte(char)
+	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(origData, padtext...)
+}
+func PKCS7UnPadding(origData []byte) []byte {
+	length := len(origData)
+	unpadding := int(origData[length-1])
+	return origData[:length-unpadding]
 }

@@ -5,10 +5,23 @@ import (
 	"fmt"
 	"gitee.com/zhimiao/wechat-sdk/message"
 	"gitee.com/zhimiao/wechat-sdk/open"
+	"gitee.com/zhimiao/wechat-sdk/pay"
 	"gitee.com/zhimiao/wechat-sdk/util"
 	"reflect"
 	"strconv"
 )
+
+func (srv *Server) pay(reply *message.Reply) (err error) {
+	srv.responseType = reply.ResponseType
+	srv.responseMsg = reply.MsgData
+	if reply.MsgData == nil {
+		srv.responseMsg = pay.NotifyResp{
+			ReturnCode: "SUCCESS",
+			ReturnMsg:  "OK",
+		}
+	}
+	return
+}
 
 // 开放平台
 func (srv *Server) open(reply *message.Reply) (err error) {
