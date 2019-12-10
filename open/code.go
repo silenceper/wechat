@@ -48,19 +48,20 @@ type CodePageList struct {
 
 // SubmitAuditParam 提审参数
 type SubmitAuditParam struct {
-	ItemList []struct {
-		Address     string `json:"address"`
-		Tag         string `json:"tag"`
-		FirstClass  string `json:"first_class"`
-		SecondClass string `json:"second_class"`
-		ThirdClass  string `json:"third_class"`
-		FirstID     int    `json:"first_id"`
-		SecondID    int    `json:"second_id"`
-		ThirdID     int    `json:"third_id"`
-		Title       string `json:"title"`
-	} `json:"item_list"` // 审核项列表，不知道微信要这玩意干啥，sdk自动注入一条
-	FeedbackInfo  string `json:"feedback_info"`
-	FeedbackStuff string `json:"feedback_stuff"`
+	ItemList      []SubmitAuditItem `json:"item_list"` // 审核项列表，不知道微信要这玩意干啥，sdk自动注入一条
+	FeedbackInfo  string            `json:"feedback_info"`
+	FeedbackStuff string            `json:"feedback_stuff"`
+}
+type SubmitAuditItem struct {
+	Address     string `json:"address"`
+	Tag         string `json:"tag"`
+	FirstClass  string `json:"first_class"`
+	SecondClass string `json:"second_class"`
+	ThirdClass  string `json:"third_class"`
+	FirstID     int    `json:"first_id"`
+	SecondID    int    `json:"second_id"`
+	ThirdID     int    `json:"third_id"`
+	Title       string `json:"title"`
 }
 
 // SubmitAuditResponse 提审返回

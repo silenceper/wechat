@@ -65,7 +65,7 @@ func (m *MiniPrograms) GetCategory() (ret Category, err error) {
 }
 
 // GetAuditCategory 获取审核时可填写的类目信息
-// 本接口接口可获取已设置的二级类目及用于代码审核的可选三级类目。
+// 本接口接口可获取已设置的二级类目以及用于代码审核的可选三级类目。
 func (m *MiniPrograms) GetAuditCategory() (result []AuditCategoryInfo, err error) {
 	var body []byte
 	body, err = m.get(getAuditCategoryURL, nil)
