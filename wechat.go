@@ -57,6 +57,7 @@ func copyConfigToContext(cfg *Config, context *context.Context) {
 	context.PayKey = cfg.PayKey
 	context.PayNotifyURL = cfg.PayNotifyURL
 	context.Cache = cfg.Cache
+	context.P12 = cfg.P12
 	context.SetAccessTokenLock(new(sync.RWMutex))
 	context.SetJsAPITicketLock(new(sync.RWMutex))
 }
