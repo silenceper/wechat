@@ -19,6 +19,48 @@ type dataModel struct {
 	Status int `json:"status"`
 }
 
+// AccountBasicInfo 用户信息详情
+type AccountBasicInfo struct {
+	util.CommonError
+	Appid          string `json:"appid"`
+	AccountType    int    `json:"account_type"`
+	PrincipalType  int    `json:"principal_type"`
+	PrincipalName  string `json:"principal_name"`
+	RealnameStatus int    `json:"realname_status"`
+	WxVerifyInfo   struct {
+		QualificationVerify   bool `json:"qualification_verify"`
+		NamingVerify          bool
+		AnnualReview          bool
+		AnnualReviewBeginTime int64
+		AnnualReviewEndTime   int64
+	} `json:"wx_verify_info"`
+	SignatureInfo struct {
+		Signature       string `json:"signature"`
+		ModifyUsedCount int    `json:"modify_used_count"`
+		ModifyQuota     int    `json:"modify_quota"`
+	} `json:"signature_info"`
+	HeadImageInfo struct {
+		HeadImageURL    string `json:"head_image_url"`
+		ModifyUsedCount int    `json:"modify_used_count"`
+		ModifyQuota     int    `json:"modify_quota"`
+	} `json:"head_image_info"`
+}
+
+// SetWebViewDomainURLParam 设置业务域名参数
+type SetWebViewDomainURLParam struct {
+	Action        Action   `json:"action"`
+	WebViewDomain []string `json:"webviewdomain"`
+}
+
+// ModifyDomainParam 设置服务器域名
+type ModifyDomainParam struct {
+	Action          Action   `json:"action"`
+	RequestDomain   []string `json:"requestdomain"`
+	WSRequestDomain []string `json:"wsrequestdomain"`
+	UploadDomain    []string `json:"uploaddomain"`
+	DownloadDomain  []string `json:"downloaddomain"`
+}
+
 // GetWxaSearchStatus 通过本接口可以查询小程序当前的隐私设置，即是否可被搜索
 func (m *MiniPrograms) GetWxaSearchStatus() (ret bool, err error) {
 	var body []byte
@@ -63,15 +105,6 @@ func (m *MiniPrograms) CanSearch(open bool) (err error) {
 	return
 }
 
-// ModifyDomainParam 设置服务器域名
-type ModifyDomainParam struct {
-	Action          Action   `json:"action"`
-	RequestDomain   []string `json:"requestdomain"`
-	WSRequestDomain []string `json:"wsrequestdomain"`
-	UploadDomain    []string `json:"uploaddomain"`
-	DownloadDomain  []string `json:"downloaddomain"`
-}
-
 // ModifyDomain 设置服务器域名
 func (m *MiniPrograms) ModifyDomain(param SetWebViewDomainURLParam) (err error) {
 	var body []byte
@@ -90,12 +123,6 @@ func (m *MiniPrograms) ModifyDomain(param SetWebViewDomainURLParam) (err error) 
 	return
 }
 
-// SetWebViewDomainURLParam 设置业务域名参数
-type SetWebViewDomainURLParam struct {
-	Action        Action   `json:"action"`
-	WebViewDomain []string `json:"webviewdomain"`
-}
-
 // SetWebViewDomain 设置业务域名
 func (m *MiniPrograms) SetWebViewDomain(param SetWebViewDomainURLParam) (err error) {
 	var body []byte
@@ -112,33 +139,6 @@ func (m *MiniPrograms) SetWebViewDomain(param SetWebViewDomainURLParam) (err err
 		err = fmt.Errorf("[%d]: %s", ret.ErrCode, ret.ErrMsg)
 	}
 	return
-}
-
-// AccountBasicInfo 用户信息详情
-type AccountBasicInfo struct {
-	util.CommonError
-	Appid          string `json:"appid"`
-	AccountType    int    `json:"account_type"`
-	PrincipalType  int    `json:"principal_type"`
-	PrincipalName  string `json:"principal_name"`
-	RealnameStatus int    `json:"realname_status"`
-	WxVerifyInfo   struct {
-		QualificationVerify   bool `json:"qualification_verify"`
-		NamingVerify          bool
-		AnnualReview          bool
-		AnnualReviewBeginTime int64
-		AnnualReviewEndTime   int64
-	} `json:"wx_verify_info"`
-	SignatureInfo struct {
-		Signature       string `json:"signature"`
-		ModifyUsedCount int    `json:"modify_used_count"`
-		ModifyQuota     int    `json:"modify_quota"`
-	} `json:"signature_info"`
-	HeadImageInfo struct {
-		HeadImageURL    string `json:"head_image_url"`
-		ModifyUsedCount int    `json:"modify_used_count"`
-		ModifyQuota     int    `json:"modify_quota"`
-	} `json:"head_image_info"`
 }
 
 // GetAccountBasicInfo 调用本 API 可以获取小程序的基本信息 没啥卵用，不知道为啥
