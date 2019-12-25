@@ -32,6 +32,7 @@ func NewMaterial(context *context.Context) *Material {
 type Article struct {
 	Title            string `json:"title"`
 	ThumbMediaID     string `json:"thumb_media_id"`
+	ThumbURL         string `json:"thumb_url"`
 	Author           string `json:"author"`
 	Digest           string `json:"digest"`
 	ShowCoverPic     int    `json:"show_cover_pic"`
