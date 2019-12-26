@@ -65,25 +65,25 @@ func (user *User) GetUserInfo(openID string) (userInfo *Info, err error) {
 	var accessToken string
 	accessToken, err = user.GetAccessToken()
 	if err != nil {
-		return nil,err
+		return
 	}
 
 	uri := fmt.Sprintf(userInfoURL, accessToken, openID)
 	var response []byte
 	response, err = util.HTTPGet(uri)
 	if err != nil {
-		return  nil,err
+		return
 	}
 	userInfo = new(Info)
 	err = json.Unmarshal(response, userInfo)
 	if err != nil {
-		return nil,err
+		return
 	}
 	if userInfo.ErrCode != 0 {
 		err = fmt.Errorf("GetUserInfo Error , errcode=%d , errmsg=%s", userInfo.ErrCode, userInfo.ErrMsg)
-		return nil,err
+		return
 	}
-	return userInfo,nil
+	return
 }
 
 // UpdateRemark 设置用户备注名

@@ -18,7 +18,6 @@ var (
 	// ErrInvalidPKCS7Padding 输入padding失败
 	ErrInvalidPKCS7Padding = errors.New("invalid padding on input")
 )
-
 // DecryptedData 解密信息
 type DecryptedData struct {
 	// 用户授权
@@ -48,7 +47,35 @@ type StepInfo struct {
 	Timestamp 	int64 	`json:"timestamp"`
 	Step 		int 	`json:"step"`
 }
-	
+
+// UserInfo 用户信息
+type UserInfo struct {
+	OpenID    string `json:"openId"`
+	UnionID   string `json:"unionId"`
+	NickName  string `json:"nickName"`
+	Gender    int    `json:"gender"`
+	City      string `json:"city"`
+	Province  string `json:"province"`
+	Country   string `json:"country"`
+	AvatarURL string `json:"avatarUrl"`
+	Language  string `json:"language"`
+	Watermark struct {
+		Timestamp int64  `json:"timestamp"`
+		AppID     string `json:"appid"`
+	} `json:"watermark"`
+}
+
+// PhoneInfo 用户手机号
+type PhoneInfo struct {
+	PhoneNumber     string `json:"phoneNumber"`
+	PurePhoneNumber string `json:"purePhoneNumber"`
+	CountryCode     string `json:"countryCode"`
+	Watermark       struct {
+		Timestamp int64  `json:"timestamp"`
+		AppID     string `json:"appid"`
+	} `json:"watermark"`
+}
+
 // pkcs7Unpad returns slice of the original data without padding
 func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
 	if blockSize <= 0 {
@@ -70,8 +97,8 @@ func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
 	return data[:len(data)-n], nil
 }
 
-// Decrypt 解密数据
-func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*DecryptedData, error) {
+// getCipherText returns slice of the cipher text
+func getCipherText(sessionKey, encryptedData, iv string) ([]byte, error) {
 	aesKey, err := base64.StdEncoding.DecodeString(sessionKey)
 	if err != nil {
 		return nil, err
@@ -94,6 +121,15 @@ func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*Decrypte
 	if err != nil {
 		return nil, err
 	}
+	return cipherText, nil
+}
+
+// Decrypt 解密数据
+func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*DecryptedData, error) {
+	cipherText, err := getCipherText(sessionKey, encryptedData, iv)
+	if err != nil {
+		return nil, err
+	}
 	var userInfo DecryptedData
 	err = json.Unmarshal(cipherText, &userInfo)
 	if err != nil {
@@ -103,4 +139,21 @@ func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*Decrypte
 		return nil, ErrAppIDNotMatch
 	}
 	return &userInfo, nil
+}
+
+// DecryptPhone 解密数据(手机)
+func (wxa *MiniProgram) DecryptPhone(sessionKey, encryptedData, iv string) (*PhoneInfo, error) {
+	cipherText, err := getCipherText(sessionKey, encryptedData, iv)
+	if err != nil {
+		return nil, err
+	}
+	var phoneInfo PhoneInfo
+	err = json.Unmarshal(cipherText, &phoneInfo)
+	if err != nil {
+		return nil, err
+	}
+	if phoneInfo.Watermark.AppID != wxa.AppID {
+		return nil, ErrAppIDNotMatch
+	}
+	return &phoneInfo, nil
 }

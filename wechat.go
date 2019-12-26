@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"github.com/silenceper/wechat/device"
 	"net/http"
 	"sync"
 
@@ -16,7 +17,6 @@ import (
 	"github.com/silenceper/wechat/server"
 	"github.com/silenceper/wechat/template"
 	"github.com/silenceper/wechat/user"
-	"github.com/silenceper/wechat/message"
 )
 
 // Wechat struct
@@ -113,7 +113,7 @@ func (wc *Wechat) GetMiniProgram() *miniprogram.MiniProgram {
 	return miniprogram.NewMiniProgram(wc.Context)
 }
 
-// GetCustom 客服消息接口
-func (wc *Wechat) GetCustom() *message.Custom {
-	return message.NewCustom(wc.Context)
+// GetDevice 获取智能设备的实例
+func (wc *Wechat) GetDevice() *device.Device {
+	return device.NewDevice(wc.Context)
 }
