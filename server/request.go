@@ -115,7 +115,7 @@ func (srv *Server) getMessage() (reply *message.Reply, err error) {
 	}
 	if srv.isSafeMode {
 		var encryptedXMLMsg message.EncryptedXMLMsg
-		err = xml.NewDecoder(srv.Request.Body).Decode(&encryptedXMLMsg)
+		err = xml.Unmarshal(srv.requestRaw, &encryptedXMLMsg)
 		if err != nil {
 			err = fmt.Errorf("从body中解析xml失败,err=%v", err)
 			return
