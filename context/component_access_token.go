@@ -221,21 +221,17 @@ func (ctx *Context) GetAuthrAccessToken(appid string) (string, error) {
 
 // AuthorizerInfo 授权方详细信息
 type AuthorizerInfo struct {
-	NickName        string          `json:"nick_name"`
-	HeadImg         string          `json:"head_img"`
-	ServiceTypeInfo ID              `json:"service_type_info"`
-	VerifyTypeInfo  ID              `json:"verify_type_info"`
-	UserName        string          `json:"user_name"`
-	Alias           string          `json:"alias"`
-	QrcodeURL       string          `json:"qrcode_url"`
+	NickName        string `json:"nick_name"`
+	HeadImg         string `json:"head_img"`
+	ServiceTypeInfo ID     `json:"service_type_info"`
+	VerifyTypeInfo  ID     `json:"verify_type_info"`
+	UserName        string `json:"user_name"`
+	Alias           string `json:"alias"`
+	QrcodeURL       string `json:"qrcode_url"`
+	// open_store-门店  open_scan-扫商品  open_pay-支付  open_card-卡券  open_shake-摇一摇
 	BusinessInfo    map[string]int8 `json:"business_info"`
 	PrincipalName   string          `json:"principal_name"`
 	Signature       string          `json:"signature"` // 小程序名称
-	// open_store	是否开通微信门店功能
-	// open_scan	是否开通微信扫商品功能
-	// open_pay	是否开通微信支付功能
-	// open_card	是否开通微信卡券功能
-	// open_shake	是否开通微信摇一摇功能
 	MiniProgramInfo struct {
 		Network struct {
 			RequestDomain   []string
