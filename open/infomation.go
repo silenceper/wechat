@@ -106,7 +106,7 @@ func (m *MiniPrograms) CanSearch(open bool) (err error) {
 }
 
 // ModifyDomain 设置服务器域名
-func (m *MiniPrograms) ModifyDomain(param SetWebViewDomainURLParam) (err error) {
+func (m *MiniPrograms) ModifyDomain(param ModifyDomainParam) (err error) {
 	var body []byte
 	body, err = m.post(modifyDomainURL, param)
 	if err != nil {

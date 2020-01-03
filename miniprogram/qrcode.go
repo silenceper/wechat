@@ -85,7 +85,7 @@ func (wxa *MiniProgram) GetWXACode(coderParams QRCoder) (response []byte, err er
 }
 
 // GetWXACodeUnlimit 获取小程序码，适用于需要的码数量极多的业务场景
-// 文档地址： https://developers.weixin.qq.com/miniprogram/dev/api/getWXACodeUnlimit.html
+// 文档地址： https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.getUnlimited.html
 func (wxa *MiniProgram) GetWXACodeUnlimit(coderParams QRCoder) (response []byte, err error) {
 	return wxa.fetchCode(getWXACodeUnlimitURL, coderParams)
 }
