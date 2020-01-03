@@ -137,6 +137,11 @@ type AuthBaseInfo struct {
 // AuthFuncInfo 授权的接口内容
 type AuthFuncInfo struct {
 	FuncscopeCategory ID `json:"funcscope_category"`
+	ConfirmInfo       struct {
+		NeedConfirm    int8 `json:"need_confirm"`
+		AlreadyConfirm int8 `json:"already_confirm"`
+		CanConfirm     int8 `json:"can_confirm"`
+	} `json:"confirm_info"`
 }
 
 // AuthrAccessToken 授权方AccessToken
@@ -216,21 +221,36 @@ func (ctx *Context) GetAuthrAccessToken(appid string) (string, error) {
 
 // AuthorizerInfo 授权方详细信息
 type AuthorizerInfo struct {
-	NickName        string `json:"nick_name"`
-	HeadImg         string `json:"head_img"`
-	ServiceTypeInfo ID     `json:"service_type_info"`
-	VerifyTypeInfo  ID     `json:"verify_type_info"`
-	UserName        string `json:"user_name"`
-	PrincipalName   string `json:"principal_name"`
-	BusinessInfo    struct {
-		OpenStore string `json:"open_store"`
-		OpenScan  string `json:"open_scan"`
-		OpenPay   string `json:"open_pay"`
-		OpenCard  string `json:"open_card"`
-		OpenShake string `json:"open_shake"`
+	NickName        string          `json:"nick_name"`
+	HeadImg         string          `json:"head_img"`
+	ServiceTypeInfo ID              `json:"service_type_info"`
+	VerifyTypeInfo  ID              `json:"verify_type_info"`
+	UserName        string          `json:"user_name"`
+	Alias           string          `json:"alias"`
+	QrcodeURL       string          `json:"qrcode_url"`
+	BusinessInfo    map[string]int8 `json:"business_info"`
+	PrincipalName   string          `json:"principal_name"`
+	Signature       string          `json:"signature"` // 小程序名称
+	// open_store	是否开通微信门店功能
+	// open_scan	是否开通微信扫商品功能
+	// open_pay	是否开通微信支付功能
+	// open_card	是否开通微信卡券功能
+	// open_shake	是否开通微信摇一摇功能
+	MiniProgramInfo struct {
+		Network struct {
+			RequestDomain   []string
+			WsRequestDomain []string
+			UploadDomain    []string
+			DownloadDomain  []string
+			BizDomain       []string
+			UDPDomain       []string
+		} `json:"network"`
+		Categories []struct {
+			First  string `json:"first"`
+			Second string `json:"second"`
+		} `json:"categories"`
+		VisitStatus int8 `json:"visit_status"`
 	}
-	Alias     string `json:"alias"`
-	QrcodeURL string `json:"qrcode_url"`
 }
 
 // GetAuthrInfo 获取授权方的帐号基本信息
