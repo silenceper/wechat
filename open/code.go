@@ -416,8 +416,8 @@ func (m *MiniPrograms) QueryQuota() (ret QueryQuotaResponse, err error) {
 
 // SpeedUpAudit 加急审核申请
 // 有加急次数的第三方可以通过该接口，对已经提审的小程序进行加急操作，加急后的小程序预计2-12小时内审完
-func (m *MiniPrograms) SpeedUpAudit(auditID string) (err error) {
-	body, err := m.post(speedUpAuditURL, map[string]string{
+func (m *MiniPrograms) SpeedUpAudit(auditID uint64) (err error) {
+	body, err := m.post(speedUpAuditURL, map[string]uint64{
 		"auditid": auditID,
 	})
 	if err != nil {
