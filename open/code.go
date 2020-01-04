@@ -68,14 +68,14 @@ type SubmitAuditItem struct {
 // SubmitAuditResponse 提审返回
 type submitAuditResponse struct {
 	util.CommonError
-	AuditID string `json:"auditid"`
+	AuditID uint64 `json:"auditid"`
 }
 
 // AuditStatusResponse 获取审核结果
 type AuditStatusResponse struct {
 	util.CommonError
-	AuditID    string `json:"auditid"`
-	Status     int    `json:"status"`
+	AuditID    uint64 `json:"auditid"`
+	Status     int    `json:"status"` // 0-审核成功 1-审核被拒绝 2-审核中 3-已撤回
 	Reason     string `json:"reason"`
 	ScreenShot string `json:"ScreenShot"`
 }
@@ -167,7 +167,7 @@ func (m *MiniPrograms) GetTestQrcode(path string) (ret []byte, err error) {
 }
 
 // SubmitAudit 提审
-func (m *MiniPrograms) SubmitAudit(param SubmitAuditParam) (auditID string, err error) {
+func (m *MiniPrograms) SubmitAudit(param SubmitAuditParam) (auditID uint64, err error) {
 	ret := submitAuditResponse{}
 	body, err := m.post(submitAuditURL, param)
 	if err != nil {
@@ -185,8 +185,8 @@ func (m *MiniPrograms) SubmitAudit(param SubmitAuditParam) (auditID string, err 
 }
 
 // GetAuditStatus 查询指定发布审核单的审核状态
-func (m *MiniPrograms) GetAuditStatus(auditID string) (ret AuditStatusResponse, err error) {
-	rmap := map[string]string{
+func (m *MiniPrograms) GetAuditStatus(auditID uint64) (ret AuditStatusResponse, err error) {
+	rmap := map[string]uint64{
 		"auditid": auditID,
 	}
 	body, err := m.post(getAuditStatusURL, rmap)
