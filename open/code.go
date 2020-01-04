@@ -29,7 +29,8 @@ const (
 // CommitParam 提交代码参数
 type CommitParam struct {
 	TemplateID  int            `json:"template_id"`  // 模板编号
-	ExtJSON     CommitParamExt `json:"ext_json"`     // 扩展
+	Ext         CommitParamExt `json:"-"`            // 扩展
+	ExtJSON     string         `json:"ext_json"`     // 扩展
 	UserVersion string         `json:"user_version"` // 提交版本
 	UserDesc    string         `json:"user_desc"`    // 版本说明
 }
@@ -114,8 +115,16 @@ type QueryQuotaResponse struct {
 func (m *MiniPrograms) Commit(param CommitParam) (err error) {
 	var body []byte
 	ret := util.CommonError{}
-	if param.ExtJSON.ExtAppID == "" {
-		param.ExtJSON.ExtAppID = m.AuthAppID
+	if param.Ext.ExtAppID == "" {
+		param.Ext.ExtAppID = m.AuthAppID
+	}
+	if param.ExtJSON == "" {
+		var extJsonByte []byte
+		extJsonByte, err = json.Marshal(param.Ext)
+		if err != nil {
+			return
+		}
+		param.ExtJSON = string(extJsonByte)
 	}
 	body, err = m.post(commitURL, param)
 	if err != nil {
