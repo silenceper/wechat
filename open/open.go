@@ -151,6 +151,9 @@ func (m *MiniPrograms) post(urlStr string, body interface{}) (response []byte, e
 	if err != nil {
 		return
 	}
+	if body == nil {
+		body = map[string]string{}
+	}
 	response, err = util.PostJSON(sendURL, body)
 	return
 }
