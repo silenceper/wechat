@@ -14,6 +14,7 @@ const (
 	addMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/add_material"
 	delMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/del_material"
 	batchgetMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/batchget_material"
+	getMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/get_material"
 )
 
 //Material 素材管理
@@ -37,6 +38,33 @@ type Article struct {
 	ShowCoverPic     int    `json:"show_cover_pic"`
 	Content          string `json:"content"`
 	ContentSourceURL string `json:"content_source_url"`
+	URL              string `json:"url"`
+	DownURL          string `json:"down_url"`
+}
+
+// GetNews 获取/下载永久素材
+func (material *Material) GetNews(id string) ([]*Article, error) {
+	accessToken, err := material.GetAccessToken()
+	if err != nil {
+		return nil, err
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", getMaterialURL, accessToken)
+
+	var req struct {
+		MediaID string `json:"media_id"`
+	}
+	req.MediaID = id
+	responseBytes, err := util.PostJSON(uri, req)
+
+	var res struct {
+		NewsItem []*Article `json:"news_item"`
+	}
+	err = json.Unmarshal(responseBytes, &res)
+	if err != nil {
+		return nil, err
+	}
+
+	return res.NewsItem, nil
 }
 
 //reqArticles 永久性图文素材请求信息
@@ -64,7 +92,7 @@ func (material *Material) AddNews(articles []*Article) (mediaID string, err erro
 	uri := fmt.Sprintf("%s?access_token=%s", addNewsURL, accessToken)
 	responseBytes, err := util.PostJSON(uri, req)
 	var res resArticles
-	err = json.Unmarshal(responseBytes, res)
+	err = json.Unmarshal(responseBytes, &res)
 	if err != nil {
 		return
 	}
@@ -139,11 +167,11 @@ func (material *Material) AddVideo(filename, title, introduction string) (mediaI
 	fields := []util.MultipartFormField{
 		{
 			IsFile:    true,
-			Fieldname: "video",
+			Fieldname: "media",
 			Filename:  filename,
 		},
 		{
-			IsFile:    true,
+			IsFile:    false,
 			Fieldname: "description",
 			Value:     fieldValue,
 		},

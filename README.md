@@ -96,6 +96,8 @@ Cache主要用来保存全局access_token以及js-sdk中的ticket：
 		- 检验access_token是否有效
 	- 获取js-sdk配置
 - [素材管理](#素材管理)
+- [小程序开发](#小程序开发)
+- [小程序-云开发](./tcb)
 
 ## 消息管理
 
@@ -282,8 +284,8 @@ type Reply struct {
 ####  回复图片消息
 ```go
 //mediaID 可通过素材管理-上上传多媒体文件获得
-image :=message.NewVideo("mediaID")
-return &message.Reply{message.MsgTypeVideo, image}
+image :=message.NewImage("mediaID")
+return &message.Reply{message.MsgTypeImage, image}
 ```
 ####  回复视频消息
 ```go
@@ -335,14 +337,14 @@ Url	：点击图文消息跳转链接
 
 ## 自定义菜单
 
-通过` wechat.GetMenu(req, writer)`获取menu的实例
+通过` wechat.GetMenu()`获取menu的实例
 
 ### 自定义菜单创建接口
 
 以下是一个创建二级菜单的例子
 
 ```go
-mu := wc.GetMenu(c.Request, c.Writer)
+mu := wc.GetMenu()
 
 buttons := make([]*menu.Button, 1)
 btn := new(menu.Button)
@@ -402,7 +404,7 @@ func (btn *Button) SetViewLimitedButton(name, mediaID string) {
 ### 自定义菜单查询接口
 
 ```go
-mu := wc.GetMenu(c.Request, c.Writer)
+mu := wc.GetMenu()
 resMenu,err:=mu.GetMenu()
 ```
 >返回结果 resMenu 结构参考 ./menu/menu.go 中ResMenu 结构体
@@ -410,7 +412,7 @@ resMenu,err:=mu.GetMenu()
 ### 自定义菜单删除接口
 
 ```go
-mu := wc.GetMenu(c.Request, c.Writer)
+mu := wc.GetMenu()
 err:=mu.DeleteMenu()
 ```
 
@@ -458,7 +460,7 @@ func (menu *Menu) GetCurrentSelfMenuInfo() (resSelfMenuInfo ResSelfMenuInfo, err
 **1.发起授权**
 
 ```go
-oauth := wc.GetOauth(c.Request, c.Writer)
+oauth := wc.GetOauth()
 err := oauth.Redirect("跳转的绝对地址", "snsapi_userinfo", "123dd123")
 if err != nil {
 	fmt.Println(err)
@@ -505,7 +507,7 @@ func (oauth *Oauth) CheckAccessToken(accessToken, openID string) (b bool, err er
 ### 获取js-sdk配置
 
 ```go
-js := wc.GetJs(c.Request, c.Writer)
+js := wc.GetJs()
 cfg, err := js.GetConfig("传入需要的调用js-sdk的url地址")
 if err != nil {
 	fmt.Println(err)
@@ -528,6 +530,110 @@ type Config struct {
 ## 素材管理
 
 [素材管理API](https://godoc.org/github.com/silenceper/wechat/material#Material)
+
+## 小程序开发
+
+获取小程序操作对象
+
+``` go
+memCache=cache.NewMemcache("127.0.0.1:11211")
+config := &wechat.Config{
+	AppID:     "xxx",
+	AppSecret: "xxx",
+	Cache:     memCache=cache.NewMemcache("127.0.0.1:11211"),
+}
+wc := wechat.NewWechat(config)
+
+wxa := wc.GetMiniProgram()
+```
+
+### 小程序登录凭证校验
+
+``` go
+func (wxa *MiniProgram) Code2Session(jsCode string) (result ResCode2Session, err error)
+```
+
+### 小程序数据统计
+
+**获取用户访问小程序日留存**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisDailyRetain(beginDate, endDate string) (result ResAnalysisRetain, err error)
+```
+
+**获取用户访问小程序月留存**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisMonthlyRetain(beginDate, endDate string) (result ResAnalysisRetain, err error)
+```
+
+**获取用户访问小程序周留存**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisWeeklyRetain(beginDate, endDate string) (result ResAnalysisRetain, err error)
+```
+
+**获取用户访问小程序数据概况**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisDailySummary(beginDate, endDate string) (result ResAnalysisDailySummary, err error)
+```
+
+**获取用户访问小程序数据日趋势**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisDailyVisitTrend(beginDate, endDate string) (result ResAnalysisVisitTrend, err error)
+```
+
+**获取用户访问小程序数据月趋势**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisMonthlyVisitTrend(beginDate, endDate string) (result ResAnalysisVisitTrend, err error)
+```
+
+**获取用户访问小程序数据周趋势**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisWeeklyVisitTrend(beginDate, endDate string) (result ResAnalysisVisitTrend, err error)
+```
+
+**获取小程序新增或活跃用户的画像分布数据**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisUserPortrait(beginDate, endDate string) (result ResAnalysisUserPortrait, err error)
+```
+
+**获取用户小程序访问分布数据**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisVisitDistribution(beginDate, endDate string) (result ResAnalysisVisitDistribution, err error)
+```
+
+**获取小程序页面访问数据**
+
+``` go
+func (wxa *MiniProgram) GetAnalysisVisitPage(beginDate, endDate string) (result ResAnalysisVisitPage, err error)
+```
+
+### 小程序二维码生成
+
+**获取小程序二维码，适用于需要的码数量较少的业务场景**
+
+``` go
+func (wxa *MiniProgram) CreateWXAQRCode(coderParams QRCoder) (response []byte, err error)
+```
+
+**获取小程序码，适用于需要的码数量较少的业务场景**
+
+``` go
+func (wxa *MiniProgram) GetWXACode(coderParams QRCoder) (response []byte, err error)
+```
+
+**获取小程序码，适用于需要的码数量极多的业务场景**
+
+``` go
+func (wxa *MiniProgram) GetWXACodeUnlimit(coderParams QRCoder) (response []byte, err error)
+```
 
 
 更多API使用请参考 godoc ：
