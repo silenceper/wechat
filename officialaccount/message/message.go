@@ -72,6 +72,7 @@ const (
 )
 
 const (
+	//微信开放平台需要用到
 	// InfoTypeVerifyTicket 返回ticket
 	InfoTypeVerifyTicket InfoType = "component_verify_ticket"
 	// InfoTypeAuthorized 授权
