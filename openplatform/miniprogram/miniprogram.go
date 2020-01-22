@@ -28,5 +28,5 @@ func (miniProgram *MiniProgram) GetComponent() *component.Component {
 
 //GetBasic 基础信息设置
 func (miniProgram *MiniProgram) GetBasic() *basic.Basic {
-	return basic.NewBasic(miniProgram.opContext)
+	return basic.NewBasic(miniProgram.opContext, miniProgram.AppID)
 }
