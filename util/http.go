@@ -7,7 +7,6 @@ import (
 	"encoding/pem"
 	"encoding/xml"
 	"fmt"
-	"golang.org/x/crypto/pkcs12"
 	"io"
 	"io/ioutil"
 	"log"
