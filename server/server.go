@@ -1,6 +1,7 @@
 package server
 
 import (
+	"bytes"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -145,6 +146,7 @@ func (srv *Server) getMessage() (interface{}, error) {
 		}
 	} else {
 		rawXMLMsgBytes, err = ioutil.ReadAll(srv.Request.Body)
+		srv.Request.Body = ioutil.NopCloser(bytes.NewBuffer(rawXMLMsgBytes))
 		if err != nil {
 			return nil, fmt.Errorf("从body中解析xml失败, err=%v", err)
 		}
