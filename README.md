@@ -3,7 +3,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/silenceper/wechat)](https://goreportcard.com/report/github.com/silenceper/wechat)
 [![GoDoc](http://godoc.org/github.com/silenceper/wechat?status.svg)](http://godoc.org/github.com/silenceper/wechat)
 
-
 使用Golang开发的微信SDK，简单、易用。
 
 ## 快速开始
@@ -45,6 +44,10 @@ server.Send()
 
 - Beego: [./examples/beego/beego.go](./examples/beego/beego.go)
 - Gin Framework: [./examples/gin/gin.go](./examples/gin/gin.go)
+
+## 交流群：
+![关注公众号入群交流](https://silenceper.oss-cn-beijing.aliyuncs.com/qrcode/qr_code_study_program_258.jpg)
+>关注公众号并回复“入群”
 
 ## 基本配置
 
@@ -97,6 +100,7 @@ Cache主要用来保存全局access_token以及js-sdk中的ticket：
 	- 获取js-sdk配置
 - [素材管理](#素材管理)
 - [小程序开发](#小程序开发)
+- [小程序-云开发](./tcb)
 
 ## 消息管理
 
@@ -283,8 +287,8 @@ type Reply struct {
 ####  回复图片消息
 ```go
 //mediaID 可通过素材管理-上上传多媒体文件获得
-image :=message.NewVideo("mediaID")
-return &message.Reply{message.MsgTypeVideo, image}
+image :=message.NewImage("mediaID")
+return &message.Reply{message.MsgTypeImage, image}
 ```
 ####  回复视频消息
 ```go

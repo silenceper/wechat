@@ -1,6 +1,10 @@
 package message
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+
+	"github.com/silenceper/wechat/device"
+)
 
 // MsgType 基本消息类型
 type MsgType string
@@ -152,6 +156,9 @@ type MixMessage struct {
 	ExtraInfoJSON string `xml:"extra_info_json"`
 	TraceID       string `xml:"trace_id"`
 	StatusCode    int    `xml:"status_code"`
+
+	//设备相关
+	device.MsgDevice
 }
 
 //EventPic 发图事件推送
@@ -175,15 +182,6 @@ type ResponseEncryptedXMLMsg struct {
 	Nonce        string   `xml:"Nonce"        json:"Nonce"`
 }
 
-// CommonToken 消息中通用的结构
-type CommonToken struct {
-	XMLName      xml.Name `xml:"xml"`
-	ToUserName   CDATA    `xml:"ToUserName"`
-	FromUserName CDATA    `xml:"FromUserName"`
-	CreateTime   int64    `xml:"CreateTime"`
-	MsgType      MsgType  `xml:"MsgType"`
-}
-
 // CDATA  使用该类型,在序列化为 xml 文本时文本会被解析器忽略
 type CDATA string
 
@@ -194,14 +192,23 @@ func (c CDATA) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	}{string(c)}, start)
 }
 
+// CommonToken 消息中通用的结构
+type CommonToken struct {
+	XMLName      xml.Name `xml:"xml"`
+	ToUserName   CDATA    `xml:"ToUserName"`
+	FromUserName CDATA    `xml:"FromUserName"`
+	CreateTime   int64    `xml:"CreateTime"`
+	MsgType      MsgType  `xml:"MsgType"`
+}
+
 //SetToUserName set ToUserName
-func (msg *CommonToken) SetToUserName(toUserName string) {
-	msg.ToUserName = CDATA(toUserName)
+func (msg *CommonToken) SetToUserName(toUserName CDATA) {
+	msg.ToUserName = toUserName
 }
 
 //SetFromUserName set FromUserName
-func (msg *CommonToken) SetFromUserName(fromUserName string) {
-	msg.FromUserName = CDATA(fromUserName)
+func (msg *CommonToken) SetFromUserName(fromUserName CDATA) {
+	msg.FromUserName = fromUserName
 }
 
 //SetCreateTime set createTime

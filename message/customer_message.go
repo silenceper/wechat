@@ -3,8 +3,8 @@ package message
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/silenceper/wechat/util"
 	"github.com/silenceper/wechat/context"
+	"github.com/silenceper/wechat/util"
 )
 
 const (
@@ -139,14 +139,14 @@ type MediaMiniprogrampage struct {
 }
 
 //Send 发送客服消息
-func (manager *Manager) Send(msg  *CustomerMessage) error {
-	accessToken,err:=manager.Context.GetAccessToken()
-	if err!=nil {
+func (manager *Manager) Send(msg *CustomerMessage) error {
+	accessToken, err := manager.Context.GetAccessToken()
+	if err != nil {
 		return err
 	}
 	uri := fmt.Sprintf("%s?access_token=%s", customerSendMessage, accessToken)
 	response, err := util.PostJSON(uri, msg)
- 	var result util.CommonError
+	var result util.CommonError
 	err = json.Unmarshal(response, &result)
 	if err != nil {
 		return err
