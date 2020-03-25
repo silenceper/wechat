@@ -14,6 +14,8 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"strings"
+	"bufio"
 )
 
 //HTTPGet get 请求
@@ -113,16 +115,32 @@ func PostMultipartForm(fields []MultipartFormField, uri string) (respBody []byte
 				return
 			}
 
-			fh, e := os.Open(field.Filename)
-			if e != nil {
-				err = fmt.Errorf("error opening file , err=%v", e)
-				return
+			// 判断是否网络图片
+			if strings.Contains(field.Filename, "http") {
+				res, e := http.Get(field.Filename)
+				if e != nil {
+					err = fmt.Errorf("error opening intent file , err=%v", e)
+					return
+				}
+				defer res.Body.Close()
+				fh := bufio.NewReader(res.Body)
+				if _, err = io.Copy(fileWriter, fh); err != nil {
+					return
+				}
+			}else{
+				fh, e := os.Open(field.Filename)
+				if e != nil {
+					err = fmt.Errorf("error opening file , err=%v", e)
+					return
+				}
+				defer fh.Close()
+				if _, err = io.Copy(fileWriter, fh); err != nil {
+					return
+				}
 			}
-			defer fh.Close()
 
-			if _, err = io.Copy(fileWriter, fh); err != nil {
-				return
-			}
+
+
 		} else {
 			partWriter, e := bodyWriter.CreateFormField(field.Fieldname)
 			if e != nil {
