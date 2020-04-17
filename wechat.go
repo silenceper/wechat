@@ -6,6 +6,7 @@ import (
 
 	"github.com/silenceper/wechat/cache"
 	"github.com/silenceper/wechat/context"
+	"github.com/silenceper/wechat/delivery"
 	"github.com/silenceper/wechat/device"
 	"github.com/silenceper/wechat/js"
 	"github.com/silenceper/wechat/material"
@@ -122,4 +123,9 @@ func (wc *Wechat) GetDevice() *device.Device {
 // GetTcb 获取小程序-云开发的实例
 func (wc *Wechat) GetTcb() *tcb.Tcb {
 	return tcb.NewTcb(wc.Context)
+}
+
+// GetDelivery 物流管理
+func (wc *Wechat) GetDelivery() *delivery.Delivery {
+	return delivery.NewDelivery(wc.Context)
 }
