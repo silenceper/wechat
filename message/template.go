@@ -34,7 +34,7 @@ type Message struct {
 
 	MiniProgram struct {
 		AppID    string `json:"appid"`    //所需跳转到的小程序appid（该小程序appid必须与发模板消息的公众号是绑定关联关系）
-		PagePath string `json:"pagepath"` //所需跳转到小程序的具体页面路径，支持带参数,（示例index?foo=bar）
+		PagePath string `json:"page"` //所需跳转到小程序的具体页面路径，支持带参数,（示例index?foo=bar）
 	} `json:"miniprogram"` //可选,跳转至小程序地址
 }
 
