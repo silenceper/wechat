@@ -24,8 +24,8 @@ func NewTemplate(context *context.Context) *Template {
 	return tpl
 }
 
-//Message 发送的模板消息内容
-type Message struct {
+//TemplateMessage 发送的模板消息内容
+type TemplateMessage struct {
 	ToUser     string               `json:"touser"`          // 必须, 接受者OpenID
 	TemplateID string               `json:"template_id"`     // 必须, 模版ID
 	URL        string               `json:"url,omitempty"`   // 可选, 用户点击后跳转的URL, 该URL必须处于开发者在公众平台网站中设置的域中
@@ -51,7 +51,7 @@ type resTemplateSend struct {
 }
 
 //Send 发送模板消息
-func (tpl *Template) Send(msg *Message) (msgID int64, err error) {
+func (tpl *Template) Send(msg *TemplateMessage) (msgID int64, err error) {
 	var accessToken string
 	accessToken, err = tpl.GetAccessToken()
 	if err != nil {
