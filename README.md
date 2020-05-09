@@ -6,6 +6,10 @@
 
 因此本工程开发线路也是围绕着主场工程线路展开，有坑排坑，有缺补缺
 
+### 主场工程已开源
+
+[![纸喵软件/wechat](https://gitee.com/zhimiao/wechat/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)](https://gitee.com/zhimiao/wechat)
+
 ## 快速开始
 
 sdk实例获取
