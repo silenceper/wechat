@@ -27,4 +27,4 @@ _testmain.go
 vendor
 .idea/
 examples/tcb/*
-.iml
+*.iml
