@@ -57,10 +57,6 @@ server.Send()
 - aispeech:智能对话
 
 
-## 交流群：
-![关注公众号入群交流](https://silenceper.oss-cn-beijing.aliyuncs.com/qrcode/qr_code_study_program_258.jpg)
->关注公众号并回复“入群”
-
 ## License
 
 Apache License, Version 2.0
