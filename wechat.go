@@ -1,13 +1,13 @@
 package wechat
 
 import (
-	"github.com/silenceper/wechat/miniprogram"
-	miniConfig "github.com/silenceper/wechat/miniprogram/config"
-	payConfig "github.com/silenceper/wechat/pay/config"
+	"github.com/silenceper/wechat/v2/miniprogram"
+	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
+	payConfig "github.com/silenceper/wechat/v2/pay/config"
 
-	"github.com/silenceper/wechat/officialaccount"
-	offConfig "github.com/silenceper/wechat/officialaccount/config"
-	"github.com/silenceper/wechat/pay"
+	"github.com/silenceper/wechat/v2/officialaccount"
+	offConfig "github.com/silenceper/wechat/v2/officialaccount/config"
+	"github.com/silenceper/wechat/v2/pay"
 )
 
 // Wechat struct

@@ -3,7 +3,7 @@ package context
 import (
 	"sync"
 
-	"github.com/silenceper/wechat/officialaccount/config"
+	"github.com/silenceper/wechat/v2/officialaccount/config"
 )
 
 // Context struct

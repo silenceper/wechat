@@ -1,9 +1,9 @@
 package pay
 
 import (
-	"github.com/silenceper/wechat/pay/config"
-	"github.com/silenceper/wechat/pay/notify"
-	"github.com/silenceper/wechat/pay/order"
+	"github.com/silenceper/wechat/v2/pay/config"
+	"github.com/silenceper/wechat/v2/pay/notify"
+	"github.com/silenceper/wechat/v2/pay/order"
 )
 
 //Pay 微信支付相关API

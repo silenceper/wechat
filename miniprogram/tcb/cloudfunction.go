@@ -3,7 +3,7 @@ package tcb
 import (
 	"fmt"
 
-	"github.com/silenceper/wechat/util"
+	"github.com/silenceper/wechat/v2/util"
 )
 
 const (

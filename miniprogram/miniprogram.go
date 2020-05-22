@@ -3,13 +3,13 @@ package miniprogram
 import (
 	"sync"
 
-	"github.com/silenceper/wechat/miniprogram/analysis"
-	"github.com/silenceper/wechat/miniprogram/auth"
-	"github.com/silenceper/wechat/miniprogram/basic"
-	"github.com/silenceper/wechat/miniprogram/config"
-	"github.com/silenceper/wechat/miniprogram/context"
-	"github.com/silenceper/wechat/miniprogram/qrcode"
-	"github.com/silenceper/wechat/miniprogram/tcb"
+	"github.com/silenceper/wechat/v2/miniprogram/analysis"
+	"github.com/silenceper/wechat/v2/miniprogram/auth"
+	"github.com/silenceper/wechat/v2/miniprogram/basic"
+	"github.com/silenceper/wechat/v2/miniprogram/config"
+	"github.com/silenceper/wechat/v2/miniprogram/context"
+	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
+	"github.com/silenceper/wechat/v2/miniprogram/tcb"
 )
 
 //MiniProgram 微信小程序相关API

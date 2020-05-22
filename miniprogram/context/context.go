@@ -3,7 +3,7 @@ package context
 import (
 	"sync"
 
-	"github.com/silenceper/wechat/miniprogram/config"
+	"github.com/silenceper/wechat/v2/miniprogram/config"
 )
 
 // Context struct

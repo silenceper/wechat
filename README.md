@@ -45,9 +45,8 @@ server.Send()
 ```
 
 
-## 参与贡献
 
-### 目录说明
+## 目录说明
 - officialaccount: 微信公众号API
 - miniprogram: 小程序API
 - minigame:小游戏API

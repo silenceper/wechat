@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/silenceper/wechat/util"
+	"github.com/silenceper/wechat/v2/util"
 )
 
 // Base 公用参数
