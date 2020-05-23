@@ -7,6 +7,7 @@ import (
 	opContext "github.com/silenceper/wechat/v2/openplatform/context"
 )
 
+//OfficialAccount 代公众号实现业务
 type OfficialAccount struct {
 	//授权的公众号的appID
 	appID string
