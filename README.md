@@ -1,5 +1,5 @@
 # WeChat SDK for Go
-[![Build Status](https://travis-ci.org/silenceper/wechat.svg?branch=release-1.3)](https://travis-ci.org/silenceper/wechat)
+[![Build Status](https://travis-ci.org/silenceper/wechat.svg?branch=release-2.0)](https://travis-ci.org/silenceper/wechat)
 [![Go Report Card](https://goreportcard.com/badge/github.com/silenceper/wechat)](https://goreportcard.com/report/github.com/silenceper/wechat)
 [![GoDoc](http://godoc.org/github.com/silenceper/wechat?status.svg)](http://godoc.org/github.com/silenceper/wechat)
 
@@ -44,10 +44,11 @@ server.Send()
 
 ```
 
+## 文档
+[Wechat SDK 2.0 文档](http://silenceper.com/wechat)
 
-## 参与贡献
 
-### 目录说明
+## 目录说明
 - officialaccount: 微信公众号API
 - miniprogram: 小程序API
 - minigame:小游戏API
@@ -55,6 +56,10 @@ server.Send()
 - opernplatform:开放平台API
 - work:企业微信
 - aispeech:智能对话
+
+## 如何贡献
+- 提交issue，描述需要贡献的内容
+- 完成更改后，提交PR
 
 
 ## License

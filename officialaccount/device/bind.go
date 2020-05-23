@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/silenceper/wechat/util"
+	"github.com/silenceper/wechat/v2/util"
 )
 
 // ReqBind 设备绑定解绑共通实体

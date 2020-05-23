@@ -1,14 +1,30 @@
 package wechat
 
 import (
-	"github.com/silenceper/wechat/miniprogram"
-	miniConfig "github.com/silenceper/wechat/miniprogram/config"
-	payConfig "github.com/silenceper/wechat/pay/config"
+	"os"
 
-	"github.com/silenceper/wechat/officialaccount"
-	offConfig "github.com/silenceper/wechat/officialaccount/config"
-	"github.com/silenceper/wechat/pay"
+	"github.com/silenceper/wechat/v2/miniprogram"
+	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
+	"github.com/silenceper/wechat/v2/officialaccount"
+	offConfig "github.com/silenceper/wechat/v2/officialaccount/config"
+	"github.com/silenceper/wechat/v2/pay"
+	payConfig "github.com/silenceper/wechat/v2/pay/config"
+	log "github.com/sirupsen/logrus"
 )
+
+func init() {
+
+	// Log as JSON instead of the default ASCII formatter.
+	log.SetFormatter(&log.TextFormatter{})
+
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	log.SetOutput(os.Stdout)
+
+	// Only log the warning severity or above.
+	log.SetLevel(log.DebugLevel)
+
+}
 
 // Wechat struct
 type Wechat struct {

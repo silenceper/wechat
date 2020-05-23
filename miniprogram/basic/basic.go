@@ -1,6 +1,6 @@
 package basic
 
-import "github.com/silenceper/wechat/miniprogram/context"
+import "github.com/silenceper/wechat/v2/miniprogram/context"
 
 //Basic struct
 type Basic struct {

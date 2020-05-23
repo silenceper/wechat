@@ -1,9 +1,11 @@
-module github.com/silenceper/wechat
+module github.com/silenceper/wechat/v2
 
-go 1.13
+go 1.14
 
 require (
 	github.com/bradfitz/gomemcache v0.0.0-20190913173617-a41fca850d0b
-	github.com/gomodule/redigo v2.0.0+incompatible
-	golang.org/x/crypto v0.0.0-20200117160349-530e935923ad
+	github.com/gomodule/redigo v1.8.1
+	github.com/sirupsen/logrus v1.6.0
+	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
+	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
 )

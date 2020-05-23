@@ -4,17 +4,17 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/silenceper/wechat/officialaccount/basic"
-	"github.com/silenceper/wechat/officialaccount/config"
-	"github.com/silenceper/wechat/officialaccount/context"
-	"github.com/silenceper/wechat/officialaccount/device"
-	"github.com/silenceper/wechat/officialaccount/js"
-	"github.com/silenceper/wechat/officialaccount/material"
-	"github.com/silenceper/wechat/officialaccount/menu"
-	"github.com/silenceper/wechat/officialaccount/message"
-	"github.com/silenceper/wechat/officialaccount/oauth"
-	"github.com/silenceper/wechat/officialaccount/server"
-	"github.com/silenceper/wechat/officialaccount/user"
+	"github.com/silenceper/wechat/v2/officialaccount/basic"
+	"github.com/silenceper/wechat/v2/officialaccount/config"
+	"github.com/silenceper/wechat/v2/officialaccount/context"
+	"github.com/silenceper/wechat/v2/officialaccount/device"
+	"github.com/silenceper/wechat/v2/officialaccount/js"
+	"github.com/silenceper/wechat/v2/officialaccount/material"
+	"github.com/silenceper/wechat/v2/officialaccount/menu"
+	"github.com/silenceper/wechat/v2/officialaccount/message"
+	"github.com/silenceper/wechat/v2/officialaccount/oauth"
+	"github.com/silenceper/wechat/v2/officialaccount/server"
+	"github.com/silenceper/wechat/v2/officialaccount/user"
 )
 
 //OfficialAccount 微信公众号相关API
@@ -25,7 +25,7 @@ type OfficialAccount struct {
 //NewOfficialAccount 实例化公众号API
 func NewOfficialAccount(cfg *config.Config) *OfficialAccount {
 	if cfg.Cache == nil {
-		panic("cache未设置")
+		panic("cache 未设置")
 	}
 	ctx := &context.Context{
 		Config: cfg,
