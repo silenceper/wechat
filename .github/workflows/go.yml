@@ -16,6 +16,10 @@ jobs:
         ports:
         - 6379:6379 
         options: --entrypoint redis-server
+      memcached:
+        image: memcached
+        ports:
+          - 11211:11211
     steps:
 
       - name: Set up Go 1.x
