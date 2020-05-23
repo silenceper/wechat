@@ -47,7 +47,7 @@ func NewServer(context *context.Context) *Server {
 	return srv
 }
 
-// SeSkipValidate set skip validate
+// SkipValidate set skip validate
 func (srv *Server) SkipValidate(skip bool) {
 	srv.skipValidate = skip
 }
