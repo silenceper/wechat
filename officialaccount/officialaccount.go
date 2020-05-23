@@ -24,9 +24,9 @@ type OfficialAccount struct {
 
 //NewOfficialAccount 实例化公众号API
 func NewOfficialAccount(cfg *config.Config) *OfficialAccount {
-	if cfg.Cache == nil {
-		panic("cache未设置")
-	}
+	//if cfg.Cache == nil {
+	//	panic("cache未设置")
+	//}
 	ctx := &context.Context{
 		Config: cfg,
 	}
