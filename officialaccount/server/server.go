@@ -12,6 +12,7 @@ import (
 
 	"github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/officialaccount/message"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/silenceper/wechat/v2/util"
 )
@@ -22,7 +23,7 @@ type Server struct {
 	Writer  http.ResponseWriter
 	Request *http.Request
 
-	debug bool
+	skipValidate bool
 
 	openID string
 
@@ -46,14 +47,15 @@ func NewServer(context *context.Context) *Server {
 	return srv
 }
 
-// SetDebug set debug field
-func (srv *Server) SetDebug(debug bool) {
-	srv.debug = debug
+// SkipValidate set skip validate
+func (srv *Server) SkipValidate(skip bool) {
+	srv.skipValidate = skip
 }
 
 //Serve 处理微信的请求消息
 func (srv *Server) Serve() error {
 	if !srv.Validate() {
+		log.Error("Validate Signature Failed.")
 		return fmt.Errorf("请求校验失败")
 	}
 
@@ -68,22 +70,21 @@ func (srv *Server) Serve() error {
 		return err
 	}
 
-	//debug
-	if srv.debug {
-		fmt.Println("request msg = ", string(srv.requestRawXMLMsg))
-	}
+	//debug print request msg
+	log.Debugf("request msg =%s", string(srv.requestRawXMLMsg))
 
 	return srv.buildResponse(response)
 }
 
 //Validate 校验请求是否合法
 func (srv *Server) Validate() bool {
-	if srv.debug {
+	if srv.skipValidate {
 		return true
 	}
 	timestamp := srv.Query("timestamp")
 	nonce := srv.Query("nonce")
 	signature := srv.Query("signature")
+	log.Debugf("validate signature, timestamp=%s, nonce=%s", timestamp, nonce)
 	return signature == util.Signature(srv.Token, timestamp, nonce)
 }
 
@@ -223,6 +224,7 @@ func (srv *Server) buildResponse(reply *message.Reply) (err error) {
 //Send 将自定义的消息发送
 func (srv *Server) Send() (err error) {
 	replyMsg := srv.responseMsg
+	log.Debugf("response msg =%+v", replyMsg)
 	if srv.isSafeMode {
 		//安全模式下对消息进行加密
 		var encryptedMsg []byte
