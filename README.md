@@ -61,6 +61,9 @@ server.Send()
 - 提交issue，描述需要贡献的内容
 - 完成更改后，提交PR
 
+## 关注公众号
+
+![学点程序](https://silenceper.oss-cn-beijing.aliyuncs.com/qrcode/search_study_program.png)
 
 ## License
 
