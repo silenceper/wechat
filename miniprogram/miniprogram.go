@@ -1,8 +1,7 @@
 package miniprogram
 
 import (
-	"sync"
-
+	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/miniprogram/analysis"
 	"github.com/silenceper/wechat/v2/miniprogram/auth"
 	"github.com/silenceper/wechat/v2/miniprogram/basic"
@@ -19,14 +18,17 @@ type MiniProgram struct {
 
 //NewMiniProgram 实例化小程序API
 func NewMiniProgram(cfg *config.Config) *MiniProgram {
-	if cfg.Cache == nil {
-		panic("cache未设置")
-	}
+	defaultAkHandle := credential.NewDefaultAccessToken(cfg.AppID, cfg.AppSecret, credential.CacheKeyMiniProgramPrefix, cfg.Cache)
 	ctx := &context.Context{
-		Config: cfg,
+		Config:            cfg,
+		AccessTokenHandle: defaultAkHandle,
 	}
-	ctx.SetAccessTokenLock(new(sync.RWMutex))
 	return &MiniProgram{ctx}
+}
+
+//SetAccessTokenHandle 自定义access_token获取方式
+func (miniProgram *MiniProgram) SetAccessTokenHandle(accessTokenHandle credential.AccessTokenHandle) {
+	miniProgram.ctx.AccessTokenHandle = accessTokenHandle
 }
 
 // GetContext get Context

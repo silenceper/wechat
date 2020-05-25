@@ -2,8 +2,8 @@ package officialaccount
 
 import (
 	"net/http"
-	"sync"
 
+	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/officialaccount/basic"
 	"github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/officialaccount/context"
@@ -24,15 +24,17 @@ type OfficialAccount struct {
 
 //NewOfficialAccount 实例化公众号API
 func NewOfficialAccount(cfg *config.Config) *OfficialAccount {
-	//if cfg.Cache == nil {
-	//	panic("cache未设置")
-	//}
+	defaultAkHandle := credential.NewDefaultAccessToken(cfg.AppID, cfg.AppSecret, credential.CacheKeyOfficialAccountPrefix, cfg.Cache)
 	ctx := &context.Context{
-		Config: cfg,
+		Config:            cfg,
+		AccessTokenHandle: defaultAkHandle,
 	}
-	ctx.SetAccessTokenLock(new(sync.RWMutex))
-	ctx.SetJsAPITicketLock(new(sync.RWMutex))
-	return &OfficialAccount{ctx}
+	return &OfficialAccount{ctx: ctx}
+}
+
+//SetAccessTokenHandle 自定义access_token获取方式
+func (officialAccount *OfficialAccount) SetAccessTokenHandle(accessTokenHandle credential.AccessTokenHandle) {
+	officialAccount.ctx.AccessTokenHandle = accessTokenHandle
 }
 
 // GetContext get Context
