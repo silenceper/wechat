@@ -15,6 +15,8 @@ const (
 	accessTokenURL = "https://api.weixin.qq.com/cgi-bin/token"
 	//CacheKeyOfficialAccountPrefix 微信公众号cache key前缀
 	CacheKeyOfficialAccountPrefix = "gowechat_officialaccount_"
+	//CacheKeyMiniProgramPrefix 小程序cache key前缀
+	CacheKeyMiniProgramPrefix = "gowechat_miniprogram_"
 )
 
 //DefaultAccessToken 默认AccessToken 获取
