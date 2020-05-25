@@ -5,8 +5,6 @@
 
 使用Golang开发的微信SDK，简单、易用。
 
-> [v2.0版本开发中，欢迎参与！](https://github.com/silenceper/wechat/issues/230)
-
 ## 快速开始
 
 以下是一个处理消息接收以及回复的例子：
