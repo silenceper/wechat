@@ -1,19 +1,17 @@
 package js
 
 import (
-	"encoding/json"
 	"fmt"
-	"time"
 
+	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/util"
 )
 
-const getTicketURL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi"
-
 // Js struct
 type Js struct {
 	*context.Context
+	credential.JsTicketHandle
 }
 
 // Config 返回给用户jssdk配置信息
@@ -24,27 +22,31 @@ type Config struct {
 	Signature string `json:"signature"`
 }
 
-// resTicket 请求jsapi_tikcet返回结果
-type resTicket struct {
-	util.CommonError
-
-	Ticket    string `json:"ticket"`
-	ExpiresIn int64  `json:"expires_in"`
-}
-
 //NewJs init
 func NewJs(context *context.Context) *Js {
 	js := new(Js)
 	js.Context = context
+	jsTicketHandle := credential.NewDefaultJsTicket(context.AppID, credential.CacheKeyOfficialAccountPrefix, context.Cache)
+	js.SetJsTicketHandle(jsTicketHandle)
 	return js
+}
+
+//SetJsTicketHandle 自定义js ticket取值方式
+func (js *Js) SetJsTicketHandle(ticketHandle credential.JsTicketHandle) {
+	js.JsTicketHandle = ticketHandle
 }
 
 //GetConfig 获取jssdk需要的配置参数
 //uri 为当前网页地址
 func (js *Js) GetConfig(uri string) (config *Config, err error) {
 	config = new(Config)
+	var accessToken string
+	accessToken, err = js.GetAccessToken()
+	if err != nil {
+		return
+	}
 	var ticketStr string
-	ticketStr, err = js.GetTicket()
+	ticketStr, err = js.GetTicket(accessToken)
 	if err != nil {
 		return
 	}
@@ -58,52 +60,5 @@ func (js *Js) GetConfig(uri string) (config *Config, err error) {
 	config.NonceStr = nonceStr
 	config.Timestamp = timestamp
 	config.Signature = sigStr
-	return
-}
-
-//GetTicket 获取jsapi_ticket
-func (js *Js) GetTicket() (ticketStr string, err error) {
-	js.GetJsAPITicketLock().Lock()
-	defer js.GetJsAPITicketLock().Unlock()
-
-	//先从cache中取
-	jsAPITicketCacheKey := fmt.Sprintf("%s_jsapi_ticket_%s", context.CacheKeyPrefix, js.AppID)
-	val := js.Cache.Get(jsAPITicketCacheKey)
-	if val != nil {
-		ticketStr = val.(string)
-		return
-	}
-	var ticket resTicket
-	ticket, err = js.getTicketFromServer()
-	if err != nil {
-		return
-	}
-	ticketStr = ticket.Ticket
-	return
-}
-
-//getTicketFromServer 强制从服务器中获取ticket
-func (js *Js) getTicketFromServer() (ticket resTicket, err error) {
-	var accessToken string
-	accessToken, err = js.GetAccessToken()
-	if err != nil {
-		return
-	}
-
-	var response []byte
-	url := fmt.Sprintf(getTicketURL, accessToken)
-	response, err = util.HTTPGet(url)
-	err = json.Unmarshal(response, &ticket)
-	if err != nil {
-		return
-	}
-	if ticket.ErrCode != 0 {
-		err = fmt.Errorf("getTicket Error : errcode=%d , errmsg=%s", ticket.ErrCode, ticket.ErrMsg)
-		return
-	}
-
-	jsAPITicketCacheKey := fmt.Sprintf("%s_jsapi_ticket_%s", context.CacheKeyPrefix, js.AppID)
-	expires := ticket.ExpiresIn - 1500
-	err = js.Cache.Set(jsAPITicketCacheKey, ticket.Ticket, time.Duration(expires)*time.Second)
 	return
 }
