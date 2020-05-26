@@ -5,6 +5,7 @@ import (
 
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/officialaccount/basic"
+	"github.com/silenceper/wechat/v2/officialaccount/broadcast"
 	"github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/officialaccount/device"
@@ -52,7 +53,7 @@ func (officialAccount *OfficialAccount) GetMenu() *menu.Menu {
 	return menu.NewMenu(officialAccount.ctx)
 }
 
-// GetServer 消息管理
+// GetServer 消息管理：接收事件，被动回复消息管理
 func (officialAccount *OfficialAccount) GetServer(req *http.Request, writer http.ResponseWriter) *server.Server {
 	srv := server.NewServer(officialAccount.ctx)
 	srv.Request = req
@@ -93,4 +94,10 @@ func (officialAccount *OfficialAccount) GetTemplate() *message.Template {
 // GetDevice 获取智能设备的实例
 func (officialAccount *OfficialAccount) GetDevice() *device.Device {
 	return device.NewDevice(officialAccount.ctx)
+}
+
+//GetBroadcast 群发消息
+//TODO 待完善
+func (officialAccount *OfficialAccount) GetBroadcast() *broadcast.Broadcast {
+	return broadcast.NewBroadcast(officialAccount.ctx)
 }
