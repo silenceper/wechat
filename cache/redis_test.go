@@ -10,6 +10,7 @@ func TestRedis(t *testing.T) {
 		Host: "127.0.0.1:6379",
 	}
 	redis := NewRedis(opts)
+	redis.SetConn(redis.conn)
 	var err error
 	timeoutDuration := 1 * time.Second
 

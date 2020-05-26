@@ -1,6 +1,7 @@
 package openplatform
 
 import (
+	"github.com/silenceper/wechat/v2/openplatform/account"
 	"github.com/silenceper/wechat/v2/openplatform/config"
 	"github.com/silenceper/wechat/v2/openplatform/context"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram"
@@ -29,6 +30,12 @@ func (openPlatform *OpenPlatform) GetOfficialAccount(appID string) *officialacco
 }
 
 //GetMiniProgram 小程序代理
-func (openPlatform *OpenPlatform) GetMiniProgram(opCtx *context.Context, appID string) *miniprogram.MiniProgram {
-	return miniprogram.NewMiniProgram(opCtx, appID)
+func (openPlatform *OpenPlatform) GetMiniProgram(appID string) *miniprogram.MiniProgram {
+	return miniprogram.NewMiniProgram(openPlatform.Context, appID)
+}
+
+//GetAccountManager 账号管理
+//TODO
+func (openPlatform *OpenPlatform) GetAccountManager() *account.Account {
+	return account.NewAccount(openPlatform.Context)
 }
