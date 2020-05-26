@@ -29,10 +29,10 @@ type Server struct {
 
 	messageHandler func(message.MixMessage) *message.Reply
 
-	requestRawXMLMsg  []byte
-	requestMsg        message.MixMessage
-	responseRawXMLMsg []byte
-	responseMsg       interface{}
+	RequestRawXMLMsg  []byte
+	RequestMsg        message.MixMessage
+	ResponseRawXMLMsg []byte
+	ResponseMsg       interface{}
 
 	isSafeMode bool
 	random     []byte
@@ -71,7 +71,7 @@ func (srv *Server) Serve() error {
 	}
 
 	//debug print request msg
-	log.Debugf("request msg =%s", string(srv.requestRawXMLMsg))
+	log.Debugf("request msg =%s", string(srv.RequestRawXMLMsg))
 
 	return srv.buildResponse(response)
 }
@@ -109,7 +109,7 @@ func (srv *Server) handleRequest() (reply *message.Reply, err error) {
 	if !success {
 		err = errors.New("消息类型转换失败")
 	}
-	srv.requestMsg = mixMessage
+	srv.RequestMsg = mixMessage
 	reply = srv.messageHandler(mixMessage)
 	return
 }
@@ -155,7 +155,7 @@ func (srv *Server) getMessage() (interface{}, error) {
 		}
 	}
 
-	srv.requestRawXMLMsg = rawXMLMsgBytes
+	srv.RequestRawXMLMsg = rawXMLMsgBytes
 
 	return srv.parseRequestMessage(rawXMLMsgBytes)
 }
@@ -204,10 +204,10 @@ func (srv *Server) buildResponse(reply *message.Reply) (err error) {
 	}
 
 	params := make([]reflect.Value, 1)
-	params[0] = reflect.ValueOf(srv.requestMsg.FromUserName)
+	params[0] = reflect.ValueOf(srv.RequestMsg.FromUserName)
 	value.MethodByName("SetToUserName").Call(params)
 
-	params[0] = reflect.ValueOf(srv.requestMsg.ToUserName)
+	params[0] = reflect.ValueOf(srv.RequestMsg.ToUserName)
 	value.MethodByName("SetFromUserName").Call(params)
 
 	params[0] = reflect.ValueOf(msgType)
@@ -216,19 +216,19 @@ func (srv *Server) buildResponse(reply *message.Reply) (err error) {
 	params[0] = reflect.ValueOf(util.GetCurrTs())
 	value.MethodByName("SetCreateTime").Call(params)
 
-	srv.responseMsg = msgData
-	srv.responseRawXMLMsg, err = xml.Marshal(msgData)
+	srv.ResponseMsg = msgData
+	srv.ResponseRawXMLMsg, err = xml.Marshal(msgData)
 	return
 }
 
 //Send 将自定义的消息发送
 func (srv *Server) Send() (err error) {
-	replyMsg := srv.responseMsg
+	replyMsg := srv.ResponseMsg
 	log.Debugf("response msg =%+v", replyMsg)
 	if srv.isSafeMode {
 		//安全模式下对消息进行加密
 		var encryptedMsg []byte
-		encryptedMsg, err = util.EncryptMsg(srv.random, srv.responseRawXMLMsg, srv.AppID, srv.EncodingAESKey)
+		encryptedMsg, err = util.EncryptMsg(srv.random, srv.ResponseRawXMLMsg, srv.AppID, srv.EncodingAESKey)
 		if err != nil {
 			return
 		}
