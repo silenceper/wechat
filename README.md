@@ -530,6 +530,17 @@ type Config struct {
 
 [素材管理API](https://godoc.org/github.com/silenceper/wechat/material#Material)
 
+### 批量获取永久素材
+
+```go
+list, err := wc.GetMaterial().BatchGetMaterial(material.MaterialTypeNews, 0, 10)
+if err != nil {
+	fmt.Println(err)
+	return
+}
+fmt.Println(list)
+```
+
 ## 小程序开发
 
 获取小程序操作对象
