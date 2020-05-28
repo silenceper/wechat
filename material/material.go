@@ -10,10 +10,25 @@ import (
 )
 
 const (
-	addNewsURL     = "https://api.weixin.qq.com/cgi-bin/material/add_news"
-	addMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/add_material"
-	delMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/del_material"
-	getMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/get_material"
+	addNewsURL          = "https://api.weixin.qq.com/cgi-bin/material/add_news"
+	addMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/add_material"
+	delMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/del_material"
+	getMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/get_material"
+	batchGetMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/batchget_material"
+)
+
+//PermanentMaterialType 永久素材类型
+type PermanentMaterialType string
+
+const (
+	//PermanentMaterialTypeImage 永久素材图片类型（image）
+	PermanentMaterialTypeImage PermanentMaterialType = "image"
+	//PermanentMaterialTypeVideo 永久素材视频类型（video）
+	PermanentMaterialTypeVideo PermanentMaterialType = "video"
+	//PermanentMaterialTypeVoice 永久素材语音类型 （voice）
+	PermanentMaterialTypeVoice PermanentMaterialType = "voice"
+	//PermanentMaterialTypeNews 永久素材图文类型（news）
+	PermanentMaterialTypeNews PermanentMaterialType = "news"
 )
 
 //Material 素材管理
@@ -55,6 +70,9 @@ func (material *Material) GetNews(id string) ([]*Article, error) {
 	}
 	req.MediaID = id
 	responseBytes, err := util.PostJSON(uri, req)
+	if err != nil {
+		return nil, err
+	}
 
 	var res struct {
 		NewsItem []*Article `json:"news_item"`
@@ -91,6 +109,10 @@ func (material *Material) AddNews(articles []*Article) (mediaID string, err erro
 
 	uri := fmt.Sprintf("%s?access_token=%s", addNewsURL, accessToken)
 	responseBytes, err := util.PostJSON(uri, req)
+	if err != nil {
+		return
+	}
+
 	var res resArticles
 	err = json.Unmarshal(responseBytes, &res)
 	if err != nil {
@@ -112,6 +134,7 @@ type resAddMaterial struct {
 func (material *Material) AddMaterial(mediaType MediaType, filename string) (mediaID string, url string, err error) {
 	if mediaType == MediaTypeVideo {
 		err = errors.New("永久视频素材上传使用 AddVideo 方法")
+		return
 	}
 	var accessToken string
 	accessToken, err = material.GetAccessToken()
@@ -215,4 +238,60 @@ func (material *Material) DeleteMaterial(mediaID string) error {
 	}
 
 	return util.DecodeWithCommonError(response, "DeleteMaterial")
+}
+
+//ArticleList 永久素材列表
+type ArticleList struct {
+	TotalCount int64             `json:"total_count"`
+	ItemCount  int64             `json:"item_count"`
+	Item       []ArticleListItem `json:"item"`
+}
+
+//ArticleListItem 用于ArticleList的item节点
+type ArticleListItem struct {
+	MediaID    string             `json:"media_id"`
+	Content    ArticleListContent `json:"content"`
+	Name       string             `json:"name"`
+	URL        string             `json:"url"`
+	UpdateTime int64              `json:"update_time"`
+}
+
+//ArticleListContent 用于ArticleListItem的content节点
+type ArticleListContent struct {
+	NewsItem   []Article `json:"news_item"`
+	UpdateTime int64     `json:"update_time"`
+	CreateTime int64     `json:"create_time"`
+}
+
+//reqBatchGetMaterial BatchGetMaterial请求参数
+type reqBatchGetMaterial struct {
+	Type   PermanentMaterialType `json:"type"`
+	Count  int64                 `json:"count"`
+	Offset int64                 `json:"offset"`
+}
+
+// BatchGetMaterial 批量获取永久素材
+//reference:https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/Get_materials_list.html
+func (material *Material) BatchGetMaterial(permanentMaterialType PermanentMaterialType, offset, count int64) (list ArticleList, err error) {
+	var accessToken string
+	accessToken, err = material.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", batchGetMaterialURL, accessToken)
+
+	req := reqBatchGetMaterial{
+		Type:   permanentMaterialType,
+		Offset: offset,
+		Count:  count,
+	}
+
+	var response []byte
+	response, err = util.PostJSON(uri, req)
+	if err != nil {
+		return
+	}
+
+	err = util.DecodeWithError(response, &list, "BatchGetMaterial")
+	return
 }
