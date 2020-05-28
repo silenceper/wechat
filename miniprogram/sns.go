@@ -9,6 +9,7 @@ import (
 
 const (
 	code2SessionURL = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
+	componentCode2SessionURL = "https://api.weixin.qq.com/sns/component/jscode2session?appid=%s&js_code=%s&grant_type=authorization_code&component_appid=%s&component_access_token=%s"
 )
 
 // ResCode2Session 登录凭证校验的返回结果
@@ -34,6 +35,25 @@ func (wxa *MiniProgram) Code2Session(jsCode string) (result ResCode2Session, err
 	}
 	if result.ErrCode != 0 {
 		err = fmt.Errorf("Code2Session error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
+		return
+	}
+	return
+}
+
+// ComponentCode2Session 第三方授权方式下，换取登录凭证session_key
+func (wxa *MiniProgram) ComponentCode2Session(jsCode string, componentAppID string, componentAccessToken string) (result ResCode2Session, err error) {
+	urlStr := fmt.Sprintf(componentCode2SessionURL, wxa.AppID, jsCode, componentAppID, componentAccessToken)
+	var response []byte
+	response, err = util.HTTPGet(urlStr)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		return
+	}
+	if result.ErrCode != 0 {
+		err = fmt.Errorf("ComponentCode2Session error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return
 	}
 	return

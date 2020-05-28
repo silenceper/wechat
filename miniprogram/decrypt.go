@@ -18,6 +18,35 @@ var (
 	// ErrInvalidPKCS7Padding 输入padding失败
 	ErrInvalidPKCS7Padding = errors.New("invalid padding on input")
 )
+// DecryptedData 解密信息
+type DecryptedData struct {
+	// 用户授权
+	OpenID    string `json:"openId,omitempty"`
+	UnionID   string `json:"unionId,omitempty"`
+	NickName  string `json:"nickName,omitempty"`
+	Gender    int    `json:"gender,omitempty"`
+	City      string `json:"city,omitempty"`
+	Province  string `json:"province,omitempty"`
+	Country   string `json:"country,omitempty"`
+	AvatarURL string `json:"avatarUrl,omitempty"`
+	Language  string `json:"language,omitempty"`
+	Watermark struct {
+		Timestamp int64  `json:"timestamp"`
+		AppID     string `json:"appid"`
+	} `json:"watermark,omitempty"`
+	// 手机授权
+	PhoneNumber     	string 			`json:"phoneNumber,omitempty"`
+	PurePhoneNumber 	string 			`json:"purePhoneNumber,omitempty"`
+	CountryCode     	string 			`json:"countryCode,omitempty"`
+	// 运动步数
+	StepInfoList 		[]StepInfo 		`json:"stepInfoList,omitempty"`
+}
+
+// StepInfo 用户微信运动步数(单条)
+type StepInfo struct {
+	Timestamp 	int64 	`json:"timestamp"`
+	Step 		int 	`json:"step"`
+}
 
 // UserInfo 用户信息
 type UserInfo struct {
@@ -96,17 +125,17 @@ func getCipherText(sessionKey, encryptedData, iv string) ([]byte, error) {
 }
 
 // Decrypt 解密数据
-func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*UserInfo, error) {
+func (wxa *MiniProgram) Decrypt(sessionKey, encryptedData, iv string) (*DecryptedData, error) {
 	cipherText, err := getCipherText(sessionKey, encryptedData, iv)
 	if err != nil {
 		return nil, err
 	}
-	var userInfo UserInfo
+	var userInfo DecryptedData
 	err = json.Unmarshal(cipherText, &userInfo)
 	if err != nil {
 		return nil, err
 	}
-	if userInfo.Watermark.AppID != wxa.AppID {
+	if userInfo.Watermark.AppID != "" && userInfo.Watermark.AppID != wxa.AppID {
 		return nil, ErrAppIDNotMatch
 	}
 	return &userInfo, nil
