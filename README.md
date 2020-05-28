@@ -533,7 +533,7 @@ type Config struct {
 ### 批量获取永久素材
 
 ```go
-list, err := wc.GetMaterial().BatchGetMaterial(material.MaterialTypeNews, 0, 10)
+list, err := wc.GetMaterial().BatchGetMaterial(material.PermanentMaterialTypeNews, 0, 10)
 if err != nil {
 	fmt.Println(err)
 	return
