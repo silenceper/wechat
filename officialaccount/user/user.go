@@ -44,7 +44,7 @@ type Info struct {
 	UnionID        string  `json:"unionid"`
 	Remark         string  `json:"remark"`
 	GroupID        int32   `json:"groupid"`
-	TagidList      []int32 `json:"tagid_list"`
+	TagIDList      []int32 `json:"tagid_list"`
 	SubscribeScene string  `json:"subscribe_scene"`
 	QrScene        int     `json:"qr_scene"`
 	QrSceneStr     string  `json:"qr_scene_str"`
