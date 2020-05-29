@@ -138,6 +138,24 @@ func (menu *Menu) SetMenu(buttons []*Button) error {
 	return util.DecodeWithCommonError(response, "SetMenu")
 }
 
+
+//SetMenuByJSON 设置按钮
+func (menu *Menu) SetMenuByJSON(jsonInfo string) error {
+	accessToken, err := menu.GetAccessToken()
+	if err != nil {
+		return err
+	}
+
+	uri := fmt.Sprintf("%s?access_token=%s", menuCreateURL, accessToken)
+
+	response, err := util.PostJSON(uri, jsonInfo)
+	if err != nil {
+		return err
+	}
+
+	return util.DecodeWithCommonError(response, "SetMenu")
+}
+
 //GetMenu 获取菜单配置
 func (menu *Menu) GetMenu() (resMenu ResMenu, err error) {
 	var accessToken string
@@ -191,6 +209,23 @@ func (menu *Menu) AddConditional(buttons []*Button, matchRule *MatchRule) error 
 	}
 
 	response, err := util.PostJSON(uri, reqMenu)
+	if err != nil {
+		return err
+	}
+
+	return util.DecodeWithCommonError(response, "AddConditional")
+}
+
+
+//AddConditionalByJSON 添加个性化菜单
+func (menu *Menu) AddConditionalByJSON(jsonInfo string) error {
+	accessToken, err := menu.GetAccessToken()
+	if err != nil {
+		return err
+	}
+
+	uri := fmt.Sprintf("%s?access_token=%s", menuAddConditionalURL, accessToken)
+	response, err := util.PostJSON(uri, jsonInfo)
 	if err != nil {
 		return err
 	}
