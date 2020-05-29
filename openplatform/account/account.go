@@ -23,12 +23,12 @@ func (account *Account) Bind(appID string) error {
 	return nil
 }
 
-//Bind 将公众号/小程序从开放平台帐号下解绑
+//Unbind 将公众号/小程序从开放平台帐号下解绑
 func (account *Account) Unbind(appID string, openAppID string) error {
 	return nil
 }
 
-//Bind 获取公众号/小程序所绑定的开放平台帐号
+//Get 获取公众号/小程序所绑定的开放平台帐号
 func (account *Account) Get(appID string) (string, error) {
 	return "", nil
 }

@@ -17,17 +17,17 @@ const (
 type MsgType string
 
 const (
-	//图文消息
+	//MsgTypeNews 图文消息
 	MsgTypeNews MsgType = "mpnews"
-	//文本
+	//MsgTypeText 文本
 	MsgTypeText MsgType = "text"
-	//语音/音频
+	//MsgTypeVoice 语音/音频
 	MsgTypeVoice MsgType = "voice"
-	//图片
+	//MsgTypeImage 图片
 	MsgTypeImage MsgType = "image"
-	//视频
+	//MsgTypeVideo 视频
 	MsgTypeVideo MsgType = "mpvideo"
-	//卡券
+	//MsgTypeWxCard 卡券
 	MsgTypeWxCard MsgType = "wxcard"
 )
 
@@ -161,7 +161,7 @@ func (broadcast *Broadcast) SendVoice(user *User, mediaID string) (*Result, erro
 	return res, err
 }
 
-//SendVoice 发送图片
+//SendImage 发送图片
 func (broadcast *Broadcast) SendImage(user *User, images *Image) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
@@ -234,7 +234,7 @@ func (broadcast *Broadcast) SendWxCard(user *User, cardID string) (*Result, erro
 	err = util.DecodeWithError(data, res, "SendVideo")
 	return res, err
 }
-//SendWxCard 发送卡券
+//Delete 删除群发消息
 func (broadcast *Broadcast) Delete(msgID int64 ,articleIDx int64) error {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
