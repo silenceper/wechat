@@ -231,7 +231,7 @@ func (broadcast *Broadcast) SendWxCard(user *User, cardID string) (*Result, erro
 		return nil, err
 	}
 	res := &Result{}
-	err = util.DecodeWithError(data, res, "SendVideo")
+	err = util.DecodeWithError(data, res, "SendWxCard")
 	return res, err
 }
 //Delete 删除群发消息
