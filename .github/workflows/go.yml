@@ -46,8 +46,12 @@ jobs:
           go vet ./...
           golint -set_exit_status $(go list ./...)
 
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v1.2.1
+      - uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v1
+        with:
+          # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
+          version: v1.26
 
 
       - name: Test
