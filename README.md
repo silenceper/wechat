@@ -4,6 +4,7 @@
 [![pkg](https://img.shields.io/badge/pkg.go-reference-informational)](https://pkg.go.dev/github.com/silenceper/wechat/v2?tab=doc)
 
 使用Golang开发的微信SDK，简单、易用。
+>当前版本为2.0版本
 
 
 ## 文档 && 例子
