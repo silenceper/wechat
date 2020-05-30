@@ -89,20 +89,21 @@ type MixMessage struct {
 	CommonToken
 
 	//基本消息
-	MsgID        int64   `xml:"MsgId"`
-	Content      string  `xml:"Content"`
-	Recognition  string  `xml:"Recognition"`
-	PicURL       string  `xml:"PicUrl"`
-	MediaID      string  `xml:"MediaId"`
-	Format       string  `xml:"Format"`
-	ThumbMediaID string  `xml:"ThumbMediaId"`
-	LocationX    float64 `xml:"Location_X"`
-	LocationY    float64 `xml:"Location_Y"`
-	Scale        float64 `xml:"Scale"`
-	Label        string  `xml:"Label"`
-	Title        string  `xml:"Title"`
-	Description  string  `xml:"Description"`
-	URL          string  `xml:"Url"`
+	MsgID         int64   `xml:"MsgId"` //其他消息推送过来是MsgId
+	TemplateMsgID int64   `xml:"MsgID"` //模板消息推送成功的消息是MsgID
+	Content       string  `xml:"Content"`
+	Recognition   string  `xml:"Recognition"`
+	PicURL        string  `xml:"PicUrl"`
+	MediaID       string  `xml:"MediaId"`
+	Format        string  `xml:"Format"`
+	ThumbMediaID  string  `xml:"ThumbMediaId"`
+	LocationX     float64 `xml:"Location_X"`
+	LocationY     float64 `xml:"Location_Y"`
+	Scale         float64 `xml:"Scale"`
+	Label         string  `xml:"Label"`
+	Title         string  `xml:"Title"`
+	Description   string  `xml:"Description"`
+	URL           string  `xml:"Url"`
 
 	//事件相关
 	Event       EventType `xml:"Event"`
