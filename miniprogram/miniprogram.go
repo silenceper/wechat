@@ -4,10 +4,11 @@ import (
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/miniprogram/analysis"
 	"github.com/silenceper/wechat/v2/miniprogram/auth"
-	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/config"
 	"github.com/silenceper/wechat/v2/miniprogram/context"
+	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
+	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
 )
 
@@ -59,4 +60,9 @@ func (miniProgram *MiniProgram) GetQRCode() *qrcode.QRCode {
 //GetTcb 小程序云开发API
 func (miniProgram *MiniProgram) GetTcb() *tcb.Tcb {
 	return tcb.NewTcb(miniProgram.ctx)
+}
+
+//GetSubscribe 小程序订阅消息
+func (miniProgram *MiniProgram) GetSubscribe() *subscribe.Subscribe {
+	return subscribe.NewSubscribe(miniProgram.ctx)
 }
