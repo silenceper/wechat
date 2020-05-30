@@ -1,11 +1,15 @@
 # WeChat SDK for Go
 ![Go](https://github.com/silenceper/wechat/workflows/Go/badge.svg?branch=release-2.0)
 [![Go Report Card](https://goreportcard.com/badge/github.com/silenceper/wechat)](https://goreportcard.com/report/github.com/silenceper/wechat)
-[![godoc](https://img.shields.io/badge/godoc-reference-informational)](https://pkg.go.dev/github.com/silenceper/wechat/v2?tab=doc)
+[![pkg](https://img.shields.io/badge/pkg.go-reference-informational)](https://pkg.go.dev/github.com/silenceper/wechat/v2?tab=doc)
 
 使用Golang开发的微信SDK，简单、易用。
 
-> 当前版本状态：alpha，部分API可能会做出调整。
+
+## 文档 && 例子
+[Wechat SDK 2.0 文档](http://silenceper.com/wechat)
+
+[Wechat SDK 2.0 例子](https://github.com/gowechat/example)
 
 ## 快速开始
 
@@ -44,11 +48,6 @@ if err != nil {
 server.Send()
 
 ```
-
-## 文档 && 例子
-[Wechat SDK 2.0 文档](http://silenceper.com/wechat)
-
-[Wechat SDK 2.0 例子](https://github.com/gowechat/example)
 
 ## 目录说明
 - officialaccount: 微信公众号API
