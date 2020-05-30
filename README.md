@@ -1,7 +1,7 @@
 # WeChat SDK for Go
 ![Go](https://github.com/silenceper/wechat/workflows/Go/badge.svg?branch=release-2.0)
 [![Go Report Card](https://goreportcard.com/badge/github.com/silenceper/wechat)](https://goreportcard.com/report/github.com/silenceper/wechat)
-[![pkg](https://img.shields.io/badge/pkg.go-reference-informational)](https://pkg.go.dev/github.com/silenceper/wechat/v2?tab=doc)
+[![pkg](https://img.shields.io/badge/dev-reference-007d9c?logo=go&logoColor=white&style=flat)](https://pkg.go.dev/github.com/silenceper/wechat/v2?tab=doc)
 
 使用Golang开发的微信SDK，简单、易用。
 >当前版本为2.0版本
