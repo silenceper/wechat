@@ -29,4 +29,4 @@ if err != nil {
 }
 ```
 
-更多使用方法参考[GODOC](https://godoc.org/github.com/silenceper/wechat/v2/tcb)
+更多使用方法参考[PKG.DEV](https://pkg.go.dev/github.com/silenceper/wechat/v2/miniprogram/tcb)
