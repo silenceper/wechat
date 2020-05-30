@@ -45,6 +45,11 @@ func NewRedis(opts *RedisOpts) *Redis {
 	return &Redis{pool}
 }
 
+//SetRedisPool 设置redis连接池
+func (r *Redis) SetRedisPool(pool *redis.Pool) {
+	r.conn = pool
+}
+
 //SetConn 设置conn
 func (r *Redis) SetConn(conn *redis.Pool) {
 	r.conn = conn
