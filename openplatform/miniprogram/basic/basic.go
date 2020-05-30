@@ -48,5 +48,5 @@ func (basic *Basic) GetAccountBasicInfo() (*AccountBasicInfo, error) {
 
 //modify_domain设置服务器域名
 //TODO
-//func (basic *Basic) modifyDomain() {
+//func (encryptor *Basic) modifyDomain() {
 //}

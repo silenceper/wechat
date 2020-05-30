@@ -1,4 +1,4 @@
-package basic
+package encryptor
 
 import (
 	"crypto/aes"
@@ -6,7 +6,22 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+
+	"github.com/silenceper/wechat/v2/miniprogram/context"
 )
+
+//Encryptor struct
+type Encryptor struct {
+	*context.Context
+}
+
+//NewEncryptor 实例
+func NewEncryptor(context *context.Context) *Encryptor {
+	basic := new(Encryptor)
+	basic.Context = context
+	return basic
+}
+
 
 var (
 	// ErrAppIDNotMatch appid不匹配
@@ -19,8 +34,8 @@ var (
 	ErrInvalidPKCS7Padding = errors.New("invalid padding on input")
 )
 
-// UserInfo 用户信息
-type UserInfo struct {
+// PlainData 用户信息/手机号信息
+type PlainData struct {
 	OpenID    string `json:"openId"`
 	UnionID   string `json:"unionId"`
 	NickName  string `json:"nickName"`
@@ -30,18 +45,10 @@ type UserInfo struct {
 	Country   string `json:"country"`
 	AvatarURL string `json:"avatarUrl"`
 	Language  string `json:"language"`
-	Watermark struct {
-		Timestamp int64  `json:"timestamp"`
-		AppID     string `json:"appid"`
-	} `json:"watermark"`
-}
-
-// PhoneInfo 用户手机号
-type PhoneInfo struct {
 	PhoneNumber     string `json:"phoneNumber"`
 	PurePhoneNumber string `json:"purePhoneNumber"`
 	CountryCode     string `json:"countryCode"`
-	Watermark       struct {
+	Watermark struct {
 		Timestamp int64  `json:"timestamp"`
 		AppID     string `json:"appid"`
 	} `json:"watermark"`
@@ -96,35 +103,18 @@ func getCipherText(sessionKey, encryptedData, iv string) ([]byte, error) {
 }
 
 // Decrypt 解密数据
-func (basic *Basic) Decrypt(sessionKey, encryptedData, iv string) (*UserInfo, error) {
+func (encryptor *Encryptor) Decrypt(sessionKey, encryptedData, iv string) (*PlainData, error) {
 	cipherText, err := getCipherText(sessionKey, encryptedData, iv)
 	if err != nil {
 		return nil, err
 	}
-	var userInfo UserInfo
-	err = json.Unmarshal(cipherText, &userInfo)
+	var plainData PlainData
+	err = json.Unmarshal(cipherText, &plainData)
 	if err != nil {
 		return nil, err
 	}
-	if userInfo.Watermark.AppID != basic.AppID {
+	if plainData.Watermark.AppID != encryptor.AppID {
 		return nil, ErrAppIDNotMatch
 	}
-	return &userInfo, nil
-}
-
-// DecryptPhone 解密数据(手机)
-func (basic *Basic) DecryptPhone(sessionKey, encryptedData, iv string) (*PhoneInfo, error) {
-	cipherText, err := getCipherText(sessionKey, encryptedData, iv)
-	if err != nil {
-		return nil, err
-	}
-	var phoneInfo PhoneInfo
-	err = json.Unmarshal(cipherText, &phoneInfo)
-	if err != nil {
-		return nil, err
-	}
-	if phoneInfo.Watermark.AppID != basic.AppID {
-		return nil, ErrAppIDNotMatch
-	}
-	return &phoneInfo, nil
+	return &plainData, nil
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/miniprogram/analysis"
 	"github.com/silenceper/wechat/v2/miniprogram/auth"
-	"github.com/silenceper/wechat/v2/miniprogram/basic"
+	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/config"
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
@@ -36,9 +36,9 @@ func (miniProgram *MiniProgram) GetContext() *context.Context {
 	return miniProgram.ctx
 }
 
-// GetBasic  基础接口(小程序加解密)
-func (miniProgram *MiniProgram) GetBasic() *basic.Basic {
-	return basic.NewBasic(miniProgram.ctx)
+// GetEncryptor  小程序加解密
+func (miniProgram *MiniProgram) GetEncryptor() *encryptor.Encryptor {
+	return encryptor.NewEncryptor(miniProgram.ctx)
 }
 
 //GetAuth 登录/用户信息相关接口
