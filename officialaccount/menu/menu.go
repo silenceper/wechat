@@ -102,12 +102,12 @@ type ButtonNew struct {
 
 //MatchRule 个性化菜单规则
 type MatchRule struct {
-	GroupID            int32  `json:"group_id,omitempty"`
-	Sex                int32  `json:"sex,omitempty"`
+	GroupID            string  `json:"group_id,omitempty"`
+	Sex                string  `json:"sex,omitempty"`
 	Country            string `json:"country,omitempty"`
 	Province           string `json:"province,omitempty"`
 	City               string `json:"city,omitempty"`
-	ClientPlatformType int32  `json:"client_platform_type,omitempty"`
+	ClientPlatformType string  `json:"client_platform_type,omitempty"`
 	Language           string `json:"language,omitempty"`
 }
 
