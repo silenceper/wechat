@@ -5,6 +5,7 @@
 
 ## 快速入门
 
+### 服务端处理
 ```go
 wc := wechat.NewWechat()
 memory := cache.NewMemory()
@@ -16,13 +17,10 @@ cfg := &openplatform.Config{
     Cache: memory,
 }
 
-//授权的第三方公众号的appID
-appID := "xxx"
-openPlatform := wc.GetOpenPlatform(cfg)
-officialAccount := openPlatform.GetOfficialAccount(appID)
 
+openPlatform := wc.GetOpenPlatform(cfg)
 // 传入request和responseWriter
-server := officialAccount.GetServer(req, rw)
+server := openPlatform.GetServer(req, rw)
 //设置接收消息的处理方法
 server.SetMessageHandler(func(msg message.MixMessage) *message.Reply {
     if msg.InfoType == message.InfoTypeVerifyTicket {
@@ -51,4 +49,15 @@ if err != nil {
 }
 //发送回复的消息
 server.Send()
+
+
+```
+### 待授权处理消息
+```go
+
+//授权的第三方公众号的appID
+appID := "xxx"
+openPlatform := wc.GetOpenPlatform(cfg)
+openPlatform.GetOfficialAccount(appID)
+
 ```
