@@ -1,6 +1,9 @@
 package openplatform
 
 import (
+	"net/http"
+
+	"github.com/silenceper/wechat/v2/officialaccount/server"
 	"github.com/silenceper/wechat/v2/openplatform/account"
 	"github.com/silenceper/wechat/v2/openplatform/config"
 	"github.com/silenceper/wechat/v2/openplatform/context"
@@ -22,6 +25,12 @@ func NewOpenPlatform(cfg *config.Config) *OpenPlatform {
 		Config: cfg,
 	}
 	return &OpenPlatform{ctx}
+}
+
+//GetServer get server
+func (openPlatform *OpenPlatform) GetServer(req *http.Request, writer http.ResponseWriter) *server.Server {
+	off := officialaccount.NewOfficialAccount(openPlatform.Context, "")
+	return off.GetServer(req, writer)
 }
 
 //GetOfficialAccount 公众号代处理
