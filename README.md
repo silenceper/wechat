@@ -59,10 +59,12 @@ server.Send()
 - work:企业微信
 - aispeech:智能对话
 
-## 如何贡献
+## 贡献
 - 提交issue，描述需要贡献的内容
 - 完成更改后，提交PR
 
+感谢以下成员贡献.
+<a href="https://github.com/silenceper/wechat/graphs/contributors"><img src="https://opencollective.com/gowechat/contributors.svg?width=890&button=false" /></a>
 ## 公众号
 ![img](https://silenceper.oss-cn-beijing.aliyuncs.com/qrcode/search_study_program.png)
 
