@@ -85,8 +85,11 @@ func (notify *Notify) PaidVerifySign(notifyRes PaidResult) bool {
 	// STEP3, 在键值对的最后加上key=API_KEY
 	signStrings = signStrings + "key=" + notify.Key
 
-	// STEP4, 进行MD5签名并且将所有字符转为大写.
-	sign := util.MD5Sum(signStrings)
+	// STEP4, 根据SignType计算出签名
+	sign, err := util.CalcSign(signStrings, *notifyRes.SignType, notify.Key)
+	if err != nil {
+		return false
+	}
 	if sign != *notifyRes.Sign {
 		return false
 	}
