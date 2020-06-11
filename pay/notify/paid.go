@@ -86,7 +86,11 @@ func (notify *Notify) PaidVerifySign(notifyRes PaidResult) bool {
 	signStrings = signStrings + "key=" + notify.Key
 
 	// STEP4, 根据SignType计算出签名
-	sign, err := util.CalcSign(signStrings, *notifyRes.SignType, notify.Key)
+	var signType string
+	if notifyRes.SignType != nil {
+		signType = *notifyRes.SignType
+	}
+	sign, err := util.CalcSign(signStrings, signType, notify.Key)
 	if err != nil {
 		return false
 	}
