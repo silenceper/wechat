@@ -151,7 +151,7 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	if p.NotifyURL != "" {
 		notifyURL = p.NotifyURL
 	}
-	param := make(map[string]interface{})
+	param := make(map[string]string)
 	param["appid"] = o.AppID
 	param["body"] = p.Body
 	param["mch_id"] = o.MchID
@@ -167,9 +167,10 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	param["goods_tag"] = p.GoodsTag
 	param["notify_url"] = notifyURL
 
-	bizKey := "&key=" + o.Key
-	str := util.OrderParam(param, bizKey)
-	sign := util.MD5Sum(str)
+	sign, err := util.ParamSign(param, o.Key)
+	if err != nil {
+		return
+	}
 	request := payRequest{
 		AppID:          o.AppID,
 		MchID:          o.MchID,
@@ -204,7 +205,7 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		err = errors.New(payOrder.ErrCode + payOrder.ErrCodeDes)
 		return
 	}
-	err = errors.New("[msg : xmlUnmarshalError] [rawReturn : " + string(rawRet) + "] [params : " + str + "] [sign : " + sign + "]")
+	err = errors.New("[msg : xmlUnmarshalError] [rawReturn : " + string(rawRet) + "] [sign : " + sign + "]")
 	return
 }
 

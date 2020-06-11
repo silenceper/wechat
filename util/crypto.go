@@ -5,10 +5,15 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/hmac"
 	"crypto/md5"
+	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
+	"errors"
 	"fmt"
+	"hash"
+	"strings"
 )
 
 //EncryptMsg 加密消息
@@ -196,4 +201,31 @@ func MD5Sum(txt string) (sum string) {
 	hex.Encode(sign, h.Sum(nil))
 	sum = string(bytes.ToUpper(sign))
 	return
+}
+
+func ParamSign(p map[string]string, key string) (string, error) {
+	bizKey := "&key=" + key
+	str := OrderParam(p, bizKey)
+
+	var signType string
+	switch p["sign_type"] {
+	case `MD5`, `HMAC-SHA256`:
+		signType = p["sign_type"]
+	case ``:
+		signType = `MD5`
+	default:
+		return ``, errors.New(`invalid sign_type`)
+	}
+
+	var h hash.Hash
+	if signType == "MD5" {
+		h = md5.New()
+	} else {
+		h = hmac.New(sha256.New, []byte(key))
+	}
+
+	if _, err := h.Write([]byte(str)); err != nil {
+		return ``, err
+	}
+	return strings.ToUpper(hex.EncodeToString(h.Sum(nil))), nil
 }
