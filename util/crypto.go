@@ -14,9 +14,10 @@ import (
 	"strings"
 )
 
+// 微信签名算法方式
 const (
-	SignTypeMD5        = `MD5`         // 微信签名算法方式
-	SignTypeHMACSHA256 = `HMAC-SHA256` // 微信签名算法方式
+	SignTypeMD5        = `MD5`
+	SignTypeHMACSHA256 = `HMAC-SHA256`
 )
 
 //EncryptMsg 加密消息
