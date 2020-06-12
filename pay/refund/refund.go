@@ -81,7 +81,7 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	param["refund_desc"] = p.RefundDesc
 	param["refund_fee"] = p.RefundFee
 	param["total_fee"] = p.TotalFee
-	param["sign_type"] = "MD5"
+	param["sign_type"] = util.SignTypeMD5
 	param["transaction_id"] = p.TransactionID
 
 	sign, err := util.ParamSign(param, refund.Key)
@@ -94,7 +94,7 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 		MchID:         refund.MchID,
 		NonceStr:      nonceStr,
 		Sign:          sign,
-		SignType:      "MD5",
+		SignType:      util.SignTypeMD5,
 		TransactionID: p.TransactionID,
 		OutRefundNo:   p.OutRefundNo,
 		TotalFee:      p.TotalFee,

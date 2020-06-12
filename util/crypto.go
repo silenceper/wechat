@@ -14,6 +14,11 @@ import (
 	"strings"
 )
 
+const (
+	SignTypeMD5        = `MD5`
+	SignTypeHMACSHA256 = `HMAC-SHA256`
+)
+
 //EncryptMsg 加密消息
 func EncryptMsg(random, rawXMLMsg []byte, appID, aesKey string) (encrtptMsg []byte, err error) {
 	defer func() {
@@ -192,7 +197,7 @@ func decodeNetworkByteOrder(orderBytes []byte) (n uint32) {
 // 计算签名
 func CalculateSign(content, signType, key string) (string, error) {
 	var h hash.Hash
-	if signType == "MD5" {
+	if signType == SignTypeMD5 {
 		h = md5.New()
 	} else {
 		h = hmac.New(sha256.New, []byte(key))
@@ -211,10 +216,10 @@ func ParamSign(p map[string]string, key string) (string, error) {
 
 	var signType string
 	switch p["sign_type"] {
-	case `MD5`, `HMAC-SHA256`:
+	case SignTypeMD5, SignTypeHMACSHA256:
 		signType = p["sign_type"]
 	case ``:
-		signType = `MD5`
+		signType = SignTypeMD5
 	default:
 		return ``, errors.New(`invalid sign_type`)
 	}
