@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	SignTypeMD5        = `MD5`
-	SignTypeHMACSHA256 = `HMAC-SHA256`
+	SignTypeMD5        = `MD5`         // 微信签名算法方式
+	SignTypeHMACSHA256 = `HMAC-SHA256` // 微信签名算法方式
 )
 
 //EncryptMsg 加密消息
@@ -194,7 +194,7 @@ func decodeNetworkByteOrder(orderBytes []byte) (n uint32) {
 		uint32(orderBytes[3])
 }
 
-// 计算签名
+// CalculateSign 计算签名
 func CalculateSign(content, signType, key string) (string, error) {
 	var h hash.Hash
 	if signType == SignTypeMD5 {
@@ -209,7 +209,7 @@ func CalculateSign(content, signType, key string) (string, error) {
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil))), nil
 }
 
-// 计算所传参数的签名
+// ParamSign 计算所传参数的签名
 func ParamSign(p map[string]string, key string) (string, error) {
 	bizKey := "&key=" + key
 	str := OrderParam(p, bizKey)
