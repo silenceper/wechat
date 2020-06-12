@@ -90,7 +90,7 @@ func (notify *Notify) PaidVerifySign(notifyRes PaidResult) bool {
 	if notifyRes.SignType != nil {
 		signType = *notifyRes.SignType
 	}
-	sign, err := util.CalcSign(signStrings, signType, notify.Key)
+	sign, err := util.CalculateSign(signStrings, signType, notify.Key)
 	if err != nil {
 		return false
 	}

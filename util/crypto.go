@@ -189,7 +189,8 @@ func decodeNetworkByteOrder(orderBytes []byte) (n uint32) {
 		uint32(orderBytes[3])
 }
 
-func CalcSign(content, signType, key string) (string, error) {
+// 计算签名
+func CalculateSign(content, signType, key string) (string, error) {
 	var h hash.Hash
 	if signType == "MD5" {
 		h = md5.New()
@@ -203,6 +204,7 @@ func CalcSign(content, signType, key string) (string, error) {
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil))), nil
 }
 
+// 计算所传参数的签名
 func ParamSign(p map[string]string, key string) (string, error) {
 	bizKey := "&key=" + key
 	str := OrderParam(p, bizKey)
@@ -217,5 +219,5 @@ func ParamSign(p map[string]string, key string) (string, error) {
 		return ``, errors.New(`invalid sign_type`)
 	}
 
-	return CalcSign(str, signType, key)
+	return CalculateSign(str, signType, key)
 }
