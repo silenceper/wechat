@@ -1,6 +1,7 @@
 package officialaccount
 
 import (
+	"github.com/silenceper/wechat/v2/officialaccount/datacube"
 	"net/http"
 
 	"github.com/silenceper/wechat/v2/credential"
@@ -100,4 +101,9 @@ func (officialAccount *OfficialAccount) GetDevice() *device.Device {
 //TODO 待完善
 func (officialAccount *OfficialAccount) GetBroadcast() *broadcast.Broadcast {
 	return broadcast.NewBroadcast(officialAccount.ctx)
+}
+
+//GetBroadcast 数据统计
+func (officialAccount *OfficialAccount) GetDataCube() *datacube.DataCube {
+	return datacube.NewCube(officialAccount.ctx)
 }
