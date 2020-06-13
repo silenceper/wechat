@@ -8,21 +8,32 @@ import (
 	"strconv"
 )
 
+//AdSlot 广告位类型
 type AdSlot string
 
 const (
-	//广告位类型名称（ad_slot）	广告位类型
-	SlotIdBizBottom         AdSlot = "SLOT_ID_BIZ_BOTTOM"         // 公众号底部广告
-	SlotIdBizMidContext     AdSlot = "SLOT_ID_BIZ_MID_CONTEXT"    // 公众号文中广告
-	SlotIdBizVideoEnd       AdSlot = "SLOT_ID_BIZ_VIDEO_END"      // 公众号视频后贴
-	SlotIdBizSponsor        AdSlot = "SLOT_ID_BIZ_SPONSOR"        // 公众号互选广告
-	SlotIdBizCps            AdSlot = "SLOT_ID_BIZ_CPS"            // 公众号返佣商品
-	SlotIdWeappBanner       AdSlot = "SLOT_ID_WEAPP_BANNER"       // 小程序banner
-	SlotIdWeappRewardVideo  AdSlot = "SLOT_ID_WEAPP_REWARD_VIDEO" // 小程序激励视频
-	SlotIdWeappInterstitial AdSlot = "SLOT_ID_WEAPP_INTERSTITIAL" // 小程序插屏广告
-	SlotIdWeappVideoFeeds   AdSlot = "SLOT_ID_WEAPP_VIDEO_FEEDS"  // 小程序视频广告
-	SlotIdWeappVideoBegin   AdSlot = "SLOT_ID_WEAPP_VIDEO_BEGIN"  // 小程序视频前贴
-	SlotIdWeappBox          AdSlot = "SLOT_ID_WEAPP_BOX"          // 小程序格子广告
+	//SlotIDBizBottom 公众号底部广告
+	SlotIDBizBottom AdSlot = "SLOT_ID_BIZ_BOTTOM"
+	//SlotIDBizMidContext 公众号文中广告
+	SlotIDBizMidContext AdSlot = "SLOT_ID_BIZ_MID_CONTEXT"
+	//SlotIDBizVideoEnd 公众号视频后贴
+	SlotIDBizVideoEnd AdSlot = "SLOT_ID_BIZ_VIDEO_END"
+	//SlotIDBizSponsor 公众号互选广告
+	SlotIDBizSponsor AdSlot = "SLOT_ID_BIZ_SPONSOR"
+	//SlotIDBizCps 公众号返佣商品
+	SlotIDBizCps AdSlot = "SLOT_ID_BIZ_CPS"
+	//SlotIDWeappBanner 小程序banner
+	SlotIDWeappBanner AdSlot = "SLOT_ID_WEAPP_BANNER"
+	//SlotIDWeappRewardVideo 小程序激励视频
+	SlotIDWeappRewardVideo AdSlot = "SLOT_ID_WEAPP_REWARD_VIDEO"
+	//SlotIDWeappInterstitial 小程序插屏广告
+	SlotIDWeappInterstitial AdSlot = "SLOT_ID_WEAPP_INTERSTITIAL"
+	//SlotIDWeappVideoFeeds 小程序视频广告
+	SlotIDWeappVideoFeeds AdSlot = "SLOT_ID_WEAPP_VIDEO_FEEDS"
+	//SlotIDWeappVideoBegin 小程序视频前贴
+	SlotIDWeappVideoBegin AdSlot = "SLOT_ID_WEAPP_VIDEO_BEGIN"
+	//SlotIDWeappBox 小程序格子广告
+	SlotIDWeappBox AdSlot = "SLOT_ID_WEAPP_BOX"
 )
 
 const (
@@ -35,6 +46,7 @@ const (
 	actionPublisherSettlement   = "publisher_settlement"
 )
 
+//BaseResp 错误信息
 type BaseResp struct {
 	ErrMsg string `json:"err_msg"`
 	Ret    int    `json:"ret"`
@@ -51,6 +63,7 @@ type ResPublisherAdPos struct {
 	TotalNum int             `json:"total_num"`
 }
 
+//ResAdPosList 公众号分广告位列表
 type ResAdPosList struct {
 	SlotID        int64   `json:"slot_id"`
 	AdSlot        string  `json:"ad_slot"`
@@ -64,6 +77,7 @@ type ResAdPosList struct {
 	Ecpm          float64 `json:"ecpm"`
 }
 
+//ResAdPosSummary 公众号分广告位概览
 type ResAdPosSummary struct {
 	ReqSuccCount  int     `json:"req_succ_count"`
 	ExposureCount int     `json:"exposure_count"`
@@ -85,6 +99,7 @@ type ResPublisherCps struct {
 	TotalNum int           `json:"total_num"`
 }
 
+//ResCpsList 公众号返佣商品列表
 type ResCpsList struct {
 	Date            string  `json:"date"`
 	ExposureCount   int     `json:"exposure_count"`
@@ -96,6 +111,7 @@ type ResCpsList struct {
 	TotalCommission int     `json:"total_commission"`
 }
 
+//ResCpsSummary 公众号返佣概览
 type ResCpsSummary struct {
 	ExposureCount   int     `json:"exposure_count"`
 	ClickCount      int     `json:"click_count"`
@@ -120,6 +136,7 @@ type ResPublisherSettlement struct {
 	TotalNum          int              `json:"total_num"`
 }
 
+//SettlementList 结算单列表
 type SettlementList struct {
 	Date           string        `json:"date"`
 	Zone           string        `json:"zone"`
@@ -132,11 +149,13 @@ type SettlementList struct {
 	SlotRevenue    []SlotRevenue `json:"slot_revenue"`
 }
 
+//SlotRevenue 产生收入的广告
 type SlotRevenue struct {
 	SlotID             string `json:"slot_id"`
 	SlotSettledRevenue int    `json:"slot_settled_revenue"`
 }
 
+//ParamsPublisher 拉取数据参数
 type ParamsPublisher struct {
 	Action    string `json:"action"`
 	StartDate string `json:"start_date"`

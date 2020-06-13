@@ -1,7 +1,6 @@
 package datacube
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/silenceper/wechat/v2/util"
 )
@@ -116,14 +115,7 @@ func (cube *DataCube) GetUpstreamMsg(s string, e string) (resUpstreamMsg ResUpst
 		return
 	}
 
-	err = json.Unmarshal(response, &resUpstreamMsg)
-	if err != nil {
-		return
-	}
-	if resUpstreamMsg.ErrCode != 0 {
-		err = fmt.Errorf("GetUpstreamMsg Error , errcode=%d , errmsg=%s", resUpstreamMsg.ErrCode, resUpstreamMsg.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUpstreamMsg, "GetUpstreamMsg")
 	return
 }
 
@@ -145,14 +137,7 @@ func (cube *DataCube) GetUpstreamMsgHour(s string, e string) (resUpstreamMsgHour
 		return
 	}
 
-	err = json.Unmarshal(response, &resUpstreamMsgHour)
-	if err != nil {
-		return
-	}
-	if resUpstreamMsgHour.ErrCode != 0 {
-		err = fmt.Errorf("GetUpstreamMsgHour Error , errcode=%d , errmsg=%s", resUpstreamMsgHour.ErrCode, resUpstreamMsgHour.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUpstreamMsgHour, "GetUpstreamMsgHour")
 	return
 }
 
@@ -174,14 +159,7 @@ func (cube *DataCube) GetUpstreamMsgWeek(s string, e string) (resUpstreamMsgWeek
 		return
 	}
 
-	err = json.Unmarshal(response, &resUpstreamMsgWeek)
-	if err != nil {
-		return
-	}
-	if resUpstreamMsgWeek.ErrCode != 0 {
-		err = fmt.Errorf("GetUpstreamMsgWeek Error , errcode=%d , errmsg=%s", resUpstreamMsgWeek.ErrCode, resUpstreamMsgWeek.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUpstreamMsgWeek, "GetUpstreamMsgWeek")
 	return
 }
 
@@ -203,14 +181,7 @@ func (cube *DataCube) GetUpstreamMsgMonth(s string, e string) (resUpstreamMsgMon
 		return
 	}
 
-	err = json.Unmarshal(response, &resUpstreamMsgMonth)
-	if err != nil {
-		return
-	}
-	if resUpstreamMsgMonth.ErrCode != 0 {
-		err = fmt.Errorf("GetUpstreamMsgMonth Error , errcode=%d , errmsg=%s", resUpstreamMsgMonth.ErrCode, resUpstreamMsgMonth.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUpstreamMsgMonth, "GetUpstreamMsgMonth")
 	return
 }
 
@@ -232,14 +203,7 @@ func (cube *DataCube) GetUpstreamMsgDist(s string, e string) (resUpstreamMsgDist
 		return
 	}
 
-	err = json.Unmarshal(response, &resUpstreamMsgDist)
-	if err != nil {
-		return
-	}
-	if resUpstreamMsgDist.ErrCode != 0 {
-		err = fmt.Errorf("GetUpstreamMsgDist Error , errcode=%d , errmsg=%s", resUpstreamMsgDist.ErrCode, resUpstreamMsgDist.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUpstreamMsgDist, "GetUpstreamMsgDist")
 	return
 }
 
@@ -261,14 +225,7 @@ func (cube *DataCube) GetUpstreamMsgDistWeek(s string, e string) (resUpstreamMsg
 		return
 	}
 
-	err = json.Unmarshal(response, &resUpstreamMsgDistWeek)
-	if err != nil {
-		return
-	}
-	if resUpstreamMsgDistWeek.ErrCode != 0 {
-		err = fmt.Errorf("GetUpstreamMsgDistWeek Error , errcode=%d , errmsg=%s", resUpstreamMsgDistWeek.ErrCode, resUpstreamMsgDistWeek.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUpstreamMsgDistWeek, "GetUpstreamMsgDistWeek")
 	return
 }
 
@@ -290,13 +247,6 @@ func (cube *DataCube) GetUpstreamMsgDistMonth(s string, e string) (resUpstreamMs
 		return
 	}
 
-	err = json.Unmarshal(response, &resUpstreamMsgDistMonth)
-	if err != nil {
-		return
-	}
-	if resUpstreamMsgDistMonth.ErrCode != 0 {
-		err = fmt.Errorf("GetUpstreamMsgDistMonth Error , errcode=%d , errmsg=%s", resUpstreamMsgDistMonth.ErrCode, resUpstreamMsgDistMonth.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUpstreamMsgDistMonth, "GetUpstreamMsgDistMonth")
 	return
 }

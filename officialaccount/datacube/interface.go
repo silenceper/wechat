@@ -1,7 +1,6 @@
 package datacube
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/silenceper/wechat/v2/util"
 )
@@ -56,15 +55,7 @@ func (cube *DataCube) GetInterfaceSummary(s string, e string) (resInterfaceSumma
 		return
 	}
 
-	err = json.Unmarshal(response, &resInterfaceSummary)
-	if err != nil {
-		return
-	}
-
-	if resInterfaceSummary.ErrCode != 0 {
-		err = fmt.Errorf("GetInterfaceSummary Error , errcode=%d , errmsg=%s", resInterfaceSummary.ErrCode, resInterfaceSummary.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resInterfaceSummary, "GetInterfaceSummary")
 	return
 }
 
@@ -86,14 +77,6 @@ func (cube *DataCube) GetInterfaceSummaryHour(s string, e string) (resInterfaceS
 		return
 	}
 
-	err = json.Unmarshal(response, &resInterfaceSummaryHour)
-	if err != nil {
-		return
-	}
-
-	if resInterfaceSummaryHour.ErrCode != 0 {
-		err = fmt.Errorf("GetInterfaceSummaryHour Error , errcode=%d , errmsg=%s", resInterfaceSummaryHour.ErrCode, resInterfaceSummaryHour.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resInterfaceSummaryHour, "GetInterfaceSummaryHour")
 	return
 }

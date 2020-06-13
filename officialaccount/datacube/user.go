@@ -1,7 +1,6 @@
 package datacube
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/silenceper/wechat/v2/util"
 )
@@ -23,7 +22,7 @@ type ResUserSummary struct {
 	} `json:"list"`
 }
 
-//ResUserSummary 获取用户增减数据响应
+//ResUserAccumulate 获取累计用户数据响应
 type ResUserAccumulate struct {
 	util.CommonError
 
@@ -51,14 +50,7 @@ func (cube *DataCube) GetUserSummary(s string, e string) (resUserSummary ResUser
 		return
 	}
 
-	err = json.Unmarshal(response, &resUserSummary)
-	if err != nil {
-		return
-	}
-	if resUserSummary.ErrCode != 0 {
-		err = fmt.Errorf("GetUserSummary Error , errcode=%d , errmsg=%s", resUserSummary.ErrCode, resUserSummary.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUserSummary, "GetUserSummary")
 	return
 }
 
@@ -80,13 +72,6 @@ func (cube *DataCube) GetUserAccumulate(s string, e string) (resUserAccumulate R
 		return
 	}
 
-	err = json.Unmarshal(response, &resUserAccumulate)
-	if err != nil {
-		return
-	}
-	if resUserAccumulate.ErrCode != 0 {
-		err = fmt.Errorf("GetUserAccumulate Error , errcode=%d , errmsg=%s", resUserAccumulate.ErrCode, resUserAccumulate.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUserAccumulate, "GetUserAccumulate")
 	return
 }

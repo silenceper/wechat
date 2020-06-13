@@ -1,7 +1,6 @@
 package datacube
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/silenceper/wechat/v2/util"
 )
@@ -21,7 +20,7 @@ type ResArticleSummary struct {
 
 	List []struct {
 		RefDate          string `json:"ref_date"`
-		MsgId            string `json:"msgid"`
+		MsgID            string `json:"msgid"`
 		Title            string `json:"title"`
 		IntPageReadUser  int    `json:"int_page_read_user"`
 		IntPageReadCount int    `json:"int_page_read_count"`
@@ -40,12 +39,13 @@ type ResArticleTotal struct {
 
 	List []struct {
 		RefDate string                `json:"ref_date"`
-		MsgId   string                `json:"msgid"`
+		MsgID   string                `json:"msgid"`
 		Title   string                `json:"title"`
 		Details []ArticleTotalDetails `json:"details"`
 	} `json:"list"`
 }
 
+//ArticleTotalDetails 获取图文群发总数据响应文字详情
 type ArticleTotalDetails struct {
 	StatDate                    string `json:"stat_date"`
 	TargetUser                  int    `json:"target_user"`
@@ -155,14 +155,7 @@ func (cube *DataCube) GetArticleSummary(s string, e string) (resArticleSummary R
 		return
 	}
 
-	err = json.Unmarshal(response, &resArticleSummary)
-	if err != nil {
-		return
-	}
-	if resArticleSummary.ErrCode != 0 {
-		err = fmt.Errorf("GetArticleSummary Error , errcode=%d , errmsg=%s", resArticleSummary.ErrCode, resArticleSummary.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resArticleSummary, "GetArticleSummary")
 	return
 }
 
@@ -184,14 +177,7 @@ func (cube *DataCube) GetArticleTotal(s string, e string) (resArticleTotal ResAr
 		return
 	}
 
-	err = json.Unmarshal(response, &resArticleTotal)
-	if err != nil {
-		return
-	}
-	if resArticleTotal.ErrCode != 0 {
-		err = fmt.Errorf("GetArticleTotal Error , errcode=%d , errmsg=%s", resArticleTotal.ErrCode, resArticleTotal.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resArticleTotal, "GetArticleTotal")
 	return
 }
 
@@ -213,14 +199,7 @@ func (cube *DataCube) GetUserRead(s string, e string) (resUserRead ResUserRead, 
 		return
 	}
 
-	err = json.Unmarshal(response, &resUserRead)
-	if err != nil {
-		return
-	}
-	if resUserRead.ErrCode != 0 {
-		err = fmt.Errorf("GetUserRead Error , errcode=%d , errmsg=%s", resUserRead.ErrCode, resUserRead.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUserRead, "GetUserRead")
 	return
 }
 
@@ -242,14 +221,7 @@ func (cube *DataCube) GetUserReadHour(s string, e string) (resUserReadHour ResUs
 		return
 	}
 
-	err = json.Unmarshal(response, &resUserReadHour)
-	if err != nil {
-		return
-	}
-	if resUserReadHour.ErrCode != 0 {
-		err = fmt.Errorf("GetUserReadHour Error , errcode=%d , errmsg=%s", resUserReadHour.ErrCode, resUserReadHour.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUserReadHour, "GetUserReadHour")
 	return
 }
 
@@ -271,14 +243,7 @@ func (cube *DataCube) GetUserShare(s string, e string) (resUserShare ResUserShar
 		return
 	}
 
-	err = json.Unmarshal(response, &resUserShare)
-	if err != nil {
-		return
-	}
-	if resUserShare.ErrCode != 0 {
-		err = fmt.Errorf("GetUserShare Error , errcode=%d , errmsg=%s", resUserShare.ErrCode, resUserShare.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUserShare, "GetUserShare")
 	return
 }
 
@@ -300,13 +265,6 @@ func (cube *DataCube) GetUserShareHour(s string, e string) (resUserShareHour Res
 		return
 	}
 
-	err = json.Unmarshal(response, &resUserShareHour)
-	if err != nil {
-		return
-	}
-	if resUserShareHour.ErrCode != 0 {
-		err = fmt.Errorf("GetUserShareHour Error , errcode=%d , errmsg=%s", resUserShareHour.ErrCode, resUserShareHour.ErrMsg)
-		return
-	}
+	err = util.DecodeWithError(response, &resUserShareHour, "GetUserShareHour")
 	return
 }

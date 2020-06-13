@@ -103,7 +103,7 @@ func (officialAccount *OfficialAccount) GetBroadcast() *broadcast.Broadcast {
 	return broadcast.NewBroadcast(officialAccount.ctx)
 }
 
-//GetBroadcast 数据统计
+//GetDataCube 数据统计
 func (officialAccount *OfficialAccount) GetDataCube() *datacube.DataCube {
 	return datacube.NewCube(officialAccount.ctx)
 }
