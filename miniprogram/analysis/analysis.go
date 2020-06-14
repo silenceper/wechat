@@ -125,7 +125,7 @@ func (analysis *Analysis) GetAnalysisDailySummary(beginDate, endDate string) (re
 	if err != nil {
 		return
 	}
-	fmt.Println(string(response))
+
 	err = json.Unmarshal(response, &result)
 	if err != nil {
 		return

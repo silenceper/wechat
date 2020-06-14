@@ -60,7 +60,7 @@ func (d *Device) VerifyQRCode(ticket string) (res ResVerifyQRCode, err error) {
 	req := map[string]interface{}{
 		"ticket": ticket,
 	}
-	fmt.Println(req)
+
 	var response []byte
 	if response, err = util.PostJSON(uri, req); err != nil {
 		return
