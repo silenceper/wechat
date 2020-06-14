@@ -1,14 +1,23 @@
 package util
 
 import (
-	"bufio"
-	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/hmac"
 	"crypto/md5"
+	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
+	"errors"
 	"fmt"
+	"hash"
+	"strings"
+)
+
+// 微信签名算法方式
+const (
+	SignTypeMD5        = `MD5`
+	SignTypeHMACSHA256 = `HMAC-SHA256`
 )
 
 //EncryptMsg 加密消息
@@ -186,14 +195,35 @@ func decodeNetworkByteOrder(orderBytes []byte) (n uint32) {
 		uint32(orderBytes[3])
 }
 
-// MD5Sum 计算 32 位长度的 MD5 sum
-func MD5Sum(txt string) (sum string) {
-	h := md5.New()
-	buf := bufio.NewWriterSize(h, 128)
-	buf.WriteString(txt)
-	buf.Flush()
-	sign := make([]byte, hex.EncodedLen(h.Size()))
-	hex.Encode(sign, h.Sum(nil))
-	sum = string(bytes.ToUpper(sign))
-	return
+// CalculateSign 计算签名
+func CalculateSign(content, signType, key string) (string, error) {
+	var h hash.Hash
+	if signType == SignTypeMD5 {
+		h = md5.New()
+	} else {
+		h = hmac.New(sha256.New, []byte(key))
+	}
+
+	if _, err := h.Write([]byte(content)); err != nil {
+		return ``, err
+	}
+	return strings.ToUpper(hex.EncodeToString(h.Sum(nil))), nil
+}
+
+// ParamSign 计算所传参数的签名
+func ParamSign(p map[string]string, key string) (string, error) {
+	bizKey := "&key=" + key
+	str := OrderParam(p, bizKey)
+
+	var signType string
+	switch p["sign_type"] {
+	case SignTypeMD5, SignTypeHMACSHA256:
+		signType = p["sign_type"]
+	case ``:
+		signType = SignTypeMD5
+	default:
+		return ``, errors.New(`invalid sign_type`)
+	}
+
+	return CalculateSign(str, signType, key)
 }

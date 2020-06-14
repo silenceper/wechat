@@ -73,7 +73,7 @@ type Response struct {
 //Refund 退款申请
 func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	nonceStr := util.RandomStr(32)
-	param := make(map[string]interface{})
+	param := make(map[string]string)
 	param["appid"] = refund.AppID
 	param["mch_id"] = refund.MchID
 	param["nonce_str"] = nonceStr
@@ -81,18 +81,20 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	param["refund_desc"] = p.RefundDesc
 	param["refund_fee"] = p.RefundFee
 	param["total_fee"] = p.TotalFee
-	param["sign_type"] = "MD5"
+	param["sign_type"] = util.SignTypeMD5
 	param["transaction_id"] = p.TransactionID
 
-	bizKey := "&key=" + refund.Key
-	str := util.OrderParam(param, bizKey)
-	sign := util.MD5Sum(str)
+	sign, err := util.ParamSign(param, refund.Key)
+	if err != nil {
+		return
+	}
+
 	request := request{
 		AppID:         refund.AppID,
 		MchID:         refund.MchID,
 		NonceStr:      nonceStr,
 		Sign:          sign,
-		SignType:      "MD5",
+		SignType:      util.SignTypeMD5,
 		TransactionID: p.TransactionID,
 		OutRefundNo:   p.OutRefundNo,
 		TotalFee:      p.TotalFee,
@@ -115,7 +117,6 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 		err = fmt.Errorf("refund error, errcode=%s,errmsg=%s", rsp.ErrCode, rsp.ErrCodeDes)
 		return
 	}
-	err = fmt.Errorf("[msg : xmlUnmarshalError] [rawReturn : %s] [params : %s] [sign : %s]",
-		string(rawRet), str, sign)
+	err = fmt.Errorf("[msg : xmlUnmarshalError] [rawReturn : %s] [sign : %s]", string(rawRet), sign)
 	return
 }

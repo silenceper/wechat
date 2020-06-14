@@ -1,13 +1,8 @@
 package order
 
 import (
-	"crypto/hmac"
-	"crypto/md5"
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/xml"
 	"errors"
-	"hash"
 	"strconv"
 	"strings"
 	"time"
@@ -96,13 +91,14 @@ type payRequest struct {
 	LimitPay       string `xml:"limit_pay,omitempty"`   //
 	OpenID         string `xml:"openid,omitempty"`      // 用户标识
 	SceneInfo      string `xml:"scene_info,omitempty"`  // 场景信息
+
+	XMLName struct{} `xml:"xml"`
 }
 
 // BridgeConfig get js bridge config
 func (o *Order) BridgeConfig(p *Params) (cfg Config, err error) {
 	var (
 		buffer    strings.Builder
-		h         hash.Hash
 		timestamp = strconv.FormatInt(time.Now().Unix(), 10)
 	)
 	order, err := o.PrePayOrder(p)
@@ -121,14 +117,13 @@ func (o *Order) BridgeConfig(p *Params) (cfg Config, err error) {
 	buffer.WriteString(timestamp)
 	buffer.WriteString("&key=")
 	buffer.WriteString(o.Key)
-	if p.SignType == "MD5" {
-		h = md5.New()
-	} else {
-		h = hmac.New(sha256.New, []byte(o.Key))
+
+	sign, err := util.CalculateSign(buffer.String(), p.SignType, o.Key)
+	if err != nil {
+		return
 	}
-	h.Write([]byte(buffer.String()))
 	// 签名
-	cfg.PaySign = strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
+	cfg.PaySign = sign
 	cfg.NonceStr = order.NonceStr
 	cfg.Timestamp = timestamp
 	cfg.PrePayID = order.PrePayID
@@ -143,13 +138,13 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	notifyURL := o.NotifyURL
 	// 签名类型
 	if p.SignType == "" {
-		p.SignType = "MD5"
+		p.SignType = util.SignTypeMD5
 	}
 	// 通知地址
 	if p.NotifyURL != "" {
 		notifyURL = p.NotifyURL
 	}
-	param := make(map[string]interface{})
+	param := make(map[string]string)
 	param["appid"] = o.AppID
 	param["body"] = p.Body
 	param["mch_id"] = o.MchID
@@ -165,9 +160,10 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	param["goods_tag"] = p.GoodsTag
 	param["notify_url"] = notifyURL
 
-	bizKey := "&key=" + o.Key
-	str := util.OrderParam(param, bizKey)
-	sign := util.MD5Sum(str)
+	sign, err := util.ParamSign(param, o.Key)
+	if err != nil {
+		return
+	}
 	request := payRequest{
 		AppID:          o.AppID,
 		MchID:          o.MchID,
@@ -202,7 +198,7 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		err = errors.New(payOrder.ErrCode + payOrder.ErrCodeDes)
 		return
 	}
-	err = errors.New("[msg : xmlUnmarshalError] [rawReturn : " + string(rawRet) + "] [params : " + str + "] [sign : " + sign + "]")
+	err = errors.New("[msg : xmlUnmarshalError] [rawReturn : " + string(rawRet) + "] [sign : " + sign + "]")
 	return
 }
 
