@@ -198,10 +198,10 @@ func decodeNetworkByteOrder(orderBytes []byte) (n uint32) {
 // CalculateSign 计算签名
 func CalculateSign(content, signType, key string) (string, error) {
 	var h hash.Hash
-	if signType == SignTypeMD5 {
-		h = md5.New()
-	} else {
+	if signType == SignTypeHMACSHA256 {
 		h = hmac.New(sha256.New, []byte(key))
+	} else {
+		h = md5.New()
 	}
 
 	if _, err := h.Write([]byte(content)); err != nil {
