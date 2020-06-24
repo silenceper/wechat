@@ -4,7 +4,7 @@
 [![pkg](https://img.shields.io/badge/dev-reference-007d9c?logo=go&logoColor=white&style=flat)](https://pkg.go.dev/github.com/silenceper/wechat/v2?tab=doc)
 
 使用Golang开发的微信SDK，简单、易用。
->当前版本为2.0版本
+>当前版本为v2版本
 
 
 ## 文档 && 例子
@@ -13,6 +13,9 @@
 [Wechat SDK 2.0 例子](https://github.com/gowechat/example)
 
 ## 快速开始
+```
+import github.com/silenceper/wechat/v2
+```
 
 以下是一个微信公众号处理消息接收以及回复的例子：
 
@@ -63,8 +66,6 @@ server.Send()
 - 提交issue，描述需要贡献的内容
 - 完成更改后，提交PR
 
-感谢以下成员贡献.
-<a href="https://github.com/silenceper/wechat/graphs/contributors"><img src="https://opencollective.com/gowechat/contributors.svg?width=890&button=false" /></a>
 ## 公众号
 ![img](https://silenceper.oss-cn-beijing.aliyuncs.com/qrcode/search_study_program.png)
 
