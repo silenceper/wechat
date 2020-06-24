@@ -22,7 +22,6 @@ func NewEncryptor(context *context.Context) *Encryptor {
 	return basic
 }
 
-
 var (
 	// ErrAppIDNotMatch appid不匹配
 	ErrAppIDNotMatch = errors.New("app id not match")
@@ -36,19 +35,19 @@ var (
 
 // PlainData 用户信息/手机号信息
 type PlainData struct {
-	OpenID    string `json:"openId"`
-	UnionID   string `json:"unionId"`
-	NickName  string `json:"nickName"`
-	Gender    int    `json:"gender"`
-	City      string `json:"city"`
-	Province  string `json:"province"`
-	Country   string `json:"country"`
-	AvatarURL string `json:"avatarUrl"`
-	Language  string `json:"language"`
+	OpenID          string `json:"openId"`
+	UnionID         string `json:"unionId"`
+	NickName        string `json:"nickName"`
+	Gender          int    `json:"gender"`
+	City            string `json:"city"`
+	Province        string `json:"province"`
+	Country         string `json:"country"`
+	AvatarURL       string `json:"avatarUrl"`
+	Language        string `json:"language"`
 	PhoneNumber     string `json:"phoneNumber"`
 	PurePhoneNumber string `json:"purePhoneNumber"`
 	CountryCode     string `json:"countryCode"`
-	Watermark struct {
+	Watermark       struct {
 		Timestamp int64  `json:"timestamp"`
 		AppID     string `json:"appid"`
 	} `json:"watermark"`

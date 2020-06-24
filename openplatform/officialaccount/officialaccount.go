@@ -12,7 +12,6 @@ type OfficialAccount struct {
 	//授权的公众号的appID
 	appID string
 	*officialaccount.OfficialAccount
-	opContext *opContext.Context
 }
 
 //NewOfficialAccount 实例化

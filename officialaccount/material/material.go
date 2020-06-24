@@ -10,10 +10,10 @@ import (
 )
 
 const (
-	addNewsURL     = "https://api.weixin.qq.com/cgi-bin/material/add_news"
-	addMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/add_material"
-	delMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/del_material"
-	getMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/get_material"
+	addNewsURL          = "https://api.weixin.qq.com/cgi-bin/material/add_news"
+	addMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/add_material"
+	delMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/del_material"
+	getMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/get_material"
 	batchGetMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/batchget_material"
 )
 
@@ -30,6 +30,7 @@ const (
 	//PermanentMaterialTypeNews 永久素材图文类型（news）
 	PermanentMaterialTypeNews PermanentMaterialType = "news"
 )
+
 //Material 素材管理
 type Material struct {
 	*context.Context

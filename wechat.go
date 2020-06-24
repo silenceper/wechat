@@ -16,7 +16,6 @@ import (
 )
 
 func init() {
-
 	// Log as JSON instead of the default ASCII formatter.
 	log.SetFormatter(&log.TextFormatter{})
 
@@ -26,7 +25,6 @@ func init() {
 
 	// Only log the warning severity or above.
 	log.SetLevel(log.DebugLevel)
-
 }
 
 // Wechat struct

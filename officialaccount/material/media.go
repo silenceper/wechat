@@ -106,5 +106,4 @@ func (material *Material) ImageUpload(filename string) (url string, err error) {
 	}
 	url = image.URL
 	return
-
 }

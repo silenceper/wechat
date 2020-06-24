@@ -102,12 +102,12 @@ type ButtonNew struct {
 
 //MatchRule 个性化菜单规则
 type MatchRule struct {
-	GroupID            string  `json:"group_id,omitempty"`
-	Sex                string  `json:"sex,omitempty"`
+	GroupID            string `json:"group_id,omitempty"`
+	Sex                string `json:"sex,omitempty"`
 	Country            string `json:"country,omitempty"`
 	Province           string `json:"province,omitempty"`
 	City               string `json:"city,omitempty"`
-	ClientPlatformType string  `json:"client_platform_type,omitempty"`
+	ClientPlatformType string `json:"client_platform_type,omitempty"`
 	Language           string `json:"language,omitempty"`
 }
 
@@ -137,7 +137,6 @@ func (menu *Menu) SetMenu(buttons []*Button) error {
 
 	return util.DecodeWithCommonError(response, "SetMenu")
 }
-
 
 //SetMenuByJSON 设置按钮
 func (menu *Menu) SetMenuByJSON(jsonInfo string) error {
@@ -215,7 +214,6 @@ func (menu *Menu) AddConditional(buttons []*Button, matchRule *MatchRule) error 
 
 	return util.DecodeWithCommonError(response, "AddConditional")
 }
-
 
 //AddConditionalByJSON 添加个性化菜单
 func (menu *Menu) AddConditionalByJSON(jsonInfo string) error {

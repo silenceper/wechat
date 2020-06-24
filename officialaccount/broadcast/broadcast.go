@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	sendURLByTag = "https://api.weixin.qq.com/cgi-bin/message/mass/sendall"
+	sendURLByTag    = "https://api.weixin.qq.com/cgi-bin/message/mass/sendall"
 	sendURLByOpenID = "https://api.weixin.qq.com/cgi-bin/message/mass/send"
-	deleteSendURL ="https://api.weixin.qq.com/cgi-bin/message/mass/delete"
+	deleteSendURL   = "https://api.weixin.qq.com/cgi-bin/message/mass/delete"
 )
 
 //MsgType 发送消息类型
@@ -69,17 +69,17 @@ type sendRequest struct {
 	//发送图片
 	Images *Image `json:"images,omitempty"`
 	//发送卡券
-	WxCard map[string]interface{} `json:"wxcard,omitempty"`
-	MsgType           MsgType `json:"msgtype"`
-	SendIgnoreReprint int32   `json:"send_ignore_reprint,omitempty"`
+	WxCard            map[string]interface{} `json:"wxcard,omitempty"`
+	MsgType           MsgType                `json:"msgtype"`
+	SendIgnoreReprint int32                  `json:"send_ignore_reprint,omitempty"`
 }
 
 //Image 发送图片
-type Image struct{
-	MediaIDs []string `json:"media_ids"`
-	Recommend string `json:"recommend"`
-	NeedOpenComment int32 `json:"need_open_comment"`
-	OnlyFansCanComment int32 `json:"only_fans_can_comment"`
+type Image struct {
+	MediaIDs           []string `json:"media_ids"`
+	Recommend          string   `json:"recommend"`
+	NeedOpenComment    int32    `json:"need_open_comment"`
+	OnlyFansCanComment int32    `json:"only_fans_can_comment"`
 }
 
 //SendText 群发文本
@@ -92,13 +92,13 @@ func (broadcast *Broadcast) SendText(user *User, content string) (*Result, error
 		return nil, err
 	}
 	req := &sendRequest{
-		ToUser: nil,
+		ToUser:  nil,
 		MsgType: MsgTypeText,
 	}
-	req.Text=map[string]interface{}{
-		"content":content,
+	req.Text = map[string]interface{}{
+		"content": content,
 	}
-	req,sendURL:=broadcast.chooseTagOrOpenID(user,req)
+	req, sendURL := broadcast.chooseTagOrOpenID(user, req)
 	url := fmt.Sprintf("%s?access_token=%s", sendURL, ak)
 	data, err := util.PostJSON(url, req)
 	if err != nil {
@@ -110,22 +110,22 @@ func (broadcast *Broadcast) SendText(user *User, content string) (*Result, error
 }
 
 //SendNews 发送图文
-func (broadcast *Broadcast) SendNews(user *User, mediaID string,ignoreReprint bool) (*Result, error) {
+func (broadcast *Broadcast) SendNews(user *User, mediaID string, ignoreReprint bool) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	req := &sendRequest{
-		ToUser: nil,
+		ToUser:  nil,
 		MsgType: MsgTypeNews,
 	}
-	if ignoreReprint{
-		req.SendIgnoreReprint=1
+	if ignoreReprint {
+		req.SendIgnoreReprint = 1
 	}
-	req.Mpnews=map[string]interface{}{
-		"media_id":mediaID,
+	req.Mpnews = map[string]interface{}{
+		"media_id": mediaID,
 	}
-	req,sendURL:=broadcast.chooseTagOrOpenID(user,req)
+	req, sendURL := broadcast.chooseTagOrOpenID(user, req)
 	url := fmt.Sprintf("%s?access_token=%s", sendURL, ak)
 	data, err := util.PostJSON(url, req)
 	if err != nil {
@@ -136,7 +136,6 @@ func (broadcast *Broadcast) SendNews(user *User, mediaID string,ignoreReprint bo
 	return res, err
 }
 
-
 //SendVoice 发送语音
 func (broadcast *Broadcast) SendVoice(user *User, mediaID string) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
@@ -144,13 +143,13 @@ func (broadcast *Broadcast) SendVoice(user *User, mediaID string) (*Result, erro
 		return nil, err
 	}
 	req := &sendRequest{
-		ToUser: nil,
+		ToUser:  nil,
 		MsgType: MsgTypeVoice,
 	}
-	req.Voice=map[string]interface{}{
-		"media_id":mediaID,
+	req.Voice = map[string]interface{}{
+		"media_id": mediaID,
 	}
-	req,sendURL:=broadcast.chooseTagOrOpenID(user,req)
+	req, sendURL := broadcast.chooseTagOrOpenID(user, req)
 	url := fmt.Sprintf("%s?access_token=%s", sendURL, ak)
 	data, err := util.PostJSON(url, req)
 	if err != nil {
@@ -168,11 +167,11 @@ func (broadcast *Broadcast) SendImage(user *User, images *Image) (*Result, error
 		return nil, err
 	}
 	req := &sendRequest{
-		ToUser: nil,
+		ToUser:  nil,
 		MsgType: MsgTypeImage,
 	}
-	req.Images=images
-	req,sendURL:=broadcast.chooseTagOrOpenID(user,req)
+	req.Images = images
+	req, sendURL := broadcast.chooseTagOrOpenID(user, req)
 	url := fmt.Sprintf("%s?access_token=%s", sendURL, ak)
 	data, err := util.PostJSON(url, req)
 	if err != nil {
@@ -183,23 +182,22 @@ func (broadcast *Broadcast) SendImage(user *User, images *Image) (*Result, error
 	return res, err
 }
 
-
 //SendVideo 发送视频
-func (broadcast *Broadcast) SendVideo(user *User, mediaID string,title,description string) (*Result, error) {
+func (broadcast *Broadcast) SendVideo(user *User, mediaID string, title, description string) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	req := &sendRequest{
-		ToUser: nil,
+		ToUser:  nil,
 		MsgType: MsgTypeVideo,
 	}
-	req.Voice=map[string]interface{}{
-		"media_id":mediaID,
-		"title":title,
-		"description":description,
+	req.Voice = map[string]interface{}{
+		"media_id":    mediaID,
+		"title":       title,
+		"description": description,
 	}
-	req,sendURL:=broadcast.chooseTagOrOpenID(user,req)
+	req, sendURL := broadcast.chooseTagOrOpenID(user, req)
 	url := fmt.Sprintf("%s?access_token=%s", sendURL, ak)
 	data, err := util.PostJSON(url, req)
 	if err != nil {
@@ -210,7 +208,6 @@ func (broadcast *Broadcast) SendVideo(user *User, mediaID string,title,descripti
 	return res, err
 }
 
-
 //SendWxCard 发送卡券
 func (broadcast *Broadcast) SendWxCard(user *User, cardID string) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
@@ -218,13 +215,13 @@ func (broadcast *Broadcast) SendWxCard(user *User, cardID string) (*Result, erro
 		return nil, err
 	}
 	req := &sendRequest{
-		ToUser: nil,
+		ToUser:  nil,
 		MsgType: MsgTypeWxCard,
 	}
-	req.WxCard=map[string]interface{}{
-		"card_id":cardID,
+	req.WxCard = map[string]interface{}{
+		"card_id": cardID,
 	}
-	req,sendURL:=broadcast.chooseTagOrOpenID(user,req)
+	req, sendURL := broadcast.chooseTagOrOpenID(user, req)
 	url := fmt.Sprintf("%s?access_token=%s", sendURL, ak)
 	data, err := util.PostJSON(url, req)
 	if err != nil {
@@ -234,11 +231,12 @@ func (broadcast *Broadcast) SendWxCard(user *User, cardID string) (*Result, erro
 	err = util.DecodeWithError(data, res, "SendWxCard")
 	return res, err
 }
+
 //Delete 删除群发消息
-func (broadcast *Broadcast) Delete(msgID int64 ,articleIDx int64) error {
+func (broadcast *Broadcast) Delete(msgID int64, articleIDx int64) error {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
-		return  err
+		return err
 	}
 	req := map[string]interface{}{
 		"msg_id":      msgID,
@@ -247,33 +245,32 @@ func (broadcast *Broadcast) Delete(msgID int64 ,articleIDx int64) error {
 	url := fmt.Sprintf("%s?access_token=%s", deleteSendURL, ak)
 	data, err := util.PostJSON(url, req)
 	if err != nil {
-		return  err
+		return err
 	}
 	return util.DecodeWithCommonError(data, "Delete")
 }
 
-
 //TODO 发送预览，群发消息状态，发送速度
 
-func (broadcast *Broadcast) chooseTagOrOpenID(user *User,req *sendRequest)(ret *sendRequest,url string){
-	sendURL:=""
+func (broadcast *Broadcast) chooseTagOrOpenID(user *User, req *sendRequest) (ret *sendRequest, url string) {
+	sendURL := ""
 	if user == nil {
-		req.Filter=map[string]interface{}{
-			"is_to_all":true,
+		req.Filter = map[string]interface{}{
+			"is_to_all": true,
 		}
-		sendURL=sendURLByTag
+		sendURL = sendURLByTag
 	} else {
 		if user.TagID != 0 {
-			req.Filter=map[string]interface{}{
-				"is_to_all":false,
-				"tag_id":user.TagID,
+			req.Filter = map[string]interface{}{
+				"is_to_all": false,
+				"tag_id":    user.TagID,
 			}
-			sendURL=sendURLByTag
+			sendURL = sendURLByTag
 		}
 		if len(user.OpenID) != 0 {
 			req.ToUser = user.OpenID
-			sendURL=sendURLByOpenID
+			sendURL = sendURLByOpenID
 		}
 	}
-	return req,sendURL
+	return req, sendURL
 }

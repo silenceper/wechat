@@ -199,7 +199,7 @@ func (srv *Server) buildResponse(reply *message.Reply) (err error) {
 	value := reflect.ValueOf(msgData)
 	//msgData must be a ptr
 	kind := value.Kind().String()
-	if "ptr" != kind {
+	if kind != "ptr" {
 		return message.ErrUnsupportReply
 	}
 
@@ -213,7 +213,7 @@ func (srv *Server) buildResponse(reply *message.Reply) (err error) {
 	params[0] = reflect.ValueOf(msgType)
 	value.MethodByName("SetMsgType").Call(params)
 
-	params[0] = reflect.ValueOf(util.GetCurrTs())
+	params[0] = reflect.ValueOf(util.GetCurrTS())
 	value.MethodByName("SetCreateTime").Call(params)
 
 	srv.ResponseMsg = msgData

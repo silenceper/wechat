@@ -65,7 +65,7 @@ func AESEncryptMsg(random, rawXMLMsg []byte, appID string, aesKey []byte) (ciphe
 	}
 
 	// 加密
-	block, err := aes.NewCipher(aesKey[:])
+	block, err := aes.NewCipher(aesKey)
 	if err != nil {
 		panic(err)
 	}

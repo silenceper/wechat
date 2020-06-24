@@ -47,6 +47,8 @@ func (s *Subscribe) Send(msg *Message) (err error) {
 	}
 	uri := fmt.Sprintf("%s?access_token=%s", subscribeSendURL, accessToken)
 	response, err := util.PostJSON(uri, msg)
-
+	if err != nil {
+		return
+	}
 	return util.DecodeWithCommonError(response, "Send")
 }

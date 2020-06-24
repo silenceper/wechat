@@ -41,7 +41,7 @@ type ReqDevice struct {
 	//	ble – 3
 	//	wifi -- 4
 	//	一个设备可以支持多种连接类型，用符号"|"做分割，客户端优先选择靠前的连接方式（优先级按|关系的排序依次降低），举例：
-	//	1：表示设备仅支持andiod classic bluetooth 1|2：表示设备支持andiod 和ios 两种classic bluetooth，但是客户端优先选择andriod classic bluetooth 协议，如果andriod classic bluetooth协议连接失败，再选择ios classic bluetooth协议进行连接
+	//	1：表示设备仅支持andiod classic bluetooth 1|2：表示设备支持android 和ios 两种classic bluetooth，但是客户端优先选择android classic bluetooth 协议，如果android classic bluetooth协议连接失败，再选择ios classic bluetooth协议进行连接
 	//	（注：安卓平台不同时支持BLE和classic类型）
 	ConnectProtocol string `json:"connect_protocol"`
 	//auth及通信的加密key，第三方需要将key烧制在设备上（128bit），格式采用16进制串的方式（长度为32字节），不需要0X前缀，如： 1234567890ABCDEF1234567890ABCDEF
@@ -56,7 +56,7 @@ type ReqDevice struct {
 	// 0：不加密的version
 	// 1：version 1
 	AuthVer string `json:"auth_ver"`
-	// 表示mac地址在厂商广播manufature data里含有mac地址的偏移，取值如下：
+	// 表示mac地址在厂商广播manufacture data里含有mac地址的偏移，取值如下：
 	// -1：在尾部、
 	// -2：表示不包含mac地址 其他：非法偏移
 	ManuMacPos string `json:"manu_mac_pos"`

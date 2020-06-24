@@ -1,11 +1,11 @@
 package datacube
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/silenceper/wechat/v2/util"
 	"net/url"
 	"strconv"
+
+	"github.com/silenceper/wechat/v2/util"
 )
 
 //AdSlot 广告位类型
@@ -55,9 +55,8 @@ type BaseResp struct {
 //ResPublisherAdPos 公众号分广告位数据响应
 type ResPublisherAdPos struct {
 	util.CommonError
-	BaseResp
 
-	Base     BaseResp        `json:"base_resp"`
+	BaseResp BaseResp        `json:"base_resp"`
 	List     []ResAdPosList  `json:"list"`
 	Summary  ResAdPosSummary `json:"summary"`
 	TotalNum int             `json:"total_num"`
@@ -91,9 +90,8 @@ type ResAdPosSummary struct {
 //ResPublisherCps 公众号返佣商品数据响应
 type ResPublisherCps struct {
 	util.CommonError
-	BaseResp
 
-	Base     BaseResp      `json:"base_resp"`
+	BaseResp BaseResp      `json:"base_resp"`
 	List     []ResCpsList  `json:"list"`
 	Summary  ResCpsSummary `json:"summary"`
 	TotalNum int           `json:"total_num"`
@@ -125,9 +123,8 @@ type ResCpsSummary struct {
 //ResPublisherSettlement 公众号结算收入数据及结算主体信息响应
 type ResPublisherSettlement struct {
 	util.CommonError
-	BaseResp
 
-	Base              BaseResp         `json:"base_resp"`
+	BaseResp          BaseResp         `json:"base_resp"`
 	Body              string           `json:"body"`
 	PenaltyAll        int              `json:"penalty_all"`
 	RevenueAll        int64            `json:"revenue_all"`
@@ -208,23 +205,13 @@ func (cube *DataCube) GetPublisherAdPosGeneral(startDate, endDate string, page, 
 		return
 	}
 
-	err = json.Unmarshal(response, &resPublisherAdPos)
+	err = util.DecodeWithError(response, &resPublisherAdPos, "GetPublisherAdPosGeneral")
 	if err != nil {
-		return
-	}
-
-	if resPublisherAdPos.CommonError.ErrCode != 0 {
-		err = fmt.Errorf("GetPublisherAdPosGeneral Error , errcode=%d , errmsg=%s", resPublisherAdPos.CommonError.ErrCode, resPublisherAdPos.CommonError.ErrMsg)
 		return
 	}
 
 	if resPublisherAdPos.BaseResp.Ret != 0 {
 		err = fmt.Errorf("GetPublisherAdPosGeneral Error , errcode=%d , errmsg=%s", resPublisherAdPos.BaseResp.Ret, resPublisherAdPos.BaseResp.ErrMsg)
-		return
-	}
-
-	if resPublisherAdPos.Base.Ret != 0 {
-		err = fmt.Errorf("GetPublisherAdPosGeneral Error , errcode=%d , errmsg=%s", resPublisherAdPos.Base.Ret, resPublisherAdPos.Base.ErrMsg)
 		return
 	}
 	return
@@ -245,13 +232,8 @@ func (cube *DataCube) GetPublisherCpsGeneral(startDate, endDate string, page, pa
 		return
 	}
 
-	err = json.Unmarshal(response, &resPublisherCps)
+	err = util.DecodeWithError(response, &resPublisherCps, "GetPublisherCpsGeneral")
 	if err != nil {
-		return
-	}
-
-	if resPublisherCps.CommonError.ErrCode != 0 {
-		err = fmt.Errorf("GetPublisherCpsGeneral Error , errcode=%d , errmsg=%s", resPublisherCps.CommonError.ErrCode, resPublisherCps.CommonError.ErrMsg)
 		return
 	}
 
@@ -259,12 +241,6 @@ func (cube *DataCube) GetPublisherCpsGeneral(startDate, endDate string, page, pa
 		err = fmt.Errorf("GetPublisherCpsGeneral Error , errcode=%d , errmsg=%s", resPublisherCps.BaseResp.Ret, resPublisherCps.BaseResp.ErrMsg)
 		return
 	}
-
-	if resPublisherCps.Base.Ret != 0 {
-		err = fmt.Errorf("GetPublisherCpsGeneral Error , errcode=%d , errmsg=%s", resPublisherCps.Base.Ret, resPublisherCps.Base.ErrMsg)
-		return
-	}
-
 	return
 }
 
@@ -283,23 +259,13 @@ func (cube *DataCube) GetPublisherSettlement(startDate, endDate string, page, pa
 		return
 	}
 
-	err = json.Unmarshal(response, &resPublisherSettlement)
+	err = util.DecodeWithError(response, &resPublisherSettlement, "GetPublisherSettlement")
 	if err != nil {
-		return
-	}
-
-	if resPublisherSettlement.CommonError.ErrCode != 0 {
-		err = fmt.Errorf("GetPublisherSettlement Error , errcode=%d , errmsg=%s", resPublisherSettlement.CommonError.ErrCode, resPublisherSettlement.CommonError.ErrMsg)
 		return
 	}
 
 	if resPublisherSettlement.BaseResp.Ret != 0 {
 		err = fmt.Errorf("GetPublisherSettlement Error , errcode=%d , errmsg=%s", resPublisherSettlement.BaseResp.Ret, resPublisherSettlement.BaseResp.ErrMsg)
-		return
-	}
-
-	if resPublisherSettlement.Base.Ret != 0 {
-		err = fmt.Errorf("GetPublisherSettlement Error , errcode=%d , errmsg=%s", resPublisherSettlement.Base.Ret, resPublisherSettlement.Base.ErrMsg)
 		return
 	}
 	return
