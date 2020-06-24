@@ -130,5 +130,5 @@ func (tcb *Tcb) BatchDeleteFile(env string, fileIDList []string) (*BatchDeleteFi
 	}
 	batchDeleteFileRes := &BatchDeleteFileRes{}
 	err = util.DecodeWithError(response, batchDeleteFileRes, "BatchDeleteFile")
-	return batchDeleteFileRes, nil
+	return batchDeleteFileRes, err
 }

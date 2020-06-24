@@ -35,21 +35,6 @@ linters:
     - varcheck
     - whitespace
 
-  # don't enable:
-  # - asciicheck
-  # - exhaustive (TODO: enable after next release; current release at time of writing is v1.27)
-  # - gochecknoglobals
-  # - gocognit
-  # - godot
-  # - godox
-  # - goerr113
-  # - maligned
-  # - nestif
-  # - noctx (TODO: enable after next release; current release at time of writing is v1.27)
-  # - prealloc
-  # - testpackage
-  # - wsl
-
 issues:
   # Excluding configuration per-path, per-linter, per-text and per-source
   exclude-rules:
@@ -61,3 +46,8 @@ issues:
     - linters:
         - gocritic
       text: "unnecessaryDefer:"
+
+linters-settings:
+  funlen:
+    lines: 66
+    statements: 40

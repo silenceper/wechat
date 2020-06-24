@@ -74,15 +74,13 @@ func (qrCode *QRCode) fetchCode(urlStr string, body interface{}) (response []byt
 			err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 			return nil, err
 		}
-	} else if contentType == "image/jpeg" {
+	}
+	if contentType == "image/jpeg" {
 		// 返回文件
 		return response, nil
-	} else {
-		err = fmt.Errorf("fetchCode error : unknown response content type - %v", contentType)
-		return nil, err
 	}
-
-	return
+	err = fmt.Errorf("fetchCode error : unknown response content type - %v", contentType)
+	return nil, err
 }
 
 // CreateWXAQRCode 获取小程序二维码，适用于需要的码数量较少的业务场景

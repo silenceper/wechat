@@ -95,10 +95,7 @@ func (r *Redis) IsExist(key string) bool {
 
 	a, _ := conn.Do("EXISTS", key)
 	i := a.(int64)
-	if i > 0 {
-		return true
-	}
-	return false
+	return i > 0
 }
 
 //Delete 删除

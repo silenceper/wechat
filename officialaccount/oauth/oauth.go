@@ -50,7 +50,7 @@ func (oauth *Oauth) Redirect(writer http.ResponseWriter, req *http.Request, redi
 	if err != nil {
 		return err
 	}
-	http.Redirect(writer, req, location, 302)
+	http.Redirect(writer, req, location, http.StatusFound)
 	return nil
 }
 

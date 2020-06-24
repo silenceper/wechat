@@ -1,8 +1,9 @@
 package officialaccount
 
 import (
-	"github.com/silenceper/wechat/v2/officialaccount/datacube"
 	"net/http"
+
+	"github.com/silenceper/wechat/v2/officialaccount/datacube"
 
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/officialaccount/basic"

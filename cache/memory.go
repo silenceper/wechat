@@ -62,13 +62,13 @@ func (mem *Memory) Set(key string, val interface{}, timeout time.Duration) (err 
 
 //Delete delete value in memcache.
 func (mem *Memory) Delete(key string) error {
-	return mem.deleteKey(key)
+	mem.deleteKey(key)
+	return nil
 }
 
 // deleteKey
-func (mem *Memory) deleteKey(key string) error {
+func (mem *Memory) deleteKey(key string) {
 	mem.Lock()
 	defer mem.Unlock()
 	delete(mem.data, key)
-	return nil
 }

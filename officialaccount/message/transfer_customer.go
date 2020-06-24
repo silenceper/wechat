@@ -13,11 +13,11 @@ type TransInfo struct {
 }
 
 //NewTransferCustomer 实例化
-func NewTransferCustomer(KfAccount string) *TransferCustomer {
+func NewTransferCustomer(kfAccount string) *TransferCustomer {
 	tc := new(TransferCustomer)
-	if KfAccount != "" {
+	if kfAccount != "" {
 		transInfo := new(TransInfo)
-		transInfo.KfAccount = KfAccount
+		transInfo.KfAccount = kfAccount
 		tc.TransInfo = transInfo
 	}
 	return tc

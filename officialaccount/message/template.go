@@ -59,7 +59,9 @@ func (tpl *Template) Send(msg *TemplateMessage) (msgID int64, err error) {
 	}
 	uri := fmt.Sprintf("%s?access_token=%s", templateSendURL, accessToken)
 	response, err := util.PostJSON(uri, msg)
-
+	if err != nil {
+		return
+	}
 	var result resTemplateSend
 	err = json.Unmarshal(response, &result)
 	if err != nil {
