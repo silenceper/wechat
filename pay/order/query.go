@@ -2,8 +2,6 @@ package order
 
 import (
 	"encoding/xml"
-	"errors"
-	"github.com/gogf/gf/util/gconv"
 	"github.com/silenceper/wechat/v2/pay/notify"
 	"github.com/silenceper/wechat/v2/util"
 )
@@ -35,16 +33,17 @@ func (o *Order) QueryOrder(p *QueryParams) (paidResult notify.PaidResult, err er
 		p.SignType = "MD5"
 	}
 
-	param := make(map[string]interface{})
+	param := make(map[string]string)
 	param["appid"] = o.AppID
 	param["mch_id"] = o.MchID
 	param["nonce_str"] = nonceStr
 	param["out_trade_no"] = p.OutTradeNo
 	param["sign_type"] = p.SignType
 
-	bizKey := "&key=" + o.Key
-	str := util.OrderParam(param, bizKey)
-	sign := util.MD5Sum(str)
+	sign, err := util.ParamSign(param, o.Key)
+	if err != nil {
+		return
+	}
 	request := queryRequest{
 		AppID:      o.AppID,
 		MchID:      o.MchID,
@@ -62,15 +61,6 @@ func (o *Order) QueryOrder(p *QueryParams) (paidResult notify.PaidResult, err er
 	if err != nil {
 		return
 	}
-	if gconv.String(paidResult.ReturnCode) == "SUCCESS" {
-		// pay success
-		if gconv.String(paidResult.ResultCode) == "SUCCESS" {
-			err = nil
-			return
-		}
-		err = errors.New(gconv.String(paidResult.ErrCode) + gconv.String(paidResult.ErrCodeDes))
-		return
-	}
-	err = errors.New("[msg : xmlUnmarshalError] [rawReturn : " + string(rawRet) + "] [params : " + str + "] [sign : " + sign + "]")
+
 	return
 }
