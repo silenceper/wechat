@@ -5,7 +5,6 @@ go 1.14
 require (
 	github.com/bradfitz/gomemcache v0.0.0-20190913173617-a41fca850d0b
 	github.com/fatih/structs v1.1.0
-	github.com/gogf/gf v1.13.1
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/cast v1.3.1
