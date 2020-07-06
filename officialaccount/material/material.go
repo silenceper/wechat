@@ -14,6 +14,7 @@ const (
 	addMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/add_material"
 	delMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/del_material"
 	getMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/get_material"
+	getMaterialCountURL = " https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token=%s"
 	batchGetMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/batchget_material"
 )
 
@@ -292,5 +293,31 @@ func (material *Material) BatchGetMaterial(permanentMaterialType PermanentMateri
 	}
 
 	err = util.DecodeWithError(response, &list, "BatchGetMaterial")
+	return
+}
+
+// ResMaterialCount 素材总数
+type ResMaterialCount struct {
+	util.CommonError
+	VoiceCount int64 `json:"voice_count"` // 语音总数量
+	VideoCount int64 `json:"video_count"` // 视频总数量
+	ImageCount int64 `json:"image_count"` // 图片总数量
+	NewsCount  int64 `json:"news_count"`  // 图文总数量
+}
+
+// GetMaterialCount 获取素材总数.
+func (material *Material) GetMaterialCount() (res ResMaterialCount, err error) {
+	var accessToken string
+	accessToken, err = material.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", getMaterialCountURL, accessToken)
+	var response []byte
+	response, err = util.HTTPGet(uri)
+	if err != nil {
+		return
+	}
+	err = util.DecodeWithError(response, &res, "GetMaterialCount")
 	return
 }
