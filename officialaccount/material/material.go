@@ -14,7 +14,7 @@ const (
 	addMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/add_material"
 	delMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/del_material"
 	getMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/get_material"
-	getMaterialCountURL = " https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token=%s"
+	getMaterialCountURL = "https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token=%s"
 	batchGetMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/batchget_material"
 )
 
