@@ -11,6 +11,7 @@ import (
 
 const (
 	addNewsURL          = "https://api.weixin.qq.com/cgi-bin/material/add_news"
+	updateNewsURL       = "https://api.weixin.qq.com/cgi-bin/material/update_news?access_token=%s"
 	addMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/add_material"
 	delMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/del_material"
 	getMaterialURL      = "https://api.weixin.qq.com/cgi-bin/material/get_material"
@@ -120,6 +121,32 @@ func (material *Material) AddNews(articles []*Article) (mediaID string, err erro
 	}
 	mediaID = res.MediaID
 	return
+}
+
+//reqUpdateArticle 更新永久性图文素材请求信息
+type reqUpdateArticle struct {
+	MediaID  string   `json:"media_id"`
+	Index    int64    `json:"index"`
+	Articles *Article `json:"articles"`
+}
+
+// UpdateNews 更新永久图文素材
+func (material *Material) UpdateNews(article *Article, mediaID string, index int64) (err error) {
+	req := &reqUpdateArticle{mediaID, index, article}
+
+	var accessToken string
+	accessToken, err = material.GetAccessToken()
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf("%s?access_token=%s", updateNewsURL, accessToken)
+	var response []byte
+	response, err = util.PostJSON(uri, req)
+	if err != nil {
+		return
+	}
+	return util.DecodeWithCommonError(response, "UpdateNews")
 }
 
 //resAddMaterial 永久性素材上传返回的结果
