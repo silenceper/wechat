@@ -1,9 +1,8 @@
-package tag
+package user
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/util"
 )
 
@@ -17,11 +16,6 @@ const (
 	tagBatchuntaggingURL = "https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token=%s"
 	tagUserTidListURL    = "https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token=%s"
 )
-
-//Tag 标签管理
-type Tag struct {
-	*context.Context
-}
 
 //TagInfo 标签信息
 type TagInfo struct {
@@ -39,17 +33,10 @@ type OpenIDList struct {
 	NextOpenID string `json:"next_openid"`
 }
 
-//NewTag 实例化
-func NewTag(context *context.Context) *Tag {
-	tag := new(Tag)
-	tag.Context = context
-	return tag
-}
-
 //Create 创建标签
-func (tag *Tag) Create(tagName string) (tagInfo *TagInfo, err error) {
+func (user *User) CreateTag(tagName string) (tagInfo *TagInfo, err error) {
 	var accessToken string
-	accessToken, err = tag.GetAccessToken()
+	accessToken, err = user.GetAccessToken()
 	if err != nil {
 		return
 	}
@@ -75,8 +62,8 @@ func (tag *Tag) Create(tagName string) (tagInfo *TagInfo, err error) {
 }
 
 //Delete  删除标签
-func (tag *Tag) Delete(tagID int) (err error) {
-	accessToken, err := tag.GetAccessToken()
+func (user *User) DeleteTag(tagID int) (err error) {
+	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return
 	}
@@ -95,8 +82,8 @@ func (tag *Tag) Delete(tagID int) (err error) {
 }
 
 //Update  编辑标签
-func (tag *Tag) Update(tagID int, tagName string) (err error) {
-	accessToken, err := tag.GetAccessToken()
+func (user *User) UpdateTag(tagID int, tagName string) (err error) {
+	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return
 	}
@@ -118,8 +105,8 @@ func (tag *Tag) Update(tagID int, tagName string) (err error) {
 }
 
 //Get 获取公众号已创建的标签
-func (tag *Tag) Get() (tags []TagInfo, err error) {
-	accessToken, err := tag.GetAccessToken()
+func (user *User) GetTag() (tags []TagInfo, err error) {
+	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
@@ -140,9 +127,9 @@ func (tag *Tag) Get() (tags []TagInfo, err error) {
 
 }
 
-//GetUserList 获取标签下粉丝列表
-func (tag *Tag) GetUserList(tagID int, nextOpenid ...string) (*OpenIDList, error) {
-	accessToken, err := tag.GetAccessToken()
+//OpenidListByTag 获取标签下粉丝列表
+func (user *User) OpenidListByTag(tagID int, nextOpenid ...string) (*OpenIDList, error) {
+	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
@@ -170,8 +157,8 @@ func (tag *Tag) GetUserList(tagID int, nextOpenid ...string) (*OpenIDList, error
 }
 
 //BatchTag 批量为用户打标签
-func (tag *Tag) BatchTag(openidList []string, tagID int) (err error) {
-	accessToken, err := tag.GetAccessToken()
+func (user *User) BatchTag(openidList []string, tagID int) (err error) {
+	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return
 	}
@@ -195,11 +182,11 @@ func (tag *Tag) BatchTag(openidList []string, tagID int) (err error) {
 }
 
 //BatchUntag 批量为用户取消标签
-func (tag *Tag) BatchUntag(openIDList []string, tagID int) (err error) {
+func (user *User) BatchUntag(openIDList []string, tagID int) (err error) {
 	if len(openIDList) == 0 {
 		return
 	}
-	accessToken, err := tag.GetAccessToken()
+	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return
 	}
@@ -220,8 +207,8 @@ func (tag *Tag) BatchUntag(openIDList []string, tagID int) (err error) {
 }
 
 //UserTidList 获取用户身上的标签列表
-func (tag *Tag) UserTidList(openID string) (tagIDList []int, err error) {
-	accessToken, err := tag.GetAccessToken()
+func (user *User) UserTidList(openID string) (tagIDList []int, err error) {
+	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return
 	}
