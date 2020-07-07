@@ -14,11 +14,11 @@ const (
 	//MediaTypeImage 媒体文件:图片
 	MediaTypeImage MediaType = "image"
 	//MediaTypeVoice 媒体文件:声音
-	MediaTypeVoice = "voice"
+	MediaTypeVoice MediaType = "voice"
 	//MediaTypeVideo 媒体文件:视频
-	MediaTypeVideo = "video"
+	MediaTypeVideo MediaType = "video"
 	//MediaTypeThumb 媒体文件:缩略图
-	MediaTypeThumb = "thumb"
+	MediaTypeThumb MediaType = "thumb"
 )
 
 const (
