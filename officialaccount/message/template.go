@@ -10,6 +10,7 @@ import (
 
 const (
 	templateSendURL = "https://api.weixin.qq.com/cgi-bin/message/template/send"
+	templateListURL = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template"
 )
 
 //Template 模板消息
@@ -72,5 +73,43 @@ func (tpl *Template) Send(msg *TemplateMessage) (msgID int64, err error) {
 		return
 	}
 	msgID = result.MsgID
+	return
+}
+
+// TemplateItem 模板消息.
+type TemplateItem struct {
+	TemplateID      string `json:"template_id"`
+	Title           string `json:"title"`
+	PrimaryIndustry string `json:"primary_industry"`
+	DeputyIndustry  string `json:"deputy_industry"`
+	Content         string `json:"content"`
+	Example         string `json:"example"`
+}
+
+type resTemplateList struct {
+	util.CommonError
+
+	TemplateList []*TemplateItem `json:"template_list"`
+}
+
+//List 获取模板列表
+func (tpl *Template) List() (templateList []*TemplateItem, err error) {
+	var accessToken string
+	accessToken, err = tpl.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", templateListURL, accessToken)
+	var response []byte
+	response, err = util.HTTPGet(uri)
+	if err != nil {
+		return
+	}
+	var res resTemplateList
+	err = util.DecodeWithError(response, res, "ListTemplate")
+	if err != nil {
+		return
+	}
+	templateList = res.TemplateList
 	return
 }
