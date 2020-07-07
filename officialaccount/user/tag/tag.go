@@ -25,13 +25,13 @@ type Tag struct {
 
 //TagInfo 标签信息
 type TagInfo struct {
-	Id    int    `json:"id"`
+	ID    int    `json:"id"`
 	Name  string `json:"name"`
 	Count int64  `json:"count"`
 }
 
 // OpenidList 标签用户列表
-type OpenidList struct {
+type OpenIDList struct {
 	Count int `json:"count"`
 	Data  struct {
 		OpenIDs []string `json:"openid"`
@@ -64,6 +64,9 @@ func (tag *Tag) Create(tagName string) (tagInfo *TagInfo, err error) {
 		Tag TagInfo `json:"tag"`
 	}
 	err = json.Unmarshal(response, &result)
+	if err != nil {
+		return nil, err
+	}
 	if result.ErrCode != 0 {
 		err = fmt.Errorf("Tag Create error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return
@@ -72,7 +75,7 @@ func (tag *Tag) Create(tagName string) (tagInfo *TagInfo, err error) {
 }
 
 //Delete  删除标签
-func (tag *Tag) Delete(tagId int) (err error) {
+func (tag *Tag) Delete(tagID int) (err error) {
 	accessToken, err := tag.GetAccessToken()
 	if err != nil {
 		return
@@ -80,10 +83,10 @@ func (tag *Tag) Delete(tagId int) (err error) {
 	url := fmt.Sprintf(tagDeleteURL, accessToken)
 	var request struct {
 		Tag struct {
-			Id int `json:"id"`
+			ID int `json:"id"`
 		} `json:"tag"`
 	}
-	request.Tag.Id = tagId
+	request.Tag.ID = tagID
 	resp, err := util.PostJSON(url, &request)
 	if err != nil {
 		return
@@ -92,7 +95,7 @@ func (tag *Tag) Delete(tagId int) (err error) {
 }
 
 //Update  编辑标签
-func (tag *Tag) Update(tagId int, tagName string) (err error) {
+func (tag *Tag) Update(tagID int, tagName string) (err error) {
 	accessToken, err := tag.GetAccessToken()
 	if err != nil {
 		return
@@ -100,11 +103,11 @@ func (tag *Tag) Update(tagId int, tagName string) (err error) {
 	url := fmt.Sprintf(tagUpdateURL, accessToken)
 	var request struct {
 		Tag struct {
-			Id   int    `json:"id"`
+			ID   int    `json:"id"`
 			Name string `json:"name"`
 		} `json:"tag"`
 	}
-	request.Tag.Id = tagId
+	request.Tag.ID = tagID
 	request.Tag.Name = tagName
 	resp, err := util.PostJSON(url, &request)
 	if err != nil {
@@ -138,17 +141,17 @@ func (tag *Tag) Get() (tags []TagInfo, err error) {
 }
 
 //GetUserList 获取标签下粉丝列表
-func (tag *Tag) GetUserList(tagId int, nextOpenid ...string) (*OpenidList, error) {
+func (tag *Tag) GetUserList(tagID int, nextOpenid ...string) (*OpenIDList, error) {
 	accessToken, err := tag.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	url := fmt.Sprintf(tagUserListURL, accessToken)
 	var request = struct {
-		Id     int    `json:"tagid"`
+		ID     int    `json:"tagid"`
 		OpenId string `json:"next_openid"`
 	}{
-		Id: tagId,
+		ID: tagID,
 	}
 	if len(nextOpenid) > 0 {
 		request.OpenId = nextOpenid[0]
@@ -157,7 +160,7 @@ func (tag *Tag) GetUserList(tagId int, nextOpenid ...string) (*OpenidList, error
 	if err != nil {
 		return nil, err
 	}
-	userlist := new(OpenidList)
+	userlist := new(OpenIDList)
 	err = json.Unmarshal(response, &userlist)
 	if err != nil {
 		return nil, err
@@ -167,7 +170,7 @@ func (tag *Tag) GetUserList(tagId int, nextOpenid ...string) (*OpenidList, error
 }
 
 //BatchTag 批量为用户打标签
-func (tag *Tag) BatchTag(openidList []string, tagId int) (err error) {
+func (tag *Tag) BatchTag(openidList []string, tagID int) (err error) {
 	accessToken, err := tag.GetAccessToken()
 	if err != nil {
 		return
@@ -177,10 +180,10 @@ func (tag *Tag) BatchTag(openidList []string, tagId int) (err error) {
 	}
 	var request = struct {
 		OpenIdList []string `json:"openid_list"`
-		TagId      int      `json:"tagid"`
+		TagID      int      `json:"tagid"`
 	}{
 		OpenIdList: openidList,
-		TagId:      tagId,
+		TagID:      tagID,
 	}
 	url := fmt.Sprintf(tagBatchtaggingURL, accessToken)
 	resp, err := util.PostJSON(url, &request)
@@ -192,8 +195,8 @@ func (tag *Tag) BatchTag(openidList []string, tagId int) (err error) {
 }
 
 //BatchUntag 批量为用户取消标签
-func (tag *Tag) BatchUntag(openidList []string, tagId int) (err error) {
-	if len(openidList) == 0 {
+func (tag *Tag) BatchUntag(openIDList []string, tagID int) (err error) {
+	if len(openIDList) == 0 {
 		return
 	}
 	accessToken, err := tag.GetAccessToken()
@@ -206,8 +209,8 @@ func (tag *Tag) BatchUntag(openidList []string, tagId int) (err error) {
 		OpenIdList []string `json:"openid_list,omitempty"`
 		TagId      int      `json:"tagid"`
 	}{
-		OpenIdList: openidList,
-		TagId:      tagId,
+		OpenIdList: openIDList,
+		TagId:      tagID,
 	}
 	resp, err := util.PostJSON(url, &request)
 	if err != nil {
@@ -217,19 +220,19 @@ func (tag *Tag) BatchUntag(openidList []string, tagId int) (err error) {
 }
 
 //UserTidList 获取用户身上的标签列表
-func (tag *Tag) UserTidList(openid string) (tagIdList []int, err error) {
+func (tag *Tag) UserTidList(openID string) (tagIDList []int, err error) {
 	accessToken, err := tag.GetAccessToken()
 	if err != nil {
 		return
 	}
 	url := fmt.Sprintf(tagUserTidListURL, accessToken)
-	resp, err := util.PostJSON(url, map[string]string{"openid": openid})
+	resp, err := util.PostJSON(url, map[string]string{"openid": openID})
 	if err != nil {
 		return
 	}
 	var result struct {
 		util.CommonError
-		TagIdList []int `json:"tagid_list"`
+		TagIDList []int `json:"tagid_list"`
 	}
 	err = json.Unmarshal(resp, &result)
 	if err != nil {
@@ -239,6 +242,6 @@ func (tag *Tag) UserTidList(openid string) (tagIdList []int, err error) {
 		err = fmt.Errorf("UserTidList Error , errcode=%d , errmsg=%s", result.ErrCode, result.ErrMsg)
 		return
 	}
-	return result.TagIdList, nil
+	return result.TagIDList, nil
 
 }
