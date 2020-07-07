@@ -24,8 +24,8 @@ type TagInfo struct {
 	Count int64  `json:"count"`
 }
 
-// OpenIDList 标签用户列表
-type OpenIDList struct {
+// TagOpenIDList 标签用户列表
+type TagOpenIDList struct {
 	Count int `json:"count"`
 	Data  struct {
 		OpenIDs []string `json:"openid"`
@@ -128,7 +128,7 @@ func (user *User) GetTag() (tags []TagInfo, err error) {
 }
 
 //OpenidListByTag 获取标签下粉丝列表
-func (user *User) OpenIDListByTag(tagID int, nextOpenID ...string) (*OpenIDList, error) {
+func (user *User) OpenIDListByTag(tagID int, nextOpenID ...string) (*TagOpenIDList, error) {
 	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return nil, err
@@ -147,7 +147,7 @@ func (user *User) OpenIDListByTag(tagID int, nextOpenID ...string) (*OpenIDList,
 	if err != nil {
 		return nil, err
 	}
-	userlist := new(OpenIDList)
+	userlist := new(TagOpenIDList)
 	err = json.Unmarshal(response, &userlist)
 	if err != nil {
 		return nil, err
