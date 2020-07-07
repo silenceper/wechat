@@ -1,6 +1,7 @@
 package officialaccount
 
 import (
+	"github.com/silenceper/wechat/v2/officialaccount/user/tag"
 	"net/http"
 
 	"github.com/silenceper/wechat/v2/officialaccount/datacube"
@@ -86,6 +87,11 @@ func (officialAccount *OfficialAccount) GetJs() *js.Js {
 // GetUser 用户管理接口
 func (officialAccount *OfficialAccount) GetUser() *user.User {
 	return user.NewUser(officialAccount.ctx)
+}
+
+// GetTag 用户标签接口
+func (officialAccount *OfficialAccount) GetTag() *tag.Tag {
+	return tag.NewTag(officialAccount.ctx)
 }
 
 // GetTemplate 模板消息接口

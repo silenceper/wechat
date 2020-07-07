@@ -30,7 +30,7 @@ type TagInfo struct {
 	Count int64  `json:"count"`
 }
 
-// OpenidList 用户列表
+// OpenidList 标签用户列表
 type OpenidList struct {
 	Count int `json:"count"`
 	Data  struct {
@@ -39,7 +39,7 @@ type OpenidList struct {
 	NextOpenID string `json:"next_openid"`
 }
 
-//NewUser 实例化
+//NewTag 实例化
 func NewTag(context *context.Context) *Tag {
 	tag := new(Tag)
 	tag.Context = context
