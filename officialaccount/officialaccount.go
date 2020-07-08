@@ -35,6 +35,14 @@ func NewOfficialAccount(cfg *config.Config) *OfficialAccount {
 	return &OfficialAccount{ctx: ctx}
 }
 
+func NewOfficialAccountWithAkHandle(cfg *config.Config, ak credential.AccessTokenHandle) *OfficialAccount {
+	ctx := &context.Context{
+		Config:            cfg,
+		AccessTokenHandle: ak,
+	}
+	return &OfficialAccount{ctx: ctx}
+}
+
 //SetAccessTokenHandle 自定义access_token获取方式
 func (officialAccount *OfficialAccount) SetAccessTokenHandle(accessTokenHandle credential.AccessTokenHandle) {
 	officialAccount.ctx.AccessTokenHandle = accessTokenHandle
