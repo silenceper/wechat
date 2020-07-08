@@ -16,6 +16,9 @@ github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32 h1:W6apQkHrMkS0Muv8G/TipAy
 github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32/go.mod h1:9wM+0iRr9ahx58uYLpLIr5fm8diHn0JbqRycJi6w0Ms=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/silenceper/wechat v1.2.6 h1:FED3ko2yD96YD153xIV0I0bDjII4GxWaggjsYKdjQQc=
+github.com/silenceper/wechat/v2 v2.0.1 h1:Gm4gtps+0tHhm1Kl88RhAcGmGAM3CqVvsK6rIX9ADR0=
+github.com/silenceper/wechat/v2 v2.0.1/go.mod h1:hksYXWXGl7/E6TQojFNgxv8ouTF9CPPjfvWWJouJJGs=
 github.com/sirupsen/logrus v1.6.0 h1:UBcNElsrwanuuMsnGSlYmtmgbb23qDR5dG+6X6Oo89I=
 github.com/sirupsen/logrus v1.6.0/go.mod h1:7uNnSEd1DgxDLC74fIahvMZmmYsHGZGEOFrfsX/uA88=
 github.com/spf13/cast v1.3.1 h1:nFm6S0SMdyzrzcmThSipiEubIDy8WEXKNZ0UOgiRpng=

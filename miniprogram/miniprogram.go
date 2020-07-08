@@ -27,6 +27,14 @@ func NewMiniProgram(cfg *config.Config) *MiniProgram {
 	return &MiniProgram{ctx}
 }
 
+func NewMiniProgramWithAkHandle(cfg *config.Config, ak credential.AccessTokenHandle) *MiniProgram {
+	ctx := &context.Context{
+		Config:            cfg,
+		AccessTokenHandle: ak,
+	}
+	return &MiniProgram{ctx}
+}
+
 //SetAccessTokenHandle 自定义access_token获取方式
 func (miniProgram *MiniProgram) SetAccessTokenHandle(accessTokenHandle credential.AccessTokenHandle) {
 	miniProgram.ctx.AccessTokenHandle = accessTokenHandle
