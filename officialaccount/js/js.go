@@ -62,3 +62,30 @@ func (js *Js) GetConfig(uri string) (config *Config, err error) {
 	config.Signature = sigStr
 	return
 }
+
+//PlatformGetConfig 第三方平台 - 获取jssdk需要的配置参数
+//uri 为当前网页地址
+func (js *Js) PlatformGetConfig(uri, appid string) (config *Config, err error) {
+	config = new(Config)
+	var accessToken string
+	accessToken, err = js.GetAccessToken()
+	if err != nil {
+		return
+	}
+	var ticketStr string
+	ticketStr, err = js.GetTicket(accessToken)
+	if err != nil {
+		return
+	}
+
+	nonceStr := util.RandomStr(16)
+	timestamp := util.GetCurrTS()
+	str := fmt.Sprintf("jsapi_ticket=%s&noncestr=%s&timestamp=%d&url=%s", ticketStr, nonceStr, timestamp, uri)
+	sigStr := util.Signature(str)
+
+	config.AppID = appid
+	config.NonceStr = nonceStr
+	config.Timestamp = timestamp
+	config.Signature = sigStr
+	return
+}
