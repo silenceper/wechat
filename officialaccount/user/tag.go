@@ -20,7 +20,7 @@ const (
 
 //TagInfo 标签信息
 type TagInfo struct {
-	ID    int    `json:"id"`
+	ID    int32  `json:"id"`
 	Name  string `json:"name"`
 	Count int64  `json:"count"`
 }
@@ -69,7 +69,7 @@ func (user *User) CreateTag(tagName string) (tagInfo *TagInfo, err error) {
 }
 
 //DeleteTag  删除标签
-func (user *User) DeleteTag(tagID int) (err error) {
+func (user *User) DeleteTag(tagID int32) (err error) {
 	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return
@@ -77,7 +77,7 @@ func (user *User) DeleteTag(tagID int) (err error) {
 	url := fmt.Sprintf(tagDeleteURL, accessToken)
 	var request struct {
 		Tag struct {
-			ID int `json:"id"`
+			ID int32 `json:"id"`
 		} `json:"tag"`
 	}
 	request.Tag.ID = tagID
@@ -89,7 +89,7 @@ func (user *User) DeleteTag(tagID int) (err error) {
 }
 
 //UpdateTag  编辑标签
-func (user *User) UpdateTag(tagID int, tagName string) (err error) {
+func (user *User) UpdateTag(tagID int32, tagName string) (err error) {
 	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return
@@ -97,7 +97,7 @@ func (user *User) UpdateTag(tagID int, tagName string) (err error) {
 	url := fmt.Sprintf(tagUpdateURL, accessToken)
 	var request struct {
 		Tag struct {
-			ID   int    `json:"id"`
+			ID   int32  `json:"id"`
 			Name string `json:"name"`
 		} `json:"tag"`
 	}
@@ -133,14 +133,14 @@ func (user *User) GetTag() (tags []*TagInfo, err error) {
 }
 
 //OpenidListByTag 获取标签下粉丝列表
-func (user *User) OpenIDListByTag(tagID int, nextOpenID ...string) (userList *TagOpenIDList, err error) {
+func (user *User) OpenIDListByTag(tagID int32, nextOpenID ...string) (userList *TagOpenIDList, err error) {
 	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	url := fmt.Sprintf(tagUserListURL, accessToken)
 	var request = struct {
-		ID     int    `json:"tagid"`
+		ID     int32  `json:"tagid"`
 		OpenID string `json:"next_openid"`
 	}{
 		ID: tagID,
@@ -161,7 +161,7 @@ func (user *User) OpenIDListByTag(tagID int, nextOpenID ...string) (userList *Ta
 }
 
 //BatchTag 批量为用户打标签
-func (user *User) BatchTag(openIDList []string, tagID int) (err error) {
+func (user *User) BatchTag(openIDList []string, tagID int32) (err error) {
 	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return
@@ -171,7 +171,7 @@ func (user *User) BatchTag(openIDList []string, tagID int) (err error) {
 	}
 	var request = struct {
 		OpenIDList []string `json:"openid_list"`
-		TagID      int      `json:"tagid"`
+		TagID      int32    `json:"tagid"`
 	}{
 		OpenIDList: openIDList,
 		TagID:      tagID,
@@ -185,7 +185,7 @@ func (user *User) BatchTag(openIDList []string, tagID int) (err error) {
 }
 
 //BatchUntag 批量为用户取消标签
-func (user *User) BatchUntag(openIDList []string, tagID int) (err error) {
+func (user *User) BatchUntag(openIDList []string, tagID int32) (err error) {
 	if len(openIDList) == 0 {
 		return
 	}
@@ -196,7 +196,7 @@ func (user *User) BatchUntag(openIDList []string, tagID int) (err error) {
 	url := fmt.Sprintf(tagBatchuntaggingURL, accessToken)
 	var request = struct {
 		OpenIDList []string `json:"openid_list"`
-		TagID      int      `json:"tagid"`
+		TagID      int32    `json:"tagid"`
 	}{
 		OpenIDList: openIDList,
 		TagID:      tagID,
@@ -209,7 +209,7 @@ func (user *User) BatchUntag(openIDList []string, tagID int) (err error) {
 }
 
 //UserTidList 获取用户身上的标签列表
-func (user *User) UserTidList(openID string) (tagIDList []int, err error) {
+func (user *User) UserTidList(openID string) (tagIDList []int32, err error) {
 	accessToken, err := user.GetAccessToken()
 	if err != nil {
 		return
@@ -217,7 +217,7 @@ func (user *User) UserTidList(openID string) (tagIDList []int, err error) {
 	url := fmt.Sprintf(tagUserTidListURL, accessToken)
 	var request = struct {
 		OpenID string `json:"openid"`
-		TagID  int    `json:"tagid"`
+		TagID  int32  `json:"tagid"`
 	}{
 		OpenID: openID,
 	}
@@ -227,7 +227,7 @@ func (user *User) UserTidList(openID string) (tagIDList []int, err error) {
 	}
 	var result struct {
 		util.CommonError
-		TagIDList []int `json:"tagid_list"`
+		TagIDList []int32 `json:"tagid_list"`
 	}
 	err = json.Unmarshal(resp, &result)
 	if err != nil {
