@@ -128,13 +128,17 @@ func (ctx *Context) QueryAuthCode(authCode string) (*AuthBaseInfo, error) {
 	}
 
 	var ret struct {
+		util.CommonError
 		Info *AuthBaseInfo `json:"authorization_info"`
 	}
 
 	if err := json.Unmarshal(body, &ret); err != nil {
 		return nil, err
 	}
-
+	if ret.ErrCode != 0 {
+		err = fmt.Errorf("QueryAuthCode error : errcode=%v , errmsg=%v", ret.ErrCode, ret.ErrMsg)
+		return nil, err
+	}
 	return ret.Info, nil
 }
 
