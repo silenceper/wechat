@@ -269,6 +269,7 @@ func (material *Material) DeleteMaterial(mediaID string) error {
 
 //ArticleList 永久素材列表
 type ArticleList struct {
+	util.CommonError
 	TotalCount int64             `json:"total_count"`
 	ItemCount  int64             `json:"item_count"`
 	Item       []ArticleListItem `json:"item"`
