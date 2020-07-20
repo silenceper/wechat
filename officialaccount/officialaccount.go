@@ -92,7 +92,10 @@ func (officialAccount *OfficialAccount) GetUser() *user.User {
 func (officialAccount *OfficialAccount) GetTemplate() *message.Template {
 	return message.NewTemplate(officialAccount.ctx)
 }
-
+// GetMessageManager 客服消息
+func (officialAccount *OfficialAccount) GetMessageManager() *message.Manager {
+	return message.NewMessageManager(officialAccount.ctx)
+}
 // GetDevice 获取智能设备的实例
 func (officialAccount *OfficialAccount) GetDevice() *device.Device {
 	return device.NewDevice(officialAccount.ctx)
