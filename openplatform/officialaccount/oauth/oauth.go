@@ -35,8 +35,8 @@ func (oauth *Oauth) GetRedirectURL(redirectURI, scope, state, appID string) (str
 	return fmt.Sprintf(platformRedirectOauthURL, appID, urlStr, scope, state, oauth.AppID), nil
 }
 
-//GetWebAppRedirectURL 第三方平台 - 跳转到网页授权
-func (oauth *Oauth) GetWebAppRedirectURL(writer http.ResponseWriter, req *http.Request, redirectURI, scope, state, appID string) error {
+//Redirect 第三方平台 - 跳转到网页授权
+func (oauth *Oauth) Redirect(writer http.ResponseWriter, req *http.Request, redirectURI, scope, state, appID string) error {
 	location, err := oauth.GetRedirectURL(redirectURI, scope, state, appID)
 	if err != nil {
 		return err
