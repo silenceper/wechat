@@ -5,21 +5,14 @@ import (
 
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/officialaccount/context"
+	officialJs "github.com/silenceper/wechat/v2/officialaccount/js"
 	"github.com/silenceper/wechat/v2/util"
 )
 
-// Js struct
+// Js wx jssdk
 type Js struct {
 	*context.Context
 	credential.JsTicketHandle
-}
-
-// Config 返回给用户jssdk配置信息
-type Config struct {
-	AppID     string `json:"app_id"`
-	Timestamp int64  `json:"timestamp"`
-	NonceStr  string `json:"nonce_str"`
-	Signature string `json:"signature"`
 }
 
 //NewJs init
@@ -36,10 +29,10 @@ func (js *Js) SetJsTicketHandle(ticketHandle credential.JsTicketHandle) {
 	js.JsTicketHandle = ticketHandle
 }
 
-//GetConfig 获取jssdk需要的配置参数
+//GetConfig 第三方平台 - 获取jssdk需要的配置参数
 //uri 为当前网页地址
-func (js *Js) GetConfig(uri string) (config *Config, err error) {
-	config = new(Config)
+func (js *Js) GetConfig(uri, appid string) (config *officialJs.Config, err error) {
+	config = new(officialJs.Config)
 	var accessToken string
 	accessToken, err = js.GetAccessToken()
 	if err != nil {
@@ -56,7 +49,7 @@ func (js *Js) GetConfig(uri string) (config *Config, err error) {
 	str := fmt.Sprintf("jsapi_ticket=%s&noncestr=%s&timestamp=%d&url=%s", ticketStr, nonceStr, timestamp, uri)
 	sigStr := util.Signature(str)
 
-	config.AppID = js.AppID
+	config.AppID = appid
 	config.NonceStr = nonceStr
 	config.Timestamp = timestamp
 	config.Signature = sigStr

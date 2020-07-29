@@ -11,14 +11,12 @@ import (
 )
 
 const (
-	redirectOauthURL         = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect"
-	webAppRedirectOauthURL   = "https://open.weixin.qq.com/connect/qrconnect?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect"
-	accessTokenURL           = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"
-	refreshAccessTokenURL    = "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=%s&grant_type=refresh_token&refresh_token=%s"
-	userInfoURL              = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN"
-	checkAccessTokenURL      = "https://api.weixin.qq.com/sns/auth?access_token=%s&openid=%s"
-	platformRedirectOauthURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s&component_appid=%s#wechat_redirect"
-	platformAccessTokenURL   = "https://api.weixin.qq.com/sns/oauth2/component/access_token?appid=%s&code=%s&grant_type=authorization_code&component_appid=%s&component_access_token=%s"
+	redirectOauthURL       = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect"
+	webAppRedirectOauthURL = "https://open.weixin.qq.com/connect/qrconnect?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect"
+	accessTokenURL         = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"
+	refreshAccessTokenURL  = "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=%s&grant_type=refresh_token&refresh_token=%s"
+	userInfoURL            = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN"
+	checkAccessTokenURL    = "https://api.weixin.qq.com/sns/auth?access_token=%s&openid=%s"
 )
 
 //Oauth 保存用户授权信息
@@ -56,23 +54,6 @@ func (oauth *Oauth) Redirect(writer http.ResponseWriter, req *http.Request, redi
 	return nil
 }
 
-//PlatformGetRedirectURL 第三方平台 - 获取跳转的url地址
-func (oauth *Oauth) PlatformGetRedirectURL(redirectURI, scope, state, appID string) (string, error) {
-	//url encode
-	urlStr := url.QueryEscape(redirectURI)
-	return fmt.Sprintf(platformRedirectOauthURL, appID, urlStr, scope, state, oauth.AppID), nil
-}
-
-//PlatformRedirect 第三方平台 - 跳转到网页授权
-func (oauth *Oauth) PlatformRedirect(writer http.ResponseWriter, req *http.Request, redirectURI, scope, state, appID string) error {
-	location, err := oauth.PlatformGetRedirectURL(redirectURI, scope, state, appID)
-	if err != nil {
-		return err
-	}
-	http.Redirect(writer, req, location, http.StatusFound)
-	return nil
-}
-
 // ResAccessToken 获取用户授权access_token的返回结果
 type ResAccessToken struct {
 	util.CommonError
@@ -102,25 +83,6 @@ func (oauth *Oauth) GetUserAccessToken(code string) (result ResAccessToken, err 
 	}
 	if result.ErrCode != 0 {
 		err = fmt.Errorf("GetUserAccessToken error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return
-	}
-	return
-}
-
-// PlatformGetUserAccessToken 第三方平台 - 通过网页授权的code 换取access_token(区别于context中的access_token)
-func (oauth *Oauth) PlatformGetUserAccessToken(code, appID, componentAccessToken string) (result ResAccessToken, err error) {
-	urlStr := fmt.Sprintf(platformAccessTokenURL, appID, code, oauth.AppID, componentAccessToken)
-	var response []byte
-	response, err = util.HTTPGet(urlStr)
-	if err != nil {
-		return
-	}
-	err = json.Unmarshal(response, &result)
-	if err != nil {
-		return
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("PlatformGetUserAccessToken error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return
 	}
 	return
