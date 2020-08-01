@@ -5,6 +5,8 @@ import (
 	"github.com/silenceper/wechat/v2/officialaccount"
 	offConfig "github.com/silenceper/wechat/v2/officialaccount/config"
 	opContext "github.com/silenceper/wechat/v2/openplatform/context"
+	"github.com/silenceper/wechat/v2/openplatform/officialaccount/js"
+	"github.com/silenceper/wechat/v2/openplatform/officialaccount/oauth"
 )
 
 //OfficialAccount 代公众号实现业务
@@ -26,6 +28,16 @@ func NewOfficialAccount(opCtx *opContext.Context, appID string) *OfficialAccount
 	//设置获取access_token的函数
 	officialAccount.SetAccessTokenHandle(NewDefaultAuthrAccessToken(opCtx, appID))
 	return &OfficialAccount{appID: appID, OfficialAccount: officialAccount}
+}
+
+// PlatformOauth 平台代发起oauth2网页授权
+func (officialAccount *OfficialAccount) PlatformOauth() *oauth.Oauth {
+	return oauth.NewOauth(officialAccount.GetContext())
+}
+
+// PlatformJs 平台代获取js-sdk配置
+func (officialAccount *OfficialAccount) PlatformJs() *js.Js {
+	return js.NewJs(officialAccount.GetContext())
 }
 
 //DefaultAuthrAccessToken 默认获取授权ak的方法
