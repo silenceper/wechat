@@ -3,6 +3,7 @@ package context
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/silenceper/wechat/v2/util"
@@ -14,6 +15,8 @@ const (
 	queryAuthURL            = "https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token=%s"
 	refreshTokenURL         = "https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=%s"
 	getComponentInfoURL     = "https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_info?component_access_token=%s"
+	componentLoginURL       = "https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid=%s&pre_auth_code=%s&redirect_uri=%s&auth_type=%d&biz_appid=%s"
+	bindComponentURL        = "https://mp.weixin.qq.com/safe/bindcomponent?action=bindcomponent&auth_type=%d&no_scan=1&component_appid=%s&pre_auth_code=%s&redirect_uri=%s&biz_appid=%s#wechat_redirect"
 	//TODO 获取授权方选项信息
 	//getComponentConfigURL = "https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_option?component_access_token=%s"
 	//TODO 获取已授权的账号信息
@@ -84,6 +87,24 @@ func (ctx *Context) GetPreCode() (string, error) {
 	}
 
 	return ret.PreCode, nil
+}
+
+// GetComponentLoginPage 获取第三方公众号授权链接(扫码授权)
+func (ctx *Context) GetComponentLoginPage(redirectURI string, authType int, bizAppID string) (string, error) {
+	code, err := ctx.GetPreCode()
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf(componentLoginURL, ctx.AppID, code, url.QueryEscape(redirectURI), authType, bizAppID), nil
+}
+
+// GetBindComponentURL 获取第三方公众号授权链接(链接跳转，适用移动端)
+func (ctx *Context) GetBindComponentURL(redirectURI string, authType int, bizAppID string) (string, error) {
+	code, err := ctx.GetPreCode()
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf(bindComponentURL, authType, ctx.AppID, code, url.QueryEscape(redirectURI), bizAppID), nil
 }
 
 // ID 微信返回接口中各种类型字段
