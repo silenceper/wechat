@@ -52,6 +52,8 @@ type Info struct {
 
 // OpenidList 用户列表
 type OpenidList struct {
+	util.CommonError
+
 	Total int `json:"total"`
 	Count int `json:"count"`
 	Data  struct {
@@ -124,13 +126,14 @@ func (user *User) ListUserOpenIDs(nextOpenid ...string) (*OpenidList, error) {
 		return nil, err
 	}
 
-	userlist := new(OpenidList)
-	err = json.Unmarshal(response, userlist)
+	userlist := OpenidList{}
+
+	err = util.DecodeWithError(response, &userlist, "ListUserOpenIDs")
 	if err != nil {
 		return nil, err
 	}
 
-	return userlist, nil
+	return &userlist, nil
 }
 
 // ListAllUserOpenIDs 返回所有用户OpenID列表
