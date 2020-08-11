@@ -218,28 +218,28 @@ type AuthorizerInfo struct {
 		OpenCard  string `json:"open_card"`
 		OpenShake string `json:"open_shake"`
 	}
-	Alias     string `json:"alias"`
-	QrcodeURL string `json:"qrcode_url"`
+	Alias           string          `json:"alias"`
+	QrcodeURL       string          `json:"qrcode_url"`
 	MiniprogramInfo MiniProgramInfo `json:"MiniProgramInfo"`
-
 }
 
 type MiniProgramInfo struct {
-	Network MiniProgramNetwork `json:"network"`
-	Categories []MiniProgramCategory `json:"categories"`
-	VisitStatus int64 `json:"visit_status"`
-	Exists bool `json:"exists"`
+	Network     MiniProgramNetwork    `json:"network"`
+	Categories  []MiniProgramCategory `json:"categories"`
+	VisitStatus int64                 `json:"visit_status"`
+	Exists      bool                  `json:"exists"`
 }
 type MiniProgramNetwork struct {
-	RequestDomain []string `json:"RequestDomain"`
+	RequestDomain   []string `json:"RequestDomain"`
 	WsRequestDomain []string `json:"WsRequestDomain"`
-	UploadDomain []string `json:"UploadDomain"`
-	DownloadDomain []string `json:"DownloadDomain"`
+	UploadDomain    []string `json:"UploadDomain"`
+	DownloadDomain  []string `json:"DownloadDomain"`
 }
 type MiniProgramCategory struct {
-	First string `json:"first"`
+	First  string `json:"first"`
 	Second string `json:"second"`
 }
+
 // GetAuthrInfo 获取授权方的帐号基本信息
 func (ctx *Context) GetAuthrInfo(appid string) (*AuthorizerInfo, *AuthBaseInfo, error) {
 	cat, err := ctx.GetComponentAccessToken()
@@ -266,12 +266,12 @@ func (ctx *Context) GetAuthrInfo(appid string) (*AuthorizerInfo, *AuthBaseInfo, 
 		return nil, nil, err
 	}
 	retMap := make(map[string]map[string]interface{})
-	
+
 	if err := json.Unmarshal(body, &retMap); err != nil {
 		return nil, nil, err
 	}
 
-	if _, ok := retMap["authorizer_info"]["MiniProgramInfo"];ok {
+	if _, ok := retMap["authorizer_info"]["MiniProgramInfo"]; ok {
 		ret.AuthorizerInfo.MiniprogramInfo.Exists = ok
 	}
 	return ret.AuthorizerInfo, ret.AuthorizationInfo, nil
