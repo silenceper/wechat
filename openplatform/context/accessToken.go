@@ -266,7 +266,10 @@ func (ctx *Context) GetAuthrInfo(appid string) (*AuthorizerInfo, *AuthBaseInfo, 
 		return nil, nil, err
 	}
 	retMap := make(map[string]map[string]interface{})
-	json.Unmarshal(body, &retMap)
+	
+	if err := json.Unmarshal(body, &retMap); err != nil {
+		return nil, nil, err
+	}
 
 	if _, ok := retMap["authorizer_info"]["MiniProgramInfo"];ok {
 		ret.AuthorizerInfo.MiniprogramInfo.Exists = ok
