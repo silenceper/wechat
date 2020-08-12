@@ -16,14 +16,19 @@ const (
 	getOpenURL    = "https://api.weixin.qq.com/cgi-bin/open/get?access_token=%s"
 )
 
+//CreateOpenRes 新增开放平台返回
 type CreateOpenRes struct {
 	OpenAppid string `json:"open_appid"`
 	BaseRes
 }
+
+//GetOpenRes 获取公众号/小程序的开放平台返回
 type GetOpenRes struct {
 	OpenAppid string `json:"open_appid"`
 	BaseRes
 }
+
+//BaseRes 基础返回结构
 type BaseRes struct {
 	Errcode int64  `json:"errcode"`
 	Errmsg  string `json:"errmsg"`
@@ -57,7 +62,7 @@ func (account *Account) Create(appID string) (string, error) {
 		return "", err
 	}
 	if ret.Errcode != 0 {
-		err = fmt.Errorf("Create error : errcode=%v , errmsg=%v", ret.Errcode, ret.Errmsg)
+		err = util.DecodeWithError(body, ret, "Create")
 		return "", err
 	}
 	return ret.OpenAppid, nil
@@ -83,7 +88,7 @@ func (account *Account) Bind(appID string, openAppID string) error {
 		return err
 	}
 	if ret.Errcode != 0 {
-		err = fmt.Errorf("Bind error : errcode=%v , errmsg=%v", ret.Errcode, ret.Errmsg)
+		err = util.DecodeWithError(body, ret, "Bind")
 		return err
 	}
 	return nil
@@ -109,7 +114,7 @@ func (account *Account) Unbind(appID string, openAppID string) error {
 		return err
 	}
 	if ret.Errcode != 0 {
-		err = fmt.Errorf("Unbind error : errcode=%v , errmsg=%v", ret.Errcode, ret.Errmsg)
+		err = util.DecodeWithError(body, ret, "Unbind")
 		return err
 	}
 	return nil
@@ -134,7 +139,7 @@ func (account *Account) Get(appID string) (string, error) {
 		return "", err
 	}
 	if ret.Errcode != 0 {
-		err = fmt.Errorf("Get error : errcode=%v , errmsg=%v", ret.Errcode, ret.Errmsg)
+		err = util.DecodeWithError(body, ret, "Get")
 		return "", err
 	}
 	return ret.OpenAppid, nil
