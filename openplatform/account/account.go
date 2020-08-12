@@ -28,7 +28,6 @@ type BaseRes struct {
 	Errmsg  string `json:"errmsg"`
 }
 
-//TODO 实现方法
 type Account struct {
 	*context.Context
 }
