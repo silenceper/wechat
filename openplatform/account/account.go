@@ -19,19 +19,23 @@ const (
 //CreateOpenRes 新增开放平台返回
 type CreateOpenRes struct {
 	OpenAppid string `json:"open_appid"`
-	BaseRes
+	util.CommonError
 }
 
 //GetOpenRes 获取公众号/小程序的开放平台返回
 type GetOpenRes struct {
 	OpenAppid string `json:"open_appid"`
-	BaseRes
+	util.CommonError
 }
 
-//BaseRes 基础返回结构
-type BaseRes struct {
-	Errcode int64  `json:"errcode"`
-	Errmsg  string `json:"errmsg"`
+//BindRes 获取公众号/小程序的绑定开放平台返回
+type BindRes struct {
+	util.CommonError
+}
+
+//UnbindRes 获取公众号/小程序的解绑开放平台返回
+type UnbindRes struct {
+	util.CommonError
 }
 
 type Account struct {
@@ -61,7 +65,7 @@ func (account *Account) Create(appID string) (string, error) {
 	if err := json.Unmarshal(body, ret); err != nil {
 		return "", err
 	}
-	if ret.Errcode != 0 {
+	if ret.ErrCode != 0 {
 		err = util.DecodeWithError(body, ret, "Create")
 		return "", err
 	}
@@ -83,11 +87,11 @@ func (account *Account) Bind(appID string, openAppID string) error {
 	if err != nil {
 		return err
 	}
-	ret := &BaseRes{}
+	ret := &BindRes{}
 	if err := json.Unmarshal(body, ret); err != nil {
 		return err
 	}
-	if ret.Errcode != 0 {
+	if ret.ErrCode != 0 {
 		err = util.DecodeWithError(body, ret, "Bind")
 		return err
 	}
@@ -109,11 +113,11 @@ func (account *Account) Unbind(appID string, openAppID string) error {
 	if err != nil {
 		return err
 	}
-	ret := &BaseRes{}
+	ret := &UnbindRes{}
 	if err := json.Unmarshal(body, ret); err != nil {
 		return err
 	}
-	if ret.Errcode != 0 {
+	if ret.ErrCode != 0 {
 		err = util.DecodeWithError(body, ret, "Unbind")
 		return err
 	}
@@ -138,7 +142,7 @@ func (account *Account) Get(appID string) (string, error) {
 	if err := json.Unmarshal(body, ret); err != nil {
 		return "", err
 	}
-	if ret.Errcode != 0 {
+	if ret.ErrCode != 0 {
 		err = util.DecodeWithError(body, ret, "Get")
 		return "", err
 	}
