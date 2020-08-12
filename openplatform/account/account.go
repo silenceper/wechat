@@ -16,11 +16,11 @@ const (
 )
 
 type CreateOpenRes struct {
-	OpenAppid string `json:"open_appid"`
+	openAppID string `json:"open_appid"`
 	BaseRes
 }
 type GetOpenRes struct {
-	OpenAppid string `json:"open_appid"`
+	openAppID string `json:"open_appid"`
 	BaseRes
 }
 type BaseRes struct {
@@ -38,8 +38,11 @@ func NewAccount(ctx *context.Context) *Account {
 }
 
 //Create 创建开放平台帐号并绑定公众号/小程序
-func (account *Account) Create(appID string) (openAppId string, err error) {
+func (account *Account) Create(appID string) (string, error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
+	if err != nil {
+		return "", err
+	}
 	req := map[string]string{
 		"appid": appID,
 	}
@@ -56,12 +59,15 @@ func (account *Account) Create(appID string) (openAppId string, err error) {
 		err = fmt.Errorf("Create error : errcode=%v , errmsg=%v", ret.Errcode, ret.Errmsg)
 		return "", err
 	}
-	return ret.OpenAppid, nil
+	return ret.openAppID, nil
 }
 
 //Bind 将公众号/小程序绑定到开放平台帐号下
 func (account *Account) Bind(appID string, openAppId string) error {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
+	if err != nil {
+		return err
+	}
 	req := map[string]string{
 		"appid":      appID,
 		"open_appid": openAppId,
@@ -85,6 +91,9 @@ func (account *Account) Bind(appID string, openAppId string) error {
 //Unbind 将公众号/小程序从开放平台帐号下解绑
 func (account *Account) Unbind(appID string, openAppID string) error {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
+	if err != nil {
+		return err
+	}
 	req := map[string]string{
 		"appid":      appID,
 		"open_appid": openAppID,
@@ -108,6 +117,9 @@ func (account *Account) Unbind(appID string, openAppID string) error {
 //Get 获取公众号/小程序所绑定的开放平台帐号
 func (account *Account) Get(appID string) (string, error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
+	if err != nil {
+		return "", err
+	}
 	req := map[string]string{
 		"appid": appID,
 	}
@@ -124,5 +136,5 @@ func (account *Account) Get(appID string) (string, error) {
 		err = fmt.Errorf("Get error : errcode=%v , errmsg=%v", ret.Errcode, ret.Errmsg)
 		return "", err
 	}
-	return ret.OpenAppid, nil
+	return ret.openAppID, nil
 }
