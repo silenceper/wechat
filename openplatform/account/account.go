@@ -3,6 +3,7 @@ package account
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/silenceper/wechat/v2/openplatform/context"
 	"github.com/silenceper/wechat/v2/util"
 )
@@ -16,11 +17,11 @@ const (
 )
 
 type CreateOpenRes struct {
-	openAppID string `json:"open_appid"`
+	OpenAppid string `json:"open_appid"`
 	BaseRes
 }
 type GetOpenRes struct {
-	openAppID string `json:"open_appid"`
+	OpenAppid string `json:"open_appid"`
 	BaseRes
 }
 type BaseRes struct {
@@ -59,18 +60,18 @@ func (account *Account) Create(appID string) (string, error) {
 		err = fmt.Errorf("Create error : errcode=%v , errmsg=%v", ret.Errcode, ret.Errmsg)
 		return "", err
 	}
-	return ret.openAppID, nil
+	return ret.OpenAppid, nil
 }
 
 //Bind 将公众号/小程序绑定到开放平台帐号下
-func (account *Account) Bind(appID string, openAppId string) error {
+func (account *Account) Bind(appID string, openAppID string) error {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
 	if err != nil {
 		return err
 	}
 	req := map[string]string{
 		"appid":      appID,
-		"open_appid": openAppId,
+		"open_appid": openAppID,
 	}
 	uri := fmt.Sprintf(bindOpenURL, accessToken)
 	body, err := util.PostJSON(uri, req)
@@ -136,5 +137,5 @@ func (account *Account) Get(appID string) (string, error) {
 		err = fmt.Errorf("Get error : errcode=%v , errmsg=%v", ret.Errcode, ret.Errmsg)
 		return "", err
 	}
-	return ret.openAppID, nil
+	return ret.OpenAppid, nil
 }
