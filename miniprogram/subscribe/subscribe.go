@@ -11,6 +11,10 @@ const (
 	//发送订阅消息
 	//https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.send.html
 	subscribeSendURL = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send"
+
+	// 获取当前帐号下的个人模板列表
+	// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getTemplateList.html
+	getTemplateURL = "https://api.weixin.qq.com/wxaapi/newtmpl/gettemplate"
 )
 
 // Subscribe 订阅消息
@@ -38,6 +42,19 @@ type DataItem struct {
 	Value string `json:"value"`
 }
 
+type TemplateItem struct {
+	PriTmplID string `json:"priTmplId"`
+	Title     string `json:"title"`
+	Content   string `json:"content"`
+	Example   string `json:"example"`
+	Type      int64  `json:"type"`
+}
+
+type TemplateList struct {
+	util.CommonError
+	Data []TemplateItem `json:"data"`
+}
+
 // Send 发送订阅消息
 func (s *Subscribe) Send(msg *Message) (err error) {
 	var accessToken string
@@ -51,4 +68,24 @@ func (s *Subscribe) Send(msg *Message) (err error) {
 		return
 	}
 	return util.DecodeWithCommonError(response, "Send")
+}
+
+// 获取当前帐号下的个人模板列表
+// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getTemplateList.html
+func (s *Subscribe) ListTemplates() (*TemplateList, error) {
+	accessToken, err := s.GetAccessToken()
+	if err != nil {
+		return nil, err
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", getTemplateURL, accessToken)
+	response, err := util.HTTPGet(uri)
+	if err != nil {
+		return nil, err
+	}
+	templateList := TemplateList{}
+	err = util.DecodeWithError(response, &templateList, "ListTemplates")
+	if err != nil {
+		return nil, err
+	}
+	return &templateList, nil
 }
