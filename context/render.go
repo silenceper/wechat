@@ -1,22 +1,21 @@
 package context
 
 import (
+	"bytes"
 	"encoding/xml"
 	"net/http"
+	"io"
 )
 
 var xmlContentType = []string{"application/xml; charset=utf-8"}
 var plainContentType = []string{"text/plain; charset=utf-8"}
 
 //Render render from bytes
-func (ctx *Context) Render(bytes []byte) {
+func (ctx *Context) Render(bytes1 []byte) {
 	//debug
 	//fmt.Println("response msg = ", string(bytes))
-	ctx.Writer.WriteHeader(200)
-	_, err := ctx.Writer.Write(bytes)
-	if err != nil {
-		panic(err)
-	}
+	bytesBuffer := bytes.NewBuffer(bytes1)
+    io.Copy(ctx.Writer, bytesBuffer)
 }
 
 //String render from string
