@@ -24,6 +24,8 @@ const (
 	MsgTypeVoice = "voice"
 	//MsgTypeVideo 表示视频消息
 	MsgTypeVideo = "video"
+	//MsgTypeMiniprogrampage 表示小程序卡片消息
+	MsgTypeMiniprogrampage = "miniprogrampage"
 	//MsgTypeShortVideo 表示短视频消息[限接收]
 	MsgTypeShortVideo = "shortvideo"
 	//MsgTypeLocation 表示坐标消息[限接收]

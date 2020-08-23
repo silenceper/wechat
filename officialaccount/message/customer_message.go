@@ -73,6 +73,19 @@ func NewCustomerVoiceMessage(toUser, mediaID string) *CustomerMessage {
 	}
 }
 
+func NewCustomerMiniprogrampageMessage(toUser, title, appID, pagePath, thumbMediaID string) *CustomerMessage {
+	return &CustomerMessage{
+		ToUser:  toUser,
+		Msgtype: MsgTypeMiniprogrampage,
+		Miniprogrampage: &MediaMiniprogrampage{
+			Title:        title,
+			AppID:        appID,
+			Pagepath:     pagePath,
+			ThumbMediaID: thumbMediaID,
+		},
+	}
+}
+
 //MediaText 文本消息的文字
 type MediaText struct {
 	Content string `json:"content"`
@@ -134,7 +147,7 @@ type MediaWxcard struct {
 //MediaMiniprogrampage 小程序消息
 type MediaMiniprogrampage struct {
 	Title        string `json:"title"`
-	Appid        string `json:"appid"`
+	AppID        string `json:"appid"`
 	Pagepath     string `json:"pagepath"`
 	ThumbMediaID string `json:"thumb_media_id"`
 }
