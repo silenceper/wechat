@@ -42,7 +42,7 @@ type MediaMiniprogrampage struct {
 	ThumbMediaID string `json:"thumb_media_id"`
 }
 
-// Link 发送图文链接
+// MediaLink 发送图文链接
 type MediaLink struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
@@ -82,6 +82,7 @@ func NewCustomerImgMessage(toUser, mediaID string) *CustomerMessage {
 	}
 }
 
+//NewCustomerLinkMessage 图文链接消息的构造方法
 func NewCustomerLinkMessage(toUser, title, description, url, thumbURL string) *CustomerMessage {
 	return &CustomerMessage{
 		ToUser:  toUser,
@@ -95,10 +96,11 @@ func NewCustomerLinkMessage(toUser, title, description, url, thumbURL string) *C
 	}
 }
 
+//NewCustomerMiniprogrampageMessage 小程序卡片消息的构造方法
 func NewCustomerMiniprogrampageMessage(toUser, title, pagepath, thumbMediaID string) *CustomerMessage {
 	return &CustomerMessage{
 		ToUser:  toUser,
-		Msgtype: MsgTypeLink,
+		Msgtype: MsgTypeMiniProgramPage,
 		Miniprogrampage: &MediaMiniprogrampage{
 			Title:        title,
 			Pagepath:     pagepath,

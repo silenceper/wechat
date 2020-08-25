@@ -16,6 +16,6 @@ const (
 	MsgTypeImage = "image"
 	//MsgTypeLink 图文链接
 	MsgTypeLink = "link"
-	// 小程序卡片
+	//MsgTypeMiniProgramPage 小程序卡片
 	MsgTypeMiniProgramPage = "miniprogrampage"
 )
