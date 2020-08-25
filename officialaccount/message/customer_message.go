@@ -73,6 +73,7 @@ func NewCustomerVoiceMessage(toUser, mediaID string) *CustomerMessage {
 	}
 }
 
+//NewCustomerMiniprogrampageMessage 小程序卡片消息的构造方法
 func NewCustomerMiniprogrampageMessage(toUser, title, appID, pagePath, thumbMediaID string) *CustomerMessage {
 	return &CustomerMessage{
 		ToUser:  toUser,

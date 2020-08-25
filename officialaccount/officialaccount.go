@@ -93,6 +93,7 @@ func (officialAccount *OfficialAccount) GetTemplate() *message.Template {
 	return message.NewTemplate(officialAccount.ctx)
 }
 
+// GetCustomerMessageManager 客服消息接口
 func (officialAccount *OfficialAccount) GetCustomerMessageManager() *message.Manager {
 	return message.NewMessageManager(officialAccount.ctx)
 }
