@@ -7,6 +7,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/config"
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
+	"github.com/silenceper/wechat/v2/miniprogram/message"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
 	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
@@ -65,4 +66,9 @@ func (miniProgram *MiniProgram) GetTcb() *tcb.Tcb {
 //GetSubscribe 小程序订阅消息
 func (miniProgram *MiniProgram) GetSubscribe() *subscribe.Subscribe {
 	return subscribe.NewSubscribe(miniProgram.ctx)
+}
+
+// GetCustomerMessage 客服消息接口
+func (miniProgram *MiniProgram) GetCustomerMessage() *message.Manager {
+	return message.NewCustomerMessageManager(miniProgram.ctx)
 }
