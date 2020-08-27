@@ -1,7 +1,6 @@
 package message
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/silenceper/wechat/v2/miniprogram/context"
@@ -117,11 +116,6 @@ func (manager *Manager) Send(msg *CustomerMessage) error {
 	}
 	uri := fmt.Sprintf("%s?access_token=%s", customerSendMessage, accessToken)
 	response, err := util.PostJSON(uri, msg)
-	if err != nil {
-		return err
-	}
-	var result util.CommonError
-	err = json.Unmarshal(response, &result)
 	if err != nil {
 		return err
 	}
