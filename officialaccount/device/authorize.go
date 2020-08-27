@@ -1,3 +1,4 @@
+//Package device 设备相关接口
 package device
 
 import (

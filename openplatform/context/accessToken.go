@@ -1,3 +1,4 @@
+//Package context 开放平台相关context
 package context
 
 import (
