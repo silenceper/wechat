@@ -42,6 +42,7 @@ type DataItem struct {
 	Value string `json:"value"`
 }
 
+//TemplateItem template item
 type TemplateItem struct {
 	PriTmplID string `json:"priTmplId"`
 	Title     string `json:"title"`
@@ -50,6 +51,7 @@ type TemplateItem struct {
 	Type      int64  `json:"type"`
 }
 
+//TemplateList template list
 type TemplateList struct {
 	util.CommonError
 	Data []TemplateItem `json:"data"`
@@ -70,7 +72,7 @@ func (s *Subscribe) Send(msg *Message) (err error) {
 	return util.DecodeWithCommonError(response, "Send")
 }
 
-// 获取当前帐号下的个人模板列表
+//ListTemplates 获取当前帐号下的个人模板列表
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getTemplateList.html
 func (s *Subscribe) ListTemplates() (*TemplateList, error) {
 	accessToken, err := s.GetAccessToken()

@@ -1,3 +1,4 @@
+//Package config 小程序config配置
 package config
 
 import (
