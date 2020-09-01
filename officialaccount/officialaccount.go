@@ -93,6 +93,11 @@ func (officialAccount *OfficialAccount) GetTemplate() *message.Template {
 	return message.NewTemplate(officialAccount.ctx)
 }
 
+// GetCustomerMessageManager 客服消息接口
+func (officialAccount *OfficialAccount) GetCustomerMessageManager() *message.Manager {
+	return message.NewMessageManager(officialAccount.ctx)
+}
+
 // GetDevice 获取智能设备的实例
 func (officialAccount *OfficialAccount) GetDevice() *device.Device {
 	return device.NewDevice(officialAccount.ctx)
