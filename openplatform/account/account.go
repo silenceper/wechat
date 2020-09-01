@@ -65,11 +65,9 @@ func (account *Account) Create(appID string) (string, error) {
 	if err := json.Unmarshal(body, ret); err != nil {
 		return "", err
 	}
-	if ret.ErrCode != 0 {
-		err = util.DecodeWithError(body, ret, "Create")
-		return "", err
-	}
-	return ret.OpenAppid, nil
+	err = util.DecodeWithError(body, ret, "Create")
+
+	return ret.OpenAppid, err
 }
 
 //Bind 将公众号/小程序绑定到开放平台帐号下
@@ -88,14 +86,9 @@ func (account *Account) Bind(appID string, openAppID string) error {
 		return err
 	}
 	ret := &BindRes{}
-	if err := json.Unmarshal(body, ret); err != nil {
-		return err
-	}
-	if ret.ErrCode != 0 {
-		err = util.DecodeWithError(body, ret, "Bind")
-		return err
-	}
-	return nil
+	err = util.DecodeWithError(body, ret, "Bind")
+
+	return err
 }
 
 //Unbind 将公众号/小程序从开放平台帐号下解绑
@@ -114,14 +107,9 @@ func (account *Account) Unbind(appID string, openAppID string) error {
 		return err
 	}
 	ret := &UnbindRes{}
-	if err := json.Unmarshal(body, ret); err != nil {
-		return err
-	}
-	if ret.ErrCode != 0 {
-		err = util.DecodeWithError(body, ret, "Unbind")
-		return err
-	}
-	return nil
+	err = util.DecodeWithError(body, ret, "Unbind")
+
+	return err
 }
 
 //Get 获取公众号/小程序所绑定的开放平台帐号
@@ -139,12 +127,7 @@ func (account *Account) Get(appID string) (string, error) {
 		return "", err
 	}
 	ret := &GetOpenRes{}
-	if err := json.Unmarshal(body, ret); err != nil {
-		return "", err
-	}
-	if ret.ErrCode != 0 {
-		err = util.DecodeWithError(body, ret, "Get")
-		return "", err
-	}
-	return ret.OpenAppid, nil
+	err = util.DecodeWithError(body, ret, "Get")
+
+	return ret.OpenAppid, err
 }
