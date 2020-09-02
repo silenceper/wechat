@@ -262,7 +262,7 @@ type TemplateList struct {
 }
 
 // getCodeTemplate 获取代码模板列表
-func (ctx *Context) getCodeTemplate() (templateList *TemplateList, err error) {
+func (ctx *Context) GetCodeTemplate() (templateList *TemplateList, err error) {
 	cat, err := ctx.GetComponentAccessToken()
 	if err != nil {
 		return
