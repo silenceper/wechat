@@ -22,6 +22,7 @@ const (
 	//getComponentConfigURL = "https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_option?component_access_token=%s"
 	//TODO 获取已授权的账号信息
 	//getuthorizerListURL = "POST https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_list?component_access_token=%s"
+	getCodeTemplate = "https://api.weixin.qq.com/wxa/gettemplatelist?access_token=%s"
 )
 
 // ComponentAccessToken 第三方平台
@@ -250,4 +251,38 @@ func (ctx *Context) GetAuthrInfo(appid string) (*AuthorizerInfo, *AuthBaseInfo, 
 	}
 
 	return ret.AuthorizerInfo, ret.AuthorizationInfo, nil
+}
+
+//TemplateList 代码模板列表
+type TemplateList struct {
+	CreateTime  int64  `json:"create_time"`
+	UserVersion string `json:"user_version"`
+	UserDesc    string `json:"user_desc"`
+	TemplateId  string `json:"template_id"`
+}
+
+// getCodeTemplate 获取代码模板列表
+func (ctx *Context) getCodeTemplate() (templateList *TemplateList, err error) {
+	cat, err := ctx.GetComponentAccessToken()
+	if err != nil {
+		return
+	}
+	var ret struct {
+		util.CommonError
+		TemplateList *TemplateList `json:"template_list"`
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", getCodeTemplate, cat)
+	data, err := util.HTTPGet(uri)
+	if err != nil {
+		return
+	}
+	if err := json.Unmarshal(data, &ret); err != nil {
+		return nil, err
+	}
+	if ret.ErrCode != 0 {
+		err = fmt.Errorf("GetCodeTemplate error : errcode=%v , errmsg=%v", ret.ErrCode, ret.ErrMsg)
+		return nil, err
+	}
+	templateList = ret.TemplateList
+	return
 }
