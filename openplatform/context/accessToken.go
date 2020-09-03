@@ -284,20 +284,20 @@ type TemplateList struct {
 	CreateTime  int64  `json:"create_time"`
 	UserVersion string `json:"user_version"`
 	UserDesc    string `json:"user_desc"`
-	TemplateId  string `json:"template_id"`
+	TemplateId  int64  `json:"template_id"`
 }
 
 // getCodeTemplate 获取代码模板列表
-func (ctx *Context) GetCodeTemplate() (templateList *TemplateList, err error) {
+func (ctx *Context) GetCodeTemplate() (templateList []*TemplateList, err error) {
 	cat, err := ctx.GetComponentAccessToken()
 	if err != nil {
 		return
 	}
 	var ret struct {
 		util.CommonError
-		TemplateList *TemplateList `json:"template_list"`
+		TemplateList []*TemplateList `json:"template_list"`
 	}
-	uri := fmt.Sprintf("%s?access_token=%s", getCodeTemplate, cat)
+	uri := fmt.Sprintf(getCodeTemplate, cat)
 	data, err := util.HTTPGet(uri)
 	if err != nil {
 		return
