@@ -114,6 +114,7 @@ func (material *Material) AddNews(articles []*Article) (mediaID string, err erro
 	if err != nil {
 		return
 	}
+
 	var res resArticles
 	err = json.Unmarshal(responseBytes, &res)
 	if err != nil {
@@ -270,6 +271,7 @@ func (material *Material) DeleteMaterial(mediaID string) error {
 //ArticleList 永久素材列表
 type ArticleList struct {
 	util.CommonError
+
 	TotalCount int64             `json:"total_count"`
 	ItemCount  int64             `json:"item_count"`
 	Item       []ArticleListItem `json:"item"`

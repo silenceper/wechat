@@ -106,7 +106,7 @@ func (tpl *Template) List() (templateList []*TemplateItem, err error) {
 		return
 	}
 	var res resTemplateList
-	err = util.DecodeWithError(response, res, "ListTemplate")
+	err = util.DecodeWithError(response, &res, "ListTemplate")
 	if err != nil {
 		return
 	}

@@ -3,6 +3,7 @@ package miniprogram
 import (
 	openContext "github.com/silenceper/wechat/v2/openplatform/context"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/basic"
+	"github.com/silenceper/wechat/v2/openplatform/miniprogram/code"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/component"
 )
 
@@ -29,4 +30,9 @@ func (miniProgram *MiniProgram) GetComponent() *component.Component {
 //GetBasic 基础信息设置
 func (miniProgram *MiniProgram) GetBasic() *basic.Basic {
 	return basic.NewBasic(miniProgram.openContext, miniProgram.AppID)
+}
+
+//GetBasic 基础信息设置
+func (miniProgram *MiniProgram) GetCode() *code.Code {
+	return code.NewCode(miniProgram.openContext, miniProgram.AppID)
 }

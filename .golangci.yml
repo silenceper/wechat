@@ -51,3 +51,11 @@ linters-settings:
   funlen:
     lines: 66
     statements: 40
+
+issues:
+  include:
+  - EXC0002 # disable excluding of issues about comments from golint
+  exclude-rules:
+    - linters:
+       - stylecheck
+      text: "ST1000:"

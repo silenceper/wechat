@@ -132,7 +132,7 @@ func (user *User) GetTag() (tags []*TagInfo, err error) {
 	return result.Tags, nil
 }
 
-//OpenidListByTag 获取标签下粉丝列表
+//OpenIDListByTag 获取标签下粉丝列表
 func (user *User) OpenIDListByTag(tagID int32, nextOpenID ...string) (userList *TagOpenIDList, err error) {
 	accessToken, err := user.GetAccessToken()
 	if err != nil {

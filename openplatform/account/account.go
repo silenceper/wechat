@@ -19,19 +19,23 @@ const (
 //CreateOpenRes 新增开放平台返回
 type CreateOpenRes struct {
 	OpenAppid string `json:"open_appid"`
-	BaseRes
+	util.CommonError
 }
 
 //GetOpenRes 获取公众号/小程序的开放平台返回
 type GetOpenRes struct {
 	OpenAppid string `json:"open_appid"`
-	BaseRes
+	util.CommonError
 }
 
-//BaseRes 基础返回结构
-type BaseRes struct {
-	Errcode int64  `json:"errcode"`
-	Errmsg  string `json:"errmsg"`
+//BindRes 获取公众号/小程序的绑定开放平台返回
+type BindRes struct {
+	util.CommonError
+}
+
+//UnbindRes 获取公众号/小程序的解绑开放平台返回
+type UnbindRes struct {
+	util.CommonError
 }
 
 type Account struct {
@@ -44,10 +48,10 @@ func NewAccount(ctx *context.Context) *Account {
 }
 
 //Create 创建开放平台帐号并绑定公众号/小程序
-func (account *Account) Create(appID string) (string, error) {
+func (account *Account) Create(appID string) (openAppId string, commonError *util.CommonError, err error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
 	if err != nil {
-		return "", err
+		return
 	}
 	req := map[string]string{
 		"appid": appID,
@@ -55,24 +59,23 @@ func (account *Account) Create(appID string) (string, error) {
 	uri := fmt.Sprintf(createOpenURL, accessToken)
 	body, err := util.PostJSON(uri, req)
 	if err != nil {
-		return "", err
+		return
 	}
 	ret := &CreateOpenRes{}
 	if err := json.Unmarshal(body, ret); err != nil {
-		return "", err
+		return
 	}
-	if ret.Errcode != 0 {
-		err = util.DecodeWithError(body, ret, "Create")
-		return "", err
-	}
-	return ret.OpenAppid, nil
+	err = util.DecodeWithError(body, ret, "Create")
+	commonError = &ret.CommonError
+	openAppId = ret.OpenAppid
+	return
 }
 
 //Bind 将公众号/小程序绑定到开放平台帐号下
-func (account *Account) Bind(appID string, openAppID string) error {
+func (account *Account) Bind(appID string, openAppID string) (commonError *util.CommonError, err error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
 	if err != nil {
-		return err
+		return
 	}
 	req := map[string]string{
 		"appid":      appID,
@@ -81,24 +84,19 @@ func (account *Account) Bind(appID string, openAppID string) error {
 	uri := fmt.Sprintf(bindOpenURL, accessToken)
 	body, err := util.PostJSON(uri, req)
 	if err != nil {
-		return err
+		return
 	}
-	ret := &BaseRes{}
-	if err := json.Unmarshal(body, ret); err != nil {
-		return err
-	}
-	if ret.Errcode != 0 {
-		err = util.DecodeWithError(body, ret, "Bind")
-		return err
-	}
-	return nil
+	ret := &BindRes{}
+	err = util.DecodeWithError(body, ret, "Bind")
+	commonError = &ret.CommonError
+	return
 }
 
 //Unbind 将公众号/小程序从开放平台帐号下解绑
-func (account *Account) Unbind(appID string, openAppID string) error {
+func (account *Account) Unbind(appID string, openAppID string) (*util.CommonError, error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	req := map[string]string{
 		"appid":      appID,
@@ -107,24 +105,19 @@ func (account *Account) Unbind(appID string, openAppID string) error {
 	uri := fmt.Sprintf(unbindOpenURL, accessToken)
 	body, err := util.PostJSON(uri, req)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	ret := &BaseRes{}
-	if err := json.Unmarshal(body, ret); err != nil {
-		return err
-	}
-	if ret.Errcode != 0 {
-		err = util.DecodeWithError(body, ret, "Unbind")
-		return err
-	}
-	return nil
+	ret := &UnbindRes{}
+	err = util.DecodeWithError(body, ret, "Unbind")
+
+	return &ret.CommonError, err
 }
 
 //Get 获取公众号/小程序所绑定的开放平台帐号
-func (account *Account) Get(appID string) (string, error) {
+func (account *Account) Get(appID string) (string, *util.CommonError, error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 	req := map[string]string{
 		"appid": appID,
@@ -132,15 +125,10 @@ func (account *Account) Get(appID string) (string, error) {
 	uri := fmt.Sprintf(getOpenURL, accessToken)
 	body, err := util.PostJSON(uri, req)
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 	ret := &GetOpenRes{}
-	if err := json.Unmarshal(body, ret); err != nil {
-		return "", err
-	}
-	if ret.Errcode != 0 {
-		err = util.DecodeWithError(body, ret, "Get")
-		return "", err
-	}
-	return ret.OpenAppid, nil
+	err = util.DecodeWithError(body, ret, "Get")
+
+	return ret.OpenAppid, &ret.CommonError, err
 }
