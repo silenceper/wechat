@@ -48,10 +48,10 @@ func NewAccount(ctx *context.Context) *Account {
 }
 
 //Create 创建开放平台帐号并绑定公众号/小程序
-func (account *Account) Create(appID string) (string, error) {
+func (account *Account) Create(appID string) (openAppId string, commonError *util.CommonError, err error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
 	if err != nil {
-		return "", err
+		return
 	}
 	req := map[string]string{
 		"appid": appID,
@@ -59,22 +59,23 @@ func (account *Account) Create(appID string) (string, error) {
 	uri := fmt.Sprintf(createOpenURL, accessToken)
 	body, err := util.PostJSON(uri, req)
 	if err != nil {
-		return "", err
+		return
 	}
 	ret := &CreateOpenRes{}
 	if err := json.Unmarshal(body, ret); err != nil {
-		return "", err
+		return
 	}
 	err = util.DecodeWithError(body, ret, "Create")
-
-	return ret.OpenAppid, err
+	commonError = &ret.CommonError
+	openAppId = ret.OpenAppid
+	return
 }
 
 //Bind 将公众号/小程序绑定到开放平台帐号下
-func (account *Account) Bind(appID string, openAppID string) error {
+func (account *Account) Bind(appID string, openAppID string) (commonError *util.CommonError, err error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
 	if err != nil {
-		return err
+		return
 	}
 	req := map[string]string{
 		"appid":      appID,
@@ -83,19 +84,19 @@ func (account *Account) Bind(appID string, openAppID string) error {
 	uri := fmt.Sprintf(bindOpenURL, accessToken)
 	body, err := util.PostJSON(uri, req)
 	if err != nil {
-		return err
+		return
 	}
 	ret := &BindRes{}
 	err = util.DecodeWithError(body, ret, "Bind")
-
-	return err
+	commonError = &ret.CommonError
+	return
 }
 
 //Unbind 将公众号/小程序从开放平台帐号下解绑
-func (account *Account) Unbind(appID string, openAppID string) error {
+func (account *Account) Unbind(appID string, openAppID string) (*util.CommonError, error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	req := map[string]string{
 		"appid":      appID,
@@ -104,19 +105,19 @@ func (account *Account) Unbind(appID string, openAppID string) error {
 	uri := fmt.Sprintf(unbindOpenURL, accessToken)
 	body, err := util.PostJSON(uri, req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	ret := &UnbindRes{}
 	err = util.DecodeWithError(body, ret, "Unbind")
 
-	return err
+	return &ret.CommonError, err
 }
 
 //Get 获取公众号/小程序所绑定的开放平台帐号
-func (account *Account) Get(appID string) (string, error) {
+func (account *Account) Get(appID string) (string, *util.CommonError, error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 	req := map[string]string{
 		"appid": appID,
@@ -124,10 +125,10 @@ func (account *Account) Get(appID string) (string, error) {
 	uri := fmt.Sprintf(getOpenURL, accessToken)
 	body, err := util.PostJSON(uri, req)
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 	ret := &GetOpenRes{}
 	err = util.DecodeWithError(body, ret, "Get")
 
-	return ret.OpenAppid, err
+	return ret.OpenAppid, &ret.CommonError, err
 }
