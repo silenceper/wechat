@@ -50,6 +50,7 @@ func NewAccount(ctx *context.Context) *Account {
 //Create 创建开放平台帐号并绑定公众号/小程序
 func (account *Account) Create(appID string) (openAppId string, commonError *util.CommonError, err error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
+	commonError = &util.CommonError{}
 	if err != nil {
 		return
 	}
@@ -74,6 +75,8 @@ func (account *Account) Create(appID string) (openAppId string, commonError *uti
 //Bind 将公众号/小程序绑定到开放平台帐号下
 func (account *Account) Bind(appID string, openAppID string) (commonError *util.CommonError, err error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
+	commonError = &util.CommonError{}
+
 	if err != nil {
 		return
 	}
@@ -95,6 +98,7 @@ func (account *Account) Bind(appID string, openAppID string) (commonError *util.
 //Unbind 将公众号/小程序从开放平台帐号下解绑
 func (account *Account) Unbind(appID string, openAppID string) (*util.CommonError, error) {
 	accessToken, err := account.Context.GetAuthrAccessToken(appID)
+
 	if err != nil {
 		return nil, err
 	}
