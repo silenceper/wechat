@@ -62,7 +62,7 @@ func (account *Account) Create(appID string) (openAppId string, commonError *uti
 		return
 	}
 	ret := &CreateOpenRes{}
-	if err := json.Unmarshal(body, ret); err != nil {
+	if err = json.Unmarshal(body, ret); err != nil {
 		return
 	}
 	err = util.DecodeWithError(body, ret, "Create")
