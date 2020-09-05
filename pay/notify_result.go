@@ -82,7 +82,7 @@ func (pcf *Pay) VerifySign(notifyRes NotifyResult) bool {
 	}
 
 	// STEP3, 在键值对的最后加上key=API_KEY
-	signStrings = signStrings + "key=" + pcf.PayKey
+	signStrings = signStrings + "key=" + pcf.cfg.Key
 
 	// STEP4, 进行MD5签名并且将所有字符转为大写.
 	sign := util.MD5Sum(signStrings)
