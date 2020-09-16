@@ -11,6 +11,8 @@ import (
 const (
 	templateSendURL = "https://api.weixin.qq.com/cgi-bin/message/template/send"
 	templateListURL = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template"
+	templateAddURL = "https://api.weixin.qq.com/cgi-bin/template/api_add_template"
+	templateDelURL = "https://api.weixin.qq.com/cgi-bin/template/del_private_template"
 )
 
 //Template 模板消息
@@ -50,7 +52,10 @@ type resTemplateSend struct {
 
 	MsgID int64 `json:"msgid"`
 }
-
+//ResTemplateDel 模版消息删除结果
+type ResTemplateDel struct {
+	util.CommonError
+}
 //Send 发送模板消息
 func (tpl *Template) Send(msg *TemplateMessage) (msgID int64, err error) {
 	var accessToken string
@@ -91,6 +96,11 @@ type resTemplateList struct {
 
 	TemplateList []*TemplateItem `json:"template_list"`
 }
+type ResTemplateAdd struct {
+	util.CommonError
+
+	TemplateId string `json:"template_id"`
+}
 
 //List 获取模板列表
 func (tpl *Template) List() (templateList []*TemplateItem, err error) {
@@ -111,5 +121,56 @@ func (tpl *Template) List() (templateList []*TemplateItem, err error) {
 		return
 	}
 	templateList = res.TemplateList
+	return
+}
+//Add 获得模板ID
+func (tpl *Template) Add(templateShortId string) (templateId string, err error) {
+	var accessToken string
+	var templateAdd ResTemplateAdd
+	accessToken, err = tpl.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", templateAddURL, accessToken)
+	var response []byte
+	response, err = util.PostJSON(uri, struct {
+		TemplateIdShort string `json:"template_id_short"`
+	}{
+		TemplateIdShort: templateShortId,
+	})
+
+	if err != nil {
+		return
+	}
+	err = util.DecodeWithError(response, &templateAdd, "ListTemplate")
+	if err != nil {
+		return
+	}
+	return templateAdd.TemplateId,nil
+}
+
+//Del 删除模版ID
+func (tpl *Template) Del(templateId string) ( err error) {
+	var accessToken string
+	var templateDel ResTemplateDel
+	accessToken, err = tpl.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", templateDelURL, accessToken)
+	var response []byte
+	response, err = util.PostJSON(uri, struct {
+		TemplateId string `json:"template_id"`
+	}{
+		TemplateId: templateId,
+	})
+
+	if err != nil {
+		return
+	}
+	err = util.DecodeWithError(response, &templateDel, "Del")
+	if err != nil {
+		return
+	}
 	return
 }
