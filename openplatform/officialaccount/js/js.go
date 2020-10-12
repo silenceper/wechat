@@ -16,10 +16,10 @@ type Js struct {
 }
 
 //NewJs init
-func NewJs(context *context.Context) *Js {
+func NewJs(context *context.Context, appID string) *Js {
 	js := new(Js)
 	js.Context = context
-	jsTicketHandle := credential.NewDefaultJsTicket(context.AppID, credential.CacheKeyOfficialAccountPrefix, context.Cache)
+	jsTicketHandle := credential.NewDefaultJsTicket(appID, credential.CacheKeyOfficialAccountPrefix, context.Cache)
 	js.SetJsTicketHandle(jsTicketHandle)
 	return js
 }
