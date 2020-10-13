@@ -6,6 +6,7 @@ import (
 	"github.com/silenceper/wechat/v2/cache"
 	"github.com/silenceper/wechat/v2/miniprogram"
 	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
+	"github.com/silenceper/wechat/v2/minishop"
 	"github.com/silenceper/wechat/v2/officialaccount"
 	offConfig "github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/openplatform"
@@ -56,6 +57,14 @@ func (wc *Wechat) GetMiniProgram(cfg *miniConfig.Config) *miniprogram.MiniProgra
 		cfg.Cache = wc.cache
 	}
 	return miniprogram.NewMiniProgram(cfg)
+}
+
+// GetMiniShop 获取小商店的实例
+func (wc *Wechat) GetMiniShop(cfg *miniConfig.Config) *minishop.MiniShop {
+	if cfg.Cache == nil {
+		cfg.Cache = wc.cache
+	}
+	return minishop.NewMiniShop(cfg)
 }
 
 // GetPay 获取微信支付的实例
