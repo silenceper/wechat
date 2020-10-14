@@ -17,21 +17,21 @@ const (
 
 const (
 	// UNPAY 未支付
-	UNPAY Status = 10
+	UNPAY OStatus = 10
 	// UNDELIVE 待发货
-	UNDELIVE Status = 20
+	UNDELIVE OStatus = 20
 	// UNRECEVIED 待收货
-	UNRECEVIED Status = 30
+	UNRECEVIED OStatus = 30
 	// COMPLETE 完成
-	COMPLETE Status = 100
+	COMPLETE OStatus = 100
 	// CANCEL 全部商品售后之后，订单取消
-	CANCEL Status = 200
+	CANCEL OStatus = 200
 	// OVERTIME 用户主动取消或待付款超时取消
-	OVERTIME Status = 250
+	OVERTIME OStatus = 250
 )
 
-// Status 订单状态
-type Status int
+// OStatus 订单状态
+type OStatus int
 
 //Order 订单接口
 type Order struct {
@@ -49,14 +49,15 @@ func (o *Order) fetchData(urlStr string, body interface{}) (response []byte, err
 	if err != nil {
 		return nil, err
 	}
-	urlStr = fmt.Sprintf(orderGetListURL, accessToken)
+	urlStr = fmt.Sprintf(urlStr, accessToken)
 
 	v := url.Values{}
-	if o.ServiceID != "" {
-		v.Add("service_id", o.ServiceID)
+
+	if o.Config.ServiceID != "" {
+		v.Add("service_id", o.Config.ServiceID)
 	}
-	if o.SpecificationID != "" {
-		v.Add("specification_id", o.SpecificationID)
+	if o.Config.SpecificationID != "" {
+		v.Add("specification_id", o.Config.SpecificationID)
 	}
 	encode := v.Encode()
 	if encode != "" {
@@ -79,13 +80,13 @@ func (o *Order) fetchData(urlStr string, body interface{}) (response []byte, err
 
 // GetListParam 请求订单列表参数
 type GetListParam struct {
-	StartCreateTime string `json:"start_create_time,omitempty"` // 订单创建时间的搜索开始时间
-	EndCreateTime   string `json:"end_create_time,omitempty"`   // 订单创建时间的搜索结束时间
-	StartUpdateTime string `json:"start_update_time,omitempty"` // 订单更新时间的搜索开始时间
-	EndUpdateTime   string `json:"end_update_time,omitempty"`   // 订单更新时间的搜索结束时间
-	Status          int    `json:"status,omitempty"`            // (必填)订单状态
-	Page            int    `json:"page,omitempty"`              // (必填)第几页（最小填1）
-	PageSize        int    `json:"page_size,omitempty"`         // (必填)每页数量(不超过10,000)
+	StartCreateTime string  `json:"start_create_time"` // 订单创建时间的搜索开始时间
+	EndCreateTime   string  `json:"end_create_time"`   // 订单创建时间的搜索结束时间
+	StartUpdateTime string  `json:"start_update_time"` // 订单更新时间的搜索开始时间
+	EndUpdateTime   string  `json:"end_update_time"`   // 订单更新时间的搜索结束时间
+	Status          OStatus `json:"status"`            // (必填)订单状态
+	Page            int     `json:"page"`              // (必填)第几页（最小填1）
+	PageSize        int     `json:"page_size"`         // (必填)每页数量(不超过10,000)
 }
 
 // GetList 获取订单列表
@@ -103,16 +104,16 @@ func (o *Order) Get(orderID string) ([]byte, error) {
 
 // SearchParam 搜索订单请求参数
 type SearchParam struct {
-	StartPayTime          string `json:"start_pay_time,omitempty"`           // 订单支付时间的搜索开始时间
-	EndPayTime            string `json:"end_pay_time,omitempty"`             // 订单支付时间的搜索结束时间
-	Title                 string `json:"title,omitempty"`                    // 商品标题关键词
-	SkuCode               string `json:"sku_code,omitempty"`                 // 商品编码
-	UserName              string `json:"user_name,omitempty"`                // 收件人
-	TelNumber             string `json:"tel_number,omitempty"`               // 收件人电话
-	OnAftersaleOrderExist bool   `json:"on_aftersale_order_exist,omitempty"` // 全部订单 0:没有正在售后的订单, 1:正在售后单数量大于等于1的订单
-	Status                int    `json:"status,omitempty"`                   // (必填)订单状态
-	Page                  int    `json:"page,omitempty"`                     // (必填)第几页（最小填1）
-	PageSize              int    `json:"page_size,omitempty"`                // (必填)每页数量(不超过10,000)
+	StartPayTime          string `json:"start_pay_time"`           // 订单支付时间的搜索开始时间
+	EndPayTime            string `json:"end_pay_time"`             // 订单支付时间的搜索结束时间
+	Title                 string `json:"title"`                    // 商品标题关键词
+	SkuCode               string `json:"sku_code"`                 // 商品编码
+	UserName              string `json:"user_name"`                // 收件人
+	TelNumber             string `json:"tel_number"`               // 收件人电话
+	OnAftersaleOrderExist bool   `json:"on_aftersale_order_exist"` // 全部订单 0:没有正在售后的订单, 1:正在售后单数量大于等于1的订单
+	Status                int    `json:"status"`                   // (必填)订单状态
+	Page                  int    `json:"page"`                     // (必填)第几页（最小填1）
+	PageSize              int    `json:"page_size"`                // (必填)每页数量(不超过10,000)
 }
 
 // Search 搜索订单

@@ -7,6 +7,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram"
 	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
 	"github.com/silenceper/wechat/v2/minishop"
+	shopConfig "github.com/silenceper/wechat/v2/minishop/config"
 	"github.com/silenceper/wechat/v2/officialaccount"
 	offConfig "github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/openplatform"
@@ -60,7 +61,7 @@ func (wc *Wechat) GetMiniProgram(cfg *miniConfig.Config) *miniprogram.MiniProgra
 }
 
 // GetMiniShop 获取小商店的实例
-func (wc *Wechat) GetMiniShop(cfg *miniConfig.Config) *minishop.MiniShop {
+func (wc *Wechat) GetMiniShop(cfg *shopConfig.Config) *minishop.MiniShop {
 	if cfg.Cache == nil {
 		cfg.Cache = wc.cache
 	}
