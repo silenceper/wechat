@@ -94,6 +94,79 @@ func (o *Order) GetList(req *GetListParam) ([]byte, error) {
 	return o.fetchData(orderGetListURL, req)
 }
 
+type GetListRsp struct {
+	Errcode int `json:"errcode"`
+	Orders  []struct {
+		OrderID     int64  `json:"order_id"`
+		CreateTime  string `json:"create_time"`
+		UpdateTime  string `json:"update_time"`
+		Status      int    `json:"status"`
+		OrderDetail struct {
+			ProductInfos []struct {
+				ProductID int    `json:"product_id"`
+				SkuID     int    `json:"sku_id"`
+				ThumbImg  string `json:"thumb_img"`
+				SalePrice int    `json:"sale_price"`
+				SkuCnt    int    `json:"sku_cnt"`
+				Title     string `json:"title"`
+				SkuAttrs  []struct {
+					AttrKey   string `json:"attr_key"`
+					AttrValue string `json:"attr_value"`
+				} `json:"sku_attrs"`
+				OnAftersaleSkuCnt     int `json:"on_aftersale_sku_cnt"`
+				FinishAftersaleSkuCnt int `json:"finish_aftersale_sku_cnt"`
+			} `json:"product_infos"`
+			PayInfo struct {
+				PayMethod     string `json:"pay_method"`
+				PrepayID      string `json:"prepay_id"`
+				PrepayTime    string `json:"prepay_time"`
+				TransactionID string `json:"transaction_id"`
+			} `json:"pay_info"`
+			PriceInfo struct {
+				ProductPrice int `json:"product_price"`
+				OrderPrice   int `json:"order_price"`
+				Freight      int `json:"freight"`
+			} `json:"price_info"`
+			DeliveryInfo struct {
+				AddressInfo struct {
+					UserName     string `json:"user_name"`
+					PostalCode   string `json:"postal_code"`
+					ProvinceName string `json:"province_name"`
+					CityName     string `json:"city_name"`
+					CountyName   string `json:"county_name"`
+					DetailInfo   string `json:"detail_info"`
+					NationalCode string `json:"national_code"`
+					TelNumber    string `json:"tel_number"`
+				} `json:"address_info"`
+				DeliveryMethod string `json:"delivery_method"`
+				ExpressFee     []struct {
+					Result int `json:"result"`
+				} `json:"express_fee"`
+				DeliveryProductInfo []interface{} `json:"delivery_product_info"`
+			} `json:"delivery_info"`
+		} `json:"order_detail"`
+		AftersaleDetail struct {
+			AftersaleOrderList  []interface{} `json:"aftersale_order_list"`
+			OnAftersaleOrderCnt int           `json:"on_aftersale_order_cnt"`
+		} `json:"aftersale_detail"`
+		Openid  string `json:"openid"`
+		ExtInfo struct {
+			CustomerNotes string `json:"customer_notes"`
+			MerchantNotes string `json:"merchant_notes"`
+		} `json:"ext_info"`
+	} `json:"orders"`
+	TotalNum int `json:"total_num"`
+}
+
+func (o *Order) ParseOrderList(t []byte) (*GetListRsp, error) {
+	rsp := &GetListRsp{}
+	err := json.Unmarshal(t, rsp)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
 // Get 获取订单详情
 func (o *Order) Get(orderID string) ([]byte, error) {
 	req := map[string]string{
