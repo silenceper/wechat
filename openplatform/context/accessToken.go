@@ -54,6 +54,7 @@ func (ctx *Context) SetComponentAccessToken(verifyTicket string) (*ComponentAcce
 	}
 
 	at := &ComponentAccessToken{}
+	fmt.Println(string(respBody))
 	if err := json.Unmarshal(respBody, at); err != nil {
 		return nil, err
 	}
