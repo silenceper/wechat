@@ -2,6 +2,7 @@ package broadcast
 
 import (
 	"fmt"
+
 	"github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/util"
 )
@@ -269,13 +270,13 @@ func (broadcast *Broadcast) Preview() *Broadcast {
 }
 
 // GetMassStatus 获取群发状态
-func (broadcast *Broadcast) GetMassStatus(msgId string) (*Result, error) {
+func (broadcast *Broadcast) GetMassStatus(msgID string) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	req := map[string]interface{}{
-		"msg_id": msgId,
+		"msg_id": msgID,
 	}
 	url := fmt.Sprintf("%s?access_token=%s", massStatusSendURL, ak)
 	data, err := util.PostJSON(url, req)
