@@ -2,17 +2,16 @@ package broadcast
 
 import (
 	"fmt"
-
 	"github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/util"
 )
 
 const (
-	sendURLByTag    = "https://api.weixin.qq.com/cgi-bin/message/mass/sendall"
-	sendURLByOpenID = "https://api.weixin.qq.com/cgi-bin/message/mass/send"
-	deleteSendURL   = "https://api.weixin.qq.com/cgi-bin/message/mass/delete"
-	previewSendURL   = "https://api.weixin.qq.com/cgi-bin/message/mass/preview"
-	massStatusSendURL   = "https://api.weixin.qq.com/cgi-bin/message/mass/get"
+	sendURLByTag      = "https://api.weixin.qq.com/cgi-bin/message/mass/sendall"
+	sendURLByOpenID   = "https://api.weixin.qq.com/cgi-bin/message/mass/send"
+	deleteSendURL     = "https://api.weixin.qq.com/cgi-bin/message/mass/delete"
+	previewSendURL    = "https://api.weixin.qq.com/cgi-bin/message/mass/preview"
+	massStatusSendURL = "https://api.weixin.qq.com/cgi-bin/message/mass/get"
 	getSpeedSendURL   = "https://api.weixin.qq.com/cgi-bin/message/mass/speed/get"
 	setSpeedSendURL   = "https://api.weixin.qq.com/cgi-bin/message/mass/speed/set"
 )
@@ -43,7 +42,7 @@ type Broadcast struct {
 
 //NewBroadcast new
 func NewBroadcast(ctx *context.Context) *Broadcast {
-	return &Broadcast{ctx,false}
+	return &Broadcast{ctx, false}
 }
 
 //User 发送的用户
@@ -55,8 +54,8 @@ type User struct {
 //Result 群发返回结果
 type Result struct {
 	util.CommonError
-	MsgID     int64 `json:"msg_id"`
-	MsgDataID int64 `json:"msg_data_id"`
+	MsgID     int64  `json:"msg_id"`
+	MsgDataID int64  `json:"msg_data_id"`
 	MsgStatus string `json:"msg_status"`
 }
 
@@ -66,7 +65,6 @@ type SpeedResult struct {
 	Speed     int64 `json:"speed"`
 	RealSpeed int64 `json:"realspeed"`
 }
-
 
 //sendRequest 发送请求的数据
 type sendRequest struct {
@@ -271,18 +269,18 @@ func (broadcast *Broadcast) Preview() *Broadcast {
 }
 
 // GetMassStatus 获取群发状态
-func (broadcast *Broadcast) GetMassStatus(msgId string) (*Result,error) {
+func (broadcast *Broadcast) GetMassStatus(msgId string) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	req := map[string]interface{}{
-		"msg_id":      msgId,
+		"msg_id": msgId,
 	}
 	url := fmt.Sprintf("%s?access_token=%s", massStatusSendURL, ak)
 	data, err := util.PostJSON(url, req)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	res := &Result{}
 	err = util.DecodeWithError(data, res, "GetMassStatus")
@@ -290,7 +288,7 @@ func (broadcast *Broadcast) GetMassStatus(msgId string) (*Result,error) {
 }
 
 // GetSpeed 获取群发速度
-func (broadcast *Broadcast) GetSpeed() (*SpeedResult,error) {
+func (broadcast *Broadcast) GetSpeed() (*SpeedResult, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
 		return nil, err
@@ -299,26 +297,26 @@ func (broadcast *Broadcast) GetSpeed() (*SpeedResult,error) {
 	url := fmt.Sprintf("%s?access_token=%s", getSpeedSendURL, ak)
 	data, err := util.PostJSON(url, req)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	res := &SpeedResult{}
 	err = util.DecodeWithError(data, res, "GetSpeed")
 	return res, err
 }
 
-// 设置群发速度
-func (broadcast *Broadcast) SetSpeed(speed int)(*SpeedResult,error) {
+// SetSpeed 设置群发速度
+func (broadcast *Broadcast) SetSpeed(speed int) (*SpeedResult, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	req := map[string]interface{}{
-		"speed" : speed,
+		"speed": speed,
 	}
 	url := fmt.Sprintf("%s?access_token=%s", setSpeedSendURL, ak)
 	data, err := util.PostJSON(url, req)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	res := &SpeedResult{}
 	err = util.DecodeWithError(data, res, "SetSpeed")
@@ -333,11 +331,11 @@ func (broadcast *Broadcast) chooseTagOrOpenID(user *User, req *sendRequest) (ret
 		}
 		sendURL = sendURLByTag
 	} else {
-		if broadcast.preview == true {
+		if broadcast.preview {
 			// 预览
 			req.ToUser = user.OpenID
 			sendURL = previewSendURL
-		}else{
+		} else {
 			if user.TagID != 0 {
 				req.Filter = map[string]interface{}{
 					"is_to_all": false,
@@ -350,7 +348,6 @@ func (broadcast *Broadcast) chooseTagOrOpenID(user *User, req *sendRequest) (ret
 				sendURL = sendURLByOpenID
 			}
 		}
-
 	}
 	return req, sendURL
 }
