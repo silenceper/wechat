@@ -2,11 +2,8 @@ package order
 
 import (
 	"encoding/json"
-	"fmt"
-	"net/url"
 
 	"github.com/silenceper/wechat/v2/minishop/context"
-	"github.com/silenceper/wechat/v2/util"
 )
 
 const (
@@ -43,41 +40,6 @@ func NewOrder(ctx *context.Context) *Order {
 	return &Order{ctx}
 }
 
-// fetchData
-func (o *Order) fetchData(urlStr string, body interface{}) (response []byte, err error) {
-	accessToken, err := o.AccessTokenHandle.GetAccessToken()
-	if err != nil {
-		return nil, err
-	}
-	urlStr = fmt.Sprintf(urlStr, accessToken)
-
-	v := url.Values{}
-
-	if o.Config.ServiceID != "" {
-		v.Add("service_id", o.Config.ServiceID)
-	}
-	if o.Config.SpecificationID != "" {
-		v.Add("specification_id", o.Config.SpecificationID)
-	}
-	encode := v.Encode()
-	if encode != "" {
-		urlStr = urlStr + "&" + encode
-	}
-
-	response, err = util.PostJSON(urlStr, body)
-	if err != nil {
-		return
-	}
-	// 返回错误信息
-	var result util.CommonError
-	err = json.Unmarshal(response, &result)
-	if err == nil && result.ErrCode != 0 {
-		err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return nil, err
-	}
-	return response, err
-}
-
 // GetListParam 请求订单列表参数
 type GetListParam struct {
 	StartCreateTime string  `json:"start_create_time"` // 订单创建时间的搜索开始时间
@@ -91,7 +53,7 @@ type GetListParam struct {
 
 // GetList 获取订单列表
 func (o *Order) GetList(req *GetListParam) ([]byte, error) {
-	return o.fetchData(orderGetListURL, req)
+	return o.FetchData(orderGetListURL, req)
 }
 
 type GetListRsp struct {
@@ -172,7 +134,7 @@ func (o *Order) Get(orderID string) ([]byte, error) {
 	req := map[string]string{
 		"order_id": orderID,
 	}
-	return o.fetchData(orderGetURL, req)
+	return o.FetchData(orderGetURL, req)
 }
 
 // SearchParam 搜索订单请求参数
@@ -191,5 +153,5 @@ type SearchParam struct {
 
 // Search 搜索订单
 func (o *Order) Search(req SearchParam) ([]byte, error) {
-	return o.fetchData(orderSearchURL, req)
+	return o.FetchData(orderSearchURL, req)
 }

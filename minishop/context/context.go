@@ -16,6 +16,7 @@ type Context struct {
 	AccessTokenHandle credential.AccessTokenHandle
 }
 
+// FetchData 数据请求
 func (c *Context) FetchData(urlStr string, body interface{}) (response []byte, err error) {
 	accessToken, err := c.AccessTokenHandle.GetAccessToken()
 	if err != nil {

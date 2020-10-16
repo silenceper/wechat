@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
 
 	"github.com/silenceper/wechat/v2/minishop/context"
@@ -22,28 +21,6 @@ type Service struct {
 //NewService new order
 func NewService(ctx *context.Context) *Service {
 	return &Service{ctx}
-}
-
-// fetchData
-func (s *Service) fetchData(urlStr string, body interface{}) (response []byte, err error) {
-	accessToken, err := s.AccessTokenHandle.GetAccessToken()
-	if err != nil {
-		return nil, err
-	}
-	urlStr = fmt.Sprintf(urlStr, accessToken)
-
-	response, err = util.PostJSON(urlStr, body)
-	if err != nil {
-		return
-	}
-	// 返回错误信息
-	var result util.CommonError
-	err = json.Unmarshal(response, &result)
-	if err == nil && result.ErrCode != 0 {
-		err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return nil, err
-	}
-	return response, err
 }
 
 // GetOrderListRsp 用户购买的服务列表
@@ -70,7 +47,7 @@ func (s *Service) GetOrderList(start, end string, page, pageSize int) (*GetOrder
 		"page":              strconv.Itoa(page),
 		"page_size":         strconv.Itoa(pageSize),
 	}
-	response, err := s.fetchData(serverGetOrderList, req)
+	response, err := s.FetchData(serverGetOrderList, req)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +75,7 @@ func (s *Service) GetList() (*GetListRsp, error) {
 	info := &GetListRsp{}
 	req := map[string]string{}
 
-	response, err := s.fetchData(serverGetList, req)
+	response, err := s.FetchData(serverGetList, req)
 	if err != nil {
 		return nil, err
 	}

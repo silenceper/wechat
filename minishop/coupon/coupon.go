@@ -2,8 +2,6 @@ package coupon
 
 import (
 	"encoding/json"
-	"fmt"
-	"net/url"
 
 	"github.com/silenceper/wechat/v2/minishop/context"
 	"github.com/silenceper/wechat/v2/util"
@@ -44,40 +42,6 @@ type Coupon struct {
 //NewCoupon new order
 func NewCoupon(ctx *context.Context) *Coupon {
 	return &Coupon{ctx}
-}
-
-// fetchData
-func (c *Coupon) fetchData(urlStr string, body interface{}) (response []byte, err error) {
-	accessToken, err := c.AccessTokenHandle.GetAccessToken()
-	if err != nil {
-		return nil, err
-	}
-	urlStr = fmt.Sprintf(urlStr, accessToken)
-
-	v := url.Values{}
-	if c.Config.ServiceID != "" {
-		v.Add("service_id", c.ServiceID)
-	}
-	if c.Config.SpecificationID != "" {
-		v.Add("specification_id", c.SpecificationID)
-	}
-	encode := v.Encode()
-	if encode != "" {
-		urlStr = urlStr + "&" + encode
-	}
-
-	response, err = util.PostJSON(urlStr, body)
-	if err != nil {
-		return
-	}
-	// 返回错误信息
-	var result util.CommonError
-	err = json.Unmarshal(response, &result)
-	if err == nil && result.ErrCode != 0 {
-		err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return nil, err
-	}
-	return response, err
 }
 
 // GetListParam 请求优惠券列表参数
@@ -130,11 +94,11 @@ func (c *Coupon) GetList(req *GetListParam) (*GetListResp, error) {
 }
 
 // Push 发放优惠券
-func (c *Coupon) Push(openid, coupon_id string) error {
+func (c *Coupon) Push(openID, couponID string) error {
 	req := map[string]string{
-		"openid":    openid,
-		"coupon_id": coupon_id,
+		"openid":    openID,
+		"coupon_id": couponID,
 	}
-	_, err := c.fetchData(couponPushURL, req)
+	_, err := c.FetchData(couponPushURL, req)
 	return err
 }
