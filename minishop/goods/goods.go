@@ -11,7 +11,6 @@ import (
 
 const (
 	spuGetListURL = "https://api.weixin.qq.com/product/spu/get_list?access_token=%s"
-	spuGetURL     = "https://api.weixin.qq.com/product/spu/get?access_token=%s"
 )
 
 //Goods 商品接口
