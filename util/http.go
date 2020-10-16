@@ -52,7 +52,6 @@ func PostJSON(uri string, obj interface{}) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("===", string(jsonData))
 	jsonData = bytes.Replace(jsonData, []byte("\\u003c"), []byte("<"), -1)
 	jsonData = bytes.Replace(jsonData, []byte("\\u003e"), []byte(">"), -1)
 	jsonData = bytes.Replace(jsonData, []byte("\\u0026"), []byte("&"), -1)

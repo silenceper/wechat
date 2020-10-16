@@ -118,7 +118,7 @@ type GetListResp struct {
 // GetList 获取优惠券列表
 func (c *Coupon) GetList(req *GetListParam) (*GetListResp, error) {
 	info := &GetListResp{}
-	response, err := s.fetchData(couponGetListURL, req)
+	response, err := c.FetchData(couponGetListURL, req)
 	if err != nil {
 		return nil, err
 	}
@@ -135,6 +135,6 @@ func (c *Coupon) Push(openid, coupon_id string) error {
 		"openid":    openid,
 		"coupon_id": coupon_id,
 	}
-	_, err := c.fetchData(orderGetURL, req)
+	_, err := c.fetchData(couponPushURL, req)
 	return err
 }
