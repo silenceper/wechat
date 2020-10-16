@@ -4,6 +4,7 @@ import (
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/minishop/config"
 	"github.com/silenceper/wechat/v2/minishop/context"
+	"github.com/silenceper/wechat/v2/minishop/coupon"
 	"github.com/silenceper/wechat/v2/minishop/goods"
 	"github.com/silenceper/wechat/v2/minishop/order"
 	"github.com/silenceper/wechat/v2/minishop/service"
@@ -41,7 +42,12 @@ func (ms *MiniShop) GetService() *service.Service {
 	return service.NewService(ms.ctx)
 }
 
-// GetGodds 获取商品
+// GetGoods 获取商品
 func (ms *MiniShop) GetGoods() *goods.Goods {
 	return goods.NewGoods(ms.ctx)
+}
+
+// GetCoupon 获取优惠券
+func (ms *MiniShop) GetCoupon() *coupon.Coupon {
+	return coupon.NewCoupon(ms.ctx)
 }
