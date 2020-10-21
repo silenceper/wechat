@@ -63,6 +63,7 @@ type PreOrder struct {
 	TradeType  string `xml:"trade_type,omitempty"`
 	PrePayID   string `xml:"prepay_id,omitempty"`
 	CodeURL    string `xml:"code_url,omitempty"`
+	MWebURL    string `xml:"mweb_url,omitempty"`
 	ErrCode    string `xml:"err_code,omitempty"`
 	ErrCodeDes string `xml:"err_code_des,omitempty"`
 }
