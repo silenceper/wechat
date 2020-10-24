@@ -8,9 +8,13 @@ import (
 )
 
 const (
-	sendURLByTag    = "https://api.weixin.qq.com/cgi-bin/message/mass/sendall"
-	sendURLByOpenID = "https://api.weixin.qq.com/cgi-bin/message/mass/send"
-	deleteSendURL   = "https://api.weixin.qq.com/cgi-bin/message/mass/delete"
+	sendURLByTag      = "https://api.weixin.qq.com/cgi-bin/message/mass/sendall"
+	sendURLByOpenID   = "https://api.weixin.qq.com/cgi-bin/message/mass/send"
+	deleteSendURL     = "https://api.weixin.qq.com/cgi-bin/message/mass/delete"
+	previewSendURL    = "https://api.weixin.qq.com/cgi-bin/message/mass/preview"
+	massStatusSendURL = "https://api.weixin.qq.com/cgi-bin/message/mass/get"
+	getSpeedSendURL   = "https://api.weixin.qq.com/cgi-bin/message/mass/speed/get"
+	setSpeedSendURL   = "https://api.weixin.qq.com/cgi-bin/message/mass/speed/set"
 )
 
 //MsgType 发送消息类型
@@ -34,11 +38,12 @@ const (
 //Broadcast 群发消息
 type Broadcast struct {
 	*context.Context
+	preview bool
 }
 
 //NewBroadcast new
 func NewBroadcast(ctx *context.Context) *Broadcast {
-	return &Broadcast{ctx}
+	return &Broadcast{ctx, false}
 }
 
 //User 发送的用户
@@ -50,8 +55,16 @@ type User struct {
 //Result 群发返回结果
 type Result struct {
 	util.CommonError
-	MsgID     int64 `json:"msg_id"`
-	MsgDataID int64 `json:"msg_data_id"`
+	MsgID     int64  `json:"msg_id"`
+	MsgDataID int64  `json:"msg_data_id"`
+	MsgStatus string `json:"msg_status"`
+}
+
+//SpeedResult 群发速度返回结果
+type SpeedResult struct {
+	util.CommonError
+	Speed     int64 `json:"speed"`
+	RealSpeed int64 `json:"realspeed"`
 }
 
 //sendRequest 发送请求的数据
@@ -250,7 +263,66 @@ func (broadcast *Broadcast) Delete(msgID int64, articleIDx int64) error {
 	return util.DecodeWithCommonError(data, "Delete")
 }
 
-//TODO 发送预览，群发消息状态，发送速度
+// Preview 预览
+func (broadcast *Broadcast) Preview() *Broadcast {
+	broadcast.preview = true
+	return broadcast
+}
+
+// GetMassStatus 获取群发状态
+func (broadcast *Broadcast) GetMassStatus(msgID string) (*Result, error) {
+	ak, err := broadcast.GetAccessToken()
+	if err != nil {
+		return nil, err
+	}
+	req := map[string]interface{}{
+		"msg_id": msgID,
+	}
+	url := fmt.Sprintf("%s?access_token=%s", massStatusSendURL, ak)
+	data, err := util.PostJSON(url, req)
+	if err != nil {
+		return nil, err
+	}
+	res := &Result{}
+	err = util.DecodeWithError(data, res, "GetMassStatus")
+	return res, err
+}
+
+// GetSpeed 获取群发速度
+func (broadcast *Broadcast) GetSpeed() (*SpeedResult, error) {
+	ak, err := broadcast.GetAccessToken()
+	if err != nil {
+		return nil, err
+	}
+	req := map[string]interface{}{}
+	url := fmt.Sprintf("%s?access_token=%s", getSpeedSendURL, ak)
+	data, err := util.PostJSON(url, req)
+	if err != nil {
+		return nil, err
+	}
+	res := &SpeedResult{}
+	err = util.DecodeWithError(data, res, "GetSpeed")
+	return res, err
+}
+
+// SetSpeed 设置群发速度
+func (broadcast *Broadcast) SetSpeed(speed int) (*SpeedResult, error) {
+	ak, err := broadcast.GetAccessToken()
+	if err != nil {
+		return nil, err
+	}
+	req := map[string]interface{}{
+		"speed": speed,
+	}
+	url := fmt.Sprintf("%s?access_token=%s", setSpeedSendURL, ak)
+	data, err := util.PostJSON(url, req)
+	if err != nil {
+		return nil, err
+	}
+	res := &SpeedResult{}
+	err = util.DecodeWithError(data, res, "SetSpeed")
+	return res, err
+}
 
 func (broadcast *Broadcast) chooseTagOrOpenID(user *User, req *sendRequest) (ret *sendRequest, url string) {
 	sendURL := ""
@@ -260,16 +332,22 @@ func (broadcast *Broadcast) chooseTagOrOpenID(user *User, req *sendRequest) (ret
 		}
 		sendURL = sendURLByTag
 	} else {
-		if user.TagID != 0 {
-			req.Filter = map[string]interface{}{
-				"is_to_all": false,
-				"tag_id":    user.TagID,
-			}
-			sendURL = sendURLByTag
-		}
-		if len(user.OpenID) != 0 {
+		if broadcast.preview {
+			// 预览
 			req.ToUser = user.OpenID
-			sendURL = sendURLByOpenID
+			sendURL = previewSendURL
+		} else {
+			if user.TagID != 0 {
+				req.Filter = map[string]interface{}{
+					"is_to_all": false,
+					"tag_id":    user.TagID,
+				}
+				sendURL = sendURLByTag
+			}
+			if len(user.OpenID) != 0 {
+				req.ToUser = user.OpenID
+				sendURL = sendURLByOpenID
+			}
 		}
 	}
 	return req, sendURL
