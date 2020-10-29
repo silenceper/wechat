@@ -5,6 +5,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram"
 	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
 	openContext "github.com/silenceper/wechat/v2/openplatform/context"
+	"github.com/silenceper/wechat/v2/openplatform/miniprogram/auth"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/basic"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/component"
 )
@@ -30,6 +31,11 @@ func NewMiniProgram(opCtx *openContext.Context, appID string) *MiniProgram {
 		AppID:       appID,
 		MiniProgram: mini,
 	}
+}
+
+// PlatformOauth 平台代发起oauth2网页授权
+func (miniProgram *MiniProgram) PlatformAuth() *auth.Auth {
+	return auth.NewAuth(miniProgram.GetContext())
 }
 
 //GetComponent get component
