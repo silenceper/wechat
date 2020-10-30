@@ -8,6 +8,7 @@ import (
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/auth"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/basic"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/component"
+	"github.com/silenceper/wechat/v2/openplatform/miniprogram/encryptor"
 )
 
 //MiniProgram 代小程序实现业务
@@ -33,9 +34,14 @@ func NewMiniProgram(opCtx *openContext.Context, appID string) *MiniProgram {
 	}
 }
 
-// PlatformOauth 平台代发起oauth2网页授权
+// PlatformAuth
 func (miniProgram *MiniProgram) PlatformAuth() *auth.Auth {
 	return auth.NewAuth(miniProgram.GetContext())
+}
+
+// PlatformEncryptor
+func (miniProgram *MiniProgram) PlatformEncryptor() *encryptor.Encryptor {
+	return encryptor.NewEncryptor(miniProgram.GetContext())
 }
 
 //GetComponent get component
