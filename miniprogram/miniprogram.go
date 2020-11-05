@@ -9,8 +9,10 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
+	"github.com/silenceper/wechat/v2/miniprogram/server"
 	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
+	"net/http"
 )
 
 //MiniProgram 微信小程序相关API
@@ -71,4 +73,12 @@ func (miniProgram *MiniProgram) GetSubscribe() *subscribe.Subscribe {
 // GetCustomerMessage 客服消息接口
 func (miniProgram *MiniProgram) GetCustomerMessage() *message.Manager {
 	return message.NewCustomerMessageManager(miniProgram.ctx)
+}
+
+// GetServer 消息管理：接收事件，被动回复消息管理
+func (miniProgram *MiniProgram) GetServer(req *http.Request, writer http.ResponseWriter) *server.Server {
+	srv := server.NewServer(miniProgram.ctx)
+	srv.Request = req
+	srv.Writer = writer
+	return srv
 }
