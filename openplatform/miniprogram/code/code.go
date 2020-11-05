@@ -145,3 +145,15 @@ func (code *Code) Release() (err error) {
 
 	return
 }
+
+func (code *Code) GetQrCode() (body []byte, err error) {
+	var accessToken string
+	accessToken, err = code.GetAuthrAccessToken(code.appId)
+	if err != nil {
+		return
+	}
+	urlStr := fmt.Sprintf(getQrcode, accessToken, "")
+	body, err = util.HTTPGet(urlStr)
+	fmt.Println(string(body), err)
+	return
+}
