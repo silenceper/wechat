@@ -13,6 +13,7 @@ const (
 	getAuditstatus       = "https://api.weixin.qq.com/wxa/get_auditstatus?access_token=%s"        //获取审核状态
 	getLatestAuditstatus = "https://api.weixin.qq.com/wxa/get_latest_auditstatus?access_token=%s" //获取最后一次审核状态
 	release              = "https://api.weixin.qq.com/wxa/release?access_token=%s"                //发布代码
+	auditRecall          = "https://api.weixin.qq.com/wxa/undocodeaudit?access_token=%s"          //审核撤回
 )
 
 //Code struct
@@ -53,7 +54,7 @@ func (code *Code) UploadCode(data *UploadCodeParams) (err error) {
 }
 
 // SubmitAudit 代码提交审核
-func (code *Code) SubmitAudit(data *SubmitAuditParams) (auditid string, err error) {
+func (code *Code) SubmitAudit(data *SubmitAuditParams) (auditid int64, err error) {
 	var accessToken string
 	accessToken, err = code.GetAuthrAccessToken(code.appId)
 	if err != nil {
@@ -68,7 +69,7 @@ func (code *Code) SubmitAudit(data *SubmitAuditParams) (auditid string, err erro
 	// 返回错误信息
 	var result struct {
 		util.CommonError
-		Auditid string `json:"auditid"`
+		Auditid int64 `json:"auditid"`
 	}
 	err = util.DecodeWithError(body, &result, "SubmitAudit")
 	auditid = result.Auditid
@@ -102,7 +103,7 @@ func (code *Code) GetAuditstatus(auditid string) (status int64, reason string, s
 }
 
 // GetLastAuditstatus 查询最新一次提交的审核状态
-func (code *Code) GetLastAuditstatus() (auditid string, status int64, reason string, screenshot string, err error) {
+func (code *Code) GetLastAuditstatus() (auditid int64, status int64, reason string, screenshot string, err error) {
 	var accessToken string
 	accessToken, err = code.GetAuthrAccessToken(code.appId)
 	if err != nil {
@@ -111,7 +112,7 @@ func (code *Code) GetLastAuditstatus() (auditid string, status int64, reason str
 
 	urlStr := fmt.Sprintf(getLatestAuditstatus, accessToken)
 
-	body, err := util.PostJSON(urlStr, nil)
+	body, err := util.HTTPGet(urlStr)
 	if err != nil {
 		return
 	}
@@ -154,6 +155,26 @@ func (code *Code) GetQrCode() (body []byte, err error) {
 	}
 	urlStr := fmt.Sprintf(getQrcode, accessToken, "")
 	body, err = util.HTTPGet(urlStr)
-	fmt.Println(string(body), err)
+	return
+}
+
+// GetLastAuditstatus 查询最新一次提交的审核状态
+func (code *Code) AuditRecall() (err error) {
+	var accessToken string
+	accessToken, err = code.GetAuthrAccessToken(code.appId)
+	if err != nil {
+		return
+	}
+
+	urlStr := fmt.Sprintf(auditRecall, accessToken)
+
+	body, err := util.HTTPGet(urlStr)
+	if err != nil {
+		return
+	}
+	var result struct {
+		util.CommonError
+	}
+	err = util.DecodeWithError(body, &result, "AuditRecall")
 	return
 }
