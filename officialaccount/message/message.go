@@ -107,6 +107,9 @@ type MixMessage struct {
 	Description   string  `xml:"Description"`
 	URL           string  `xml:"Url"`
 
+	PagePath string `json:"PagePath"`
+	ThumbUrl string `json:"ThumbUrl"`
+
 	//事件相关
 	Event       EventType `xml:"Event"`
 	EventKey    string    `xml:"EventKey"`
