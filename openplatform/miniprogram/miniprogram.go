@@ -22,7 +22,8 @@ type MiniProgram struct {
 func NewMiniProgram(opCtx *openContext.Context, appID string) *MiniProgram {
 	mini := miniprogram.NewMiniProgram(&miniConfig.Config{
 		AppID:          opCtx.AppID,
-		AppSecret:      opCtx.AppSecret,
+		EncodingAESKey: opCtx.EncodingAESKey,
+		Token:          opCtx.Token,
 		Cache:          opCtx.Cache,
 	})
 	//设置获取access_token的函数
