@@ -9,12 +9,39 @@ import (
 
 const (
 	getAccountBasicInfoURL = "https://api.weixin.qq.com/cgi-bin/account/getaccountbasicinfo"
+	modifyDomain = "https://api.weixin.qq.com/wxa/modify_domain"
+	modifyWebviewDomain = "https://api.weixin.qq.com/wxa/setwebviewdomain"
 )
 
 //Basic 基础信息设置
 type Basic struct {
 	*openContext.Context
 	appID string
+}
+//ModifyDomain 修改服务器域名请求参数
+type ModifyDomain struct {
+	Action string `json:"action"`
+	RequestDomain []string `json:"requestdomain"`
+	WsRequestDomain []string `json:"wsrequestdomain"`
+	UploadDomain []string `json:"uploaddomain"`
+	DownloadDomain []string `json:"downloaddomain"`
+}
+//ModifyDomainRes 修改服务器域名请求结果
+type ModifyDomainRes struct {
+	util.CommonError
+	RequestDomain []string `json:"requestdomain"`
+	WsRequestDomain []string `json:"wsrequestdomain"`
+	UploadDomain []string `json:"uploaddomain"`
+	DownloadDomain []string `json:"downloaddomain"`
+}
+//ModifyWebviewDomain 修改业务域名请求参数
+type ModifyWebviewDomain struct {
+	Action string `json:"action"`
+	WebviewDomain []string `json:"webviewdomain"`
+}
+//ModifyWebviewDomainRes 修改业务域名请求结果
+type ModifyWebviewDomainRes struct {
+	util.CommonError
 }
 
 //NewBasic new
@@ -46,7 +73,40 @@ func (basic *Basic) GetAccountBasicInfo() (*AccountBasicInfo, error) {
 	return result, nil
 }
 
-//modify_domain设置服务器域名
-//TODO
-//func (encryptor *Basic) modifyDomain() {
-//}
+//ModifyDomain 设置服务器域名
+func (encryptor *Basic) ModifyDomain(data *ModifyDomain)(result *ModifyDomainRes,err error) {
+	var accessToken string
+	accessToken, err = encryptor.GetAuthrAccessToken(encryptor.appID)
+	if err != nil {
+		return
+	}
+
+	urlStr := fmt.Sprintf("%s?access_token=%s", modifyDomain, accessToken)
+	body, err := util.PostJSON(urlStr, data)
+	if err != nil {
+		return
+	}
+	// 返回错误信息
+	result = &ModifyDomainRes{}
+	err = util.DecodeWithError(body, result, "modifyDomain")
+	return
+}
+
+//ModifyWebviewDomain 设置业务域名
+func (encryptor *Basic) ModifyWebviewDomain(data *ModifyWebviewDomain)(result *ModifyWebviewDomainRes,err error) {
+	var accessToken string
+	accessToken, err = encryptor.GetAuthrAccessToken(encryptor.appID)
+	if err != nil {
+		return
+	}
+
+	urlStr := fmt.Sprintf("%s?access_token=%s", modifyWebviewDomain, accessToken)
+	body, err := util.PostJSON(urlStr, data)
+	if err != nil {
+		return
+	}
+	// 返回错误信息
+	result = &ModifyWebviewDomainRes{}
+	err = util.DecodeWithError(body, result, "modifyWebviewDomain")
+	return
+}
