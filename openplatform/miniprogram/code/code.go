@@ -136,13 +136,15 @@ func (code *Code) Release() (err error) {
 
 	urlStr := fmt.Sprintf(release, accessToken)
 
-	body, err := util.PostJSON(urlStr, nil)
+	body, err := util.PostJSON(urlStr, struct {}{})
 	if err != nil {
 		return
 	}
 	// 返回错误信息
-	var result = &util.CommonError{}
-	err = util.DecodeWithError(body, result, "Release")
+	var result struct {
+		util.CommonError
+	}
+	err = util.DecodeWithError(body, &result, "Release")
 
 	return
 }
