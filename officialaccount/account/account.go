@@ -25,8 +25,8 @@ type FastRegisterRes struct {
 	util.CommonError
 	Appid string `json:"appid"`
 	AuthorizationCode string `json:"authorization_code"`
-	IsWxVerifySucc string `json:"is_wx_verify_succ"`
-	IsLinkSucc string `json:"is_link_succ"`
+	IsWxVerifySucc bool `json:"is_wx_verify_succ"`
+	IsLinkSucc bool `json:"is_link_succ"`
 
 }
 //FastRegisterMiniProgram 通过公众号快速注册小程序
