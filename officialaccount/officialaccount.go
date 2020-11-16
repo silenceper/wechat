@@ -1,6 +1,7 @@
 package officialaccount
 
 import (
+	account2 "github.com/silenceper/wechat/v2/officialaccount/account"
 	"net/http"
 
 	"github.com/silenceper/wechat/v2/officialaccount/datacube"
@@ -49,7 +50,10 @@ func (officialAccount *OfficialAccount) GetContext() *context.Context {
 func (officialAccount *OfficialAccount) GetBasic() *basic.Basic {
 	return basic.NewBasic(officialAccount.ctx)
 }
-
+// GetAccount 获取账号信息
+func (officialAccount *OfficialAccount) GetAccount() *account2.Account {
+	return account2.NewAccountManager(officialAccount.ctx)
+}
 // GetMenu 菜单管理接口
 func (officialAccount *OfficialAccount) GetMenu() *menu.Menu {
 	return menu.NewMenu(officialAccount.ctx)
