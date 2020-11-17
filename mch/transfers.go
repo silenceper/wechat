@@ -19,13 +19,13 @@ type Transfers struct {
 }
 
 type TransfersParams struct {
-	MchAppid       string `xml:"mch_appid"`
-	Mchid          string `xml:"mchid"`
-	DeviceInfo     string `xml:"device_info"`
-	NonceStr       string `xml:"nonce_str"`
-	Sign           string `xml:"sign"`
+	//MchAppid       string `xml:"mch_appid"`
+	//Mchid          string `xml:"mchid"`
+	DeviceInfo string `xml:"device_info"`
+	//NonceStr       string `xml:"nonce_str"`
+	//Sign           string `xml:"sign"`
 	PartnerTradeNo string `xml:"partner_trade_no"`
-	OpenId         string `xml:"open_id"`
+	OpenId         string `xml:"openid"`
 	CheckName      string `xml:"check_name"`
 	ReUserName     string `xml:"re_user_name"`
 	Amount         string `xml:"amount"`
@@ -37,25 +37,26 @@ type TransfersParams struct {
 type transfersRequest struct {
 	MchAppid       string `xml:"mch_appid"`
 	Mchid          string `xml:"mchid"`
-	DeviceInfo     string `xml:"device_info"`
+	DeviceInfo     string `xml:"device_info,omitempty"`
 	NonceStr       string `xml:"nonce_str"`
 	Sign           string `xml:"sign"`
 	PartnerTradeNo string `xml:"partner_trade_no"`
-	OpenId         string `xml:"open_id"`
+	OpenId         string `xml:"openid"`
 	CheckName      string `xml:"check_name"`
-	ReUserName     string `xml:"re_user_name"`
+	ReUserName     string `xml:"re_user_name,omitempty"`
 	Amount         string `xml:"amount"`
 	Desc           string `xml:"desc"`
-	SpbillCreateIp string `xml:"spbill_create_ip"`
+	SpbillCreateIp string `xml:"spbill_create_ip,omitempty"`
 }
 
 type TransferResponse struct {
 	ReturnCode     string `xml:"return_code"`
 	ReturnMsg      string `xml:"return_msg"`
-	MchAppid       string `xml:"mch_appid,omitempty"`
+	MchAppid       string `xml:"mch_appid"`
+	MchId          string `xml:"mchid"`
 	DeviceInfo     string `xml:"device_info,omitempty"`
-	NonceStr       string `xml:"nonce_str,omitempty"`
-	ResultCode     string `xml:"result_code,omitempty"`
+	NonceStr       string `xml:"nonce_str"`
+	ResultCode     string `xml:"result_code"`
 	ErrCode        string `xml:"err_code,omitempty"`
 	ErrCodeDes     string `xml:"err_code_des,omitempty"`
 	PartnerTradeNo string `xml:"partner_trade_no,omitempty"`
@@ -128,11 +129,10 @@ func makeParam(source interface{}, bizKey string) (returnStr string) {
 func (m *Mch) Transfers(p *TransfersParams) (resp TransferResponse, err error) {
 	nonceStr := util.RandomStr(32)
 	param := make(map[string]interface{})
-	param["appid"] = m.AppID
+	param["mch_appid"] = m.AppID
 	param["mchid"] = m.PayMchID
 	param["device_info"] = p.DeviceInfo
-	param["nonce_str"] = p.NonceStr
-	param["sign"] = p.Sign
+	param["nonce_str"] = nonceStr
 	param["partner_trade_no"] = p.PartnerTradeNo
 	param["openid"] = p.OpenId
 	param["check_name"] = p.CheckName
@@ -162,6 +162,7 @@ func (m *Mch) Transfers(p *TransfersParams) (resp TransferResponse, err error) {
 	if err != nil {
 		return
 	}
+
 	err = xml.Unmarshal(rawRet, &resp)
 	if err != nil {
 		return
