@@ -1,0 +1,19 @@
+language: go
+
+go:
+  - 1.13.x
+  - 1.12.x
+  - 1.11.x
+
+services:
+  - memcached
+  - redis-server
+
+before_script:
+  - GO_FILES=$(find . -iname '*.go' -type f | grep -v /vendor/)
+  - go get golang.org/x/lint/golint
+    
+script:
+  - go test -v -race ./...
+  - go vet ./...
+  - golint -set_exit_status $(go list ./...)
