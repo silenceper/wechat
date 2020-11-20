@@ -15,7 +15,7 @@ const (
 	webAppRedirectOauthURL = "https://open.weixin.qq.com/connect/qrconnect?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect"
 	accessTokenURL         = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code"
 	refreshAccessTokenURL  = "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=%s&grant_type=refresh_token&refresh_token=%s"
-	userInfoURL            = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN"
+	userInfoURL            = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=%s"
 	checkAccessTokenURL    = "https://api.weixin.qq.com/sns/auth?access_token=%s&openid=%s"
 )
 
@@ -144,8 +144,11 @@ type UserInfo struct {
 }
 
 //GetUserInfo 如果scope为 snsapi_userinfo 则可以通过此方法获取到用户基本信息
-func (oauth *Oauth) GetUserInfo(accessToken, openID string) (result UserInfo, err error) {
-	urlStr := fmt.Sprintf(userInfoURL, accessToken, openID)
+func (oauth *Oauth) GetUserInfo(accessToken, openID, lang string) (result UserInfo, err error) {
+	if lang == "" {
+		lang = "zh_CN"
+	}
+	urlStr := fmt.Sprintf(userInfoURL, accessToken, openID, lang)
 	var response []byte
 	response, err = util.HTTPGet(urlStr)
 	if err != nil {
