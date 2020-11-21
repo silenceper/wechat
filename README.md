@@ -58,7 +58,7 @@ server.Send()
 - miniprogram: 小程序API
 - minigame:小游戏API
 - pay:微信支付API
-- opernplatform:开放平台API
+- openplatform:开放平台API
 - work:企业微信
 - aispeech:智能对话
 
