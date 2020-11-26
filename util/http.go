@@ -52,9 +52,9 @@ func PostJSON(uri string, obj interface{}) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	jsonData = bytes.Replace(jsonData, []byte("\\u003c"), []byte("<"), -1)
-	jsonData = bytes.Replace(jsonData, []byte("\\u003e"), []byte(">"), -1)
-	jsonData = bytes.Replace(jsonData, []byte("\\u0026"), []byte("&"), -1)
+	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u003c"), []byte("<"))
+	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u003e"), []byte(">"))
+	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u0026"), []byte("&"))
 	body := bytes.NewBuffer(jsonData)
 	response, err := http.Post(uri, "application/json;charset=utf-8", body)
 	if err != nil {
@@ -75,9 +75,9 @@ func PostJSONWithRespContentType(uri string, obj interface{}) ([]byte, string, e
 		return nil, "", err
 	}
 
-	jsonData = bytes.Replace(jsonData, []byte("\\u003c"), []byte("<"), -1)
-	jsonData = bytes.Replace(jsonData, []byte("\\u003e"), []byte(">"), -1)
-	jsonData = bytes.Replace(jsonData, []byte("\\u0026"), []byte("&"), -1)
+	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u003c"), []byte("<"))
+	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u003e"), []byte(">"))
+	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u0026"), []byte("&"))
 
 	body := bytes.NewBuffer(jsonData)
 	response, err := http.Post(uri, "application/json;charset=utf-8", body)
