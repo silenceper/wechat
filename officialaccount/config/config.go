@@ -4,7 +4,7 @@ import (
 	"github.com/silenceper/wechat/v2/cache"
 )
 
-//Config config for 微信公众号
+// Config config for 微信公众号
 type Config struct {
 	AppID          string `json:"app_id"`           //appid
 	AppSecret      string `json:"app_secret"`       //appsecret

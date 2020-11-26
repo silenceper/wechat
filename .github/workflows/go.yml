@@ -7,34 +7,38 @@ on:
     branches: [ master,release-* ]
 
 jobs:
+  golangci:
+    strategy:
+      matrix:
+        go-version: [1.15.x]
+    name: golangci-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
+          version: v1.31
   build:
-    name: Build
+    name: Test
     runs-on: ubuntu-latest
     services:
       redis:
         image: redis
         ports:
-        - 6379:6379 
+        - 6379:6379
         options: --entrypoint redis-server
       memcached:
         image: memcached
         ports:
           - 11211:11211
     steps:
-
+      - uses: actions/checkout@v2
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
         with:
           go-version: ^1.13
         id: go
-
-      - uses: actions/checkout@v2
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v1
-        with:
-          # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
-          version: v1.26
-
-
       - name: Test
         run: go test -v -race ./...

@@ -11,7 +11,7 @@ linters:
     - errcheck
     - funlen
     - goconst
-    - gocritic
+      # - gocritic
     - gocyclo
     - gofmt
     - goimports

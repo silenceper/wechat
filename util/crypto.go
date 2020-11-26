@@ -20,7 +20,7 @@ const (
 	SignTypeHMACSHA256 = `HMAC-SHA256`
 )
 
-//EncryptMsg 加密消息
+// EncryptMsg 加密消息
 func EncryptMsg(random, rawXMLMsg []byte, appID, aesKey string) (encrtptMsg []byte, err error) {
 	defer func() {
 		if e := recover(); e != nil {
@@ -38,7 +38,7 @@ func EncryptMsg(random, rawXMLMsg []byte, appID, aesKey string) (encrtptMsg []by
 	return
 }
 
-//AESEncryptMsg ciphertext = AES_Encrypt[random(16B) + msg_len(4B) + rawXMLMsg + appId]
+// AESEncryptMsg ciphertext = AES_Encrypt[random(16B) + msg_len(4B) + rawXMLMsg + appId]
 //参考：github.com/chanxuehong/wechat.v2
 func AESEncryptMsg(random, rawXMLMsg []byte, appID string, aesKey []byte) (ciphertext []byte) {
 	const (
@@ -76,7 +76,7 @@ func AESEncryptMsg(random, rawXMLMsg []byte, appID string, aesKey []byte) (ciphe
 	return
 }
 
-//DecryptMsg 消息解密
+// DecryptMsg 消息解密
 func DecryptMsg(appID, encryptedMsg, aesKey string) (random, rawMsgXMLBytes []byte, err error) {
 	defer func() {
 		if e := recover(); e != nil {
