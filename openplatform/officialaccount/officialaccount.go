@@ -37,7 +37,7 @@ func (officialAccount *OfficialAccount) PlatformOauth() *oauth.Oauth {
 
 // PlatformJs 平台代获取js-sdk配置
 func (officialAccount *OfficialAccount) PlatformJs() *js.Js {
-	return js.NewJs(officialAccount.GetContext())
+	return js.NewJs(officialAccount.GetContext(), officialAccount.appID)
 }
 
 //DefaultAuthrAccessToken 默认获取授权ak的方法
