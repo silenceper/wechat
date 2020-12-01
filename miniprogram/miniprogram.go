@@ -12,6 +12,9 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/server"
 	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
+	config2 "github.com/silenceper/wechat/v2/officialaccount/config"
+	context2 "github.com/silenceper/wechat/v2/officialaccount/context"
+	"github.com/silenceper/wechat/v2/officialaccount/material"
 	"net/http"
 )
 
@@ -81,4 +84,18 @@ func (miniProgram *MiniProgram) GetServer(req *http.Request, writer http.Respons
 	srv.Request = req
 	srv.Writer = writer
 	return srv
+}
+
+// GetMaterial 素材管理
+func (miniProgram *MiniProgram) GetMaterial() *material.Material {
+	return material.NewMaterial(&context2.Context{
+		Config:            &config2.Config{
+			AppID:          miniProgram.ctx.AppID,
+			AppSecret:      miniProgram.ctx.AppSecret,
+			Token:          miniProgram.ctx.Token,
+			EncodingAESKey: miniProgram.ctx.EncodingAESKey,
+			Cache:          miniProgram.ctx.Cache,
+		},
+		AccessTokenHandle: miniProgram.ctx.AccessTokenHandle,
+	})
 }
