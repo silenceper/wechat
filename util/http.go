@@ -12,14 +12,73 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"os"
 
 	"golang.org/x/crypto/pkcs12"
 )
 
+var (
+	idx       int
+	proxyURLs []string
+
+	// RequestURLHook 替换请求 url
+	RequestURLHook func(rawurl string) string
+)
+
+func init() {
+	RequestURLHook = func(rawurl string) string {
+		return rawurl
+	}
+}
+
+// SetProxy 设置 http 代理
+func SetProxy(proxys []string) {
+	proxyURLs = proxys
+}
+
+// rrProxyURL Round-Robin ProxyURL
+func rrProxyURL(proxys []string) string {
+	proxyPoolLen := len(proxys)
+	if proxyPoolLen == 0 {
+		return ""
+	}
+	idx = (idx + 1) % proxyPoolLen
+	return proxys[idx]
+}
+
+// HTTPClient 获取 http client
+func HTTPClient() *http.Client {
+	return withProxy(http.DefaultClient)
+}
+
+func withProxy(client *http.Client) *http.Client {
+	if client.Transport == nil {
+		client.Transport = &http.Transport{}
+	}
+
+	transport, ok := client.Transport.(*http.Transport)
+	if !ok {
+		return client
+	}
+
+	rawurl := rrProxyURL(proxyURLs)
+	if rawurl == "" {
+		return client
+	}
+
+	parsed, err := url.Parse(rawurl)
+	if err != nil {
+		return client
+	}
+
+	transport.Proxy = http.ProxyURL(parsed)
+	return client
+}
+
 //HTTPGet get 请求
 func HTTPGet(uri string) ([]byte, error) {
-	response, err := http.Get(uri)
+	response, err := HTTPClient().Get(RequestURLHook(uri))
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +93,7 @@ func HTTPGet(uri string) ([]byte, error) {
 //HTTPPost post 请求
 func HTTPPost(uri string, data string) ([]byte, error) {
 	body := bytes.NewBuffer([]byte(data))
-	response, err := http.Post(uri, "", body)
+	response, err := HTTPClient().Post(RequestURLHook(uri), "", body)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +115,7 @@ func PostJSON(uri string, obj interface{}) ([]byte, error) {
 	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u003e"), []byte(">"))
 	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u0026"), []byte("&"))
 	body := bytes.NewBuffer(jsonData)
-	response, err := http.Post(uri, "application/json;charset=utf-8", body)
+	response, err := HTTPClient().Post(RequestURLHook(uri), "application/json;charset=utf-8", body)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +139,7 @@ func PostJSONWithRespContentType(uri string, obj interface{}) ([]byte, string, e
 	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u0026"), []byte("&"))
 
 	body := bytes.NewBuffer(jsonData)
-	response, err := http.Post(uri, "application/json;charset=utf-8", body)
+	response, err := HTTPClient().Post(RequestURLHook(uri), "application/json;charset=utf-8", body)
 	if err != nil {
 		return nil, "", err
 	}
@@ -152,8 +211,7 @@ func PostMultipartForm(fields []MultipartFormField, uri string) (respBody []byte
 
 	contentType := bodyWriter.FormDataContentType()
 	bodyWriter.Close()
-
-	resp, e := http.Post(uri, contentType, bodyBuf)
+	resp, e := HTTPClient().Post(RequestURLHook(uri), contentType, bodyBuf)
 	if e != nil {
 		err = e
 		return
@@ -174,7 +232,7 @@ func PostXML(uri string, obj interface{}) ([]byte, error) {
 	}
 
 	body := bytes.NewBuffer(xmlData)
-	response, err := http.Post(uri, "application/xml;charset=utf-8", body)
+	response, err := HTTPClient().Post(RequestURLHook(uri), "application/xml;charset=utf-8", body)
 	if err != nil {
 		return nil, err
 	}
@@ -202,6 +260,8 @@ func httpWithTLS(rootCa, key string) (*http.Client, error) {
 		DisableCompression: true,
 	}
 	client = &http.Client{Transport: tr}
+	withProxy(client)
+
 	return client, nil
 }
 
@@ -239,7 +299,7 @@ func PostXMLWithTLS(uri string, obj interface{}, ca, key string) ([]byte, error)
 	if err != nil {
 		return nil, err
 	}
-	response, err := client.Post(uri, "application/xml;charset=utf-8", body)
+	response, err := client.Post(RequestURLHook(uri), "application/xml;charset=utf-8", body)
 	if err != nil {
 		return nil, err
 	}
