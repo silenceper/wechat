@@ -49,14 +49,10 @@ func rrProxyURL(proxys []string) string {
 
 // HTTPClient 获取 http client
 func HTTPClient() *http.Client {
-	return withProxy(http.DefaultClient)
+	return withProxy(&http.Client{Transport: http.DefaultTransport})
 }
 
 func withProxy(client *http.Client) *http.Client {
-	if client.Transport == nil {
-		client.Transport = &http.Transport{}
-	}
-
 	transport, ok := client.Transport.(*http.Transport)
 	if !ok {
 		return client
