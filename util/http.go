@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"sync"
 
 	"golang.org/x/crypto/pkcs12"
 )
@@ -21,6 +22,7 @@ import (
 var (
 	idx       int
 	proxyURLs []string
+	l         sync.Mutex
 
 	// RequestURLHook 替换请求 url
 	RequestURLHook func(rawurl string) string
@@ -43,33 +45,32 @@ func rrProxyURL(proxys []string) string {
 	if proxyPoolLen == 0 {
 		return ""
 	}
-	idx = (idx + 1) % proxyPoolLen
+
+	l.Lock()
+	defer l.Unlock()
+	idx := (idx + 1) % proxyPoolLen
 	return proxys[idx]
 }
 
 // HTTPClient 获取 http client
 func HTTPClient() *http.Client {
-	return withProxy(&http.Client{Transport: http.DefaultTransport})
-}
-
-func withProxy(client *http.Client) *http.Client {
-	transport, ok := client.Transport.(*http.Transport)
-	if !ok {
-		return client
-	}
-
 	rawurl := rrProxyURL(proxyURLs)
 	if rawurl == "" {
-		return client
+		return &http.Client{}
 	}
 
 	parsed, err := url.Parse(rawurl)
 	if err != nil {
-		return client
+		return &http.Client{}
 	}
 
-	transport.Proxy = http.ProxyURL(parsed)
-	return client
+	tr := &http.Transport{
+		Proxy: http.ProxyURL(parsed),
+	}
+
+	return &http.Client{
+		Transport: tr,
+	}
 }
 
 //HTTPGet get 请求
@@ -242,7 +243,6 @@ func PostXML(uri string, obj interface{}) ([]byte, error) {
 
 //httpWithTLS CA证书
 func httpWithTLS(rootCa, key string) (*http.Client, error) {
-	var client *http.Client
 	certData, err := ioutil.ReadFile(rootCa)
 	if err != nil {
 		return nil, fmt.Errorf("unable to find cert path=%s, error=%v", rootCa, err)
@@ -251,13 +251,13 @@ func httpWithTLS(rootCa, key string) (*http.Client, error) {
 	config := &tls.Config{
 		Certificates: []tls.Certificate{cert},
 	}
-	tr := &http.Transport{
-		TLSClientConfig:    config,
-		DisableCompression: true,
-	}
-	client = &http.Client{Transport: tr}
-	withProxy(client)
 
+	client := HTTPClient()
+	tr, ok := client.Transport.(*http.Transport)
+	if ok {
+		tr.TLSClientConfig = config
+		tr.DisableCompression = true
+	}
 	return client, nil
 }
 
