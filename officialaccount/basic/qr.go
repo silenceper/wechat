@@ -56,6 +56,11 @@ func (basic *Basic) GetQRTicket(tq *Request) (t *Ticket, err error) {
 		return
 	}
 
+	err = util.DecodeWithCommonError(response, "GetQRTicket")
+	if err != nil {
+		return
+	}
+
 	t = new(Ticket)
 	err = json.Unmarshal(response, &t)
 	if err != nil {
