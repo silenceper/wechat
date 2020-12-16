@@ -56,14 +56,14 @@ func (basic *Basic) GetQRTicket(tq *Request) (t *Ticket, err error) {
 		return
 	}
 
-	err = util.DecodeWithCommonError(response, "GetQRTicket")
+	t = new(Ticket)
+	err = json.Unmarshal(response, &t)
 	if err != nil {
 		return
 	}
 
-	t = new(Ticket)
-	err = json.Unmarshal(response, &t)
-	if err != nil {
+	if t.ErrCode != 0 {
+		err = fmt.Errorf("GetQRTicket Error, errcode=%d ,errmsg=%s", t.ErrCode, t.ErrMsg)
 		return
 	}
 
