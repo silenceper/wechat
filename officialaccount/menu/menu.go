@@ -147,12 +147,12 @@ func (menu *Menu) SetMenuByJSON(jsonInfo string) error {
 
 	uri := fmt.Sprintf("%s?access_token=%s", menuCreateURL, accessToken)
 
-	response, err := util.PostJSON(uri, jsonInfo)
+	response, err := util.HTTPPost(uri, jsonInfo)
 	if err != nil {
 		return err
 	}
 
-	return util.DecodeWithCommonError(response, "SetMenu")
+	return util.DecodeWithCommonError(response, "SetMenuByJSON")
 }
 
 //GetMenu 获取菜单配置
