@@ -223,7 +223,7 @@ func (menu *Menu) AddConditionalByJSON(jsonInfo string) error {
 	}
 
 	uri := fmt.Sprintf("%s?access_token=%s", menuAddConditionalURL, accessToken)
-	response, err := util.PostJSON(uri, jsonInfo)
+	response, err := util.HTTPPost(uri, jsonInfo)
 	if err != nil {
 		return err
 	}
