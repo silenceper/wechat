@@ -16,6 +16,8 @@ import (
 	config2 "github.com/silenceper/wechat/v2/officialaccount/config"
 	context2 "github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/officialaccount/material"
+	message2 "github.com/silenceper/wechat/v2/officialaccount/message"
+	"github.com/silenceper/wechat/v2/officialaccount/server"
 	"net/http"
 )
 
@@ -83,9 +85,32 @@ func (miniProgram *MiniProgram) GetCustomerMessage() *message.Manager {
 	return message.NewCustomerMessageManager(miniProgram.ctx)
 }
 
+// GetCustomerMessageManager 客服消息接口
+func (miniProgram *MiniProgram) GetCustomerMessageManager() *message2.Manager {
+	return message2.NewMessageManager(&context2.Context{
+		Config:            &config2.Config{
+			AppID:          miniProgram.ctx.AppID,
+			AppSecret:      miniProgram.ctx.AppSecret,
+			Token:          miniProgram.ctx.Token,
+			EncodingAESKey: miniProgram.ctx.EncodingAESKey,
+			Cache:          miniProgram.ctx.Cache,
+		},
+		AccessTokenHandle: miniProgram.ctx.AccessTokenHandle,
+	})
+}
+
 // GetServer 消息管理：接收事件，被动回复消息管理
 func (miniProgram *MiniProgram) GetServer(req *http.Request, writer http.ResponseWriter) *server.Server {
-	srv := server.NewServer(miniProgram.ctx)
+	srv := server.NewServer(&context2.Context{
+		Config:            &config2.Config{
+			AppID:          miniProgram.ctx.AppID,
+			AppSecret:      miniProgram.ctx.AppSecret,
+			Token:          miniProgram.ctx.Token,
+			EncodingAESKey: miniProgram.ctx.EncodingAESKey,
+			Cache:          miniProgram.ctx.Cache,
+		},
+		AccessTokenHandle: miniProgram.ctx.AccessTokenHandle,
+	})
 	srv.Request = req
 	srv.Writer = writer
 	return srv
