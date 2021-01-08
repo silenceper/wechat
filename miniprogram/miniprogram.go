@@ -10,7 +10,6 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/message"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
 	"github.com/silenceper/wechat/v2/miniprogram/scheme"
-	"github.com/silenceper/wechat/v2/miniprogram/server"
 	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
 	config2 "github.com/silenceper/wechat/v2/officialaccount/config"
