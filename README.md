@@ -14,7 +14,7 @@
 
 ## 快速开始
 ```
-import github.com/silenceper/wechat/v2
+import "github.com/silenceper/wechat/v2"
 ```
 
 以下是一个微信公众号处理消息接收以及回复的例子：
