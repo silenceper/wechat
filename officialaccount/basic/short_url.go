@@ -1,7 +1,6 @@
 package basic
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/silenceper/wechat/v2/util"
@@ -45,11 +44,7 @@ func (basic *Basic) Long2ShortURL(longURL string) (shortURL string, err error) {
 	if err != nil {
 		return
 	}
-	if err = json.Unmarshal(responseBytes, resp); err != nil {
-		return
-	}
-	if resp.ErrCode != 0 {
-		err = fmt.Errorf("%s Error , errcode=%d , errmsg=%s", long2shortAction, resp.ErrCode, resp.ErrMsg)
+	if err = util.DecodeWithError(responseBytes, resp, long2shortAction); err != nil {
 		return
 	}
 	shortURL = resp.ShortURL
