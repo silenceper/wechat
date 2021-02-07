@@ -1,6 +1,7 @@
 package util
 
 import (
+	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/hmac"
@@ -226,4 +227,106 @@ func ParamSign(p map[string]string, key string) (string, error) {
 	}
 
 	return CalculateSign(str, signType, key)
+}
+
+// ECB provides confidentiality by assigning a fixed ciphertext block to each plaintext block.
+// See NIST SP 800-38A, pp 08-09
+// reference: https://codereview.appspot.com/7860047/patch/23001/24001
+type ecb struct {
+	b         cipher.Block
+	blockSize int
+}
+
+func newECB(b cipher.Block) *ecb {
+	return &ecb{
+		b:         b,
+		blockSize: b.BlockSize(),
+	}
+}
+
+// ECBEncryptor -
+type ECBEncryptor ecb
+
+// NewECBEncryptor returns a BlockMode which encrypts in electronic code book mode, using the given Block.
+func NewECBEncryptor(b cipher.Block) cipher.BlockMode {
+	return (*ECBEncryptor)(newECB(b))
+}
+
+// BlockSize implement BlockMode.BlockSize
+func (x *ECBEncryptor) BlockSize() int {
+	return x.blockSize
+}
+
+// CryptBlocks implement BlockMode.CryptBlocks
+func (x *ECBEncryptor) CryptBlocks(dst, src []byte) {
+	if len(src)%x.blockSize != 0 {
+		panic("crypto/cipher: input not full blocks")
+	}
+	if len(dst) < len(src) {
+		panic("crypto/cipher: output smaller than input")
+	}
+	for len(src) > 0 {
+		x.b.Encrypt(dst, src[:x.blockSize])
+		src = src[x.blockSize:]
+		dst = dst[x.blockSize:]
+	}
+}
+
+// ECBDecryptor -
+type ECBDecryptor ecb
+
+// NewECBDecryptor returns a BlockMode which decrypts in electronic code book mode, using the given Block.
+func NewECBDecryptor(b cipher.Block) cipher.BlockMode {
+	return (*ECBDecryptor)(newECB(b))
+}
+
+// BlockSize implement BlockMode.BlockSize
+func (x *ECBDecryptor) BlockSize() int {
+	return x.blockSize
+}
+
+// CryptBlocks implement BlockMode.CryptBlocks
+func (x *ECBDecryptor) CryptBlocks(dst, src []byte) {
+	if len(src)%x.blockSize != 0 {
+		panic("crypto/cipher: input not full blocks")
+	}
+	if len(dst) < len(src) {
+		panic("crypto/cipher: output smaller than input")
+	}
+	for len(src) > 0 {
+		x.b.Decrypt(dst, src[:x.blockSize])
+		src = src[x.blockSize:]
+		dst = dst[x.blockSize:]
+	}
+}
+
+// AesECBDecrypt will decrypt data with PKCS5Padding
+func AesECBDecrypt(ciphertext []byte, aesKey []byte) ([]byte, error) {
+	if len(ciphertext) < aes.BlockSize {
+		return nil, errors.New("ciphertext too short")
+	}
+	// ECB mode always works in whole blocks.
+	if len(ciphertext)%aes.BlockSize != 0 {
+		return nil, errors.New("ciphertext is not a multiple of the block size")
+	}
+	block, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return nil, err
+	}
+	NewECBDecryptor(block).CryptBlocks(ciphertext, ciphertext)
+	return PKCS5UnPadding(ciphertext), nil
+}
+
+// PKCS5Padding -
+func PKCS5Padding(ciphertext []byte, blockSize int) []byte {
+	padding := blockSize - len(ciphertext)%blockSize
+	padText := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(ciphertext, padText...)
+}
+
+// PKCS5UnPadding -
+func PKCS5UnPadding(origData []byte) []byte {
+	length := len(origData)
+	unPadding := int(origData[length-1])
+	return origData[:(length - unPadding)]
 }
