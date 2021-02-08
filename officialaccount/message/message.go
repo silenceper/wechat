@@ -225,3 +225,8 @@ func (msg *CommonToken) SetCreateTime(createTime int64) {
 func (msg *CommonToken) SetMsgType(msgType MsgType) {
 	msg.MsgType = msgType
 }
+
+//GetOpenID get the FromUserName value
+func (msg *CommonToken) GetOpenID() string {
+	return string(msg.FromUserName)
+}
