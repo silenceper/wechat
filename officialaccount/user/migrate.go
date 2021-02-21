@@ -69,7 +69,7 @@ func (user *User) ListChangeOpenIDs(fromAppID string, openIDs ...string) (list *
 	return
 }
 
-// ListAllUserOpenIDs 返回所有用户OpenID列表
+// ListAllChangeOpenIDs  返回所有用户OpenID列表
 // fromAppID 为老账号AppID
 // openIDs 为老账号的openID
 // AccessToken 为新账号的AccessToken
