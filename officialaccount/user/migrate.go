@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	changeOpenIDURL = "http://api.weixin.qq.com/cgi-bin/changeopenid"
+	changeOpenIDURL = "https://api.weixin.qq.com/cgi-bin/changeopenid"
 )
 
 // ChangeOpenIDResult OpenID迁移变化
@@ -27,6 +27,9 @@ type ChangeOpenIDResultList struct {
 }
 
 // ListChangeOpenIDs 返回指定OpenID变化列表
+// fromAppID 为老账号AppID
+// openIDs 为老账号的openID，openIDs限100个以内
+// AccessToken 为新账号的AccessToken
 func (user *User) ListChangeOpenIDs(fromAppID string, openIDs ...string) (list *ChangeOpenIDResultList, err error) {
 	list = &ChangeOpenIDResultList{}
 	//list.List = make([]ChangeOpenIDResult, 0)
@@ -52,7 +55,8 @@ func (user *User) ListChangeOpenIDs(fromAppID string, openIDs ...string) (list *
 		OpenidList []string `json:"openid_list"`
 	}
 	req.FromAppID = fromAppID
-	resp, err = util.PostJSON(uri, &req)
+	req.OpenidList = append(req.OpenidList, openIDs...)
+	resp, err = util.PostJSON(uri, req)
 	if err != nil {
 		return
 	}
@@ -66,18 +70,16 @@ func (user *User) ListChangeOpenIDs(fromAppID string, openIDs ...string) (list *
 }
 
 // ListAllUserOpenIDs 返回所有用户OpenID列表
-func (user *User) ListAllChangeOpenIDs(fromAppID string) (list []ChangeOpenIDResult, err error) {
+// fromAppID 为老账号AppID
+// openIDs 为老账号的openID
+// AccessToken 为新账号的AccessToken
+func (user *User) ListAllChangeOpenIDs(fromAppID string, openIDs ...string) (list []ChangeOpenIDResult, err error) {
 	list = make([]ChangeOpenIDResult, 0)
-	openIDs, err := user.ListAllUserOpenIDs()
-	if err != nil {
-		return
-	}
-
 	chunks := util.SliceChunk(openIDs, 100)
 	for _, chunk := range chunks {
 		result, err := user.ListChangeOpenIDs(fromAppID, chunk...)
 		if err != nil {
-			return
+			return list, err
 		}
 		list = append(list, result.List...)
 	}
