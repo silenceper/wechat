@@ -29,6 +29,7 @@ type Params struct {
 	RefundFee     string
 	RefundDesc    string
 	RootCa        string //ca证书
+	NotifyURL     string
 }
 
 //request 接口请求参数
@@ -43,7 +44,7 @@ type request struct {
 	TotalFee      string `xml:"total_fee"`
 	RefundFee     string `xml:"refund_fee"`
 	RefundDesc    string `xml:"refund_desc,omitempty"`
-	//NotifyUrl     string `xml:"notify_url,omitempty"`
+	NotifyURL     string `xml:"notify_url,omitempty"`
 }
 
 //Response 接口返回
@@ -83,13 +84,16 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	param["total_fee"] = p.TotalFee
 	param["sign_type"] = util.SignTypeMD5
 	param["transaction_id"] = p.TransactionID
+	if p.NotifyURL != "" {
+		param["notify_url"] = p.NotifyURL
+	}
 
 	sign, err := util.ParamSign(param, refund.Key)
 	if err != nil {
 		return
 	}
 
-	request := request{
+	req := request{
 		AppID:         refund.AppID,
 		MchID:         refund.MchID,
 		NonceStr:      nonceStr,
@@ -101,7 +105,7 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 		RefundFee:     p.RefundFee,
 		RefundDesc:    p.RefundDesc,
 	}
-	rawRet, err := util.PostXMLWithTLS(refundGateway, request, p.RootCa, refund.MchID)
+	rawRet, err := util.PostXMLWithTLS(refundGateway, req, p.RootCa, refund.MchID)
 	if err != nil {
 		return
 	}
