@@ -7,8 +7,7 @@ import (
 )
 
 const (
-	generateUrlScheme   = "https://api.weixin.qq.com/wxa/generatescheme?access_token=%v"
-
+	generateUrlScheme = "https://api.weixin.qq.com/wxa/generatescheme?access_token=%v"
 )
 
 //UrlScheme struct
@@ -16,14 +15,19 @@ type UrlScheme struct {
 	*context.Context
 }
 type MiniProgram struct {
-	Path string `json:"path"`
+	Path  string `json:"path"`
 	Query string `json:"query"`
 }
 type GenerateBody struct {
-	JumpWxa *MiniProgram `json:"jump_wxa"`
-	IsExpire bool `json:"is_expire"`
-	ExpireTime int64 `json:"expire_time"`
+	JumpWxa    *MiniProgram `json:"jump_wxa"`
+	IsExpire   bool         `json:"is_expire"`
+	ExpireTime int64        `json:"expire_time"`
 }
+type GenerateRes struct {
+	util.CommonError
+	Openlink string `json:"openlink"`
+}
+
 //NewUrlScheme 实例
 func NewUrlScheme(context *context.Context) *UrlScheme {
 	urlScheme := new(UrlScheme)
@@ -31,14 +35,14 @@ func NewUrlScheme(context *context.Context) *UrlScheme {
 	return urlScheme
 }
 
-
 // Generate 获取小程序scheme码
-func (urlScheme *UrlScheme) Generate(miniprogram *MiniProgram,isExpire bool,expireTime int64) (response []byte, err error) {
+func (urlScheme *UrlScheme) Generate(miniprogram *MiniProgram, isExpire bool, expireTime int64) (rd string, err error) {
 	var (
 		accessToken string
-		urlStr string
-		body = &GenerateBody{}
-
+		urlStr      string
+		body        = &GenerateBody{}
+		res         = GenerateRes{}
+		response    []byte
 	)
 
 	accessToken, err = urlScheme.GetAccessToken()
@@ -50,10 +54,8 @@ func (urlScheme *UrlScheme) Generate(miniprogram *MiniProgram,isExpire bool,expi
 	body.IsExpire = isExpire
 	body.ExpireTime = expireTime
 	response, err = util.PostJSON(urlStr, body)
-	if err != nil {
-		return
-	}
-	err = util.DecodeWithCommonError(response, "GenerateUrlScheme")
+	err = util.DecodeWithError(response, &res, "GenerateUrlScheme")
+	rd = res.Openlink
 	return
 
 }
