@@ -112,6 +112,9 @@ type MixMessage struct {
 	Description   string  `xml:"Description"`
 	URL           string  `xml:"Url"`
 
+	PagePath string `json:"PagePath"`
+	ThumbUrl string `json:"ThumbUrl"`
+
 	//事件相关
 	Event       EventType `xml:"Event"`
 	EventKey    string    `xml:"EventKey"`
@@ -166,6 +169,14 @@ type MixMessage struct {
 	ExtraInfoJSON string `xml:"extra_info_json"`
 	TraceID       string `xml:"trace_id"`
 	StatusCode    int    `xml:"status_code"`
+
+
+	SuccTime   int64  `xlm:"SuccTime"`
+	FailTime   int64  `xml:"FailTime"`
+	DelayTime  int64  `xml:"DelayTime"`
+	Reason     string `xml:"Reason"`
+	ScreenShot string `xml:"ScreenShot"`
+
 
 	//设备相关
 	device.MsgDevice

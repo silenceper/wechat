@@ -5,8 +5,10 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram"
 	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
 	openContext "github.com/silenceper/wechat/v2/openplatform/context"
+	"github.com/silenceper/wechat/v2/openplatform/miniprogram/auth"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/basic"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/component"
+	"github.com/silenceper/wechat/v2/openplatform/miniprogram/encryptor"
 )
 
 //MiniProgram 代小程序实现业务
@@ -20,7 +22,8 @@ type MiniProgram struct {
 func NewMiniProgram(opCtx *openContext.Context, appID string) *MiniProgram {
 	mini := miniprogram.NewMiniProgram(&miniConfig.Config{
 		AppID:          opCtx.AppID,
-		AppSecret:      opCtx.AppSecret,
+		EncodingAESKey: opCtx.EncodingAESKey,
+		Token:          opCtx.Token,
 		Cache:          opCtx.Cache,
 	})
 	//设置获取access_token的函数
@@ -30,6 +33,16 @@ func NewMiniProgram(opCtx *openContext.Context, appID string) *MiniProgram {
 		AppID:       appID,
 		MiniProgram: mini,
 	}
+}
+
+// PlatformAuth
+func (miniProgram *MiniProgram) PlatformAuth() *auth.Auth {
+	return auth.NewAuth(miniProgram.GetContext())
+}
+
+// PlatformEncryptor
+func (miniProgram *MiniProgram) PlatformEncryptor() *encryptor.Encryptor {
+	return encryptor.NewEncryptor(miniProgram.GetContext())
 }
 
 //GetComponent get component

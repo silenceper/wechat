@@ -59,8 +59,8 @@ type GetAuditstatusResponse struct {
 //GetLastAuditstatusResponse 获取最后一次审核状态返回结果
 type GetLastAuditstatusResponse struct {
 	util.CommonError
-	Auditid    string `json:"Auditid"`
+	Auditid    int64  `json:"auditid"`
 	Status     int64  `json:"status"`     //0	审核成功  1	审核被拒绝 2	审核中 3	已撤回 4	审核延后
 	Reason     string `json:"reason"`     //当 status = 1 时，返回的拒绝原因; status = 4 时，返回的延后原因
-	Screenshot string `json:"screenshot"` //当 status = 1 时，会返回审核失败的小程序截图示例。用 | 分隔的 media_id 的列表，可通过获取永久素材接口拉取截图内容
+	Screenshot string `json:"ScreenShot"` //当 status = 1 时，会返回审核失败的小程序截图示例。用 | 分隔的 media_id 的列表，可通过获取永久素材接口拉取截图内容
 }

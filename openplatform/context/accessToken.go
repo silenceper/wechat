@@ -23,6 +23,8 @@ const (
 	//TODO 获取已授权的账号信息
 	//getuthorizerListURL = "POST https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_list?component_access_token=%s"
 	getCodeTemplate = "https://api.weixin.qq.com/wxa/gettemplatelist?access_token=%s"
+	getFastRegisterAuthURL     = "https://mp.weixin.qq.com/cgi-bin/fastregisterauth?appid=%s&component_appid=%s&copy_wx_verify=1&redirect_uri=%s"
+
 )
 
 // ComponentAccessToken 第三方平台
@@ -54,6 +56,7 @@ func (ctx *Context) SetComponentAccessToken(verifyTicket string) (*ComponentAcce
 	}
 
 	at := &ComponentAccessToken{}
+	fmt.Println(string(respBody))
 	if err := json.Unmarshal(respBody, at); err != nil {
 		return nil, err
 	}
@@ -61,6 +64,7 @@ func (ctx *Context) SetComponentAccessToken(verifyTicket string) (*ComponentAcce
 	accessTokenCacheKey := fmt.Sprintf("component_access_token_%s", ctx.AppID)
 	expires := at.ExpiresIn - 1500
 	if err := ctx.Cache.Set(accessTokenCacheKey, at.AccessToken, time.Duration(expires)*time.Second); err != nil {
+		fmt.Println(err)
 		return nil, nil
 	}
 	return at, nil
@@ -107,6 +111,11 @@ func (ctx *Context) GetBindComponentURL(redirectURI string, authType int, bizApp
 		return "", err
 	}
 	return fmt.Sprintf(bindComponentURL, authType, ctx.AppID, code, url.QueryEscape(redirectURI), bizAppID), nil
+}
+
+func (ctx *Context) GetFastRegisterAuth(gzhAppId string,redirectUrl string)(url string){
+	url = fmt.Sprintf(getFastRegisterAuthURL,gzhAppId, ctx.AppID,redirectUrl)
+	return
 }
 
 // ID 微信返回接口中各种类型字段

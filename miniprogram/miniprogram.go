@@ -9,8 +9,15 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
+	"github.com/silenceper/wechat/v2/miniprogram/scheme"
 	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
+	config2 "github.com/silenceper/wechat/v2/officialaccount/config"
+	context2 "github.com/silenceper/wechat/v2/officialaccount/context"
+	"github.com/silenceper/wechat/v2/officialaccount/material"
+	message2 "github.com/silenceper/wechat/v2/officialaccount/message"
+	"github.com/silenceper/wechat/v2/officialaccount/server"
+	"net/http"
 )
 
 //MiniProgram 微信小程序相关API
@@ -51,6 +58,10 @@ func (miniProgram *MiniProgram) GetAuth() *auth.Auth {
 //GetAnalysis 数据分析
 func (miniProgram *MiniProgram) GetAnalysis() *analysis.Analysis {
 	return analysis.NewAnalysis(miniProgram.ctx)
+} 
+//GetUrlScheme 链接
+func (miniProgram *MiniProgram) GetUrlScheme() *scheme.UrlScheme {
+	return scheme.NewUrlScheme(miniProgram.ctx)
 }
 
 //GetQRCode 小程序码相关API
@@ -71,4 +82,49 @@ func (miniProgram *MiniProgram) GetSubscribe() *subscribe.Subscribe {
 // GetCustomerMessage 客服消息接口
 func (miniProgram *MiniProgram) GetCustomerMessage() *message.Manager {
 	return message.NewCustomerMessageManager(miniProgram.ctx)
+}
+
+// GetCustomerMessageManager 客服消息接口
+func (miniProgram *MiniProgram) GetCustomerMessageManager() *message2.Manager {
+	return message2.NewMessageManager(&context2.Context{
+		Config:            &config2.Config{
+			AppID:          miniProgram.ctx.AppID,
+			AppSecret:      miniProgram.ctx.AppSecret,
+			Token:          miniProgram.ctx.Token,
+			EncodingAESKey: miniProgram.ctx.EncodingAESKey,
+			Cache:          miniProgram.ctx.Cache,
+		},
+		AccessTokenHandle: miniProgram.ctx.AccessTokenHandle,
+	})
+}
+
+// GetServer 消息管理：接收事件，被动回复消息管理
+func (miniProgram *MiniProgram) GetServer(req *http.Request, writer http.ResponseWriter) *server.Server {
+	srv := server.NewServer(&context2.Context{
+		Config:            &config2.Config{
+			AppID:          miniProgram.ctx.AppID,
+			AppSecret:      miniProgram.ctx.AppSecret,
+			Token:          miniProgram.ctx.Token,
+			EncodingAESKey: miniProgram.ctx.EncodingAESKey,
+			Cache:          miniProgram.ctx.Cache,
+		},
+		AccessTokenHandle: miniProgram.ctx.AccessTokenHandle,
+	})
+	srv.Request = req
+	srv.Writer = writer
+	return srv
+}
+
+// GetMaterial 素材管理
+func (miniProgram *MiniProgram) GetMaterial() *material.Material {
+	return material.NewMaterial(&context2.Context{
+		Config:            &config2.Config{
+			AppID:          miniProgram.ctx.AppID,
+			AppSecret:      miniProgram.ctx.AppSecret,
+			Token:          miniProgram.ctx.Token,
+			EncodingAESKey: miniProgram.ctx.EncodingAESKey,
+			Cache:          miniProgram.ctx.Cache,
+		},
+		AccessTokenHandle: miniProgram.ctx.AccessTokenHandle,
+	})
 }
