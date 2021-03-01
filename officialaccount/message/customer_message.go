@@ -26,8 +26,10 @@ func NewMessageManager(context *context.Context) *Manager {
 
 //CustomerMessage  客服消息
 type CustomerMessage struct {
-	ToUser          string                `json:"touser"`                    //接受者OpenID
-	Msgtype         MsgType               `json:"msgtype"`                   //客服消息类型
+	ToUser  string  `json:"touser"`            //接受者OpenID
+	Command Command `json:"command,omitempty"` //客服消息类型
+
+	Msgtype         MsgType               `json:"msgtype,omitempty"`         //客服消息类型
 	Text            *MediaText            `json:"text,omitempty"`            //可选
 	Image           *MediaResource        `json:"image,omitempty"`           //可选
 	Voice           *MediaResource        `json:"voice,omitempty"`           //可选

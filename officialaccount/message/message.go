@@ -8,6 +8,7 @@ import (
 
 // MsgType 基本消息类型
 type MsgType string
+type Command string
 
 // EventType 事件类型
 type EventType string
@@ -15,6 +16,10 @@ type EventType string
 // InfoType 第三方平台授权事件类型
 type InfoType string
 
+const (
+	TypingCommand       Command = "Typing"
+	CancelTypingCommand Command = "CancelTyping"
+)
 const (
 	//MsgTypeText 表示文本消息
 	MsgTypeText MsgType = "text"
