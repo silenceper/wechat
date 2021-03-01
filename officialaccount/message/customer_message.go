@@ -10,6 +10,7 @@ import (
 
 const (
 	customerSendMessage = "https://api.weixin.qq.com/cgi-bin/message/custom/send"
+	customerSendTyping  = "https://api.weixin.qq.com/cgi-bin/message/custom/typing"
 )
 
 //Manager 消息管理者，可以发送消息
@@ -26,8 +27,7 @@ func NewMessageManager(context *context.Context) *Manager {
 
 //CustomerMessage  客服消息
 type CustomerMessage struct {
-	ToUser  string  `json:"touser"`            //接受者OpenID
-	Command Command `json:"command,omitempty"` //客服消息类型
+	ToUser string `json:"touser"` //接受者OpenID
 
 	Msgtype         MsgType               `json:"msgtype,omitempty"`         //客服消息类型
 	Text            *MediaText            `json:"text,omitempty"`            //可选
@@ -173,6 +173,60 @@ func (manager *Manager) Send(msg *CustomerMessage) error {
 	}
 	if result.ErrCode != 0 {
 		err = fmt.Errorf("customer msg send error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
+		return err
+	}
+
+	return nil
+}
+
+//Typing 正在输入
+func (manager *Manager) Typing(openid string) error {
+	accessToken, err := manager.Context.GetAccessToken()
+	if err != nil {
+		return err
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", customerSendTyping, accessToken)
+	response, err := util.PostJSON(uri, struct {
+		Touser  string  `json:"touser"`
+		Command Command `json:"command"`
+	}{Touser: openid, Command: TypingCommand})
+	if err != nil {
+		return err
+	}
+	var result util.CommonError
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		return err
+	}
+	if result.ErrCode != 0 {
+		err = fmt.Errorf("customer typing send error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
+		return err
+	}
+
+	return nil
+}
+
+//CancelTyping 取消正在输入
+func (manager *Manager) CancelTyping(openid string) error {
+	accessToken, err := manager.Context.GetAccessToken()
+	if err != nil {
+		return err
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", customerSendTyping, accessToken)
+	response, err := util.PostJSON(uri, struct {
+		Touser  string  `json:"touser"`
+		Command Command `json:"command"`
+	}{Touser: openid, Command: CancelTypingCommand})
+	if err != nil {
+		return err
+	}
+	var result util.CommonError
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		return err
+	}
+	if result.ErrCode != 0 {
+		err = fmt.Errorf("customer cancle_typing send error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return err
 	}
 
