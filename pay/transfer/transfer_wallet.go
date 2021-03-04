@@ -65,7 +65,7 @@ type Response struct {
 	ErrCode        string `xml:"err_code,omitempty"`
 	ErrCodeDes     string `xml:"err_code_des,omitempty"`
 	PartnerTradeNo string `xml:"partner_trade_no"`
-	PaymentNo       string `xml:"payment_no"`
+	PaymentNo      string `xml:"payment_no"`
 	PaymentTime    string `xml:"payment_time"`
 }
 
