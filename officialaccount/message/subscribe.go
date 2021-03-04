@@ -26,11 +26,11 @@ func NewSubscrib(context *context.Context) *Subscrib {
 
 //SubscribeMessage 发送的订阅消息内容
 type SubscribeMessage struct {
-	ToUser         string                        `json:"touser"`         // 必须, 接受者OpenID
-	SubscriptionID string                        `json:"template_id"`    // 必须, 模版ID
-	Page           string                        `json:"page,omitempty"` // 可选, 跳转网页时填写
-	Data           map[string]*SubscribeDataItem `json:"data"`           // 必须, 模板数据
-	MiniProgram    struct {
+	ToUser      string                        `json:"touser"`         // 必须, 接受者OpenID
+	TemplateID  string                        `json:"template_id"`    // 必须, 模版ID
+	Page        string                        `json:"page,omitempty"` // 可选, 跳转网页时填写
+	Data        map[string]*SubscribeDataItem `json:"data"`           // 必须, 模板数据
+	MiniProgram struct {
 		AppID    string `json:"appid"`    //所需跳转到的小程序appid（该小程序appid必须与发模板消息的公众号是绑定关联关系）
 		PagePath string `json:"pagepath"` //所需跳转到小程序的具体页面路径，支持带参数,（示例index?foo=bar）
 	} `json:"miniprogram"` //可选,跳转至小程序地址
