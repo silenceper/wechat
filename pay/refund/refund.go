@@ -24,7 +24,7 @@ func NewRefund(cfg *config.Config) *Refund {
 //Params 调用参数
 type Params struct {
 	TransactionID string
-	OutTradeNo   string
+	OutTradeNo    string
 	OutRefundNo   string
 	TotalFee      string
 	RefundFee     string
@@ -41,7 +41,7 @@ type request struct {
 	Sign          string `xml:"sign"`
 	SignType      string `xml:"sign_type,omitempty"`
 	TransactionID string `xml:"transaction_id,omitempty"`
-	OutTradeNo   string `xml:"out_trade_no,omitempty"`
+	OutTradeNo    string `xml:"out_trade_no,omitempty"`
 	OutRefundNo   string `xml:"out_refund_no"`
 	TotalFee      string `xml:"total_fee"`
 	RefundFee     string `xml:"refund_fee"`
@@ -85,10 +85,10 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	param["refund_fee"] = p.RefundFee
 	param["total_fee"] = p.TotalFee
 	param["sign_type"] = util.SignTypeMD5
-	if(p.TransactionID != ""){
-	param["transaction_id"] = p.TransactionID
+	if p.TransactionID != "" {
+		param["transaction_id"] = p.TransactionID
 	}
-	if(p.OutTradeNo != ""){
+	if p.OutTradeNo != "" {
 		param["out_trade_no"] = p.OutTradeNo
 	}
 	if p.NotifyURL != "" {
@@ -108,11 +108,11 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 		SignType:      util.SignTypeMD5,
 		TransactionID: p.TransactionID,
 		OutRefundNo:   p.OutRefundNo,
-		OutTradeNo:   p.OutTradeNo,
+		OutTradeNo:    p.OutTradeNo,
 		TotalFee:      p.TotalFee,
 		RefundFee:     p.RefundFee,
 		RefundDesc:    p.RefundDesc,
-		NotifyURL:    p.NotifyURL,
+		NotifyURL:     p.NotifyURL,
 	}
 	rawRet, err := util.PostXMLWithTLS(refundGateway, req, p.RootCa, refund.MchID)
 	if err != nil {
