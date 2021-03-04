@@ -1,8 +1,8 @@
 package message
 
 import (
-	"encoding/json"
 	"fmt"
+
 	"github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/util"
 )
@@ -17,7 +17,7 @@ type Subscrib struct {
 	*context.Context
 }
 
-//NewNewSubscrib 实例化
+//NewSubscrib 实例化
 func NewSubscrib(context *context.Context) *Subscrib {
 	tpl := new(Subscrib)
 	tpl.Context = context
@@ -41,11 +41,6 @@ type SubscribeDataItem struct {
 	Value string `json:"value"`
 }
 
-// 发送结果
-type resSubscribeSend struct {
-	util.CommonError
-}
-
 //Send 发送订阅消息
 func (tpl *Subscrib) Send(msg *SubscribeMessage) (err error) {
 	var accessToken string
@@ -58,21 +53,12 @@ func (tpl *Subscrib) Send(msg *SubscribeMessage) (err error) {
 	if err != nil {
 		return
 	}
-	var result resSubscribeSend
-	err = json.Unmarshal(response, &result)
-	if err != nil {
-		return
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("subscribe msg send error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return
-	}
-	return nil
+	return util.DecodeWithCommonError(response, "SendSubscribMessage")
 }
 
 // PrivateSubscribItem 私有订阅消息模板
 type PrivateSubscribItem struct {
-	PriTmplId string `json:"priTmplId"` //	添加至帐号下的模板 id，发送订阅通知时所需
+	PriTmplID string `json:"priTmplId"` //	添加至帐号下的模板 id，发送订阅通知时所需
 	Title     string `json:"title"`     //模版标题
 	Content   string `json:"content"`   //模版内容
 	Example   string `json:"example"`   //模板内容示例
