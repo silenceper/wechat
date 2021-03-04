@@ -93,9 +93,6 @@ func (transfer *Transfer) WalletTransfer(p *Params) (rsp Response, err error) {
 		param["spbill_create_ip"] = p.SpbillCreateIP
 	}
 
-	str,_ := xml.Marshal(param)
-	fmt.Println(string(str))
-
 	sign, err := util.ParamSign(param, transfer.Key)
 	if err != nil {
 		return
@@ -119,9 +116,6 @@ func (transfer *Transfer) WalletTransfer(p *Params) (rsp Response, err error) {
 	} else {
 		req.CheckName = "NO_CHECK"
 	}
-
-	str,_ = xml.Marshal(req)
-	fmt.Println(string(str))
 
 	rawRet, err := util.PostXMLWithTLS(walletTransferGateway, req, p.RootCa, transfer.MchID)
 	if err != nil {
