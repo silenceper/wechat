@@ -2,6 +2,7 @@ package order
 
 import (
 	"encoding/xml"
+	"errors"
 
 	"github.com/silenceper/wechat/v2/pay/notify"
 	"github.com/silenceper/wechat/v2/util"
@@ -67,5 +68,15 @@ func (o *Order) QueryOrder(p *QueryParams) (paidResult notify.PaidResult, err er
 		return
 	}
 
+	if *paidResult.ReturnCode == SUCCESS {
+		// query success
+		if *paidResult.ResultCode == SUCCESS {
+			err = nil
+			return
+		}
+		err = errors.New(*paidResult.ErrCode + *paidResult.ErrCodeDes)
+		return
+	}
+	err = errors.New("[msg : xmlUnmarshalError] [rawReturn : " + string(rawRet) + "] [sign : " + sign + "]")
 	return
 }

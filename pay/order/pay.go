@@ -14,6 +14,9 @@ import (
 // https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
 var payGateway = "https://api.mch.weixin.qq.com/pay/unifiedorder"
 
+// SUCCESS 表示支付成功
+const SUCCESS = "SUCCESS"
+
 // Order struct extends context
 type Order struct {
 	*config.Config
@@ -190,9 +193,9 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	if err != nil {
 		return
 	}
-	if payOrder.ReturnCode == "SUCCESS" {
+	if payOrder.ReturnCode == SUCCESS {
 		// pay success
-		if payOrder.ResultCode == "SUCCESS" {
+		if payOrder.ResultCode == SUCCESS {
 			err = nil
 			return
 		}
