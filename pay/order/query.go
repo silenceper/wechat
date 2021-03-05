@@ -35,15 +35,15 @@ func (o *Order) QueryOrder(p *QueryParams) (paidResult notify.PaidResult, err er
 		p.SignType = "MD5"
 	}
 
-	param := make(map[string]string)
-	param["appid"] = o.AppID
-	param["mch_id"] = o.MchID
-	param["nonce_str"] = nonceStr
-	param["out_trade_no"] = p.OutTradeNo
-	param["sign_type"] = p.SignType
-	param["transaction_id"] = p.TransactionID
+	params := make(map[string]string)
+	params["appid"] = o.AppID
+	params["mch_id"] = o.MchID
+	params["nonce_str"] = nonceStr
+	params["out_trade_no"] = p.OutTradeNo
+	params["sign_type"] = p.SignType
+	params["transaction_id"] = p.TransactionID
 
-	sign, err := util.ParamSign(param, o.Key)
+	sign, err := util.ParamSign(params, o.Key)
 	if err != nil {
 		return
 	}
@@ -61,10 +61,11 @@ func (o *Order) QueryOrder(p *QueryParams) (paidResult notify.PaidResult, err er
 	if err != nil {
 		return
 	}
+
 	err = xml.Unmarshal(rawRet, &paidResult)
 	if err != nil {
 		return
 	}
 
-	return
+	return paidResult, nil
 }
