@@ -9,7 +9,7 @@ import (
 
 var queryGateway = "https://api.mch.weixin.qq.com/pay/orderquery"
 
-// 传入的参数
+// QueryParams 传入的参数
 type QueryParams struct {
 	OutTradeNo    string // 商户订单号
 	SignType      string // 签名类型
@@ -27,7 +27,7 @@ type queryRequest struct {
 	OutTradeNo    string `xml:"out_trade_no"`        // 商户订单号
 }
 
-// 查询订单
+// QueryOrder 查询订单
 func (o *Order) QueryOrder(p *QueryParams) (paidResult notify.PaidResult, err error) {
 	nonceStr := util.RandomStr(32)
 	// 签名类型
@@ -67,5 +67,5 @@ func (o *Order) QueryOrder(p *QueryParams) (paidResult notify.PaidResult, err er
 		return
 	}
 
-	return paidResult, nil
+	return
 }
