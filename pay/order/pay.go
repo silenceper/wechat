@@ -11,8 +11,11 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
-//https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
+// https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
 var payGateway = "https://api.mch.weixin.qq.com/pay/unifiedorder"
+
+// SUCCESS 表示支付成功
+const SUCCESS = "SUCCESS"
 
 // Order struct extends context
 type Order struct {
@@ -25,7 +28,7 @@ func NewOrder(cfg *config.Config) *Order {
 	return &order
 }
 
-// Params was NEEDED when request unifiedorder
+// Params was NEEDED when request Unified order
 // 传入的参数，用于生成 prepay_id 的必需参数
 type Params struct {
 	TotalFee   string
@@ -51,7 +54,7 @@ type Config struct {
 	PaySign   string `json:"paySign"`
 }
 
-// PreOrder 是 unifie order 接口的返回
+// PreOrder 是 Unified order 接口的返回
 type PreOrder struct {
 	ReturnCode string `xml:"return_code"`
 	ReturnMsg  string `xml:"return_msg"`
@@ -70,14 +73,14 @@ type PreOrder struct {
 
 // payRequest 接口请求参数
 type payRequest struct {
-	AppID          string `xml:"appid"`
-	MchID          string `xml:"mch_id"`
-	DeviceInfo     string `xml:"device_info,omitempty"`
-	NonceStr       string `xml:"nonce_str"`
-	Sign           string `xml:"sign"`
-	SignType       string `xml:"sign_type,omitempty"`
-	Body           string `xml:"body"`
-	Detail         string `xml:"detail,omitempty"`
+	AppID          string `xml:"appid"`                 // 公众账号ID
+	MchID          string `xml:"mch_id"`                // 商户号
+	DeviceInfo     string `xml:"device_info,omitempty"` // 设备号
+	NonceStr       string `xml:"nonce_str"`             // 随机字符串
+	Sign           string `xml:"sign"`                  // 签名
+	SignType       string `xml:"sign_type,omitempty"`   // 签名类型
+	Body           string `xml:"body"`                  // 商品描述
+	Detail         string `xml:"detail,omitempty"`      // 商品详情
 	Attach         string `xml:"attach,omitempty"`      // 附加数据
 	OutTradeNo     string `xml:"out_trade_no"`          // 商户订单号
 	FeeType        string `xml:"fee_type,omitempty"`    // 标价币种
@@ -89,7 +92,7 @@ type payRequest struct {
 	NotifyURL      string `xml:"notify_url"`            // 通知地址
 	TradeType      string `xml:"trade_type"`            // 交易类型
 	ProductID      string `xml:"product_id,omitempty"`  // 商品ID
-	LimitPay       string `xml:"limit_pay,omitempty"`   //
+	LimitPay       string `xml:"limit_pay,omitempty"`   // 指定支付方式
 	OpenID         string `xml:"openid,omitempty"`      // 用户标识
 	SceneInfo      string `xml:"scene_info,omitempty"`  // 场景信息
 
@@ -190,9 +193,9 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	if err != nil {
 		return
 	}
-	if payOrder.ReturnCode == "SUCCESS" {
+	if payOrder.ReturnCode == SUCCESS {
 		// pay success
-		if payOrder.ResultCode == "SUCCESS" {
+		if payOrder.ResultCode == SUCCESS {
 			err = nil
 			return
 		}
