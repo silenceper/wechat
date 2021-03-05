@@ -13,7 +13,7 @@ var queryGateway = "https://api.mch.weixin.qq.com/pay/orderquery"
 type QueryParams struct {
 	OutTradeNo    string // 商户订单号
 	SignType      string // 签名类型
-	TransactionId string // 微信订单号
+	TransactionID string // 微信订单号
 }
 
 // queryRequest 接口请求参数
@@ -23,7 +23,7 @@ type queryRequest struct {
 	NonceStr      string `xml:"nonce_str"`           // 随机字符串
 	Sign          string `xml:"sign"`                // 签名
 	SignType      string `xml:"sign_type,omitempty"` // 签名类型
-	TransactionId string `xml:"transaction_id"`      // 微信订单号
+	TransactionID string `xml:"transaction_id"`      // 微信订单号
 	OutTradeNo    string `xml:"out_trade_no"`        // 商户订单号
 }
 
@@ -41,7 +41,7 @@ func (o *Order) QueryOrder(p *QueryParams) (paidResult notify.PaidResult, err er
 	param["nonce_str"] = nonceStr
 	param["out_trade_no"] = p.OutTradeNo
 	param["sign_type"] = p.SignType
-	param["transaction_id"] = p.TransactionId
+	param["transaction_id"] = p.TransactionID
 
 	sign, err := util.ParamSign(param, o.Key)
 	if err != nil {
@@ -53,7 +53,7 @@ func (o *Order) QueryOrder(p *QueryParams) (paidResult notify.PaidResult, err er
 		NonceStr:      nonceStr,
 		Sign:          sign,
 		OutTradeNo:    p.OutTradeNo,
-		TransactionId: p.TransactionId,
+		TransactionID: p.TransactionID,
 		SignType:      p.SignType,
 	}
 

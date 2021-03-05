@@ -89,7 +89,7 @@ type payRequest struct {
 	NotifyURL      string `xml:"notify_url"`            // 通知地址
 	TradeType      string `xml:"trade_type"`            // 交易类型
 	ProductID      string `xml:"product_id,omitempty"`  // 商品ID
-	LimitPay       string `xml:"limit_pay,omitempty"`   //
+	LimitPay       string `xml:"limit_pay,omitempty"`   // 指定支付方式
 	OpenID         string `xml:"openid,omitempty"`      // 用户标识
 	SceneInfo      string `xml:"scene_info,omitempty"`  // 场景信息
 
