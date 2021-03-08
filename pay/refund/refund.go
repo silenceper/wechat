@@ -21,33 +21,35 @@ func NewRefund(cfg *config.Config) *Refund {
 	return &refund
 }
 
-//Params 调用参数
+// Params 调用参数
 type Params struct {
-	TransactionID string
-	OutRefundNo   string
-	TotalFee      string
-	RefundFee     string
-	RefundDesc    string
-	RootCa        string //ca证书
-	NotifyURL     string
+	TransactionID string // 微信支付订单号
+	OutRefundNo   string // 商户订单号
+	TotalFee      string // 订单金额
+	SignType      string // 签名类型
+	RefundFee     string // 退款金额
+	RefundDesc    string // 退款原因
+	RootCa        string // ca证书
+	NotifyURL     string // 退款结果通知url
 }
 
-//request 接口请求参数
+// request 接口请求参数
 type request struct {
-	AppID         string `xml:"appid"`
-	MchID         string `xml:"mch_id"`
-	NonceStr      string `xml:"nonce_str"`
-	Sign          string `xml:"sign"`
-	SignType      string `xml:"sign_type,omitempty"`
-	TransactionID string `xml:"transaction_id"`
-	OutRefundNo   string `xml:"out_refund_no"`
-	TotalFee      string `xml:"total_fee"`
-	RefundFee     string `xml:"refund_fee"`
-	RefundDesc    string `xml:"refund_desc,omitempty"`
-	NotifyURL     string `xml:"notify_url,omitempty"`
+	AppID         string `xml:"appid"`                 // 公众账号ID
+	MchID         string `xml:"mch_id"`                // 商户号
+	NonceStr      string `xml:"nonce_str"`             // 随机字符串
+	Sign          string `xml:"sign"`                  // 签名
+	SignType      string `xml:"sign_type,omitempty"`   // 签名类型
+	TransactionID string `xml:"transaction_id"`        // 微信支付订单号
+	OutRefundNo   string `xml:"out_refund_no"`         // 商户订单号
+	TotalFee      string `xml:"total_fee"`             // 订单金额
+	RefundFee     string `xml:"refund_fee"`            // 退款金额
+	RefundFeeType string `xml:"refund_fee_type"`       // 退款货币种类
+	RefundDesc    string `xml:"refund_desc,omitempty"` // 退款原因
+	NotifyURL     string `xml:"notify_url,omitempty"`  // 退款结果通知url
 }
 
-//Response 接口返回
+// Response 接口返回
 type Response struct {
 	ReturnCode          string `xml:"return_code"`
 	ReturnMsg           string `xml:"return_msg"`
@@ -71,18 +73,23 @@ type Response struct {
 	CashFeeType         string `xml:"cash_fee_type,omitempty"`
 }
 
-//Refund 退款申请
+// Refund 退款申请
 func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	nonceStr := util.RandomStr(32)
 	param := make(map[string]string)
-	param["appid"] = refund.AppID
+
+	// 签名类型
+	if p.SignType == "" {
+		p.SignType = util.SignTypeMD5
+	}
+
 	param["mch_id"] = refund.MchID
 	param["nonce_str"] = nonceStr
 	param["out_refund_no"] = p.OutRefundNo
 	param["refund_desc"] = p.RefundDesc
 	param["refund_fee"] = p.RefundFee
 	param["total_fee"] = p.TotalFee
-	param["sign_type"] = util.SignTypeMD5
+	param["sign_type"] = p.SignType
 	param["transaction_id"] = p.TransactionID
 	if p.NotifyURL != "" {
 		param["notify_url"] = p.NotifyURL
@@ -98,7 +105,7 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 		MchID:         refund.MchID,
 		NonceStr:      nonceStr,
 		Sign:          sign,
-		SignType:      util.SignTypeMD5,
+		SignType:      p.SignType,
 		TransactionID: p.TransactionID,
 		OutRefundNo:   p.OutRefundNo,
 		TotalFee:      p.TotalFee,
