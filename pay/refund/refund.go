@@ -91,6 +91,10 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	param["total_fee"] = p.TotalFee
 	param["sign_type"] = p.SignType
 	param["transaction_id"] = p.TransactionID
+
+	if p.OutTradeNo != "" {
+		param["out_trade_no"] = p.OutTradeNo
+	}
 	if p.NotifyURL != "" {
 		param["notify_url"] = p.NotifyURL
 	}
@@ -108,9 +112,11 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 		SignType:      p.SignType,
 		TransactionID: p.TransactionID,
 		OutRefundNo:   p.OutRefundNo,
+		OutTradeNo:    p.OutTradeNo,
 		TotalFee:      p.TotalFee,
 		RefundFee:     p.RefundFee,
 		RefundDesc:    p.RefundDesc,
+		NotifyURL:     p.NotifyURL,
 	}
 	rawRet, err := util.PostXMLWithTLS(refundGateway, req, p.RootCa, refund.MchID)
 	if err != nil {
