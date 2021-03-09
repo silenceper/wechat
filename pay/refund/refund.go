@@ -21,19 +21,20 @@ func NewRefund(cfg *config.Config) *Refund {
 	return &refund
 }
 
-//Params 调用参数
+// Params 调用参数
 type Params struct {
 	TransactionID string
 	OutTradeNo    string
+	SignType      string
 	OutRefundNo   string
 	TotalFee      string
 	RefundFee     string
 	RefundDesc    string
-	RootCa        string //ca证书
+	RootCa        string // ca证书
 	NotifyURL     string
 }
 
-//request 接口请求参数
+// request 接口请求参数
 type request struct {
 	AppID         string `xml:"appid"`
 	MchID         string `xml:"mch_id"`
@@ -49,7 +50,7 @@ type request struct {
 	NotifyURL     string `xml:"notify_url,omitempty"`
 }
 
-//Response 接口返回
+// Response 接口返回
 type Response struct {
 	ReturnCode          string `xml:"return_code"`
 	ReturnMsg           string `xml:"return_msg"`
@@ -73,10 +74,15 @@ type Response struct {
 	CashFeeType         string `xml:"cash_fee_type,omitempty"`
 }
 
-//Refund 退款申请
+// Refund 退款申请
 func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	nonceStr := util.RandomStr(32)
 	param := make(map[string]string)
+
+	if p.SignType == "" {
+		p.SignType = util.SignTypeMD5
+	}
+
 	param["appid"] = refund.AppID
 	param["mch_id"] = refund.MchID
 	param["nonce_str"] = nonceStr
@@ -84,7 +90,7 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	param["refund_desc"] = p.RefundDesc
 	param["refund_fee"] = p.RefundFee
 	param["total_fee"] = p.TotalFee
-	param["sign_type"] = util.SignTypeMD5
+	param["sign_type"] = p.SignType
 	if p.TransactionID != "" {
 		param["transaction_id"] = p.TransactionID
 	}
@@ -105,7 +111,7 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 		MchID:         refund.MchID,
 		NonceStr:      nonceStr,
 		Sign:          sign,
-		SignType:      util.SignTypeMD5,
+		SignType:      p.SignType,
 		TransactionID: p.TransactionID,
 		OutRefundNo:   p.OutRefundNo,
 		OutTradeNo:    p.OutTradeNo,
