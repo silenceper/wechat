@@ -31,6 +31,7 @@ type Params struct {
 	RefundDesc    string
 	RootCa        string // ca证书
 	NotifyURL     string
+	SignType      string
 }
 
 // request 接口请求参数
@@ -84,8 +85,10 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	param["refund_desc"] = p.RefundDesc
 	param["refund_fee"] = p.RefundFee
 	param["total_fee"] = p.TotalFee
-	param["sign_type"] = util.SignTypeMD5
 
+	if p.SignType == "" {
+		p.SignType = util.SignTypeMD5
+	}
 	if p.OutTradeNo != "" {
 		param["out_trade_no"] = p.OutTradeNo
 	}
@@ -106,7 +109,7 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 		MchID:       refund.MchID,
 		NonceStr:    nonceStr,
 		Sign:        sign,
-		SignType:    util.SignTypeMD5,
+		SignType:    p.SignType,
 		OutRefundNo: p.OutRefundNo,
 		TotalFee:    p.TotalFee,
 		RefundFee:   p.RefundFee,
