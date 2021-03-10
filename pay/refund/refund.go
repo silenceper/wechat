@@ -96,10 +96,10 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 		NotifyURL:   param["notify_url"],
 	}
 	if p.OutTradeNo != "" {
-		req.OutTradeNo = param["out_trade_no"]
+		req.OutTradeNo = p.OutTradeNo
 	}
 	if p.TransactionID != "" {
-		req.TransactionID = param["transaction_id"]
+		req.TransactionID = p.TransactionID
 	}
 
 	rawRet, err := util.PostXMLWithTLS(refundGateway, req, p.RootCa, refund.MchID)
