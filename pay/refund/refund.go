@@ -112,7 +112,9 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 		RefundFee:   p.RefundFee,
 		RefundDesc:  p.RefundDesc,
 	}
-
+	if p.NotifyURL != "" {
+		req.NotifyURL = p.NotifyURL
+	}
 	if p.OutTradeNo != "" {
 		req.OutTradeNo = p.OutTradeNo
 	}
