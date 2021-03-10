@@ -95,9 +95,6 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	if p.TransactionID != "" {
 		param["transaction_id"] = p.TransactionID
 	}
-	if p.NotifyURL != "" {
-		param["notify_url"] = p.NotifyURL
-	}
 
 	sign, err := util.ParamSign(param, refund.Key)
 	if err != nil {
@@ -114,9 +111,7 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 		TotalFee:    p.TotalFee,
 		RefundFee:   p.RefundFee,
 		RefundDesc:  p.RefundDesc,
-	}
-	if p.NotifyURL != "" {
-		req.NotifyURL = p.NotifyURL
+		NotifyURL:   p.NotifyURL,
 	}
 	if p.OutTradeNo != "" {
 		req.OutTradeNo = p.OutTradeNo
