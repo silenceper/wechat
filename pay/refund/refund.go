@@ -76,25 +76,7 @@ type Response struct {
 
 // Refund 退款申请
 func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
-	nonceStr := util.RandomStr(32)
-	param := make(map[string]string)
-	param["appid"] = refund.AppID
-	param["mch_id"] = refund.MchID
-	param["nonce_str"] = nonceStr
-	param["out_refund_no"] = p.OutRefundNo
-	param["refund_desc"] = p.RefundDesc
-	param["refund_fee"] = p.RefundFee
-	param["total_fee"] = p.TotalFee
-
-	if p.SignType == "" {
-		p.SignType = util.SignTypeMD5
-	}
-	if p.OutTradeNo != "" {
-		param["out_trade_no"] = p.OutTradeNo
-	}
-	if p.TransactionID != "" {
-		param["transaction_id"] = p.TransactionID
-	}
+	param := refund.GetSignParam(p)
 
 	sign, err := util.ParamSign(param, refund.Key)
 	if err != nil {
@@ -102,22 +84,22 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	}
 
 	req := request{
-		AppID:       refund.AppID,
-		MchID:       refund.MchID,
-		NonceStr:    nonceStr,
+		AppID:       param["appid"],
+		MchID:       param["mch_id"],
+		NonceStr:    param["nonce_str"],
 		Sign:        sign,
-		SignType:    p.SignType,
-		OutRefundNo: p.OutRefundNo,
-		TotalFee:    p.TotalFee,
-		RefundFee:   p.RefundFee,
-		RefundDesc:  p.RefundDesc,
-		NotifyURL:   p.NotifyURL,
+		SignType:    param["sign_type"],
+		OutRefundNo: param["out_refund_no"],
+		TotalFee:    param["total_fee"],
+		RefundFee:   param["refund_fee"],
+		RefundDesc:  param["refund_desc"],
+		NotifyURL:   param["notify_url"],
 	}
 	if p.OutTradeNo != "" {
-		req.OutTradeNo = p.OutTradeNo
+		req.OutTradeNo = param["out_trade_no"]
 	}
 	if p.TransactionID != "" {
-		req.TransactionID = p.TransactionID
+		req.TransactionID = param["transaction_id"]
 	}
 
 	rawRet, err := util.PostXMLWithTLS(refundGateway, req, p.RootCa, refund.MchID)
@@ -138,4 +120,32 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	}
 	err = fmt.Errorf("[msg : xmlUnmarshalError] [rawReturn : %s] [sign : %s]", string(rawRet), sign)
 	return
+}
+
+// GetSignParam 获取签名的参数
+func (refund *Refund) GetSignParam(p *Params) (param map[string]string) {
+	nonceStr := util.RandomStr(32)
+	param = make(map[string]string)
+	param["appid"] = refund.AppID
+	param["mch_id"] = refund.MchID
+	param["nonce_str"] = nonceStr
+	param["out_refund_no"] = p.OutRefundNo
+	param["refund_desc"] = p.RefundDesc
+	param["refund_fee"] = p.RefundFee
+	param["total_fee"] = p.TotalFee
+
+	if p.SignType == "" {
+		param["sign_type"] = util.SignTypeMD5
+	}
+	if p.OutTradeNo != "" {
+		param["out_trade_no"] = p.OutTradeNo
+	}
+	if p.TransactionID != "" {
+		param["transaction_id"] = p.TransactionID
+	}
+	if p.NotifyURL != "" {
+		param["notify_url"] = p.NotifyURL
+	}
+
+	return param
 }
