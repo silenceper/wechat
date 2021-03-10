@@ -24,9 +24,8 @@ func NewRefund(cfg *config.Config) *Refund {
 // Params 调用参数
 type Params struct {
 	TransactionID string
-	OutTradeNo    string
-	SignType      string
 	OutRefundNo   string
+	OutTradeNo    string
 	TotalFee      string
 	RefundFee     string
 	RefundDesc    string
@@ -78,11 +77,6 @@ type Response struct {
 func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	nonceStr := util.RandomStr(32)
 	param := make(map[string]string)
-
-	if p.SignType == "" {
-		p.SignType = util.SignTypeMD5
-	}
-
 	param["appid"] = refund.AppID
 	param["mch_id"] = refund.MchID
 	param["nonce_str"] = nonceStr
@@ -90,12 +84,13 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	param["refund_desc"] = p.RefundDesc
 	param["refund_fee"] = p.RefundFee
 	param["total_fee"] = p.TotalFee
-	param["sign_type"] = p.SignType
-	if p.TransactionID != "" {
-		param["transaction_id"] = p.TransactionID
-	}
+	param["sign_type"] = util.SignTypeMD5
+
 	if p.OutTradeNo != "" {
 		param["out_trade_no"] = p.OutTradeNo
+	}
+	if p.TransactionID != "" {
+		param["transaction_id"] = p.TransactionID
 	}
 	if p.NotifyURL != "" {
 		param["notify_url"] = p.NotifyURL
@@ -107,19 +102,24 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 	}
 
 	req := request{
-		AppID:         refund.AppID,
-		MchID:         refund.MchID,
-		NonceStr:      nonceStr,
-		Sign:          sign,
-		SignType:      p.SignType,
-		TransactionID: p.TransactionID,
-		OutRefundNo:   p.OutRefundNo,
-		OutTradeNo:    p.OutTradeNo,
-		TotalFee:      p.TotalFee,
-		RefundFee:     p.RefundFee,
-		RefundDesc:    p.RefundDesc,
-		NotifyURL:     p.NotifyURL,
+		AppID:       refund.AppID,
+		MchID:       refund.MchID,
+		NonceStr:    nonceStr,
+		Sign:        sign,
+		SignType:    util.SignTypeMD5,
+		OutRefundNo: p.OutRefundNo,
+		TotalFee:    p.TotalFee,
+		RefundFee:   p.RefundFee,
+		RefundDesc:  p.RefundDesc,
 	}
+
+	if p.OutTradeNo != "" {
+		req.OutTradeNo = p.OutTradeNo
+	}
+	if p.TransactionID != "" {
+		req.TransactionID = p.TransactionID
+	}
+
 	rawRet, err := util.PostXMLWithTLS(refundGateway, req, p.RootCa, refund.MchID)
 	if err != nil {
 		return
