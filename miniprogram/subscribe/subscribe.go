@@ -15,6 +15,10 @@ const (
 	// 获取当前帐号下的个人模板列表
 	// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getTemplateList.html
 	getTemplateURL = "https://api.weixin.qq.com/wxaapi/newtmpl/gettemplate"
+
+	// 统一服务消息
+	// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/uniform-message/uniformMessage.send.html
+	uniformMessageSend = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send"
 )
 
 // Subscribe 订阅消息
@@ -40,6 +44,7 @@ type Message struct {
 //DataItem 模版内某个 .DATA 的值
 type DataItem struct {
 	Value string `json:"value"`
+	Color string `json:"color"`
 }
 
 //TemplateItem template item
@@ -90,4 +95,41 @@ func (s *Subscribe) ListTemplates() (*TemplateList, error) {
 		return nil, err
 	}
 	return &templateList, nil
+}
+
+// UniformMessage 统一服务消息
+type UniformMessage struct {
+	ToUser           string `json:"touser"`
+	WeappTemplateMsg struct {
+		TemplateID      string               `json:"template_id"`
+		Page            string               `json:"page"`
+		FormID          string               `json:"form_id"`
+		Data            map[string]*DataItem `json:"data"`
+		EmphasisKeyword string               `json:"emphasis_keyword"`
+	} `json:"weapp_template_msg"`
+	MpTemplateMsg struct {
+		Appid       string `json:"appid"`
+		TemplateID  string `json:"template_id"`
+		URL         string `json:"url"`
+		Miniprogram struct {
+			Appid    string `json:"appid"`
+			Pagepath string `json:"pagepath"`
+		} `json:"miniprogram"`
+		Data map[string]*DataItem `json:"data"`
+	} `json:"mp_template_msg"`
+}
+
+// UniformSend 发送统一服务消息
+func (s *Subscribe) UniformSend(msg *UniformMessage) (err error) {
+	var accessToken string
+	accessToken, err = s.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", uniformMessageSend, accessToken)
+	response, err := util.PostJSON(uri, msg)
+	if err != nil {
+		return
+	}
+	return util.DecodeWithCommonError(response, "UniformSend")
 }
