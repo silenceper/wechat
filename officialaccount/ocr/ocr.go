@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	ocrIdCardURL         = "https://api.weixin.qq.com/cv/ocr/idcard"
+	ocrIDCardURL         = "https://api.weixin.qq.com/cv/ocr/idcard"
 	ocrBankCardURL       = "https://api.weixin.qq.com/cv/ocr/bankcard"
 	ocrDrivingURL        = "https://api.weixin.qq.com/cv/ocr/driving"
 	ocrDrivingLicenseURL = "https://api.weixin.qq.com/cv/ocr/drivinglicense"
@@ -63,7 +63,7 @@ type resDriving struct {
 	ImageSize         imageSize           `json:"img_size,omitempty"`
 }
 
-type resIdCard struct {
+type resIDCard struct {
 	util.CommonError
 
 	Type        string `json:"type,omitempty"`
@@ -134,38 +134,41 @@ type resPlateNumber struct {
 	Number string `json:"number"`
 }
 
+//NewOCR 实例
 func NewOCR(c *context.Context) *OCR {
 	ocr := new(OCR)
 	ocr.Context = c
 	return ocr
 }
 
-func (ocr *OCR) IdCard(path string) (resIdCard resIdCard, err error) {
+//身份证OCR识别接口
+func (ocr *OCR) IdCard(path string) (resIDCard resIDCard, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrIdCardURL, url.QueryEscape(path), accessToken)
+	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrIDCardURL, url.QueryEscape(path), accessToken)
 
 	response, err := util.HTTPPost(uri, "")
 	if err != nil {
 		return
 	}
 
-	err = json.Unmarshal(response, &resIdCard)
+	err = json.Unmarshal(response, &resIDCard)
 	if err != nil {
 		return
 	}
 
-	if resIdCard.ErrCode != 0 {
-		err = fmt.Errorf("OCRIdCard Error , errcode=%d , errmsg=%s", resIdCard.ErrCode, resIdCard.ErrMsg)
+	if resIDCard.ErrCode != 0 {
+		err = fmt.Errorf("OCRIdCard Error , errcode=%d , errmsg=%s", resIDCard.ErrCode, resIDCard.ErrMsg)
 		return
 	}
 
 	return
 }
 
+//银行卡OCR识别接口
 func (ocr *OCR) BankCard(path string) (resBankCard resBankCard, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
@@ -192,6 +195,7 @@ func (ocr *OCR) BankCard(path string) (resBankCard resBankCard, err error) {
 	return
 }
 
+//行驶证OCR识别接口
 func (ocr *OCR) Driving(path string) (resDriving resDriving, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
@@ -218,6 +222,7 @@ func (ocr *OCR) Driving(path string) (resDriving resDriving, err error) {
 	return
 }
 
+//驾驶证OCR识别接口
 func (ocr *OCR) DrivingLicense(path string) (resDrivingLicense resDrivingLicense, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
@@ -244,6 +249,7 @@ func (ocr *OCR) DrivingLicense(path string) (resDrivingLicense resDrivingLicense
 	return
 }
 
+//营业执照OCR识别接口
 func (ocr *OCR) BizLicense(path string) (resBizLicense resBizLicense, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
@@ -270,6 +276,7 @@ func (ocr *OCR) BizLicense(path string) (resBizLicense resBizLicense, err error)
 	return
 }
 
+//通用印刷体OCR识别接口
 func (ocr *OCR) Common(path string) (resCommon resCommon, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
@@ -296,6 +303,7 @@ func (ocr *OCR) Common(path string) (resCommon resCommon, err error) {
 	return
 }
 
+//车牌OCR识别接口
 func (ocr *OCR) PlateNumber(path string) (resPlateNumber resPlateNumber, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {

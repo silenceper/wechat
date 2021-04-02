@@ -115,6 +115,7 @@ func (officialAccount *OfficialAccount) GetDataCube() *datacube.DataCube {
 	return datacube.NewCube(officialAccount.ctx)
 }
 
-func (OfficialAccount *OfficialAccount) GetOCR() *ocr.OCR {
-	return ocr.NewOCR(OfficialAccount.ctx)
+//GetOCR OCR接口
+func (officialAccount *OfficialAccount) GetOCR() *ocr.OCR {
+	return ocr.NewOCR(officialAccount.ctx)
 }
