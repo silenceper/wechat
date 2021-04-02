@@ -1,6 +1,7 @@
 package officialaccount
 
 import (
+	"github.com/silenceper/wechat/v2/officialaccount/ocr"
 	"net/http"
 
 	"github.com/silenceper/wechat/v2/officialaccount/datacube"
@@ -112,4 +113,8 @@ func (officialAccount *OfficialAccount) GetBroadcast() *broadcast.Broadcast {
 //GetDataCube 数据统计
 func (officialAccount *OfficialAccount) GetDataCube() *datacube.DataCube {
 	return datacube.NewCube(officialAccount.ctx)
+}
+
+func (OfficialAccount *OfficialAccount) GetOCR() *ocr.OCR {
+	return ocr.NewOCR(OfficialAccount.ctx)
 }
