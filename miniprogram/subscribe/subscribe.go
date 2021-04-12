@@ -43,8 +43,8 @@ type Message struct {
 
 //DataItem 模版内某个 .DATA 的值
 type DataItem struct {
-	Value string `json:"value"`
-	Color string `json:"color"`
+	Value interface{} `json:"value"`
+	Color string      `json:"color"`
 }
 
 //TemplateItem template item
