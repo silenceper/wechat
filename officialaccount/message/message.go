@@ -163,6 +163,8 @@ type MixMessage struct {
 	OuterStr            string `xml:"OuterStr"`
 	IsRestoreMemberCard int32  `xml:"IsRestoreMemberCard"`
 	UnionID             string `xml:"UnionId"`
+	ModifyBonus         int    `xml:"ModifyBonus"`
+	ModifyBalance       int    `xml:"ModifyBalance"`
 
 	// 内容审核相关
 	IsRisky       bool   `xml:"isrisky"`
