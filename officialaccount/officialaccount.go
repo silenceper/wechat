@@ -2,6 +2,7 @@ package officialaccount
 
 import (
 	account2 "github.com/silenceper/wechat/v2/officialaccount/account"
+	"github.com/silenceper/wechat/v2/officialaccount/card"
 	"net/http"
 
 	"github.com/silenceper/wechat/v2/officialaccount/datacube"
@@ -116,4 +117,9 @@ func (officialAccount *OfficialAccount) GetBroadcast() *broadcast.Broadcast {
 //GetDataCube 数据统计
 func (officialAccount *OfficialAccount) GetDataCube() *datacube.DataCube {
 	return datacube.NewCube(officialAccount.ctx)
+}
+
+// GetCard 卡券实例
+func (officialAccount *OfficialAccount) GetCard() *card.Card {
+	return card.NewCard(officialAccount.ctx)
 }
