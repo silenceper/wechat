@@ -119,6 +119,10 @@ type MixMessage struct {
 	MenuID      string    `xml:"MenuId"`
 	Status      string    `xml:"Status"`
 	SessionFrom string    `xml:"SessionFrom"`
+	TotalCount  int64     `xml:"TotalCount"`
+	FilterCount int64     `xml:"FilterCount"`
+	SentCount   int64     `xml:"SentCount"`
+	ErrorCount  int64     `xml:"ErrorCount"`
 
 	ScanCodeInfo struct {
 		ScanType   string `xml:"ScanType"`
