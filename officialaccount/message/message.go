@@ -69,6 +69,8 @@ const (
 	EventLocationSelect = "location_select"
 	//EventTemplateSendJobFinish 发送模板消息推送通知
 	EventTemplateSendJobFinish = "TEMPLATESENDJOBFINISH"
+	//EventMassSendJobFinish 群发消息推送通知
+	EventMassSendJobFinish = "MASSSENDJOBFINISH"
 	//EventWxaMediaCheck 异步校验图片/音频是否含有违法违规内容推送事件
 	EventWxaMediaCheck = "wxa_media_check"
 )
