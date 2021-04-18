@@ -333,9 +333,11 @@ func (broadcast *Broadcast) chooseTagOrOpenID(user *User, req *sendRequest) (ret
 		sendURL = sendURLByTag
 	} else {
 		if broadcast.preview {
-			// 预览
-			req.ToUser = user.OpenID
-			sendURL = previewSendURL
+			// 预览 默认发给第一个用户
+			if len(user.OpenID) != 0 {
+				req.ToUser = user.OpenID[0]
+				sendURL = previewSendURL
+			}
 		} else {
 			if user.TagID != 0 {
 				req.Filter = map[string]interface{}{
