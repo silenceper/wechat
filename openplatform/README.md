@@ -22,7 +22,7 @@ openPlatform := wc.GetOpenPlatform(cfg)
 // 传入request和responseWriter
 server := openPlatform.GetServer(req, rw)
 //设置接收消息的处理方法
-server.SetMessageHandler(func(msg message.MixMessage) *message.Reply {
+server.SetMessageHandler(func(msg *message.MixMessage) *message.Reply {
     if msg.InfoType == message.InfoTypeVerifyTicket {
         componentVerifyTicket, err := openPlatform.SetComponentAccessToken(msg.ComponentVerifyTicket)
         if err != nil {
