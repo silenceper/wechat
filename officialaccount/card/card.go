@@ -10,12 +10,8 @@ const (
 	createCardURL     = "https://api.weixin.qq.com/card/create"
 	updateCardUrl     = "https://api.weixin.qq.com/card/update"
 	updateUserCardUrl = "https://api.weixin.qq.com/membercard/updateuser"
+	getTicketURL      = "https://api.weixin.qq.com/cgi-bin/ticket/getticket"
 )
-
-type CreateMemberResponse struct {
-	util.CommonError
-	CardId string `json:"card_id"`
-}
 
 func (c *Card) Create(params interface{}) (resp *CreateMemberResponse, err error) {
 	var accessToken string
@@ -53,3 +49,31 @@ func (c *Card) UpdateInfo(params interface{}) (err error) {
 	_, err = util.PostJSON(uri, params)
 	return err
 }
+
+func (c *Card) GetTicket() (ticket string, err error) {
+	var accessToken string
+	accessToken, err = c.GetAccessToken()
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf("%s?access_token=%s&type=wx_card", getTicketURL, accessToken)
+	var bAry []byte
+	bAry,err=util.HTTPGet(uri)
+	if err != nil {
+		return
+	}
+
+	var resp GetTicketResponse
+	err = json.Unmarshal(bAry, &resp)
+	if err != nil {
+		return
+	}
+	if resp.ErrCode != 0 {
+		err = fmt.Errorf("get card ticket error : errcode=%v , errmsg=%v", resp.ErrCode, resp.ErrMsg)
+		return
+	}
+
+	return resp.Ticket, nil
+}
+
