@@ -38,7 +38,19 @@ func (c *Card) Create(params interface{}) (resp *CreateMemberResponse, err error
 	return
 }
 
-func (c *Card) UpdateInfo(params interface{}) (err error) {
+func (c *Card) Update(params interface{}) ( err error) {
+	var accessToken string
+	accessToken, err = c.GetAccessToken()
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf("%s?access_token=%s", updateCardUrl, accessToken)
+	_, err = util.PostJSON(uri, params)
+	return err
+}
+
+func (c *Card) UpdateUserCardInfo(params interface{}) (err error) {
 	var accessToken string
 	accessToken, err = c.GetAccessToken()
 	if err != nil {
