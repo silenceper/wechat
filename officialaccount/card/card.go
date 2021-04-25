@@ -9,7 +9,7 @@ import (
 const (
 	createCardURL     = "https://api.weixin.qq.com/card/create"
 	updateCardUrl     = "https://api.weixin.qq.com/card/update"
-	updateUserCardUrl = "https://api.weixin.qq.com/membercard/updateuser"
+	updateUserCardUrl = "https://api.weixin.qq.com/card/membercard/updateuser"
 	getTicketURL      = "https://api.weixin.qq.com/cgi-bin/ticket/getticket"
 )
 
