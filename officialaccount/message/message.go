@@ -143,7 +143,11 @@ type MixMessage struct {
 		Label     string  `xml:"Label"`
 		Poiname   string  `xml:"Poiname"`
 	}
-
+	SubscribeMsgPopupEvent []struct {
+		TemplateId            string `xml:"TemplateId"`
+		SubscribeStatusString string `xml:"SubscribeStatusString"`
+		PopupScene            string `xml:"PopupScene"`
+	}
 	// 第三方平台相关
 	InfoType                     InfoType `xml:"InfoType"`
 	AppID                        string   `xml:"AppId"`
