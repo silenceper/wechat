@@ -11,8 +11,8 @@ import (
 const (
 	templateSendURL = "https://api.weixin.qq.com/cgi-bin/message/template/send"
 	templateListURL = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template"
-	templateAddURL = "https://api.weixin.qq.com/cgi-bin/template/api_add_template"
-	templateDelURL = "https://api.weixin.qq.com/cgi-bin/template/del_private_template"
+	templateAddURL  = "https://api.weixin.qq.com/cgi-bin/template/api_add_template"
+	templateDelURL  = "https://api.weixin.qq.com/cgi-bin/template/del_private_template"
 )
 
 //Template 模板消息
@@ -52,10 +52,12 @@ type resTemplateSend struct {
 
 	MsgID int64 `json:"msgid"`
 }
+
 //ResTemplateDel 模版消息删除结果
 type ResTemplateDel struct {
 	util.CommonError
 }
+
 //Send 发送模板消息
 func (tpl *Template) Send(msg *TemplateMessage) (msgID int64, err error) {
 	var accessToken string
@@ -123,6 +125,7 @@ func (tpl *Template) List() (templateList []*TemplateItem, err error) {
 	templateList = res.TemplateList
 	return
 }
+
 //Add 获得模板ID
 func (tpl *Template) Add(templateShortId string) (templateId string, err error) {
 	var accessToken string
@@ -146,11 +149,11 @@ func (tpl *Template) Add(templateShortId string) (templateId string, err error) 
 	if err != nil {
 		return
 	}
-	return templateAdd.TemplateId,nil
+	return templateAdd.TemplateId, nil
 }
 
 //Del 删除模版ID
-func (tpl *Template) Del(templateId string) ( err error) {
+func (tpl *Template) Del(templateId string) (err error) {
 	var accessToken string
 	var templateDel ResTemplateDel
 	accessToken, err = tpl.GetAccessToken()

@@ -51,10 +51,12 @@ func (officialAccount *OfficialAccount) GetContext() *context.Context {
 func (officialAccount *OfficialAccount) GetBasic() *basic.Basic {
 	return basic.NewBasic(officialAccount.ctx)
 }
+
 // GetAccount 获取账号信息
 func (officialAccount *OfficialAccount) GetAccount() *account2.Account {
 	return account2.NewAccountManager(officialAccount.ctx)
 }
+
 // GetMenu 菜单管理接口
 func (officialAccount *OfficialAccount) GetMenu() *menu.Menu {
 	return menu.NewMenu(officialAccount.ctx)
@@ -96,6 +98,11 @@ func (officialAccount *OfficialAccount) GetUser() *user.User {
 // GetTemplate 模板消息接口
 func (officialAccount *OfficialAccount) GetTemplate() *message.Template {
 	return message.NewTemplate(officialAccount.ctx)
+}
+
+// GetTemplate 模板消息接口
+func (officialAccount *OfficialAccount) GetSubscribeTemplate() *message.Subscribe {
+	return message.NewSubscribe(officialAccount.ctx)
 }
 
 // GetCustomerMessageManager 客服消息接口

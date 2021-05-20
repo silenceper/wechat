@@ -1,10 +1,10 @@
-package subscribe
+package message
 
 import (
 	"fmt"
 	"strings"
 
-	"github.com/silenceper/wechat/v2/miniprogram/context"
+	"github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/util"
 )
 
@@ -53,7 +53,7 @@ type DataItem struct {
 }
 
 //TemplateItem template item
-type TemplateItem struct {
+type SubscribeTemplateItem struct {
 	PriTmplID string `json:"priTmplId"`
 	Title     string `json:"title"`
 	Content   string `json:"content"`
@@ -64,7 +64,7 @@ type TemplateItem struct {
 //TemplateList template list
 type TemplateList struct {
 	util.CommonError
-	Data []*TemplateItem `json:"data"`
+	Data []SubscribeTemplateItem `json:"data"`
 }
 
 type SubscribePubListParams struct {
@@ -111,7 +111,7 @@ func (s *Subscribe) Send(msg *Message) (err error) {
 
 //ListTemplates 获取当前帐号下的个人模板列表
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getTemplateList.html
-func (s *Subscribe) ListTemplates() ([]*TemplateItem, error) {
+func (s *Subscribe) ListTemplates() (*TemplateList, error) {
 	accessToken, err := s.GetAccessToken()
 	if err != nil {
 		return nil, err
@@ -126,7 +126,7 @@ func (s *Subscribe) ListTemplates() ([]*TemplateItem, error) {
 	if err != nil {
 		return nil, err
 	}
-	return templateList.Data, nil
+	return &templateList, nil
 }
 
 //GetTemplatePubList 获取公共模板列表
