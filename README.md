@@ -8,7 +8,7 @@
 
 
 ## 文档 && 例子
-[Wechat SDK 2.0 文档](http://silenceper.com/wechat)
+[Wechat SDK 2.0 文档](https://github.com/gowechat/docs)
 
 [Wechat SDK 2.0 例子](https://github.com/gowechat/example)
 
