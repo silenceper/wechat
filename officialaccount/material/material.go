@@ -119,6 +119,9 @@ func (material *Material) AddNews(articles []*Article) (mediaID string, err erro
 	if err != nil {
 		return
 	}
+	if res.ErrCode != 0 {
+		return "", fmt.Errorf("errcode=%d,errmsg=%s", res.ErrCode, res.ErrMsg)
+	}
 	mediaID = res.MediaID
 	return
 }
