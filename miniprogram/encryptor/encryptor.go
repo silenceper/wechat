@@ -45,6 +45,8 @@ type PlainData struct {
 	AvatarURL       string `json:"avatarUrl"`
 	Language        string `json:"language"`
 	PhoneNumber     string `json:"phoneNumber"`
+	OpenGId     	string `json:"openGId"`
+	MsgTicket     	string `json:"msgTicket"`
 	PurePhoneNumber string `json:"purePhoneNumber"`
 	CountryCode     string `json:"countryCode"`
 	Watermark       struct {
