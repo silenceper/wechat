@@ -45,6 +45,8 @@ type PlainData struct {
 	AvatarURL       string `json:"avatarUrl"`
 	Language        string `json:"language"`
 	PhoneNumber     string `json:"phoneNumber"`
+	OpenGID         string `json:"openGId"`
+	MsgTicket       string `json:"msgTicket"`
 	PurePhoneNumber string `json:"purePhoneNumber"`
 	CountryCode     string `json:"countryCode"`
 	Watermark       struct {
@@ -74,8 +76,8 @@ func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
 	return data[:len(data)-n], nil
 }
 
-// getCipherText returns slice of the cipher text
-func getCipherText(sessionKey, encryptedData, iv string) ([]byte, error) {
+// GetCipherText returns slice of the cipher text
+func GetCipherText(sessionKey, encryptedData, iv string) ([]byte, error) {
 	aesKey, err := base64.StdEncoding.DecodeString(sessionKey)
 	if err != nil {
 		return nil, err
@@ -103,7 +105,7 @@ func getCipherText(sessionKey, encryptedData, iv string) ([]byte, error) {
 
 // Decrypt 解密数据
 func (encryptor *Encryptor) Decrypt(sessionKey, encryptedData, iv string) (*PlainData, error) {
-	cipherText, err := getCipherText(sessionKey, encryptedData, iv)
+	cipherText, err := GetCipherText(sessionKey, encryptedData, iv)
 	if err != nil {
 		return nil, err
 	}

@@ -69,6 +69,8 @@ const (
 	EventLocationSelect = "location_select"
 	//EventTemplateSendJobFinish 发送模板消息推送通知
 	EventTemplateSendJobFinish = "TEMPLATESENDJOBFINISH"
+	//EventMassSendJobFinish 群发消息推送通知
+	EventMassSendJobFinish = "MASSSENDJOBFINISH"
 	//EventWxaMediaCheck 异步校验图片/音频是否含有违法违规内容推送事件
 	EventWxaMediaCheck = "wxa_media_check"
 )
@@ -117,6 +119,10 @@ type MixMessage struct {
 	MenuID      string    `xml:"MenuId"`
 	Status      string    `xml:"Status"`
 	SessionFrom string    `xml:"SessionFrom"`
+	TotalCount  int64     `xml:"TotalCount"`
+	FilterCount int64     `xml:"FilterCount"`
+	SentCount   int64     `xml:"SentCount"`
+	ErrorCount  int64     `xml:"ErrorCount"`
 
 	ScanCodeInfo struct {
 		ScanType   string `xml:"ScanType"`

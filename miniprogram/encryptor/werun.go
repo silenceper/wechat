@@ -26,7 +26,7 @@ func NewWeRun(ctx *context.Context) *WeRun {
 
 // GetWeRunData 解密数据
 func (werun *WeRun) GetWeRunData(sessionKey, encryptedData, iv string) (*WeRunData, error) {
-	cipherText, err := getCipherText(sessionKey, encryptedData, iv)
+	cipherText, err := GetCipherText(sessionKey, encryptedData, iv)
 	if err != nil {
 		return nil, err
 	}
