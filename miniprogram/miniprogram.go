@@ -72,3 +72,8 @@ func (miniProgram *MiniProgram) GetSubscribe() *subscribe.Subscribe {
 func (miniProgram *MiniProgram) GetCustomerMessage() *message.Manager {
 	return message.NewCustomerMessageManager(miniProgram.ctx)
 }
+
+// GetWeRun 微信运动接口
+func (miniProgram *MiniProgram) GetWeRun() *encryptor.WeRun {
+	return encryptor.NewWeRun(miniProgram.ctx)
+}
