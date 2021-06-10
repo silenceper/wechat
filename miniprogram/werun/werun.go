@@ -12,8 +12,8 @@ type WeRun struct {
 	*context.Context
 }
 
-// WeRunData 微信运动数据
-type WeRunData struct {
+// Data 微信运动数据
+type Data struct {
 	StepInfoList []struct {
 		Timestamp int `json:"timestamp"`
 		Step      int `json:"step"`
@@ -26,12 +26,12 @@ func NewWeRun(ctx *context.Context) *WeRun {
 }
 
 // GetWeRunData 解密数据
-func (werun *WeRun) GetWeRunData(sessionKey, encryptedData, iv string) (*WeRunData, error) {
+func (werun *WeRun) GetWeRunData(sessionKey, encryptedData, iv string) (*Data, error) {
 	cipherText, err := encryptor.GetCipherText(sessionKey, encryptedData, iv)
 	if err != nil {
 		return nil, err
 	}
-	var weRunData WeRunData
+	var weRunData Data
 	err = json.Unmarshal(cipherText, &weRunData)
 	if err != nil {
 		return nil, err
