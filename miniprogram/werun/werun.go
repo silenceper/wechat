@@ -1,9 +1,10 @@
-package encryptor
+package werun
 
 import (
 	"encoding/json"
 
 	"github.com/silenceper/wechat/v2/miniprogram/context"
+	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 )
 
 // WeRun 微信运动
@@ -26,7 +27,7 @@ func NewWeRun(ctx *context.Context) *WeRun {
 
 // GetWeRunData 解密数据
 func (werun *WeRun) GetWeRunData(sessionKey, encryptedData, iv string) (*WeRunData, error) {
-	cipherText, err := GetCipherText(sessionKey, encryptedData, iv)
+	cipherText, err := encryptor.GetCipherText(sessionKey, encryptedData, iv)
 	if err != nil {
 		return nil, err
 	}

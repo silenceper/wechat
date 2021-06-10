@@ -11,6 +11,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
 	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
+	"github.com/silenceper/wechat/v2/miniprogram/werun"
 )
 
 //MiniProgram 微信小程序相关API
@@ -74,6 +75,6 @@ func (miniProgram *MiniProgram) GetCustomerMessage() *message.Manager {
 }
 
 // GetWeRun 微信运动接口
-func (miniProgram *MiniProgram) GetWeRun() *encryptor.WeRun {
-	return encryptor.NewWeRun(miniProgram.ctx)
+func (miniProgram *MiniProgram) GetWeRun() *werun.WeRun {
+	return werun.NewWeRun(miniProgram.ctx)
 }
