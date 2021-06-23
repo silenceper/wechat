@@ -48,15 +48,14 @@ func HTTPPost(uri string, data string) ([]byte, error) {
 
 //PostJSON post json 数据请求
 func PostJSON(uri string, obj interface{}) ([]byte, error) {
-	jsonData, err := json.Marshal(obj)
+	jsonBuf := new(bytes.Buffer)
+	enc := json.NewEncoder(jsonBuf)
+	enc.SetEscapeHTML(false)
+	err := enc.Encode(obj)
 	if err != nil {
 		return nil, err
 	}
-	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u003c"), []byte("<"))
-	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u003e"), []byte(">"))
-	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u0026"), []byte("&"))
-	body := bytes.NewBuffer(jsonData)
-	response, err := http.Post(uri, "application/json;charset=utf-8", body)
+	response, err := http.Post(uri, "application/json;charset=utf-8", jsonBuf)
 	if err != nil {
 		return nil, err
 	}
@@ -70,17 +69,15 @@ func PostJSON(uri string, obj interface{}) ([]byte, error) {
 
 // PostJSONWithRespContentType post json数据请求，且返回数据类型
 func PostJSONWithRespContentType(uri string, obj interface{}) ([]byte, string, error) {
-	jsonData, err := json.Marshal(obj)
+	jsonBuf := new(bytes.Buffer)
+	enc := json.NewEncoder(jsonBuf)
+	enc.SetEscapeHTML(false)
+	err := enc.Encode(obj)
 	if err != nil {
 		return nil, "", err
 	}
 
-	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u003c"), []byte("<"))
-	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u003e"), []byte(">"))
-	jsonData = bytes.ReplaceAll(jsonData, []byte("\\u0026"), []byte("&"))
-
-	body := bytes.NewBuffer(jsonData)
-	response, err := http.Post(uri, "application/json;charset=utf-8", body)
+	response, err := http.Post(uri, "application/json;charset=utf-8", jsonBuf)
 	if err != nil {
 		return nil, "", err
 	}
