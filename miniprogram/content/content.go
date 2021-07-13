@@ -1,7 +1,6 @@
 package content
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/silenceper/wechat/v2/miniprogram/context"
@@ -18,12 +17,6 @@ type Content struct {
 	*context.Context
 }
 
-//ResContent 请求返回体
-type ResContent struct {
-	Errcode int    `json:"errcode"`
-	Errmsg  string `json:"errmsg"`
-}
-
 //NewContent 内容安全接口
 func NewContent(ctx *context.Context) *Content {
 	return &Content{ctx}
@@ -31,11 +24,10 @@ func NewContent(ctx *context.Context) *Content {
 
 //CheckText 检测文字
 //@text 需要检测的文字
-func (content *Content) CheckText(text string) (result ResContent, err error) {
-	var accessToken string
-	accessToken, err = content.GetAccessToken()
+func (content *Content) CheckText(text string) error {
+	accessToken, err := content.GetAccessToken()
 	if err != nil {
-		return
+		return err
 	}
 	response, err := util.PostJSON(
 		fmt.Sprintf(checkTextURL, accessToken),
@@ -44,22 +36,18 @@ func (content *Content) CheckText(text string) (result ResContent, err error) {
 		},
 	)
 	if err != nil {
-		return
+		return err
 	}
-	err = json.Unmarshal(response, &result)
-	if err != nil {
-		return
-	}
-	return
+	return util.DecodeWithCommonError(response, "ContentCheckText")
 }
 
 //CheckImage 检测图片
 //所传参数为要检测的图片文件的绝对路径，图片格式支持PNG、JPEG、JPG、GIF, 像素不超过 750 x 1334，同时文件大小以不超过 300K 为宜，否则可能报错
 //@media 图片文件的绝对路径
-func (content *Content) CheckImage(media string) (result ResContent, err error) {
+func (content *Content) CheckImage(media string) error {
 	accessToken, err := content.GetAccessToken()
 	if err != nil {
-		return
+		return err
 	}
 	response, err := util.PostFile(
 		"media",
@@ -67,11 +55,7 @@ func (content *Content) CheckImage(media string) (result ResContent, err error) 
 		fmt.Sprintf(checkImageURL, accessToken),
 	)
 	if err != nil {
-		return
+		return err
 	}
-	err = json.Unmarshal(response, &result)
-	if err != nil {
-		return
-	}
-	return
+	return util.DecodeWithCommonError(response, "ContentCheckImage")
 }
