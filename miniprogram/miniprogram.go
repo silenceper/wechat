@@ -5,6 +5,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/analysis"
 	"github.com/silenceper/wechat/v2/miniprogram/auth"
 	"github.com/silenceper/wechat/v2/miniprogram/config"
+	"github.com/silenceper/wechat/v2/miniprogram/content_security"
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
@@ -77,4 +78,9 @@ func (miniProgram *MiniProgram) GetCustomerMessage() *message.Manager {
 // GetWeRun 微信运动接口
 func (miniProgram *MiniProgram) GetWeRun() *werun.WeRun {
 	return werun.NewWeRun(miniProgram.ctx)
+}
+
+// GetContentSecurity 内容安全接口
+func (miniProgram *MiniProgram) GetContentSecurity() *content_security.ContentSecurity {
+	return content_security.NewContentSecurity(miniProgram.ctx)
 }
