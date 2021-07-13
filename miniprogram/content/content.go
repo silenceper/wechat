@@ -1,4 +1,4 @@
-package content_security
+package content
 
 import (
 	"encoding/json"
@@ -8,35 +8,36 @@ import (
 )
 
 const (
-	checkTextUrl  = "https://api.weixin.qq.com/wxa/msg_sec_check?access_token=%s"
-	checkImageUrl = "https://api.weixin.qq.com/wxa/img_sec_check?access_token=%s"
+	checkTextURL  = "https://api.weixin.qq.com/wxa/msg_sec_check?access_token=%s"
+	checkImageURL = "https://api.weixin.qq.com/wxa/img_sec_check?access_token=%s"
 )
 
-//内容安全
-type ContentSecurity struct {
+//Content 内容安全
+type Content struct {
 	*context.Context
 }
 
-type ContentSecurityRes struct {
+//ResContent 请求返回体
+type ResContent struct {
 	Errcode int    `json:"errcode"`
 	Errmsg  string `json:"errmsg"`
 }
 
-//NewContentSecurity
-func NewContentSecurity(ctx *context.Context) *ContentSecurity {
-	return &ContentSecurity{ctx}
+//NewContent 内容安全接口
+func NewContent(ctx *context.Context) *Content {
+	return &Content{ctx}
 }
 
-//检测文字
+//CheckText 检测文字
 //@text 需要检测的文字
-func (content *ContentSecurity) CheckText(text string) (result ContentSecurityRes, err error) {
+func (content *Content) CheckText(text string) (result ResContent, err error) {
 	var accessToken string
 	accessToken, err = content.GetAccessToken()
 	if err != nil {
 		return
 	}
 	response, _, err := util.PostJSONWithRespContentType(
-		fmt.Sprintf(checkTextUrl, accessToken),
+		fmt.Sprintf(checkTextURL, accessToken),
 		map[string]string{
 			"content": text,
 		},
@@ -48,10 +49,10 @@ func (content *ContentSecurity) CheckText(text string) (result ContentSecurityRe
 	return
 }
 
-//检测图片
+//CheckImage 检测图片
 //所传参数为要检测的图片文件的绝对路径，图片格式支持PNG、JPEG、JPG、GIF, 像素不超过 750 x 1334，同时文件大小以不超过 300K 为宜，否则可能报错
 //@media 图片文件的绝对路径
-func (content *ContentSecurity) CheckImage(media string) (result ContentSecurityRes, err error) {
+func (content *Content) CheckImage(media string) (result ResContent, err error) {
 	accessToken, err := content.GetAccessToken()
 	if err != nil {
 		return
@@ -59,7 +60,7 @@ func (content *ContentSecurity) CheckImage(media string) (result ContentSecurity
 	response, err := util.PostFile(
 		"media",
 		media,
-		fmt.Sprintf(checkImageUrl, accessToken),
+		fmt.Sprintf(checkImageURL, accessToken),
 	)
 	fmt.Println(string(response))
 	err = json.Unmarshal(response, &result)
