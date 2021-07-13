@@ -62,7 +62,6 @@ func (content *Content) CheckImage(media string) (result ResContent, err error) 
 		media,
 		fmt.Sprintf(checkImageURL, accessToken),
 	)
-	fmt.Println(string(response))
 	err = json.Unmarshal(response, &result)
 	if err != nil {
 		return
