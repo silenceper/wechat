@@ -36,12 +36,15 @@ func (content *Content) CheckText(text string) (result ResContent, err error) {
 	if err != nil {
 		return
 	}
-	response, _, err := util.PostJSONWithRespContentType(
+	response, err := util.PostJSON(
 		fmt.Sprintf(checkTextURL, accessToken),
 		map[string]string{
 			"content": text,
 		},
 	)
+	if err != nil {
+		return
+	}
 	err = json.Unmarshal(response, &result)
 	if err != nil {
 		return
@@ -62,6 +65,9 @@ func (content *Content) CheckImage(media string) (result ResContent, err error) 
 		media,
 		fmt.Sprintf(checkImageURL, accessToken),
 	)
+	if err != nil {
+		return
+	}
 	err = json.Unmarshal(response, &result)
 	if err != nil {
 		return
