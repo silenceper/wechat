@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"github.com/silenceper/wechat/v2/work"
 	"os"
 
 	"github.com/silenceper/wechat/v2/cache"
@@ -12,6 +13,7 @@ import (
 	openConfig "github.com/silenceper/wechat/v2/openplatform/config"
 	"github.com/silenceper/wechat/v2/pay"
 	payConfig "github.com/silenceper/wechat/v2/pay/config"
+	workConfig "github.com/silenceper/wechat/v2/work/config"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -66,4 +68,9 @@ func (wc *Wechat) GetPay(cfg *payConfig.Config) *pay.Pay {
 // GetOpenPlatform 获取微信开放平台的实例
 func (wc *Wechat) GetOpenPlatform(cfg *openConfig.Config) *openplatform.OpenPlatform {
 	return openplatform.NewOpenPlatform(cfg)
+}
+
+// GetWork 获取企业微信的实例
+func (wc *Wechat) GetWork(cfg *workConfig.Config) *work.Work {
+	return work.NewWork(cfg)
 }
