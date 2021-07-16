@@ -95,7 +95,7 @@ type WorkAccessToken struct {
 //NewWorkAccessToken new WorkAccessToken
 func NewWorkAccessToken(corpID, corpSecret, cacheKeyPrefix string, cache cache.Cache) AccessTokenHandle {
 	if cache == nil {
-		panic("cache is ineed")
+		panic("cache the not exist")
 	}
 	return &WorkAccessToken{
 		CorpID:          corpID,
