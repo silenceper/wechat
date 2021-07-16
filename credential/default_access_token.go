@@ -93,13 +93,13 @@ type WorkAccessToken struct {
 }
 
 //NewWorkAccessToken new WorkAccessToken
-func NewWorkAccessToken(CorpID, CorpSecret, cacheKeyPrefix string, cache cache.Cache) AccessTokenHandle {
+func NewWorkAccessToken(corpID, corpSecret, cacheKeyPrefix string, cache cache.Cache) AccessTokenHandle {
 	if cache == nil {
 		panic("cache is ineed")
 	}
 	return &WorkAccessToken{
-		CorpID:          CorpID,
-		CorpSecret:      CorpSecret,
+		CorpID:          corpID,
+		CorpSecret:      corpSecret,
 		cache:           cache,
 		cacheKeyPrefix:  cacheKeyPrefix,
 		accessTokenLock: new(sync.Mutex),
