@@ -31,7 +31,7 @@ type Client struct {
 *      0   - 成功
 *      !=0 - 失败
  */
-func NewClient(cfg *config.MsgAuditConfig) (*Client, error) {
+func NewClient(cfg *config.Config) (*Client, error) {
 	ptr := C.NewSdk()
 	corpIdC := C.CString(cfg.CorpID)
 	corpSecretC := C.CString(cfg.CorpSecret)

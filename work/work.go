@@ -23,11 +23,6 @@ func NewWork(cfg *config.Config) *Work {
 	return &Work{ctx: ctx}
 }
 
-// NewMsgAudit init msgAudit
-func NewMsgAudit(cfg *config.MsgAuditConfig) (*msgaudit.Client, error) {
-	return msgaudit.NewClient(cfg)
-}
-
 //GetContext get Context
 func (wk *Work) GetContext() *context.Context {
 	return wk.ctx
@@ -36,4 +31,9 @@ func (wk *Work) GetContext() *context.Context {
 //GetOauth get oauth
 func (wk *Work) GetOauth() *oauth.Oauth {
 	return oauth.NewOauth(wk.ctx)
+}
+
+// GetMsgAudit get msgAudit
+func (wk *Work) GetMsgAudit(cfg *config.Config) (*msgaudit.Client, error) {
+	return msgaudit.NewClient(cfg)
 }
