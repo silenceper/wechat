@@ -1,4 +1,3 @@
-# finance
 企业微信会话存档SDK（基于企业微信C版官方SDK封装），暂时只支持在`linux`环境下使用当前SDK。
 
 ### 官方文档地址
@@ -59,7 +58,7 @@ func main() {
 		}
 
 		if chatInfo.Type == "image" {
-			image := chatInfo.GetImageMessage()
+			image, _ := chatInfo.GetImageMessage()
 			sdkfileid := image.Image.SdkFileId
 
 			isFinish := false
