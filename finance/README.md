@@ -12,7 +12,7 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/NICEXAI/WeWorkFinanceSDK"
+	"github.com/silenceper/wechat/finance"
 	"io/ioutil"
 	"os"
 	"path"
