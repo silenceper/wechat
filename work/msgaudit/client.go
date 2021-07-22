@@ -7,6 +7,8 @@ package msgaudit
 import "C"
 import (
 	"encoding/json"
+	"github.com/silenceper/wechat/v2/util"
+	"github.com/silenceper/wechat/v2/work/config"
 	"unsafe"
 )
 
@@ -29,7 +31,7 @@ type Client struct {
 *      0   - 成功
 *      !=0 - 失败
  */
-func NewClient(cfg *Config) (*Client, error) {
+func NewClient(cfg *config.MsgAuditConfig) (*Client, error) {
 	ptr := C.NewSdk()
 	corpIdC := C.CString(cfg.CorpID)
 	corpSecretC := C.CString(cfg.CorpSecret)
@@ -153,7 +155,7 @@ func (s *Client) GetRawChatData(seq uint64, limit uint64, proxy string, passwd s
 *      !=0 - 失败
  */
 func (s *Client) DecryptData(encrypt_random_key string, encryptMsg string) (msg ChatMessage, err error) {
-	encryptKey, err := RSADecryptBase64(s.privateKey, encrypt_random_key)
+	encryptKey, err := util.RSADecryptBase64(s.privateKey, encrypt_random_key)
 	if err != nil {
 		return msg, err
 	}

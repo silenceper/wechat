@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"github.com/silenceper/wechat/v2/work/config"
 	"github.com/silenceper/wechat/v2/work/msgaudit"
 	"os"
 
@@ -77,6 +78,6 @@ func (wc *Wechat) GetWork(cfg *workConfig.Config) *work.Work {
 }
 
 // GetMsgAuditFromWork 获取企业微信会话存档实例
-func (wc *Wechat) GetMsgAuditFromWork(cfg *msgaudit.Config) (*msgaudit.Client, error) {
-	return msgaudit.NewClient(cfg)
+func (wc *Wechat) GetMsgAuditFromWork(cfg *config.MsgAuditConfig) (*msgaudit.Client, error) {
+	return work.NewMsgAudit(cfg)
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/work/config"
 	"github.com/silenceper/wechat/v2/work/context"
+	"github.com/silenceper/wechat/v2/work/msgaudit"
 	"github.com/silenceper/wechat/v2/work/oauth"
 )
 
@@ -20,6 +21,11 @@ func NewWork(cfg *config.Config) *Work {
 		AccessTokenHandle: defaultAkHandle,
 	}
 	return &Work{ctx: ctx}
+}
+
+// NewMsgAudit init msgAudit
+func NewMsgAudit(cfg *config.MsgAuditConfig) (*msgaudit.Client, error) {
+	return msgaudit.NewClient(cfg)
 }
 
 //GetContext get Context
