@@ -34,6 +34,6 @@ func (wk *Work) GetOauth() *oauth.Oauth {
 }
 
 // GetMsgAudit get msgAudit
-func (wk *Work) GetMsgAudit(cfg *config.Config) (*msgaudit.Client, error) {
-	return msgaudit.NewClient(cfg)
+func (wk *Work) GetMsgAudit() (*msgaudit.Client, error) {
+	return msgaudit.NewClient(wk.ctx.Config)
 }

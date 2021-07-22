@@ -52,7 +52,7 @@ func NewClient(cfg *config.Config) (*Client, error) {
 	}, nil
 }
 
-// Free 释放内存
+// Free 释放SDK实例是可调用该方法释放内存
 func (s *Client) Free() {
 	if s.ptr == nil {
 		return

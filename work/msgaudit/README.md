@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"github.com/silenceper/wechat/v2"
 	"github.com/silenceper/wechat/v2/work/msgaudit"
+	"github.com/silenceper/wechat/v2/work/config"
 	"io/ioutil"
 	"os"
 	"path"
@@ -29,11 +30,14 @@ import (
 func main() {
 	//初始化客户端
 	wechatClient := wechat.NewWechat()
-	client, err := wechatClient.GetMsgAuditFromWork(&msgaudit.Config{
+	
+	workClient := wechatClient.NewWork(&config.Config{
 		CorpID:        "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 		CorpSecret:    "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 		RasPrivateKey: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 	})
+	
+	client, err := workClient.GetMsgAudit()
 	if err != nil {
 		fmt.Printf("SDK 初始化失败：%v \n", err)
 		return
@@ -82,6 +86,9 @@ func main() {
 			break
 		}
 	}
+	
+	//释放SDK实例
+	client.Free()
 }
 
 
