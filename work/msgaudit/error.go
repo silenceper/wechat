@@ -24,7 +24,7 @@ const (
 	SDKParseErrMsg          = "数据解析失败"
 	SDKSystemErrMsg         = "系统失败"
 	SDKSecretErrMsg         = "密钥错误导致加密失败"
-	SDKFileIdErrMsg         = "fileid错误"
+	SDKFileIDErrMsg         = "fileid错误"
 	SDKDecryptErrMsg        = "解密失败"
 	SDKSecretMissErrMsg     = "找不到消息加密版本的私钥，需要重新传入私钥对"
 	SDKEncryptKeyErrMsg     = "解析encrypt_key出错"
@@ -33,15 +33,17 @@ const (
 	SDKTokenExpiredErrMsg   = "证书过期"
 )
 
+// Error 错误
 type Error struct {
 	ErrCode int    `json:"errcode,omitempty"`
 	ErrMsg  string `json:"errmsg,omitempty"`
 }
 
-func (this Error) Error() string {
-	return fmt.Sprintf("%d:%s", this.ErrCode, this.ErrMsg)
+func (e Error) Error() string {
+	return fmt.Sprintf("%d:%s", e.ErrCode, e.ErrMsg)
 }
 
+// NewSDKErr 初始化新的SDK错误
 func NewSDKErr(code int) Error {
 	msg := ""
 	switch code {
@@ -56,7 +58,7 @@ func NewSDKErr(code int) Error {
 	case 10004:
 		msg = SDKSecretErrMsg
 	case 10005:
-		msg = SDKFileIdErrMsg
+		msg = SDKFileIDErrMsg
 	case 10006:
 		msg = SDKDecryptErrMsg
 	case 10007:

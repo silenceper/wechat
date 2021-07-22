@@ -10,6 +10,7 @@ import (
 	"fmt"
 )
 
+// RSADecrypt 数据解密
 func RSADecrypt(privateKey string, ciphertext []byte) ([]byte, error) {
 	block, _ := pem.Decode([]byte(privateKey))
 	if block == nil {
@@ -20,18 +21,19 @@ func RSADecrypt(privateKey string, ciphertext []byte) ([]byte, error) {
 		oldErr := err
 		key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
 		if err != nil {
-			return nil, errors.New(fmt.Sprintf("ParsePKCS1PrivateKey error: %s, ParsePKCS8PrivateKey error: %s", oldErr.Error(), err.Error()))
+			return nil, fmt.Errorf("ParsePKCS1PrivateKey error: %s, ParsePKCS8PrivateKey error: %s", oldErr.Error(), err.Error())
 		}
 		switch t := key.(type) {
 		case *rsa.PrivateKey:
 			priv = key.(*rsa.PrivateKey)
 		default:
-			return nil, errors.New(fmt.Sprintf("ParsePKCS1PrivateKey error: %s, ParsePKCS8PrivateKey error: Not supported privatekey format, should be *rsa.PrivateKey, got %T", oldErr.Error(), t))
+			return nil, fmt.Errorf("ParsePKCS1PrivateKey error: %s, ParsePKCS8PrivateKey error: Not supported privatekey format, should be *rsa.PrivateKey, got %T", oldErr.Error(), t)
 		}
 	}
 	return rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext)
 }
 
+// RSADecryptBase64 Base64解码后再次进行RSA解密
 func RSADecryptBase64(privateKey string, cryptoText string) ([]byte, error) {
 	encryptedData, err := base64.StdEncoding.DecodeString(cryptoText)
 	if err != nil {

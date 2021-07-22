@@ -12,11 +12,13 @@ import (
 	"unsafe"
 )
 
+// Client 会话存档
 type Client struct {
 	ptr        *C.WeWorkFinanceSdk_t
 	privateKey string
 }
 
+// NewClient 初始会话会话存档实例
 /**
 * 初始化函数
 * Return值=0表示该API调用成功
@@ -33,13 +35,13 @@ type Client struct {
  */
 func NewClient(cfg *config.Config) (*Client, error) {
 	ptr := C.NewSdk()
-	corpIdC := C.CString(cfg.CorpID)
+	corpIDC := C.CString(cfg.CorpID)
 	corpSecretC := C.CString(cfg.CorpSecret)
 	defer func() {
-		C.free(unsafe.Pointer(corpIdC))
+		C.free(unsafe.Pointer(corpIDC))
 		C.free(unsafe.Pointer(corpSecretC))
 	}()
-	retC := C.Init(ptr, corpIdC, corpSecretC)
+	retC := C.Init(ptr, corpIDC, corpSecretC)
 	ret := int(retC)
 	if ret != 0 {
 		return nil, NewSDKErr(ret)
@@ -50,6 +52,7 @@ func NewClient(cfg *config.Config) (*Client, error) {
 	}, nil
 }
 
+// Free 释放内存
 func (s *Client) Free() {
 	if s.ptr == nil {
 		return
@@ -58,6 +61,7 @@ func (s *Client) Free() {
 	s.ptr = nil
 }
 
+// GetChatData 拉取聊天记录函数
 /**
 * 拉取聊天记录函数
 *
@@ -103,6 +107,7 @@ func (s *Client) GetChatData(seq uint64, limit uint64, proxy string, passwd stri
 	return data.ChatDataList, nil
 }
 
+// GetRawChatData 拉取聊天记录函数
 /**
 * 拉取聊天记录函数
 *
@@ -145,6 +150,7 @@ func (s *Client) GetRawChatData(seq uint64, limit uint64, proxy string, passwd s
 	return data, nil
 }
 
+// DecryptData 解析密文.企业微信自有解密内容
 /**
 * @brief 解析密文.企业微信自有解密内容
 * @param [in]  encrypt_key, getchatdata返回的encrypt_random_key,使用企业自持对应版本秘钥RSA解密后的内容
@@ -154,8 +160,8 @@ func (s *Client) GetRawChatData(seq uint64, limit uint64, proxy string, passwd s
 *      0   - 成功
 *      !=0 - 失败
  */
-func (s *Client) DecryptData(encrypt_random_key string, encryptMsg string) (msg ChatMessage, err error) {
-	encryptKey, err := util.RSADecryptBase64(s.privateKey, encrypt_random_key)
+func (s *Client) DecryptData(encryptRandomKey string, encryptMsg string) (msg ChatMessage, err error) {
+	encryptKey, err := util.RSADecryptBase64(s.privateKey, encryptRandomKey)
 	if err != nil {
 		return msg, err
 	}
@@ -190,7 +196,7 @@ func (s *Client) DecryptData(encrypt_random_key string, encryptMsg string) (msg 
 		return msg, err
 	}
 
-	msg.Id = baseMessage.MsgId
+	msg.ID = baseMessage.MsgID
 	msg.From = baseMessage.From
 	msg.ToList = baseMessage.ToList
 	msg.Action = baseMessage.Action
@@ -199,6 +205,7 @@ func (s *Client) DecryptData(encrypt_random_key string, encryptMsg string) (msg 
 	return msg, err
 }
 
+// GetMediaData 拉取媒体消息函数
 /**
  * 拉取媒体消息函数
  * Return值=0表示该API调用成功
@@ -217,16 +224,15 @@ func (s *Client) DecryptData(encrypt_random_key string, encryptMsg string) (msg 
  *      0   - 成功
  *      !=0 - 失败
  */
-
-func (s *Client) GetMediaData(indexBuf string, sdkFileId string, proxy string, passwd string, timeout int) (*MediaData, error) {
+func (s *Client) GetMediaData(indexBuf string, sdkFileID string, proxy string, passwd string, timeout int) (*MediaData, error) {
 	indexBufC := C.CString(indexBuf)
-	sdkFileIdC := C.CString(sdkFileId)
+	sdkFileIDC := C.CString(sdkFileID)
 	proxyC := C.CString(proxy)
 	passwdC := C.CString(passwd)
 	mediaDataC := C.NewMediaData()
 	defer func() {
 		C.free(unsafe.Pointer(indexBufC))
-		C.free(unsafe.Pointer(sdkFileIdC))
+		C.free(unsafe.Pointer(sdkFileIDC))
 		C.free(unsafe.Pointer(proxyC))
 		C.free(unsafe.Pointer(passwdC))
 		C.FreeMediaData(mediaDataC)
@@ -236,18 +242,19 @@ func (s *Client) GetMediaData(indexBuf string, sdkFileId string, proxy string, p
 		return nil, NewSDKErr(10002)
 	}
 
-	retC := C.GetMediaData(s.ptr, indexBufC, sdkFileIdC, proxyC, passwdC, C.int(timeout), mediaDataC)
+	retC := C.GetMediaData(s.ptr, indexBufC, sdkFileIDC, proxyC, passwdC, C.int(timeout), mediaDataC)
 	ret := int(retC)
 	if ret != 0 {
 		return nil, NewSDKErr(ret)
 	}
 	return &MediaData{
 		OutIndexBuf: C.GoString(C.GetOutIndexBuf(mediaDataC)),
-		Data:        C.GoBytes(unsafe.Pointer(C.GetData(mediaDataC)), C.int(C.GetDataLen(mediaDataC))),
+		Data:        C.GoBytes(unsafe.Pointer(C.GetData(mediaDataC)), C.GetDataLen(mediaDataC)),
 		IsFinish:    int(C.IsMediaDataFinish(mediaDataC)) == 1,
 	}, nil
 }
 
+// GetContentFromSlice 从切片内获取内容
 func (s *Client) GetContentFromSlice(slice *C.struct_Slice_t) []byte {
-	return C.GoBytes(unsafe.Pointer(C.GetContentFromSlice(slice)), C.int(C.GetSliceLen(slice)))
+	return C.GoBytes(unsafe.Pointer(C.GetContentFromSlice(slice)), C.GetSliceLen(slice))
 }
