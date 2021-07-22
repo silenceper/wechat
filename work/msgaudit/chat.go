@@ -33,175 +33,175 @@ type ChatMessage struct {
 }
 
 // GetOriginMessage 获取消息原始数据
-func (c ChatMessage) GetOriginMessage() (msg map[string]interface{}) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetOriginMessage() (msg map[string]interface{}, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetTextMessage 获取文本消息
-func (c ChatMessage) GetTextMessage() (msg TextMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetTextMessage() (msg TextMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetImageMessage 获取图片消息
-func (c ChatMessage) GetImageMessage() (msg ImageMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetImageMessage() (msg ImageMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetRevokeMessage 获取撤回消息
-func (c ChatMessage) GetRevokeMessage() (msg RevokeMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetRevokeMessage() (msg RevokeMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetAgreeMessage 获取同意会话聊天内容
-func (c ChatMessage) GetAgreeMessage() (msg AgreeMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetAgreeMessage() (msg AgreeMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetVoiceMessage 获取语音消息
-func (c ChatMessage) GetVoiceMessage() (msg VoiceMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetVoiceMessage() (msg VoiceMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetVideoMessage 获取视频消息
-func (c ChatMessage) GetVideoMessage() (msg VideoMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetVideoMessage() (msg VideoMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetCardMessage 获取名片消息
-func (c ChatMessage) GetCardMessage() (msg CardMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetCardMessage() (msg CardMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetLocationMessage 获取位置消息
-func (c ChatMessage) GetLocationMessage() (msg LocationMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetLocationMessage() (msg LocationMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetEmotionMessage 获取表情消息
-func (c ChatMessage) GetEmotionMessage() (msg EmotionMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetEmotionMessage() (msg EmotionMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetFileMessage 获取文件消息
-func (c ChatMessage) GetFileMessage() (msg FileMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetFileMessage() (msg FileMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetLinkMessage 获取链接消息
-func (c ChatMessage) GetLinkMessage() (msg LinkMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetLinkMessage() (msg LinkMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetWeappMessage 获取小程序消息
-func (c ChatMessage) GetWeappMessage() (msg WeappMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetWeappMessage() (msg WeappMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetChatRecordMessage 获取会话记录消息
-func (c ChatMessage) GetChatRecordMessage() (msg ChatRecordMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetChatRecordMessage() (msg ChatRecordMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetTodoMessage 获取待办消息
-func (c ChatMessage) GetTodoMessage() (msg TodoMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetTodoMessage() (msg TodoMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetVoteMessage 获取投票消息
-func (c ChatMessage) GetVoteMessage() (msg VoteMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetVoteMessage() (msg VoteMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetCollectMessage 获取填表消息
-func (c ChatMessage) GetCollectMessage() (msg CollectMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetCollectMessage() (msg CollectMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetRedpacketMessage 获取红包消息
-func (c ChatMessage) GetRedpacketMessage() (msg RedpacketMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetRedpacketMessage() (msg RedpacketMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetMeetingMessage 获取会议邀请消息
-func (c ChatMessage) GetMeetingMessage() (msg MeetingMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetMeetingMessage() (msg MeetingMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetDocMessage 获取在线文档消息
-func (c ChatMessage) GetDocMessage() (msg DocMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetDocMessage() (msg DocMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetMarkdownMessage 获取MarkDown格式消息
-func (c ChatMessage) GetMarkdownMessage() (msg MarkdownMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetMarkdownMessage() (msg MarkdownMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetNewsMessage 获取图文消息
-func (c ChatMessage) GetNewsMessage() (msg NewsMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetNewsMessage() (msg NewsMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetCalendarMessage 获取日程消息
-func (c ChatMessage) GetCalendarMessage() (msg CalendarMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetCalendarMessage() (msg CalendarMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetMixedMessage 获取混合消息
-func (c ChatMessage) GetMixedMessage() (msg MixedMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetMixedMessage() (msg MixedMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetMeetingVoiceCallMessage 获取音频存档消息
-func (c ChatMessage) GetMeetingVoiceCallMessage() (msg MeetingVoiceCallMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetMeetingVoiceCallMessage() (msg MeetingVoiceCallMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetVoipDocShareMessage 获取音频共享消息
-func (c ChatMessage) GetVoipDocShareMessage() (msg VoipDocShareMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetVoipDocShareMessage() (msg VoipDocShareMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetExternalRedPacketMessage 获取互通红包消息
-func (c ChatMessage) GetExternalRedPacketMessage() (msg ExternalRedPacketMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetExternalRedPacketMessage() (msg ExternalRedPacketMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetSphFeedMessage 获取视频号消息
-func (c ChatMessage) GetSphFeedMessage() (msg SphFeedMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetSphFeedMessage() (msg SphFeedMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
 
 // GetSwitchMessage 获取切换企业日志
-func (c ChatMessage) GetSwitchMessage() (msg SwitchMessage) {
-	_ = json.Unmarshal(c.originData, &msg)
-	return msg
+func (c ChatMessage) GetSwitchMessage() (msg SwitchMessage, err error) {
+	err = json.Unmarshal(c.originData, &msg)
+	return msg, err
 }
