@@ -1,6 +1,6 @@
 ---
 name: 使用咨询
-about: 关于SDK使用相关的咨询
+about: 关于SDK使用相关的咨询，在使用前请先阅读官方微信文档
 title: "[咨询]"
 labels: question
 assignees: ''
