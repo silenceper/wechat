@@ -32,6 +32,7 @@ type Params struct {
 	CreateIP   string
 	Body       string
 	OutTradeNo string
+	TimeExpire string
 	OpenID     string
 	TradeType  string
 	SignType   string
@@ -166,6 +167,11 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	param["goods_tag"] = p.GoodsTag
 	param["notify_url"] = notifyURL
 
+	if len(p.TimeExpire) > 0 {
+		// 如果有传入交易结束时间
+		param["time_expire"] = p.TimeExpire
+	}
+
 	bizKey := "&key=" + pcf.PayKey
 	str := orderParam(param, bizKey)
 	sign := util.MD5Sum(str)
@@ -185,6 +191,10 @@ func (pcf *Pay) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		Detail:         p.Detail,
 		Attach:         p.Attach,
 		GoodsTag:       p.GoodsTag,
+	}
+	if len(p.TimeExpire) > 0 {
+		// 如果有传入交易结束时间
+		request.TimeExpire = p.TimeExpire
 	}
 	rawRet, err := util.PostXML(payGateway, request)
 	if err != nil {
