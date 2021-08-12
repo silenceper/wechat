@@ -32,7 +32,7 @@ type Params struct {
 	CreateIP   string
 	Body       string
 	OutTradeNo string
-	TimeExpire string
+	TimeExpire string // 订单失效时间，格式为yyyyMMddHHmmss，如2009年12月27日9点10分10秒表示为20091227091010。
 	OpenID     string
 	TradeType  string
 	SignType   string
