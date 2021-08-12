@@ -35,6 +35,7 @@ type Params struct {
 	CreateIP   string
 	Body       string
 	OutTradeNo string
+	TimeExpire string // 订单失效时间，格式为yyyyMMddHHmmss，如2009年12月27日9点10分10秒表示为20091227091010。
 	OpenID     string
 	TradeType  string
 	SignType   string
@@ -164,6 +165,11 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	param["goods_tag"] = p.GoodsTag
 	param["notify_url"] = notifyURL
 
+	if len(p.TimeExpire) > 0 {
+		// 如果有传入交易结束时间
+		param["time_expire"] = p.TimeExpire
+	}
+
 	sign, err := util.ParamSign(param, o.Key)
 	if err != nil {
 		return
@@ -184,6 +190,10 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		Detail:         p.Detail,
 		Attach:         p.Attach,
 		GoodsTag:       p.GoodsTag,
+	}
+	if len(p.TimeExpire) > 0 {
+		// 如果有传入交易结束时间
+		request.TimeExpire = p.TimeExpire
 	}
 	rawRet, err := util.PostXML(payGateway, request)
 	if err != nil {
