@@ -100,6 +100,27 @@ type payRequest struct {
 	XMLName struct{} `xml:"xml"`
 }
 
+func (req *payRequest) BridgePayRequest(p *Params, AppID, MchID, nonceStr, sign string) *payRequest {
+	request := payRequest{
+		AppID:          AppID,
+		MchID:          MchID,
+		NonceStr:       nonceStr,
+		Sign:           sign,
+		Body:           p.Body,
+		OutTradeNo:     p.OutTradeNo,
+		TotalFee:       p.TotalFee,
+		SpbillCreateIP: p.CreateIP,
+		NotifyURL:      p.NotifyURL,
+		TradeType:      p.TradeType,
+		OpenID:         p.OpenID,
+		SignType:       p.SignType,
+		Detail:         p.Detail,
+		Attach:         p.Attach,
+		GoodsTag:       p.GoodsTag,
+	}
+	return &request
+}
+
 // BridgeConfig get js bridge config
 func (o *Order) BridgeConfig(p *Params) (cfg Config, err error) {
 	var (
@@ -140,32 +161,32 @@ func (o *Order) BridgeConfig(p *Params) (cfg Config, err error) {
 // PrePayOrder return data for invoke wechat payment
 func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	nonceStr := util.RandomStr(32)
-	notifyURL := o.NotifyURL
-	// 签名类型
-	if p.SignType == "" {
-		p.SignType = util.SignTypeMD5
+	param := map[string]string{
+		"appid":            o.AppID,
+		"body":             p.Body,
+		"mch_id":           o.MchID,
+		"nonce_str":        nonceStr,
+		"out_trade_no":     p.OutTradeNo,
+		"spbill_create_ip": p.CreateIP,
+		"total_fee":        p.TotalFee,
+		"trade_type":       p.TradeType,
+		"openid":           p.OpenID,
+		"sign_type":        p.SignType,
+		"detail":           p.Detail,
+		"attach":           p.Attach,
+		"goods_tag":        p.GoodsTag,
 	}
+	// 签名类型
+	if param["sign_type"] == "" {
+		param["sign_type"] = util.SignTypeMD5
+	}
+
 	// 通知地址
 	if p.NotifyURL != "" {
-		notifyURL = p.NotifyURL
+		param["notify_url"] = p.NotifyURL
 	}
-	param := make(map[string]string)
-	param["appid"] = o.AppID
-	param["body"] = p.Body
-	param["mch_id"] = o.MchID
-	param["nonce_str"] = nonceStr
-	param["out_trade_no"] = p.OutTradeNo
-	param["spbill_create_ip"] = p.CreateIP
-	param["total_fee"] = p.TotalFee
-	param["trade_type"] = p.TradeType
-	param["openid"] = p.OpenID
-	param["sign_type"] = p.SignType
-	param["detail"] = p.Detail
-	param["attach"] = p.Attach
-	param["goods_tag"] = p.GoodsTag
-	param["notify_url"] = notifyURL
 
-	if len(p.TimeExpire) > 0 {
+	if p.TimeExpire != "" {
 		// 如果有传入交易结束时间
 		param["time_expire"] = p.TimeExpire
 	}
@@ -174,23 +195,7 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	if err != nil {
 		return
 	}
-	request := payRequest{
-		AppID:          o.AppID,
-		MchID:          o.MchID,
-		NonceStr:       nonceStr,
-		Sign:           sign,
-		Body:           p.Body,
-		OutTradeNo:     p.OutTradeNo,
-		TotalFee:       p.TotalFee,
-		SpbillCreateIP: p.CreateIP,
-		NotifyURL:      notifyURL,
-		TradeType:      p.TradeType,
-		OpenID:         p.OpenID,
-		SignType:       p.SignType,
-		Detail:         p.Detail,
-		Attach:         p.Attach,
-		GoodsTag:       p.GoodsTag,
-	}
+	request := new(payRequest).BridgePayRequest(p, o.AppID, o.MchID, nonceStr, sign)
 	if len(p.TimeExpire) > 0 {
 		// 如果有传入交易结束时间
 		request.TimeExpire = p.TimeExpire
