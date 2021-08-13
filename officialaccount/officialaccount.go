@@ -120,3 +120,8 @@ func (officialAccount *OfficialAccount) GetDataCube() *datacube.DataCube {
 func (officialAccount *OfficialAccount) GetOCR() *ocr.OCR {
 	return ocr.NewOCR(officialAccount.ctx)
 }
+
+//GetSubscribe 公众号订阅消息
+func (officialAccount *OfficialAccount) GetSubscribe() *message.Subscrib {
+	return message.NewSubscrib(officialAccount.ctx)
+}
