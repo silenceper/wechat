@@ -13,10 +13,13 @@ var refundGateway = "https://api.mch.weixin.qq.com/secapi/pay/refund"
 type RefundParams struct {
 	TransactionID string
 	OutRefundNo   string
+	OutTradeNo    string
 	TotalFee      string
 	RefundFee     string
 	RefundDesc    string
 	RootCa        string //ca证书
+	NotifyURL     string
+	// SignType      string // 暂时只支持 MD5 的加密方案
 }
 
 //refundRequest 接口请求参数
@@ -27,11 +30,12 @@ type refundRequest struct {
 	Sign          string `xml:"sign"`
 	SignType      string `xml:"sign_type,omitempty"`
 	TransactionID string `xml:"transaction_id"`
+	OutTradeNo    string `xml:"out_trade_no,omitempty"`
 	OutRefundNo   string `xml:"out_refund_no"`
 	TotalFee      string `xml:"total_fee"`
 	RefundFee     string `xml:"refund_fee"`
 	RefundDesc    string `xml:"refund_desc,omitempty"`
-	//NotifyUrl     string `xml:"notify_url,omitempty"`
+	NotifyUrl     string `xml:"notify_url,omitempty"`
 }
 
 //RefundResponse 接口返回
@@ -70,7 +74,16 @@ func (pcf *Pay) Refund(p *RefundParams) (rsp RefundResponse, err error) {
 	param["refund_fee"] = p.RefundFee
 	param["total_fee"] = p.TotalFee
 	param["sign_type"] = "MD5"
-	param["transaction_id"] = p.TransactionID
+
+	if p.OutTradeNo != "" {
+		param["out_trade_no"] = p.OutTradeNo
+	}
+	if p.TransactionID != "" {
+		param["transaction_id"] = p.TransactionID
+	}
+	if p.NotifyURL != "" {
+		param["notify_url"] = p.NotifyURL
+	}
 
 	bizKey := "&key=" + pcf.PayKey
 	str := orderParam(param, bizKey)
@@ -82,6 +95,7 @@ func (pcf *Pay) Refund(p *RefundParams) (rsp RefundResponse, err error) {
 		Sign:          sign,
 		SignType:      "MD5",
 		TransactionID: p.TransactionID,
+		OutTradeNo:    p.OutTradeNo,
 		OutRefundNo:   p.OutRefundNo,
 		TotalFee:      p.TotalFee,
 		RefundFee:     p.RefundFee,
