@@ -55,6 +55,17 @@ type Config struct {
 	PaySign   string `json:"paySign"`
 }
 
+// ConfigForApp 是传出用于 app sdk 用的参数
+type ConfigForApp struct {
+	AppID     string `json:"appid"`
+	MchID     string `json:"partnerid"` // 微信支付分配的商户号
+	PrePayID  string `json:"prepayid"`
+	Package   string `json:"package"`
+	NonceStr  string `json:"nonceStr"`
+	Timestamp string `json:"timestamp"`
+	Sign      string `json:"sign"`
+}
+
 // PreOrder 是 Unified order 接口的返回
 type PreOrder struct {
 	ReturnCode string `xml:"return_code"`
@@ -155,6 +166,44 @@ func (o *Order) BridgeConfig(p *Params) (cfg Config, err error) {
 	cfg.PrePayID = order.PrePayID
 	cfg.SignType = p.SignType
 	cfg.Package = "prepay_id=" + order.PrePayID
+	return
+}
+
+// BridgeAppConfig get app bridge config
+func (o *Order) BridgeAppConfig(p *Params) (cfg ConfigForApp, err error) {
+	var (
+		timestamp string = strconv.FormatInt(time.Now().Unix(), 10)
+		noncestr  string = util.RandomStr(32)
+		_package  string = "Sign=WXPay"
+	)
+	order, err := o.PrePayOrder(p)
+	if err != nil {
+		return
+	}
+
+	result := map[string]string{
+		"appid":     order.AppID,
+		"partnerid": order.MchID,
+		"prepayid":  order.PrePayID,
+		"package":   _package,
+		"noncestr":  noncestr,
+		"timestamp": timestamp,
+	}
+	// 签名
+	sign, err := util.ParamSign(result, o.Key)
+	if err != nil {
+		return
+	}
+	result["sign"] = sign
+	cfg = ConfigForApp{
+		AppID:     result["appid"],
+		MchID:     result["partnerid"],
+		PrePayID:  result["prepayid"],
+		Package:   result["package"],
+		NonceStr:  result["noncestr"],
+		Timestamp: result["timestamp"],
+		Sign:      result["sign"],
+	}
 	return
 }
 
