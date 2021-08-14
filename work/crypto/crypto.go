@@ -222,7 +222,10 @@ func (r *WXBizMsgCrypt) calSignature(timestamp, nonce, data string) string {
 	}
 
 	sha := sha1.New()
-	sha.Write(buffer.Bytes())
+	_, err := sha.Write(buffer.Bytes())
+	if err != nil {
+		return ""
+	}
 	signature := fmt.Sprintf("%x", sha.Sum(nil))
 	return signature
 }
