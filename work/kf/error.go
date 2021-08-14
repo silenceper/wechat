@@ -31,7 +31,7 @@ const (
 	SDKWeWorkAlready Error = "已在企业微信使用微信客服"
 )
 
-//输出错误信息
+//Error 输出错误信息
 func (r Error) Error() string {
 	return reflect.ValueOf(r).String()
 }
