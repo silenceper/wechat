@@ -36,7 +36,7 @@ type ServiceStateGetSchema struct {
 func (r *Client) ServiceStateGet(options ServiceStateGetOptions) (info ServiceStateGetSchema, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
@@ -67,7 +67,7 @@ type ServiceStateTransOptions struct {
 func (r *Client) ServiceStateTrans(options ServiceStateTransOptions) (info util.CommonError, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {

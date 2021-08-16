@@ -43,7 +43,7 @@ type SyncMsgSchema struct {
 func (r *Client) SyncMsg(options SyncMsgOptions) (info SyncMsgSchema, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {

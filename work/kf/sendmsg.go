@@ -22,7 +22,7 @@ type SendMsgSchema struct {
 func (r *Client) SendMsg(options interface{}) (info SendMsgSchema, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {

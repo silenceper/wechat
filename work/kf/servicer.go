@@ -35,7 +35,7 @@ type ReceptionistSchema struct {
 func (r *Client) ReceptionistAdd(options ReceptionistOptions) (info ReceptionistSchema, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
@@ -58,7 +58,7 @@ func (r *Client) ReceptionistAdd(options ReceptionistOptions) (info Receptionist
 func (r *Client) ReceptionistDel(options ReceptionistOptions) (info ReceptionistSchema, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
@@ -90,7 +90,7 @@ type ReceptionistListSchema struct {
 func (r *Client) ReceptionistList(kfID string) (info ReceptionistListSchema, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {

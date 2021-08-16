@@ -32,7 +32,7 @@ type UpgradeServiceConfigSchema struct {
 func (r *Client) UpgradeServiceConfig() (info UpgradeServiceConfigSchema, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
@@ -70,7 +70,7 @@ type UpgradeServiceOptions struct {
 func (r *Client) UpgradeService(options UpgradeServiceOptions) (info util.CommonError, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
@@ -104,7 +104,7 @@ type UpgradeMemberServiceOptions struct {
 func (r *Client) UpgradeMemberService(options UpgradeMemberServiceOptions) (info util.CommonError, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
@@ -138,7 +138,7 @@ type UpgradeServiceGroupChatOptions struct {
 func (r *Client) UpgradeGroupChatService(options UpgradeServiceGroupChatOptions) (info util.CommonError, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
@@ -167,7 +167,7 @@ type UpgradeServiceCancelOptions struct {
 func (r *Client) UpgradeServiceCancel(options UpgradeServiceCancelOptions) (info util.CommonError, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {

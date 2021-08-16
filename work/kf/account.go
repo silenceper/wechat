@@ -36,7 +36,7 @@ type AccountAddSchema struct {
 func (r *Client) AccountAdd(options AccountAddOptions) (info AccountAddSchema, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
@@ -64,7 +64,7 @@ type AccountDelOptions struct {
 func (r *Client) AccountDel(options AccountDelOptions) (info util.CommonError, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
@@ -94,7 +94,7 @@ type AccountUpdateOptions struct {
 func (r *Client) AccountUpdate(options AccountUpdateOptions) (info util.CommonError, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
@@ -130,7 +130,7 @@ type AccountListSchema struct {
 func (r *Client) AccountList() (info AccountListSchema, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
@@ -165,7 +165,7 @@ type AddContactWaySchema struct {
 func (r *Client) AddContactWay(options AddContactWayOptions) (info AddContactWaySchema, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {

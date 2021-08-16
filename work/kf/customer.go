@@ -36,7 +36,7 @@ type CustomerBatchGetSchema struct {
 func (r *Client) CustomerBatchGet(options CustomerBatchGetOptions) (info CustomerBatchGetSchema, err error) {
 	var (
 		accessToken string
-		data []byte
+		data        []byte
 	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
