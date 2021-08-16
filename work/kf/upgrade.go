@@ -18,7 +18,7 @@ const (
 
 // UpgradeServiceConfigSchema 获取配置的专员与客户群
 type UpgradeServiceConfigSchema struct {
-	BaseModel
+	util.CommonError
 	MemberRange struct {
 		UserIDList       []string `json:"userid_list"`        // 专员userid列表
 		DepartmentIDList []string `json:"department_id_list"` // 专员部门列表
@@ -30,11 +30,18 @@ type UpgradeServiceConfigSchema struct {
 
 // UpgradeServiceConfig 获取配置的专员与客户群
 func (r *Client) UpgradeServiceConfig() (info UpgradeServiceConfigSchema, err error) {
-	data, err := util.HTTPGet(fmt.Sprintf(upgradeServiceConfigAddr, r.accessToken))
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.HTTPGet(fmt.Sprintf(upgradeServiceConfigAddr, accessToken))
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}
@@ -57,12 +64,19 @@ type UpgradeServiceOptions struct {
 }
 
 // UpgradeService 为客户升级为专员或客户群服务
-func (r *Client) UpgradeService(options UpgradeServiceOptions) (info BaseModel, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(upgradeService, r.accessToken), options)
+func (r *Client) UpgradeService(options UpgradeServiceOptions) (info util.CommonError, err error) {
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}
@@ -81,12 +95,19 @@ type UpgradeMemberServiceOptions struct {
 }
 
 // UpgradeMemberService 为客户升级为专员服务
-func (r *Client) UpgradeMemberService(options UpgradeMemberServiceOptions) (info BaseModel, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(upgradeService, r.accessToken), options)
+func (r *Client) UpgradeMemberService(options UpgradeMemberServiceOptions) (info util.CommonError, err error) {
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}
@@ -105,12 +126,19 @@ type UpgradeServiceGroupChatOptions struct {
 }
 
 // UpgradeGroupChatService 为客户升级为客户群服务
-func (r *Client) UpgradeGroupChatService(options UpgradeServiceGroupChatOptions) (info BaseModel, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(upgradeService, r.accessToken), options)
+func (r *Client) UpgradeGroupChatService(options UpgradeServiceGroupChatOptions) (info util.CommonError, err error) {
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}
@@ -124,12 +152,19 @@ type UpgradeServiceCancelOptions struct {
 }
 
 // UpgradeServiceCancel 为客户取消推荐
-func (r *Client) UpgradeServiceCancel(options UpgradeServiceCancelOptions) (info BaseModel, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(upgradeServiceCancel, r.accessToken), options)
+func (r *Client) UpgradeServiceCancel(options UpgradeServiceCancelOptions) (info util.CommonError, err error) {
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(upgradeServiceCancel, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}

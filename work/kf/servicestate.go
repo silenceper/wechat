@@ -22,7 +22,7 @@ type ServiceStateGetOptions struct {
 
 // ServiceStateGetSchema 获取会话状态响应内容
 type ServiceStateGetSchema struct {
-	BaseModel
+	util.CommonError
 	ServiceState  int    `json:"service_state"`  // 当前的会话状态，状态定义参考概述中的表格
 	ServiceUserID string `json:"service_userid"` // 接待人员的userid，仅当state=3时有效
 }
@@ -34,11 +34,18 @@ type ServiceStateGetSchema struct {
 //3	由人工接待	人工接待中。可选择结束会话
 //4	已结束	会话已经结束。不允许变更会话状态，等待用户重新发起咨询
 func (r *Client) ServiceStateGet(options ServiceStateGetOptions) (info ServiceStateGetSchema, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(serviceStateGetAddr, r.accessToken), options)
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(serviceStateGetAddr, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}
@@ -54,12 +61,19 @@ type ServiceStateTransOptions struct {
 }
 
 // ServiceStateTrans 变更会话状态
-func (r *Client) ServiceStateTrans(options ServiceStateTransOptions) (info BaseModel, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(serviceStateTransAddr, r.accessToken), options)
+func (r *Client) ServiceStateTrans(options ServiceStateTransOptions) (info util.CommonError, err error) {
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(serviceStateTransAddr, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}

@@ -24,20 +24,27 @@ type ReceptionistOptions struct {
 
 // ReceptionistSchema 添加接待人员响应内容
 type ReceptionistSchema struct {
-	BaseModel
+	util.CommonError
 	ResultList []struct {
 		UserID string `json:"userid"`
-		BaseModel
+		util.CommonError
 	} `json:"result_list"`
 }
 
 // ReceptionistAdd 添加接待人员
 func (r *Client) ReceptionistAdd(options ReceptionistOptions) (info ReceptionistSchema, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(receptionistAddAddr, r.accessToken), options)
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(receptionistAddAddr, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}
@@ -46,11 +53,18 @@ func (r *Client) ReceptionistAdd(options ReceptionistOptions) (info Receptionist
 
 // ReceptionistDel 删除接待人员
 func (r *Client) ReceptionistDel(options ReceptionistOptions) (info ReceptionistSchema, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(receptionistDelAddr, r.accessToken), options)
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(receptionistDelAddr, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}
@@ -59,7 +73,7 @@ func (r *Client) ReceptionistDel(options ReceptionistOptions) (info Receptionist
 
 // ReceptionistListSchema 获取接待人员列表响应内容
 type ReceptionistListSchema struct {
-	BaseModel
+	util.CommonError
 	ReceptionistList []struct {
 		UserID string `json:"userid"` // 接待人员的userid。第三方应用获取到的为密文userid，即open_userid
 		Status int    `json:"status"` // 接待人员的接待状态。0:接待中,1:停止接待。第三方应用需具有“管理帐号、分配会话和收发消息”权限才可获取
@@ -68,11 +82,18 @@ type ReceptionistListSchema struct {
 
 // ReceptionistList 获取接待人员列表
 func (r *Client) ReceptionistList(kfID string) (info ReceptionistListSchema, err error) {
-	data, err := util.HTTPGet(fmt.Sprintf(receptionistListAddr, r.accessToken, kfID))
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.HTTPGet(fmt.Sprintf(receptionistListAddr, accessToken, kfID))
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}

@@ -37,7 +37,7 @@ func (r Error) Error() string {
 }
 
 // NewSDKErr 初始化SDK实例错误信息
-func NewSDKErr(code int, msgList ...string) Error {
+func NewSDKErr(code int64, msgList ...string) Error {
 	switch code {
 	case 50001:
 		return SDKInitFailed

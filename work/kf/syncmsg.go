@@ -41,14 +41,18 @@ type SyncMsgSchema struct {
 
 // SyncMsg 获取消息
 func (r *Client) SyncMsg(options SyncMsgOptions) (info SyncMsgSchema, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(syncMsgAddr, r.accessToken), options)
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	fmt.Println(string(data))
+	data, err := util.PostJSON(fmt.Sprintf(syncMsgAddr, accessToken), options)
+	if err != nil {
+		return
+	}
 	originInfo := syncMsgSchema{}
 	if err = json.Unmarshal(data, &originInfo); err != nil {
-		return info, err
+		return
 	}
 	if originInfo.ErrCode != 0 {
 		return info, errors.New(originInfo.ErrMsg)

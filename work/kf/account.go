@@ -28,17 +28,24 @@ type AccountAddOptions struct {
 
 // AccountAddSchema 添加客服账号响应内容
 type AccountAddSchema struct {
-	BaseModel
+	util.CommonError
 	OpenKFID string `json:"open_kfid"` // 新创建的客服张号ID
 }
 
 // AccountAdd 添加客服账号
 func (r *Client) AccountAdd(options AccountAddOptions) (info AccountAddSchema, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(accountAddAddr, r.accessToken), options)
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(accountAddAddr, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}
@@ -51,12 +58,19 @@ type AccountDelOptions struct {
 }
 
 // AccountDel 删除客服账号
-func (r *Client) AccountDel(options AccountDelOptions) (info BaseModel, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(accountDelAddr, r.accessToken), options)
+func (r *Client) AccountDel(options AccountDelOptions) (info util.CommonError, err error) {
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(accountDelAddr, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}
@@ -71,12 +85,19 @@ type AccountUpdateOptions struct {
 }
 
 // AccountUpdate 修复客服账号
-func (r *Client) AccountUpdate(options AccountUpdateOptions) (info BaseModel, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(accountUpdateAddr, r.accessToken), options)
+func (r *Client) AccountUpdate(options AccountUpdateOptions) (info util.CommonError, err error) {
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(accountUpdateAddr, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}
@@ -92,17 +113,24 @@ type AccountInfoSchema struct {
 
 // AccountListSchema 获取客服账号列表响应内容
 type AccountListSchema struct {
-	BaseModel
+	util.CommonError
 	AccountList []AccountInfoSchema `json:"account_list"` // 客服账号列表
 }
 
 // AccountList 获取客服账号列表
 func (r *Client) AccountList() (info AccountListSchema, err error) {
-	data, err := util.HTTPGet(fmt.Sprintf(accountListAddr, r.accessToken))
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.HTTPGet(fmt.Sprintf(accountListAddr, accessToken))
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}
@@ -117,17 +145,24 @@ type AddContactWayOptions struct {
 
 // AddContactWaySchema 获取客服账号链接响应内容
 type AddContactWaySchema struct {
-	BaseModel
+	util.CommonError
 	URL string `json:"url"` // 客服链接，开发者可将该链接嵌入到H5页面中，用户点击链接即可向对应的微信客服帐号发起咨询。开发者也可根据该url自行生成需要的二维码图片
 }
 
 // AddContactWay 获取客服账号链接
 func (r *Client) AddContactWay(options AddContactWayOptions) (info AddContactWaySchema, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(addContactWayAddr, r.accessToken), options)
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(addContactWayAddr, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}

@@ -27,18 +27,25 @@ type CustomerSchema struct {
 
 // CustomerBatchGetSchema 获取客户基本信息响应内容
 type CustomerBatchGetSchema struct {
-	BaseModel
+	util.CommonError
 	CustomerList          []CustomerSchema `json:"customer_list"`           // 微信客户信息列表
 	InvalidExternalUserID []string         `json:"invalid_external_userid"` // 无效的微信客户ID
 }
 
 // CustomerBatchGet 客户基本信息获取
 func (r *Client) CustomerBatchGet(options CustomerBatchGetOptions) (info CustomerBatchGetSchema, err error) {
-	data, err := util.PostJSON(fmt.Sprintf(customerBatchGetAddr, r.accessToken), options)
+	var accessToken string
+	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
-		return info, err
+		return
 	}
-	_ = json.Unmarshal(data, &info)
+	data, err := util.PostJSON(fmt.Sprintf(customerBatchGetAddr, accessToken), options)
+	if err != nil {
+		return
+	}
+	if err = json.Unmarshal(data, &info); err != nil {
+		return
+	}
 	if info.ErrCode != 0 {
 		return info, NewSDKErr(info.ErrCode, info.ErrMsg)
 	}
