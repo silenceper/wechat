@@ -12,14 +12,14 @@ const (
 	subscribeTemplateListURL = "https://api.weixin.qq.com/wxaapi/newtmpl/gettemplate"
 )
 
-//Subscrib 订阅消息
-type Subscrib struct {
+//Subscribe 订阅消息
+type Subscribe struct {
 	*context.Context
 }
 
-//NewSubscrib 实例化
-func NewSubscrib(context *context.Context) *Subscrib {
-	tpl := new(Subscrib)
+//NewSubscribe 实例化
+func NewSubscribe(context *context.Context) *Subscribe {
+	tpl := new(Subscribe)
 	tpl.Context = context
 	return tpl
 }
@@ -42,7 +42,7 @@ type SubscribeDataItem struct {
 }
 
 //Send 发送订阅消息
-func (tpl *Subscrib) Send(msg *SubscribeMessage) (err error) {
+func (tpl *Subscribe) Send(msg *SubscribeMessage) (err error) {
 	var accessToken string
 	accessToken, err = tpl.GetAccessToken()
 	if err != nil {
@@ -53,11 +53,11 @@ func (tpl *Subscrib) Send(msg *SubscribeMessage) (err error) {
 	if err != nil {
 		return
 	}
-	return util.DecodeWithCommonError(response, "SendSubscribMessage")
+	return util.DecodeWithCommonError(response, "SendSubscribeMessage")
 }
 
-// PrivateSubscribItem 私有订阅消息模板
-type PrivateSubscribItem struct {
+// PrivateSubscribeItem 私有订阅消息模板
+type PrivateSubscribeItem struct {
 	PriTmplID string `json:"priTmplId"` //	添加至帐号下的模板 id，发送订阅通知时所需
 	Title     string `json:"title"`     //模版标题
 	Content   string `json:"content"`   //模版内容
@@ -65,13 +65,13 @@ type PrivateSubscribItem struct {
 	SubType   int    `json:"type"`      //模版类型，2 为一次性订阅，3 为长期订阅
 }
 
-type resPrivateSubscribList struct {
+type resPrivateSubscribeList struct {
 	util.CommonError
-	SubscriptionList []*PrivateSubscribItem `json:"data"`
+	SubscriptionList []*PrivateSubscribeItem `json:"data"`
 }
 
 //List 获取私有订阅消息模板列表
-func (tpl *Subscrib) List() (templateList []*PrivateSubscribItem, err error) {
+func (tpl *Subscribe) List() (templateList []*PrivateSubscribeItem, err error) {
 	var accessToken string
 	accessToken, err = tpl.GetAccessToken()
 	if err != nil {
@@ -83,7 +83,7 @@ func (tpl *Subscrib) List() (templateList []*PrivateSubscribItem, err error) {
 	if err != nil {
 		return
 	}
-	var res resPrivateSubscribList
+	var res resPrivateSubscribeList
 	err = util.DecodeWithError(response, &res, "ListSubscription")
 	if err != nil {
 		return
