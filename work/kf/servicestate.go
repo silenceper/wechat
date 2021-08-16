@@ -34,12 +34,15 @@ type ServiceStateGetSchema struct {
 //3	由人工接待	人工接待中。可选择结束会话
 //4	已结束	会话已经结束。不允许变更会话状态，等待用户重新发起咨询
 func (r *Client) ServiceStateGet(options ServiceStateGetOptions) (info ServiceStateGetSchema, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(serviceStateGetAddr, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(serviceStateGetAddr, accessToken), options)
 	if err != nil {
 		return
 	}
@@ -62,12 +65,15 @@ type ServiceStateTransOptions struct {
 
 // ServiceStateTrans 变更会话状态
 func (r *Client) ServiceStateTrans(options ServiceStateTransOptions) (info util.CommonError, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(serviceStateTransAddr, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(serviceStateTransAddr, accessToken), options)
 	if err != nil {
 		return
 	}

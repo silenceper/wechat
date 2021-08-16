@@ -41,12 +41,15 @@ type SyncMsgSchema struct {
 
 // SyncMsg 获取消息
 func (r *Client) SyncMsg(options SyncMsgOptions) (info SyncMsgSchema, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(syncMsgAddr, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(syncMsgAddr, accessToken), options)
 	if err != nil {
 		return
 	}

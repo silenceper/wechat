@@ -34,12 +34,15 @@ type CustomerBatchGetSchema struct {
 
 // CustomerBatchGet 客户基本信息获取
 func (r *Client) CustomerBatchGet(options CustomerBatchGetOptions) (info CustomerBatchGetSchema, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(customerBatchGetAddr, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(customerBatchGetAddr, accessToken), options)
 	if err != nil {
 		return
 	}

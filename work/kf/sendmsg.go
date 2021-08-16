@@ -20,12 +20,15 @@ type SendMsgSchema struct {
 
 // SendMsg 获取消息
 func (r *Client) SendMsg(options interface{}) (info SendMsgSchema, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(sendMsgAddr, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(sendMsgAddr, accessToken), options)
 	if err != nil {
 		return
 	}

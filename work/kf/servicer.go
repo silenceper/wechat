@@ -33,12 +33,15 @@ type ReceptionistSchema struct {
 
 // ReceptionistAdd 添加接待人员
 func (r *Client) ReceptionistAdd(options ReceptionistOptions) (info ReceptionistSchema, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(receptionistAddAddr, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(receptionistAddAddr, accessToken), options)
 	if err != nil {
 		return
 	}
@@ -53,12 +56,15 @@ func (r *Client) ReceptionistAdd(options ReceptionistOptions) (info Receptionist
 
 // ReceptionistDel 删除接待人员
 func (r *Client) ReceptionistDel(options ReceptionistOptions) (info ReceptionistSchema, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(receptionistDelAddr, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(receptionistDelAddr, accessToken), options)
 	if err != nil {
 		return
 	}
@@ -82,12 +88,15 @@ type ReceptionistListSchema struct {
 
 // ReceptionistList 获取接待人员列表
 func (r *Client) ReceptionistList(kfID string) (info ReceptionistListSchema, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.HTTPGet(fmt.Sprintf(receptionistListAddr, accessToken, kfID))
+	data, err = util.HTTPGet(fmt.Sprintf(receptionistListAddr, accessToken, kfID))
 	if err != nil {
 		return
 	}

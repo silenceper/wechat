@@ -34,12 +34,15 @@ type AccountAddSchema struct {
 
 // AccountAdd 添加客服账号
 func (r *Client) AccountAdd(options AccountAddOptions) (info AccountAddSchema, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(accountAddAddr, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(accountAddAddr, accessToken), options)
 	if err != nil {
 		return
 	}
@@ -59,12 +62,15 @@ type AccountDelOptions struct {
 
 // AccountDel 删除客服账号
 func (r *Client) AccountDel(options AccountDelOptions) (info util.CommonError, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(accountDelAddr, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(accountDelAddr, accessToken), options)
 	if err != nil {
 		return
 	}
@@ -86,12 +92,15 @@ type AccountUpdateOptions struct {
 
 // AccountUpdate 修复客服账号
 func (r *Client) AccountUpdate(options AccountUpdateOptions) (info util.CommonError, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(accountUpdateAddr, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(accountUpdateAddr, accessToken), options)
 	if err != nil {
 		return
 	}
@@ -119,12 +128,15 @@ type AccountListSchema struct {
 
 // AccountList 获取客服账号列表
 func (r *Client) AccountList() (info AccountListSchema, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.HTTPGet(fmt.Sprintf(accountListAddr, accessToken))
+	data, err = util.HTTPGet(fmt.Sprintf(accountListAddr, accessToken))
 	if err != nil {
 		return
 	}
@@ -151,12 +163,15 @@ type AddContactWaySchema struct {
 
 // AddContactWay 获取客服账号链接
 func (r *Client) AddContactWay(options AddContactWayOptions) (info AddContactWaySchema, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(addContactWayAddr, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(addContactWayAddr, accessToken), options)
 	if err != nil {
 		return
 	}

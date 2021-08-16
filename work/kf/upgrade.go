@@ -30,12 +30,15 @@ type UpgradeServiceConfigSchema struct {
 
 // UpgradeServiceConfig 获取配置的专员与客户群
 func (r *Client) UpgradeServiceConfig() (info UpgradeServiceConfigSchema, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.HTTPGet(fmt.Sprintf(upgradeServiceConfigAddr, accessToken))
+	data, err = util.HTTPGet(fmt.Sprintf(upgradeServiceConfigAddr, accessToken))
 	if err != nil {
 		return
 	}
@@ -65,12 +68,15 @@ type UpgradeServiceOptions struct {
 
 // UpgradeService 为客户升级为专员或客户群服务
 func (r *Client) UpgradeService(options UpgradeServiceOptions) (info util.CommonError, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options)
 	if err != nil {
 		return
 	}
@@ -96,12 +102,15 @@ type UpgradeMemberServiceOptions struct {
 
 // UpgradeMemberService 为客户升级为专员服务
 func (r *Client) UpgradeMemberService(options UpgradeMemberServiceOptions) (info util.CommonError, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options)
 	if err != nil {
 		return
 	}
@@ -127,12 +136,15 @@ type UpgradeServiceGroupChatOptions struct {
 
 // UpgradeGroupChatService 为客户升级为客户群服务
 func (r *Client) UpgradeGroupChatService(options UpgradeServiceGroupChatOptions) (info util.CommonError, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options)
 	if err != nil {
 		return
 	}
@@ -153,12 +165,15 @@ type UpgradeServiceCancelOptions struct {
 
 // UpgradeServiceCancel 为客户取消推荐
 func (r *Client) UpgradeServiceCancel(options UpgradeServiceCancelOptions) (info util.CommonError, err error) {
-	var accessToken string
+	var (
+		accessToken string
+		data []byte
+	)
 	accessToken, err = r.ctx.GetAccessToken()
 	if err != nil {
 		return
 	}
-	data, err := util.PostJSON(fmt.Sprintf(upgradeServiceCancel, accessToken), options)
+	data, err = util.PostJSON(fmt.Sprintf(upgradeServiceCancel, accessToken), options)
 	if err != nil {
 		return
 	}
