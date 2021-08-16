@@ -122,6 +122,6 @@ func (officialAccount *OfficialAccount) GetOCR() *ocr.OCR {
 }
 
 //GetSubscribe 公众号订阅消息
-func (officialAccount *OfficialAccount) GetSubscribe() *message.Subscrib {
-	return message.NewSubscrib(officialAccount.ctx)
+func (officialAccount *OfficialAccount) GetSubscribe() *message.Subscribe {
+	return message.NewSubscribe(officialAccount.ctx)
 }
