@@ -25,7 +25,7 @@ type SyncMsgOptions struct {
 type syncMsgSchema struct {
 	ErrCode    int32                    `json:"errcode"`     // 返回码
 	ErrMsg     string                   `json:"errmsg"`      // 错误码描述
-	NextCursor string                   `json:"next_cursor"` // 下次调用带上该值则从该key值往后拉，用于增量拉取
+	NextCursor string                   `json:"next_cursor"` // 下次调用带上该值，则从当前的位置继续往后拉，以实现增量拉取。强烈建议对改该字段入库保存，每次请求读取带上，请求结束后更新。避免因意外丢，导致必须从头开始拉取，引起消息延迟。
 	HasMore    uint32                   `json:"has_more"`    // 是否还有更多数据。0-否；1-是。不能通过判断msg_list是否空来停止拉取，可能会出现has_more为1，而msg_list为空的情况
 	MsgList    []map[string]interface{} `json:"msg_list"`    // 消息列表
 }
