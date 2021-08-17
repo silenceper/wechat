@@ -35,6 +35,7 @@ type Params struct {
 	CreateIP   string
 	Body       string
 	OutTradeNo string
+	TimeExpire string // 订单失效时间，格式为yyyyMMddHHmmss，如2009年12月27日9点10分10秒表示为20091227091010。
 	OpenID     string
 	TradeType  string
 	SignType   string
@@ -52,6 +53,17 @@ type Config struct {
 	SignType  string `json:"signType"`
 	Package   string `json:"package"`
 	PaySign   string `json:"paySign"`
+}
+
+// ConfigForApp 是传出用于 app sdk 用的参数
+type ConfigForApp struct {
+	AppID     string `json:"appid"`
+	MchID     string `json:"partnerid"` // 微信支付分配的商户号
+	PrePayID  string `json:"prepayid"`
+	Package   string `json:"package"`
+	NonceStr  string `json:"nonceStr"`
+	Timestamp string `json:"timestamp"`
+	Sign      string `json:"sign"`
 }
 
 // PreOrder 是 Unified order 接口的返回
@@ -99,6 +111,27 @@ type payRequest struct {
 	XMLName struct{} `xml:"xml"`
 }
 
+func (req *payRequest) BridgePayRequest(p *Params, AppID, MchID, nonceStr, sign string) *payRequest {
+	request := payRequest{
+		AppID:          AppID,
+		MchID:          MchID,
+		NonceStr:       nonceStr,
+		Sign:           sign,
+		Body:           p.Body,
+		OutTradeNo:     p.OutTradeNo,
+		TotalFee:       p.TotalFee,
+		SpbillCreateIP: p.CreateIP,
+		NotifyURL:      p.NotifyURL,
+		TradeType:      p.TradeType,
+		OpenID:         p.OpenID,
+		SignType:       p.SignType,
+		Detail:         p.Detail,
+		Attach:         p.Attach,
+		GoodsTag:       p.GoodsTag,
+	}
+	return &request
+}
+
 // BridgeConfig get js bridge config
 func (o *Order) BridgeConfig(p *Params) (cfg Config, err error) {
 	var (
@@ -136,54 +169,85 @@ func (o *Order) BridgeConfig(p *Params) (cfg Config, err error) {
 	return
 }
 
+// BridgeAppConfig get app bridge config
+func (o *Order) BridgeAppConfig(p *Params) (cfg ConfigForApp, err error) {
+	var (
+		timestamp string = strconv.FormatInt(time.Now().Unix(), 10)
+		noncestr  string = util.RandomStr(32)
+		_package  string = "Sign=WXPay"
+	)
+	order, err := o.PrePayOrder(p)
+	if err != nil {
+		return
+	}
+
+	result := map[string]string{
+		"appid":     order.AppID,
+		"partnerid": order.MchID,
+		"prepayid":  order.PrePayID,
+		"package":   _package,
+		"noncestr":  noncestr,
+		"timestamp": timestamp,
+	}
+	// 签名
+	sign, err := util.ParamSign(result, o.Key)
+	if err != nil {
+		return
+	}
+	result["sign"] = sign
+	cfg = ConfigForApp{
+		AppID:     result["appid"],
+		MchID:     result["partnerid"],
+		PrePayID:  result["prepayid"],
+		Package:   result["package"],
+		NonceStr:  result["noncestr"],
+		Timestamp: result["timestamp"],
+		Sign:      result["sign"],
+	}
+	return
+}
+
 // PrePayOrder return data for invoke wechat payment
 func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	nonceStr := util.RandomStr(32)
-	notifyURL := o.NotifyURL
-	// 签名类型
-	if p.SignType == "" {
-		p.SignType = util.SignTypeMD5
+	param := map[string]string{
+		"appid":            o.AppID,
+		"body":             p.Body,
+		"mch_id":           o.MchID,
+		"nonce_str":        nonceStr,
+		"out_trade_no":     p.OutTradeNo,
+		"spbill_create_ip": p.CreateIP,
+		"total_fee":        p.TotalFee,
+		"trade_type":       p.TradeType,
+		"openid":           p.OpenID,
+		"sign_type":        p.SignType,
+		"detail":           p.Detail,
+		"attach":           p.Attach,
+		"goods_tag":        p.GoodsTag,
 	}
+	// 签名类型
+	if param["sign_type"] == "" {
+		param["sign_type"] = util.SignTypeMD5
+	}
+
 	// 通知地址
 	if p.NotifyURL != "" {
-		notifyURL = p.NotifyURL
+		param["notify_url"] = p.NotifyURL
 	}
-	param := make(map[string]string)
-	param["appid"] = o.AppID
-	param["body"] = p.Body
-	param["mch_id"] = o.MchID
-	param["nonce_str"] = nonceStr
-	param["out_trade_no"] = p.OutTradeNo
-	param["spbill_create_ip"] = p.CreateIP
-	param["total_fee"] = p.TotalFee
-	param["trade_type"] = p.TradeType
-	param["openid"] = p.OpenID
-	param["sign_type"] = p.SignType
-	param["detail"] = p.Detail
-	param["attach"] = p.Attach
-	param["goods_tag"] = p.GoodsTag
-	param["notify_url"] = notifyURL
+
+	if p.TimeExpire != "" {
+		// 如果有传入交易结束时间
+		param["time_expire"] = p.TimeExpire
+	}
 
 	sign, err := util.ParamSign(param, o.Key)
 	if err != nil {
 		return
 	}
-	request := payRequest{
-		AppID:          o.AppID,
-		MchID:          o.MchID,
-		NonceStr:       nonceStr,
-		Sign:           sign,
-		Body:           p.Body,
-		OutTradeNo:     p.OutTradeNo,
-		TotalFee:       p.TotalFee,
-		SpbillCreateIP: p.CreateIP,
-		NotifyURL:      notifyURL,
-		TradeType:      p.TradeType,
-		OpenID:         p.OpenID,
-		SignType:       p.SignType,
-		Detail:         p.Detail,
-		Attach:         p.Attach,
-		GoodsTag:       p.GoodsTag,
+	request := new(payRequest).BridgePayRequest(p, o.AppID, o.MchID, nonceStr, sign)
+	if len(p.TimeExpire) > 0 {
+		// 如果有传入交易结束时间
+		request.TimeExpire = p.TimeExpire
 	}
 	rawRet, err := util.PostXML(payGateway, request)
 	if err != nil {
