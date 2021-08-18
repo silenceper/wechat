@@ -3,11 +3,11 @@ package syncmsg
 // BaseMessage 接收消息
 type BaseMessage struct {
 	MsgID              string `json:"msgid"`           // 消息ID
-	OpenKFID           string `json:"open_kfid"`       // 客服帐号ID
-	ExternalUserID     string `json:"external_userid"` // 客户UserID
+	OpenKFID           string `json:"open_kfid"`       // 客服帐号ID（msgtype为event，该字段不返回）
+	ExternalUserID     string `json:"external_userid"` // 客户UserID（msgtype为event，该字段不返回）
 	ReceptionistUserID string `json:"servicer_userid"` // 接待客服userID
 	SendTime           uint64 `json:"send_time"`       // 消息发送时间
-	Origin             uint32 `json:"origin"`          // 消息来源。3-客户回复的消息 4-系统推送的消息 5-客服回复消息
+	Origin             uint32 `json:"origin"`          // 消息来源。3-微信客户发送的消息 4-系统推送的事件消息 5-接待人员在企业微信客户端发送的消息
 }
 
 // Text 文本消息
@@ -119,6 +119,7 @@ type EnterSessionEvent struct {
 		OpenKFID       string `json:"open_kfid"`       // 客服账号ID
 		ExternalUserID string `json:"external_userid"` // 客户UserID
 		Scene          string `json:"scene"`           // 进入会话的场景值，获取客服帐号链接开发者自定义的场景值
+		SceneParam     string `json:"scene_param"`     // 进入会话的自定义参数，获取客服帐号链接返回的url，开发者按规范拼接的scene_param参数
 	} `json:"event"` // 事件消息
 }
 
