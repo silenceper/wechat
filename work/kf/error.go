@@ -21,6 +21,10 @@ const (
 	SDKInvalidCorpID Error = "无效的 CorpID"
 	// SDKAccessTokenInvalid 错误码：40014
 	SDKAccessTokenInvalid Error = "AccessToken 无效"
+	// SDKValidateSignatureFailed 错误码：40015
+	SDKValidateSignatureFailed Error = "校验签名错误"
+	// SDKDecryptMSGFailed 错误码：40016
+	SDKDecryptMSGFailed Error = "消息解密失败"
 	// SDKAccessTokenMissing 错误码：41001
 	SDKAccessTokenMissing Error = "缺少AccessToken参数"
 	// SDKAccessTokenExpired 错误码：42001
@@ -53,6 +57,10 @@ func NewSDKErr(code int64, msgList ...string) Error {
 		return SDKInvalidCorpID
 	case 40014:
 		return SDKAccessTokenInvalid
+	case 40015:
+		return SDKValidateSignatureFailed
+	case 40016:
+		return SDKDecryptMSGFailed
 	case 45009:
 		return SDKApiFreqOutOfLimit
 	case 95011:
