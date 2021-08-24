@@ -61,7 +61,8 @@ func (tpl *Template) Send(msg *TemplateMessage) (msgID int64, err error) {
 		return
 	}
 	uri := fmt.Sprintf("%s?access_token=%s", templateSendURL, accessToken)
-	response, err := util.PostJSON(uri, msg)
+	var response []byte
+	response, err = util.PostJSON(uri, msg)
 	if err != nil {
 		return
 	}
@@ -133,18 +134,15 @@ func (tpl *Template) Add(shortID string) (templateID string, err error) {
 		ShortID string `json:"template_id_short"`
 	}{ShortID: shortID}
 	uri := fmt.Sprintf("%s?access_token=%s", templateAddURL, accessToken)
-	response, err := util.PostJSON(uri, msg)
+	var response []byte
+	response, err = util.PostJSON(uri, msg)
 	if err != nil {
 		return
 	}
 
 	var result resTemplateAdd
-	err = json.Unmarshal(response, &result)
+	err = util.DecodeWithError(response, &result, "AddTemplate")
 	if err != nil {
-		return
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("add template error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return
 	}
 	templateID = result.TemplateID
@@ -163,19 +161,10 @@ func (tpl *Template) Delete(templateID string) (err error) {
 	}{TemplateID: templateID}
 
 	uri := fmt.Sprintf("%s?access_token=%s", templateDelURL, accessToken)
-	response, err := util.PostJSON(uri, msg)
+	var response []byte
+	response, err = util.PostJSON(uri, msg)
 	if err != nil {
 		return
 	}
-
-	var result util.CommonError
-	err = json.Unmarshal(response, &result)
-	if err != nil {
-		return
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("delete template error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return
-	}
-	return
+	return util.DecodeWithCommonError(response, "DeleteTemplate")
 }
