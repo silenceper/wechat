@@ -30,6 +30,7 @@ type PaidResult struct {
 	OpenID             *string `xml:"openid"`
 	IsSubscribe        *string `xml:"is_subscribe"`
 	TradeType          *string `xml:"trade_type"`
+	TradeState         *string `xml:"trade_state"`
 	BankType           *string `xml:"bank_type"`
 	TotalFee           *int    `xml:"total_fee"`
 	SettlementTotalFee *int    `xml:"settlement_total_fee"`
