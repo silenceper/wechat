@@ -11,6 +11,8 @@ import (
 const (
 	templateSendURL = "https://api.weixin.qq.com/cgi-bin/message/template/send"
 	templateListURL = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template"
+	templateAddURL  = "https://api.weixin.qq.com/cgi-bin/template/api_add_template"
+	templateDelURL  = "https://api.weixin.qq.com/cgi-bin/template/del_private_template"
 )
 
 //Template 模板消息
@@ -59,7 +61,8 @@ func (tpl *Template) Send(msg *TemplateMessage) (msgID int64, err error) {
 		return
 	}
 	uri := fmt.Sprintf("%s?access_token=%s", templateSendURL, accessToken)
-	response, err := util.PostJSON(uri, msg)
+	var response []byte
+	response, err = util.PostJSON(uri, msg)
 	if err != nil {
 		return
 	}
@@ -112,4 +115,56 @@ func (tpl *Template) List() (templateList []*TemplateItem, err error) {
 	}
 	templateList = res.TemplateList
 	return
+}
+
+type resTemplateAdd struct {
+	util.CommonError
+
+	TemplateID string `json:"template_id"`
+}
+
+// Add 添加模板.
+func (tpl *Template) Add(shortID string) (templateID string, err error) {
+	var accessToken string
+	accessToken, err = tpl.GetAccessToken()
+	if err != nil {
+		return
+	}
+	var msg = struct {
+		ShortID string `json:"template_id_short"`
+	}{ShortID: shortID}
+	uri := fmt.Sprintf("%s?access_token=%s", templateAddURL, accessToken)
+	var response []byte
+	response, err = util.PostJSON(uri, msg)
+	if err != nil {
+		return
+	}
+
+	var result resTemplateAdd
+	err = util.DecodeWithError(response, &result, "AddTemplate")
+	if err != nil {
+		return
+	}
+	templateID = result.TemplateID
+	return
+}
+
+// Delete 删除私有模板.
+func (tpl *Template) Delete(templateID string) (err error) {
+	var accessToken string
+	accessToken, err = tpl.GetAccessToken()
+	if err != nil {
+		return
+	}
+	var msg = struct {
+		TemplateID string `json:"template_id"`
+	}{TemplateID: templateID}
+
+	uri := fmt.Sprintf("%s?access_token=%s", templateDelURL, accessToken)
+	var response []byte
+	response, err = util.PostJSON(uri, msg)
+	if err != nil {
+		return
+	}
+	return util.DecodeWithCommonError(response, "DeleteTemplate")
 }
