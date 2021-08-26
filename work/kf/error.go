@@ -33,6 +33,8 @@ const (
 	SDKApiFreqOutOfLimit Error = "接口请求次数超频"
 	// SDKApiForbidden 错误码：48002
 	SDKApiForbidden Error = "API 禁止调用"
+	// SDKInvalidOpenKFID 错误码：95000
+	SDKInvalidOpenKFID Error = "无效的 open_kfid"
 	// SDKOpenKFIDNotExist 错误码：95004
 	SDKOpenKFIDNotExist Error = "open_kfid 不存在"
 	// SDKWeWorkAlready 错误码：95011
@@ -69,6 +71,8 @@ func NewSDKErr(code int64, msgList ...string) Error {
 		return SDKApiFreqOutOfLimit
 	case 48002:
 		return SDKApiForbidden
+	case 95000:
+		return SDKInvalidOpenKFID
 	case 95004:
 		return SDKOpenKFIDNotExist
 	case 95011:
