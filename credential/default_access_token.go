@@ -56,15 +56,19 @@ type ResAccessToken struct {
 
 //GetAccessToken 获取access_token,先从cache中获取，没有则从服务端获取
 func (ak *DefaultAccessToken) GetAccessToken() (accessToken string, err error) {
+	// 先从cache中取
+	accessTokenCacheKey := fmt.Sprintf("%s_access_token_%s", ak.cacheKeyPrefix, ak.appID)
+	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
+		return val.(string), nil
+	}
+
 	//加上lock，是为了防止在并发获取token时，cache刚好失效，导致从微信服务器上获取到不同token
 	ak.accessTokenLock.Lock()
 	defer ak.accessTokenLock.Unlock()
 
-	accessTokenCacheKey := fmt.Sprintf("%s_access_token_%s", ak.cacheKeyPrefix, ak.appID)
-	val := ak.cache.Get(accessTokenCacheKey)
-	if val != nil {
-		accessToken = val.(string)
-		return
+	// 双检，防止重复从微信服务器获取
+	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
+		return val.(string), nil
 	}
 
 	//cache失效，从微信服务器获取
