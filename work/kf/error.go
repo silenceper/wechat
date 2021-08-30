@@ -33,10 +33,14 @@ const (
 	SDKApiFreqOutOfLimit Error = "接口请求次数超频"
 	// SDKApiForbidden 错误码：48002
 	SDKApiForbidden Error = "API 禁止调用"
+	// SDKInvalidOpenKFID 错误码：95000
+	SDKInvalidOpenKFID Error = "无效的 open_kfid"
 	// SDKOpenKFIDNotExist 错误码：95004
 	SDKOpenKFIDNotExist Error = "open_kfid 不存在"
 	// SDKWeWorkAlready 错误码：95011
 	SDKWeWorkAlready Error = "已在企业微信使用微信客服"
+	// SDKApiNotOpen 错误码：95017
+	SDKApiNotOpen Error = "API 功能没有被开启"
 )
 
 //Error 输出错误信息
@@ -69,10 +73,14 @@ func NewSDKErr(code int64, msgList ...string) Error {
 		return SDKApiFreqOutOfLimit
 	case 48002:
 		return SDKApiForbidden
+	case 95000:
+		return SDKInvalidOpenKFID
 	case 95004:
 		return SDKOpenKFIDNotExist
 	case 95011:
 		return SDKWeWorkAlready
+	case 95017:
+		return SDKApiNotOpen
 	default:
 		//返回未知的自定义错误
 		if len(msgList) > 0 {
