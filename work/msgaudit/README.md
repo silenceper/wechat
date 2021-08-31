@@ -1,4 +1,5 @@
 企业微信会话存档SDK（基于企业微信C版官方SDK封装），暂时只支持在`linux`环境下使用当前SDK。
+> 编译时候需要打开CGO的支持：`CGO_ENABLED=1`
 
 ### 官方文档地址
 https://open.work.weixin.qq.com/api/doc/90000/90135/91774
