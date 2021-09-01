@@ -1,4 +1,4 @@
-// +build !linux linux,!cgo
+// +build !linux !cgo !msgaudit
 
 //Package msgaudit for unsupport platform
 package msgaudit

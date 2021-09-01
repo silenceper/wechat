@@ -1,5 +1,5 @@
 企业微信会话存档SDK（基于企业微信C版官方SDK封装），暂时只支持在`linux`环境下使用当前SDK。
-> 编译时候需要打开CGO的支持：`CGO_ENABLED=1`
+
 
 ### 官方文档地址
 https://open.work.weixin.qq.com/api/doc/90000/90135/91774
@@ -10,6 +10,10 @@ https://open.work.weixin.qq.com/api/doc/90000/90135/91774
 > go get -u github.com/silenceper/wechat/v2
 
 2、从 `github.com/silenceper/wechat/v2/work/msgaudit/lib` 文件夹下复制 `libWeWorkFinanceSdk_C.so` 动态库文件到系统动态链接库默认文件夹下，或者复制到任意文件夹并在当前文件夹下执行 `export LD_LIBRARY_PATH=$(pwd)`命令设置动态链接库检索地址后即可正常使用
+
+3、编译要求
+- 开启CGO: `CGO_ENABLED=1`
+- 增加tags参数`msgaudit`： `go build -tags msgaudit`或者`go run -tags msgaudit main.go`
 
 ### Example
 
@@ -31,7 +35,7 @@ func main() {
 	//初始化客户端
 	wechatClient := wechat.NewWechat()
 	
-	workClient := wechatClient.NewWork(&config.Config{
+	workClient := wechatClient.GetWork(&config.Config{
 		CorpID:        "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 		CorpSecret:    "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 		RasPrivateKey: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
