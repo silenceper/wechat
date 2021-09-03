@@ -35,7 +35,7 @@ type RefundedReqInfo struct {
 	SettlementRefundFee *int    `xml:"settlement_refund_fee"`
 	RefundStatus        *string `xml:"refund_status"`
 	SuccessTime         *string `xml:"success_time"`
-	RefundRecvAccount   *string `xml:"refund_recv_account"`
+	RefundRecvAccount   *string `xml:"refund_recv_accout"`
 	RefundAccount       *string `xml:"refund_account"`
 	RefundRequestSource *string `xml:"refund_request_source"`
 }

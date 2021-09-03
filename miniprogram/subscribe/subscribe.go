@@ -16,6 +16,14 @@ const (
 	// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getTemplateList.html
 	getTemplateURL = "https://api.weixin.qq.com/wxaapi/newtmpl/gettemplate"
 
+	// 添加订阅模板
+	// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.addTemplate.html
+	addTemplateURL = "https://api.weixin.qq.com/wxaapi/newtmpl/addtemplate"
+
+	// 删除私有模板
+	// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.deleteTemplate.html
+	delTemplateURL = "https://api.weixin.qq.com/wxaapi/newtmpl/deltemplate"
+
 	// 统一服务消息
 	// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/uniform-message/uniformMessage.send.html
 	uniformMessageSend = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send"
@@ -132,4 +140,56 @@ func (s *Subscribe) UniformSend(msg *UniformMessage) (err error) {
 		return
 	}
 	return util.DecodeWithCommonError(response, "UniformSend")
+}
+
+type resSubscribeAdd struct {
+	util.CommonError
+
+	TemplateID string `json:"priTmplId"`
+}
+
+// Add 添加订阅消息模板
+func (s *Subscribe) Add(ShortID string, kidList []int, sceneDesc string) (templateID string, err error) {
+	var accessToken string
+	accessToken, err = s.GetAccessToken()
+	if err != nil {
+		return
+	}
+	var msg = struct {
+		TemplateIDShort string `json:"tid"`
+		SceneDesc       string `json:"sceneDesc"`
+		KidList         []int  `json:"kidList"`
+	}{TemplateIDShort: ShortID, SceneDesc: sceneDesc, KidList: kidList}
+	uri := fmt.Sprintf("%s?access_token=%s", addTemplateURL, accessToken)
+	var response []byte
+	response, err = util.PostJSON(uri, msg)
+	if err != nil {
+		return
+	}
+	var result resSubscribeAdd
+	err = util.DecodeWithError(response, &result, "AddSubscribe")
+	if err != nil {
+		return
+	}
+	templateID = result.TemplateID
+	return
+}
+
+// Delete 删除私有模板
+func (s *Subscribe) Delete(templateID string) (err error) {
+	var accessToken string
+	accessToken, err = s.GetAccessToken()
+	if err != nil {
+		return
+	}
+	var msg = struct {
+		TemplateID string `json:"priTmplId"`
+	}{TemplateID: templateID}
+	uri := fmt.Sprintf("%s?access_token=%s", delTemplateURL, accessToken)
+	var response []byte
+	response, err = util.PostJSON(uri, msg)
+	if err != nil {
+		return
+	}
+	return util.DecodeWithCommonError(response, "DeleteSubscribe")
 }
