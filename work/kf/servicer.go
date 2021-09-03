@@ -19,7 +19,7 @@ const (
 // ReceptionistOptions 添加接待人员请求参数
 type ReceptionistOptions struct {
 	OpenKFID   string   `json:"open_kfid"`   // 客服帐号ID
-	UserIDList []string `json:"userid_list"` // 接待人员userid列表
+	UserIDList []string `json:"userid_list"` // 接待人员userid列表。第三方应用填密文userid，即open_userid 可填充个数：1 ~ 100。超过100个需分批调用。
 }
 
 // ReceptionistSchema 添加接待人员响应内容
