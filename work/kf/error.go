@@ -39,6 +39,8 @@ const (
 	SDKOpenKFIDNotExist Error = "open_kfid 不存在"
 	// SDKWeWorkAlready 错误码：95011
 	SDKWeWorkAlready Error = "已在企业微信使用微信客服"
+	// SDKNotUseInWeCom 错误码：95012
+	SDKNotUseInWeCom Error = "未在企业微信使用微信客服"
 	// SDKApiNotOpen 错误码：95017
 	SDKApiNotOpen Error = "API 功能没有被开启"
 )
@@ -79,6 +81,8 @@ func NewSDKErr(code int64, msgList ...string) Error {
 		return SDKOpenKFIDNotExist
 	case 95011:
 		return SDKWeWorkAlready
+	case 95012:
+		return SDKNotUseInWeCom
 	case 95017:
 		return SDKApiNotOpen
 	default:
