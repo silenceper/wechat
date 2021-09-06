@@ -10,6 +10,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
+	"github.com/silenceper/wechat/v2/miniprogram/shortlink"
 	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
 	"github.com/silenceper/wechat/v2/miniprogram/urllink"
@@ -86,7 +87,12 @@ func (miniProgram *MiniProgram) GetContentSecurity() *content.Content {
 	return content.NewContent(miniProgram.ctx)
 }
 
-// GetURLLink 生成 URL Link 接口
+// GetURLLink 小程序URL Link接口
 func (miniProgram *MiniProgram) GetURLLink() *urllink.URLLink {
 	return urllink.NewURLLink(miniProgram.ctx)
+}
+
+// GetShortLink 小程序短链接口
+func (miniProgram *MiniProgram) GetShortLink() *shortlink.ShortLink {
+	return shortlink.NewShortLink(miniProgram.ctx)
 }
