@@ -1,7 +1,6 @@
 package shortlink
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/util"
@@ -55,14 +54,10 @@ func (shortLink *ShortLink) generate(shortLinkParams ShortLinker) (string,error)
 		return "",err
 	}
 
+	// 使用通用方法返回错误
 	var res resShortLinker
-	err = json.Unmarshal(response,&res)
+	err = util.DecodeWithError(response,&res,"GenerateShortLink")
 	if err != nil {
-		return "",err
-	}
-
-	if res.ErrCode != 0 {
-		err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", res.ErrCode, res.ErrMsg)
 		return "",err
 	}
 
