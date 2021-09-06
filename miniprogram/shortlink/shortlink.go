@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/util"
-	"strings"
 )
 
 const (
@@ -34,34 +33,44 @@ type ShortLinker struct {
 
 }
 
+type resShortLinker struct {
+	// 通用错误
+	*util.CommonError
+
+	// 返回的 shortLink
+	Link string `json:"link"`
+}
+
 // Generate 生成 shortLink
-func (shortLink *ShortLink) generate(shortLinkParams ShortLinker) (response []byte, err error) {
+func (shortLink *ShortLink) generate(shortLinkParams ShortLinker) (string,error) {
 	var accessToken string
-	accessToken, err = shortLink.GetAccessToken()
+	accessToken, err := shortLink.GetAccessToken()
 	if err != nil {
-		return
+		return "",err
 	}
 
 	urlStr := fmt.Sprintf(generateShortLinkURL, accessToken)
-	var contentType string
-	response, contentType, err = util.PostJSONWithRespContentType(urlStr, shortLinkParams)
+	response, err := util.PostJSON(urlStr, shortLinkParams)
 	if err != nil {
-		return
+		return "",err
 	}
-	if strings.HasPrefix(contentType, "application/json") {
-		// 返回错误信息
-		var result util.CommonError
-		err = json.Unmarshal(response, &result)
-		if err == nil && result.ErrCode != 0 {
-			err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-			return
-		}
+
+	var res resShortLinker
+	err = json.Unmarshal(response,&res)
+	if err != nil {
+		return "",err
 	}
-	return response,nil
+
+	if res.ErrCode != 0 {
+		err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", res.ErrCode, res.ErrMsg)
+		return "",err
+	}
+
+	return res.Link,nil
 }
 
 // GenerateShortLinkPermanent 生成永久shortLink
-func (shortLink *ShortLink) GenerateShortLinkPermanent(pageUrl,pageTitle string) (response []byte, err error) {
+func (shortLink *ShortLink) GenerateShortLinkPermanent(pageUrl,pageTitle string) (string,error) {
 	return shortLink.generate(ShortLinker{
 		PageUrl:     pageUrl,
 		PageTitle:   pageTitle,
@@ -70,7 +79,7 @@ func (shortLink *ShortLink) GenerateShortLinkPermanent(pageUrl,pageTitle string)
 }
 
 // GenerateShortLinkTemp 生成临时shortLink
-func (shortLink *ShortLink) GenerateShortLinkTemp(pageUrl,pageTitle string) (response []byte, err error) {
+func (shortLink *ShortLink) GenerateShortLinkTemp(pageUrl,pageTitle string) (string,error) {
 	return shortLink.generate(ShortLinker{
 		PageUrl:     pageUrl,
 		PageTitle:   pageTitle,
