@@ -50,22 +50,22 @@ type ULResult struct {
 }
 
 // Generate 生成url link
-func (u *URLLink) Generate(params *ULParams) (*ULResult, error) {
+func (u *URLLink) Generate(params *ULParams) (string, error) {
 	var accessToken string
 	accessToken, err := u.GetAccessToken()
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	uri := fmt.Sprintf("%s?access_token=%s", generateURL, accessToken)
 	response, err := util.PostJSON(uri, params)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	var resp ULResult
 	err = util.DecodeWithError(response, &resp, "URLLink.Generate")
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	return &resp, nil
+	return resp.URLLink, nil
 }
