@@ -18,13 +18,12 @@ type CloseParams struct {
 
 // closeRequest 接口请求参数
 type closeRequest struct {
-	AppID         string `xml:"appid"`               // 公众账号ID
-	MchID         string `xml:"mch_id"`              // 商户号
-	NonceStr      string `xml:"nonce_str"`           // 随机字符串
-	Sign          string `xml:"sign"`                // 签名
-	SignType      string `xml:"sign_type,omitempty"` // 签名类型
-	TransactionID string `xml:"transaction_id"`      // 微信订单号
-	OutTradeNo    string `xml:"out_trade_no"`        // 商户订单号
+	AppID      string `xml:"appid"`               // 公众账号ID
+	MchID      string `xml:"mch_id"`              // 商户号
+	NonceStr   string `xml:"nonce_str"`           // 随机字符串
+	Sign       string `xml:"sign"`                // 签名
+	SignType   string `xml:"sign_type,omitempty"` // 签名类型
+	OutTradeNo string `xml:"out_trade_no"`        // 商户订单号
 }
 
 // CloseResult 关闭订单返回结果
