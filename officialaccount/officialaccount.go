@@ -22,12 +22,12 @@ import (
 	"github.com/silenceper/wechat/v2/officialaccount/user"
 )
 
-//OfficialAccount 微信公众号相关API
+// OfficialAccount 微信公众号相关API
 type OfficialAccount struct {
 	ctx *context.Context
 }
 
-//NewOfficialAccount 实例化公众号API
+// NewOfficialAccount 实例化公众号API
 func NewOfficialAccount(cfg *config.Config) *OfficialAccount {
 	defaultAkHandle := credential.NewDefaultAccessToken(cfg.AppID, cfg.AppSecret, credential.CacheKeyOfficialAccountPrefix, cfg.Cache)
 	ctx := &context.Context{
@@ -37,7 +37,7 @@ func NewOfficialAccount(cfg *config.Config) *OfficialAccount {
 	return &OfficialAccount{ctx: ctx}
 }
 
-//SetAccessTokenHandle 自定义access_token获取方式
+// SetAccessTokenHandle 自定义access_token获取方式
 func (officialAccount *OfficialAccount) SetAccessTokenHandle(accessTokenHandle credential.AccessTokenHandle) {
 	officialAccount.ctx.AccessTokenHandle = accessTokenHandle
 }
@@ -65,7 +65,7 @@ func (officialAccount *OfficialAccount) GetServer(req *http.Request, writer http
 	return srv
 }
 
-//GetAccessToken 获取access_token
+// GetAccessToken 获取access_token
 func (officialAccount *OfficialAccount) GetAccessToken() (string, error) {
 	return officialAccount.ctx.GetAccessToken()
 }
@@ -105,23 +105,23 @@ func (officialAccount *OfficialAccount) GetDevice() *device.Device {
 	return device.NewDevice(officialAccount.ctx)
 }
 
-//GetBroadcast 群发消息
-//TODO 待完善
+// GetBroadcast 群发消息
+// TODO 待完善
 func (officialAccount *OfficialAccount) GetBroadcast() *broadcast.Broadcast {
 	return broadcast.NewBroadcast(officialAccount.ctx)
 }
 
-//GetDataCube 数据统计
+// GetDataCube 数据统计
 func (officialAccount *OfficialAccount) GetDataCube() *datacube.DataCube {
 	return datacube.NewCube(officialAccount.ctx)
 }
 
-//GetOCR OCR接口
+// GetOCR OCR接口
 func (officialAccount *OfficialAccount) GetOCR() *ocr.OCR {
 	return ocr.NewOCR(officialAccount.ctx)
 }
 
-//GetSubscribe 公众号订阅消息
+// GetSubscribe 公众号订阅消息
 func (officialAccount *OfficialAccount) GetSubscribe() *message.Subscribe {
 	return message.NewSubscribe(officialAccount.ctx)
 }

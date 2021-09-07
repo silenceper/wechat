@@ -1,5 +1,5 @@
-//Package user migrate 用于微信公众号账号迁移，获取openID变化
-//参考文档：https://kf.qq.com/faq/1901177NrqMr190117nqYJze.html
+// Package user migrate 用于微信公众号账号迁移，获取openID变化
+// 参考文档：https://kf.qq.com/faq/1901177NrqMr190117nqYJze.html
 package user
 
 import (
@@ -32,7 +32,7 @@ type ChangeOpenIDResultList struct {
 // AccessToken 为新账号的AccessToken
 func (user *User) ListChangeOpenIDs(fromAppID string, openIDs ...string) (list *ChangeOpenIDResultList, err error) {
 	list = &ChangeOpenIDResultList{}
-	//list.List = make([]ChangeOpenIDResult, 0)
+	// list.List = make([]ChangeOpenIDResult, 0)
 	if len(openIDs) > 100 {
 		err = errors.New("openIDs length must be lt 100")
 		return

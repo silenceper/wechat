@@ -1,6 +1,6 @@
 package message
 
-//Voice 语音消息
+// Voice 语音消息
 type Voice struct {
 	CommonToken
 
@@ -9,7 +9,7 @@ type Voice struct {
 	} `xml:"Voice"`
 }
 
-//NewVoice 回复语音消息
+// NewVoice 回复语音消息
 func NewVoice(mediaID string) *Voice {
 	voice := new(Voice)
 	voice.Voice.MediaID = mediaID

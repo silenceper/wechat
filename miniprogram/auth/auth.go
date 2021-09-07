@@ -12,12 +12,12 @@ const (
 	code2SessionURL = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
 )
 
-//Auth 登录/用户信息
+// Auth 登录/用户信息
 type Auth struct {
 	*context.Context
 }
 
-//NewAuth new auth
+// NewAuth new auth
 func NewAuth(ctx *context.Context) *Auth {
 	return &Auth{ctx}
 }
@@ -31,16 +31,13 @@ type ResCode2Session struct {
 	UnionID    string `json:"unionid"`     // 用户在开放平台的唯一标识符，在满足UnionID下发条件的情况下会返回
 }
 
-//Code2Session 登录凭证校验。
+// Code2Session 登录凭证校验。
 func (auth *Auth) Code2Session(jsCode string) (result ResCode2Session, err error) {
-	urlStr := fmt.Sprintf(code2SessionURL, auth.AppID, auth.AppSecret, jsCode)
 	var response []byte
-	response, err = util.HTTPGet(urlStr)
-	if err != nil {
+	if response, err = util.HTTPGet(fmt.Sprintf(code2SessionURL, auth.AppID, auth.AppSecret, jsCode)); err != nil {
 		return
 	}
-	err = json.Unmarshal(response, &result)
-	if err != nil {
+	if err = json.Unmarshal(response, &result); err != nil {
 		return
 	}
 	if result.ErrCode != 0 {
@@ -50,7 +47,7 @@ func (auth *Auth) Code2Session(jsCode string) (result ResCode2Session, err error
 	return
 }
 
-//GetPaidUnionID 用户支付完成后，获取该用户的 UnionId，无需用户授权
+// GetPaidUnionID 用户支付完成后，获取该用户的 UnionId，无需用户授权
 func (auth *Auth) GetPaidUnionID() {
-	//TODO
+	// TODO
 }

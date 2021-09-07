@@ -15,10 +15,10 @@ func writeContextType(w http.ResponseWriter, value []string) {
 	}
 }
 
-//Render render from bytes
+// Render render from bytes
 func (srv *Server) Render(bytes []byte) {
-	//debug
-	//fmt.Println("response msg = ", string(bytes))
+	// debug
+	// fmt.Println("response msg = ", string(bytes))
 	srv.Writer.WriteHeader(200)
 	_, err := srv.Writer.Write(bytes)
 	if err != nil {
@@ -26,13 +26,13 @@ func (srv *Server) Render(bytes []byte) {
 	}
 }
 
-//String render from string
+// String render from string
 func (srv *Server) String(str string) {
 	writeContextType(srv.Writer, plainContentType)
 	srv.Render([]byte(str))
 }
 
-//XML render to xml
+// XML render to xml
 func (srv *Server) XML(obj interface{}) {
 	writeContextType(srv.Writer, xmlContentType)
 	bytes, err := xml.Marshal(obj)

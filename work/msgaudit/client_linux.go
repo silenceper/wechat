@@ -1,6 +1,7 @@
+//go:build linux && cgo && msgaudit
 // +build linux,cgo,msgaudit
 
-//Package msgaudit only for linux
+// Package msgaudit only for linux
 package msgaudit
 
 // #cgo LDFLAGS: -L${SRCDIR}/lib -lWeWorkFinanceSdk_C
