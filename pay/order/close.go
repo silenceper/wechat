@@ -56,7 +56,12 @@ func (o *Order) CloseOrder(p *CloseParams) (closeResult CloseResult, err error) 
 	params["out_trade_no"] = p.OutTradeNo
 	params["sign_type"] = p.SignType
 
-	sign, err := util.ParamSign(params, o.Key)
+	var (
+		sign   string
+		rawRet []byte
+	)
+
+	sign, err = util.ParamSign(params, o.Key)
 	if err != nil {
 		return
 	}
@@ -69,7 +74,7 @@ func (o *Order) CloseOrder(p *CloseParams) (closeResult CloseResult, err error) 
 		SignType:   p.SignType,
 	}
 
-	rawRet, err := util.PostXML(closeGateway, request)
+	rawRet, err = util.PostXML(closeGateway, request)
 	if err != nil {
 		return
 	}
