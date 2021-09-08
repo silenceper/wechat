@@ -77,9 +77,5 @@ func (auth *Auth) CheckEncryptedData(encryptedMsgHash string) (result RspCheckEn
 	if err = util.DecodeWithError(response, &result, "CheckEncryptedDataAuth"); err != nil {
 		return
 	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("CheckEncryptedData error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-		return
-	}
 	return
 }
