@@ -15,7 +15,7 @@ type Js struct {
 	credential.JsTicketHandle
 }
 
-//NewJs init
+// NewJs init
 func NewJs(context *context.Context, appID string) *Js {
 	js := new(Js)
 	js.Context = context
@@ -24,13 +24,13 @@ func NewJs(context *context.Context, appID string) *Js {
 	return js
 }
 
-//SetJsTicketHandle 自定义js ticket取值方式
+// SetJsTicketHandle 自定义js ticket取值方式
 func (js *Js) SetJsTicketHandle(ticketHandle credential.JsTicketHandle) {
 	js.JsTicketHandle = ticketHandle
 }
 
-//GetConfig 第三方平台 - 获取jssdk需要的配置参数
-//uri 为当前网页地址
+// GetConfig 第三方平台 - 获取jssdk需要的配置参数
+// uri 为当前网页地址
 func (js *Js) GetConfig(uri, appid string) (config *officialJs.Config, err error) {
 	config = new(officialJs.Config)
 	var accessToken string

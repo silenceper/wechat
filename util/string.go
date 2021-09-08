@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-//RandomStr 随机生成字符串
+// RandomStr 随机生成字符串
 func RandomStr(length int) string {
 	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	bytes := []byte(str)

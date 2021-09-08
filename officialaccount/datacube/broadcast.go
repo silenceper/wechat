@@ -15,7 +15,7 @@ const (
 	getUserShareHour  = "https://api.weixin.qq.com/datacube/getusersharehour"
 )
 
-//ResArticleSummary 获取图文群发每日数据响应
+// ResArticleSummary 获取图文群发每日数据响应
 type ResArticleSummary struct {
 	util.CommonError
 
@@ -34,7 +34,7 @@ type ResArticleSummary struct {
 	} `json:"list"`
 }
 
-//ResArticleTotal 获取图文群发总数据响应
+// ResArticleTotal 获取图文群发总数据响应
 type ResArticleTotal struct {
 	util.CommonError
 
@@ -46,7 +46,7 @@ type ResArticleTotal struct {
 	} `json:"list"`
 }
 
-//ArticleTotalDetails 获取图文群发总数据响应文字详情
+// ArticleTotalDetails 获取图文群发总数据响应文字详情
 type ArticleTotalDetails struct {
 	StatDate                    string `json:"stat_date"`
 	TargetUser                  int    `json:"target_user"`
@@ -76,7 +76,7 @@ type ArticleTotalDetails struct {
 	FeedShareFromOtherCnt       int    `json:"feed_share_from_other_cnt"`
 }
 
-//ResUserRead 获取图文统计数据响应
+// ResUserRead 获取图文统计数据响应
 type ResUserRead struct {
 	util.CommonError
 
@@ -94,7 +94,7 @@ type ResUserRead struct {
 	} `json:"list"`
 }
 
-//ResUserReadHour 获取图文统计分时数据
+// ResUserReadHour 获取图文统计分时数据
 type ResUserReadHour struct {
 	util.CommonError
 
@@ -113,7 +113,7 @@ type ResUserReadHour struct {
 	} `json:"list"`
 }
 
-//ResUserShare 获取图文分享转发数据
+// ResUserShare 获取图文分享转发数据
 type ResUserShare struct {
 	util.CommonError
 
@@ -125,7 +125,7 @@ type ResUserShare struct {
 	} `json:"list"`
 }
 
-//ResUserShareHour  获取图文分享转发分时数据
+// ResUserShareHour  获取图文分享转发分时数据
 type ResUserShareHour struct {
 	util.CommonError
 
@@ -138,7 +138,7 @@ type ResUserShareHour struct {
 	} `json:"list"`
 }
 
-//GetArticleSummary 获取图文群发每日数据
+// GetArticleSummary 获取图文群发每日数据
 func (cube *DataCube) GetArticleSummary(s string, e string) (resArticleSummary ResArticleSummary, err error) {
 	accessToken, err := cube.GetAccessToken()
 	if err != nil {
@@ -160,7 +160,7 @@ func (cube *DataCube) GetArticleSummary(s string, e string) (resArticleSummary R
 	return
 }
 
-//GetArticleTotal 获取图文群发总数据
+// GetArticleTotal 获取图文群发总数据
 func (cube *DataCube) GetArticleTotal(s string, e string) (resArticleTotal ResArticleTotal, err error) {
 	accessToken, err := cube.GetAccessToken()
 	if err != nil {
@@ -182,7 +182,7 @@ func (cube *DataCube) GetArticleTotal(s string, e string) (resArticleTotal ResAr
 	return
 }
 
-//GetUserRead 获取图文统计数据
+// GetUserRead 获取图文统计数据
 func (cube *DataCube) GetUserRead(s string, e string) (resUserRead ResUserRead, err error) {
 	accessToken, err := cube.GetAccessToken()
 	if err != nil {
@@ -204,7 +204,7 @@ func (cube *DataCube) GetUserRead(s string, e string) (resUserRead ResUserRead, 
 	return
 }
 
-//GetUserReadHour 获取图文统计分时数据
+// GetUserReadHour 获取图文统计分时数据
 func (cube *DataCube) GetUserReadHour(s string, e string) (resUserReadHour ResUserReadHour, err error) {
 	accessToken, err := cube.GetAccessToken()
 	if err != nil {
@@ -226,7 +226,7 @@ func (cube *DataCube) GetUserReadHour(s string, e string) (resUserReadHour ResUs
 	return
 }
 
-//GetUserShare 获取图文分享转发数据
+// GetUserShare 获取图文分享转发数据
 func (cube *DataCube) GetUserShare(s string, e string) (resUserShare ResUserShare, err error) {
 	accessToken, err := cube.GetAccessToken()
 	if err != nil {
@@ -248,7 +248,7 @@ func (cube *DataCube) GetUserShare(s string, e string) (resUserShare ResUserShar
 	return
 }
 
-//GetUserShareHour 获取图文分享转发分时数据
+// GetUserShareHour 获取图文分享转发分时数据
 func (cube *DataCube) GetUserShareHour(s string, e string) (resUserShareHour ResUserShareHour, err error) {
 	accessToken, err := cube.GetAccessToken()
 	if err != nil {

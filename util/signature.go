@@ -7,7 +7,7 @@ import (
 	"sort"
 )
 
-//Signature sha1签名
+// Signature sha1签名
 func Signature(params ...string) string {
 	sort.Strings(params)
 	h := sha1.New()

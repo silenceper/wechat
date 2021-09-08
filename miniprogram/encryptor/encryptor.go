@@ -10,12 +10,12 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 )
 
-//Encryptor struct
+// Encryptor struct
 type Encryptor struct {
 	*context.Context
 }
 
-//NewEncryptor 实例
+// NewEncryptor 实例
 func NewEncryptor(context *context.Context) *Encryptor {
 	basic := new(Encryptor)
 	basic.Context = context

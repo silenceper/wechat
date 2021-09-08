@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-//Memory struct contains *memcache.Client
+// Memory struct contains *memcache.Client
 type Memory struct {
 	sync.Mutex
 
@@ -17,14 +17,14 @@ type data struct {
 	Expired time.Time
 }
 
-//NewMemory create new memcache
+// NewMemory create new memcache
 func NewMemory() *Memory {
 	return &Memory{
 		data: map[string]*data{},
 	}
 }
 
-//Get return cached value
+// Get return cached value
 func (mem *Memory) Get(key string) interface{} {
 	if ret, ok := mem.data[key]; ok {
 		if ret.Expired.Before(time.Now()) {
@@ -48,7 +48,7 @@ func (mem *Memory) IsExist(key string) bool {
 	return false
 }
 
-//Set cached value with key and expire time.
+// Set cached value with key and expire time.
 func (mem *Memory) Set(key string, val interface{}, timeout time.Duration) (err error) {
 	mem.Lock()
 	defer mem.Unlock()
@@ -60,7 +60,7 @@ func (mem *Memory) Set(key string, val interface{}, timeout time.Duration) (err 
 	return nil
 }
 
-//Delete delete value in memcache.
+// Delete delete value in memcache.
 func (mem *Memory) Delete(key string) error {
 	mem.deleteKey(key)
 	return nil

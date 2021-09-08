@@ -32,12 +32,12 @@ const (
 	getAnalysisVisitPageURL = "https://api.weixin.qq.com/datacube/getweanalysisappidvisitpage?access_token=%s"
 )
 
-//Analysis analyis 数据分析
+// Analysis analyis 数据分析
 type Analysis struct {
 	*context.Context
 }
 
-//NewAnalysis new
+// NewAnalysis new
 func NewAnalysis(ctx *context.Context) *Analysis {
 	return &Analysis{ctx}
 }

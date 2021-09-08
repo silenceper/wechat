@@ -1,6 +1,6 @@
 package message
 
-//Video 视频消息
+// Video 视频消息
 type Video struct {
 	CommonToken
 
@@ -11,7 +11,7 @@ type Video struct {
 	} `xml:"Video"`
 }
 
-//NewVideo 回复图片消息
+// NewVideo 回复图片消息
 func NewVideo(mediaID, title, description string) *Video {
 	video := new(Video)
 	video.Video.MediaID = mediaID

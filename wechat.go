@@ -39,12 +39,12 @@ func NewWechat() *Wechat {
 	return &Wechat{}
 }
 
-//SetCache 设置cache
+// SetCache 设置cache
 func (wc *Wechat) SetCache(cahce cache.Cache) {
 	wc.cache = cahce
 }
 
-//GetOfficialAccount 获取微信公众号实例
+// GetOfficialAccount 获取微信公众号实例
 func (wc *Wechat) GetOfficialAccount(cfg *offConfig.Config) *officialaccount.OfficialAccount {
 	if cfg.Cache == nil {
 		cfg.Cache = wc.cache

@@ -1,6 +1,6 @@
 package message
 
-//Music 音乐消息
+// Music 音乐消息
 type Music struct {
 	CommonToken
 
@@ -13,7 +13,7 @@ type Music struct {
 	} `xml:"Music"`
 }
 
-//NewMusic  回复音乐消息
+// NewMusic  回复音乐消息
 func NewMusic(title, description, musicURL, hQMusicURL, thumbMediaID string) *Music {
 	music := new(Music)
 	music.Music.Title = title

@@ -172,9 +172,9 @@ func (o *Order) BridgeConfig(p *Params) (cfg Config, err error) {
 // BridgeAppConfig get app bridge config
 func (o *Order) BridgeAppConfig(p *Params) (cfg ConfigForApp, err error) {
 	var (
-		timestamp string = strconv.FormatInt(time.Now().Unix(), 10)
-		noncestr  string = util.RandomStr(32)
-		_package  string = "Sign=WXPay"
+		timestamp = strconv.FormatInt(time.Now().Unix(), 10)
+		noncestr  = util.RandomStr(32)
+		_package  = "Sign=WXPay"
 	)
 	order, err := o.PrePayOrder(p)
 	if err != nil {
