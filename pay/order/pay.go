@@ -210,6 +210,12 @@ func (o *Order) BridgeAppConfig(p *Params) (cfg ConfigForApp, err error) {
 // PrePayOrder return data for invoke wechat payment
 func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	nonceStr := util.RandomStr(32)
+
+	// 通知地址
+	if len(p.NotifyURL) == 0 {
+		p.NotifyURL = o.NotifyURL // 默认使用order.NotifyURL
+	}
+
 	param := map[string]string{
 		"appid":            o.AppID,
 		"body":             p.Body,
@@ -224,15 +230,11 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		"detail":           p.Detail,
 		"attach":           p.Attach,
 		"goods_tag":        p.GoodsTag,
+		"notify_url":       p.NotifyURL,
 	}
 	// 签名类型
 	if param["sign_type"] == "" {
 		param["sign_type"] = util.SignTypeMD5
-	}
-
-	// 通知地址
-	if p.NotifyURL != "" {
-		param["notify_url"] = p.NotifyURL
 	}
 
 	if p.TimeExpire != "" {
