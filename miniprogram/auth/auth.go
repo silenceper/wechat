@@ -74,7 +74,7 @@ func (auth *Auth) CheckEncryptedData(encryptedMsgHash string) (result RspCheckEn
 	if response, err = util.HTTPPost(fmt.Sprintf(checkEncryptedDataURL, at), "encrypted_msg_hash="+encryptedMsgHash); err != nil {
 		return
 	}
-	if err = json.Unmarshal(response, &result); err != nil {
+	if err = util.DecodeWithError(response, &result, "CheckEncryptedDataAuth"); err != nil {
 		return
 	}
 	if result.ErrCode != 0 {
