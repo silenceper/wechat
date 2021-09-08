@@ -18,4 +18,3 @@ require (
 )
 
 
-replace github.com/silenceper/wechat/v2 => github.com/JerryTam/wechat/v2 v2.0.10
