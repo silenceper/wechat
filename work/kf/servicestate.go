@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	//获取会话状态
+	// 获取会话状态
 	serviceStateGetAddr = "https://qyapi.weixin.qq.com/cgi-bin/kf/service_state/get?access_token=%s"
 	// 变更会话状态
 	serviceStateTransAddr = "https://qyapi.weixin.qq.com/cgi-bin/kf/service_state/trans?access_token=%s"
@@ -28,11 +28,11 @@ type ServiceStateGetSchema struct {
 }
 
 // ServiceStateGet 获取会话状态
-//0	未处理	新会话接入。可选择：1.直接用API自动回复消息。2.放进待接入池等待接待人员接待。3.指定接待人员进行接待
-//1	由智能助手接待	可使用API回复消息。可选择转入待接入池或者指定接待人员处理。
-//2	待接入池排队中	在待接入池中排队等待接待人员接入。可选择转为指定人员接待
-//3	由人工接待	人工接待中。可选择结束会话
-//4	已结束	会话已经结束或未开始。不允许变更会话状态，等待用户发起咨询
+// 0	未处理	新会话接入。可选择：1.直接用API自动回复消息。2.放进待接入池等待接待人员接待。3.指定接待人员进行接待
+// 1	由智能助手接待	可使用API回复消息。可选择转入待接入池或者指定接待人员处理。
+// 2	待接入池排队中	在待接入池中排队等待接待人员接入。可选择转为指定人员接待
+// 3	由人工接待	人工接待中。可选择结束会话
+// 4	已结束	会话已经结束或未开始。不允许变更会话状态，等待用户发起咨询
 // 注：一个微信用户向一个客服帐号发起咨询后，在48h内，或主动结束会话前（包括接待人员手动结束，或企业通过API结束会话），都算是一次会话
 func (r *Client) ServiceStateGet(options ServiceStateGetOptions) (info ServiceStateGetSchema, err error) {
 	var (

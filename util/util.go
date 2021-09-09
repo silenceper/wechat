@@ -1,6 +1,6 @@
 package util
 
-//SliceChunk 用于将字符串切片分块
+// SliceChunk 用于将字符串切片分块
 func SliceChunk(src []string, chunkSize int) (chunks [][]string) {
 	total := len(src)
 	chunks = make([][]string, 0)

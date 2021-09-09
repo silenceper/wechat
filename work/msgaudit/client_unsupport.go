@@ -1,6 +1,7 @@
-// +build !linux linux,!cgo
+//go:build !linux || !cgo || !msgaudit
+// +build !linux !cgo !msgaudit
 
-//Package msgaudit for unsupport platform
+// Package msgaudit for unsupport platform
 package msgaudit
 
 import (

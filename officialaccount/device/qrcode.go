@@ -7,7 +7,7 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
-//ResCreateQRCode 获取二维码的返回实体
+// ResCreateQRCode 获取二维码的返回实体
 type ResCreateQRCode struct {
 	util.CommonError
 	DeviceNum int `json:"device_num"`
@@ -42,7 +42,7 @@ func (d *Device) CreateQRCode(devices []string) (res ResCreateQRCode, err error)
 	return
 }
 
-//ResVerifyQRCode 验证授权结果实体
+// ResVerifyQRCode 验证授权结果实体
 type ResVerifyQRCode struct {
 	util.CommonError
 	DeviceType string `json:"device_type"`
