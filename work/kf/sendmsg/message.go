@@ -83,6 +83,7 @@ type Menu struct {
 	MsgMenu struct {
 		HeadContent string        `json:"head_content"` // 消息内容，不多于1024字节
 		List        []interface{} `json:"list"`         // 菜单项配置
+		TailContent string        `json:"tail_content"` // 结束文本, 不多于1024字
 	} `json:"msgmenu"`
 }
 
