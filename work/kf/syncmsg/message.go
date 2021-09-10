@@ -120,7 +120,7 @@ type EnterSessionEvent struct {
 		ExternalUserID string `json:"external_userid"` // 客户UserID
 		Scene          string `json:"scene"`           // 进入会话的场景值，获取客服帐号链接开发者自定义的场景值
 		SceneParam     string `json:"scene_param"`     // 进入会话的自定义参数，获取客服帐号链接返回的url，开发者按规范拼接的scene_param参数
-		WelcomeCode    string `json:"welcome_code"`	   // 如果满足发送欢迎语条件（条件为：1. 企业没有在管理端配置了原生欢迎语；2. 用户在过去48小时里未收过欢迎语，且未向该用户发过消息），会返回该字段。可用该welcome_code调用发送事件响应消息接口给客户发送欢迎语。
+		WelcomeCode    string `json:"welcome_code"`    // 如果满足发送欢迎语条件（条件为：1. 企业没有在管理端配置了原生欢迎语；2. 用户在过去48小时里未收过欢迎语，且未向该用户发过消息），会返回该字段。可用该welcome_code调用发送事件响应消息接口给客户发送欢迎语。
 	} `json:"event"` // 事件消息
 }
 
