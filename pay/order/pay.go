@@ -217,8 +217,8 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	}
 
 	// 签名类型
-	if p.TradeType == "" {
-		p.TradeType = util.SignTypeMD5
+	if p.SignType == "" {
+		p.SignType = util.SignTypeMD5
 	}
 
 	param := map[string]string{
