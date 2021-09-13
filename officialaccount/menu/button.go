@@ -1,6 +1,6 @@
 package menu
 
-//Button 菜单按钮
+// Button 菜单按钮
 type Button struct {
 	Type       string    `json:"type,omitempty"`
 	Name       string    `json:"name,omitempty"`
@@ -12,7 +12,7 @@ type Button struct {
 	SubButtons []*Button `json:"sub_button,omitempty"`
 }
 
-//SetSubButton 设置二级菜单
+// SetSubButton 设置二级菜单
 func (btn *Button) SetSubButton(name string, subButtons []*Button) *Button {
 	btn.Name = name
 	btn.SubButtons = subButtons
@@ -23,7 +23,7 @@ func (btn *Button) SetSubButton(name string, subButtons []*Button) *Button {
 	return btn
 }
 
-//SetClickButton btn 为click类型
+// SetClickButton btn 为click类型
 func (btn *Button) SetClickButton(name, key string) *Button {
 	btn.Type = "click"
 	btn.Name = name
@@ -34,7 +34,7 @@ func (btn *Button) SetClickButton(name, key string) *Button {
 	return btn
 }
 
-//SetViewButton view类型
+// SetViewButton view类型
 func (btn *Button) SetViewButton(name, url string) *Button {
 	btn.Type = "view"
 	btn.Name = name
@@ -45,7 +45,7 @@ func (btn *Button) SetViewButton(name, url string) *Button {
 	return btn
 }
 
-//SetScanCodePushButton 扫码推事件
+// SetScanCodePushButton 扫码推事件
 func (btn *Button) SetScanCodePushButton(name, key string) *Button {
 	btn.Type = "scancode_push"
 	btn.Name = name
@@ -56,7 +56,7 @@ func (btn *Button) SetScanCodePushButton(name, key string) *Button {
 	return btn
 }
 
-//SetScanCodeWaitMsgButton 设置 扫码推事件且弹出"消息接收中"提示框
+// SetScanCodeWaitMsgButton 设置 扫码推事件且弹出"消息接收中"提示框
 func (btn *Button) SetScanCodeWaitMsgButton(name, key string) *Button {
 	btn.Type = "scancode_waitmsg"
 	btn.Name = name
@@ -68,7 +68,7 @@ func (btn *Button) SetScanCodeWaitMsgButton(name, key string) *Button {
 	return btn
 }
 
-//SetPicSysPhotoButton 设置弹出系统拍照发图按钮
+// SetPicSysPhotoButton 设置弹出系统拍照发图按钮
 func (btn *Button) SetPicSysPhotoButton(name, key string) *Button {
 	btn.Type = "pic_sysphoto"
 	btn.Name = name
@@ -80,7 +80,7 @@ func (btn *Button) SetPicSysPhotoButton(name, key string) *Button {
 	return btn
 }
 
-//SetPicPhotoOrAlbumButton 设置弹出拍照或者相册发图类型按钮
+// SetPicPhotoOrAlbumButton 设置弹出拍照或者相册发图类型按钮
 func (btn *Button) SetPicPhotoOrAlbumButton(name, key string) *Button {
 	btn.Type = "pic_photo_or_album"
 	btn.Name = name
@@ -92,7 +92,7 @@ func (btn *Button) SetPicPhotoOrAlbumButton(name, key string) *Button {
 	return btn
 }
 
-//SetPicWeixinButton 设置弹出微信相册发图器类型按钮
+// SetPicWeixinButton 设置弹出微信相册发图器类型按钮
 func (btn *Button) SetPicWeixinButton(name, key string) *Button {
 	btn.Type = "pic_weixin"
 	btn.Name = name
@@ -104,7 +104,7 @@ func (btn *Button) SetPicWeixinButton(name, key string) *Button {
 	return btn
 }
 
-//SetLocationSelectButton 设置 弹出地理位置选择器 类型按钮
+// SetLocationSelectButton 设置 弹出地理位置选择器 类型按钮
 func (btn *Button) SetLocationSelectButton(name, key string) *Button {
 	btn.Type = "location_select"
 	btn.Name = name
@@ -116,7 +116,7 @@ func (btn *Button) SetLocationSelectButton(name, key string) *Button {
 	return btn
 }
 
-//SetMediaIDButton  设置 下发消息(除文本消息) 类型按钮
+// SetMediaIDButton  设置 下发消息(除文本消息) 类型按钮
 func (btn *Button) SetMediaIDButton(name, mediaID string) *Button {
 	btn.Type = "media_id"
 	btn.Name = name
@@ -128,7 +128,7 @@ func (btn *Button) SetMediaIDButton(name, mediaID string) *Button {
 	return btn
 }
 
-//SetViewLimitedButton  设置 跳转图文消息URL 类型按钮
+// SetViewLimitedButton  设置 跳转图文消息URL 类型按钮
 func (btn *Button) SetViewLimitedButton(name, mediaID string) *Button {
 	btn.Type = "view_limited"
 	btn.Name = name
@@ -140,7 +140,7 @@ func (btn *Button) SetViewLimitedButton(name, mediaID string) *Button {
 	return btn
 }
 
-//SetMiniprogramButton  设置 跳转小程序 类型按钮 (公众号后台必须已经关联小程序)
+// SetMiniprogramButton  设置 跳转小程序 类型按钮 (公众号后台必须已经关联小程序)
 func (btn *Button) SetMiniprogramButton(name, url, appID, pagePath string) *Button {
 	btn.Type = "miniprogram"
 	btn.Name = name
@@ -154,62 +154,62 @@ func (btn *Button) SetMiniprogramButton(name, url, appID, pagePath string) *Butt
 	return btn
 }
 
-//NewSubButton 二级菜单
+// NewSubButton 二级菜单
 func NewSubButton(name string, subButtons []*Button) *Button {
 	return (&Button{}).SetSubButton(name, subButtons)
 }
 
-//NewClickButton btn 为click类型
+// NewClickButton btn 为click类型
 func NewClickButton(name, key string) *Button {
 	return (&Button{}).SetClickButton(name, key)
 }
 
-//NewViewButton view类型
+// NewViewButton view类型
 func NewViewButton(name, url string) *Button {
 	return (&Button{}).SetViewButton(name, url)
 }
 
-//NewScanCodePushButton 扫码推事件
+// NewScanCodePushButton 扫码推事件
 func NewScanCodePushButton(name, key string) *Button {
 	return (&Button{}).SetScanCodePushButton(name, key)
 }
 
-//NewScanCodeWaitMsgButton 扫码推事件且弹出"消息接收中"提示框
+// NewScanCodeWaitMsgButton 扫码推事件且弹出"消息接收中"提示框
 func NewScanCodeWaitMsgButton(name, key string) *Button {
 	return (&Button{}).SetScanCodeWaitMsgButton(name, key)
 }
 
-//NewPicSysPhotoButton 弹出系统拍照发图按钮
+// NewPicSysPhotoButton 弹出系统拍照发图按钮
 func NewPicSysPhotoButton(name, key string) *Button {
 	return (&Button{}).SetPicSysPhotoButton(name, key)
 }
 
-//NewPicPhotoOrAlbumButton 弹出拍照或者相册发图类型按钮
+// NewPicPhotoOrAlbumButton 弹出拍照或者相册发图类型按钮
 func NewPicPhotoOrAlbumButton(name, key string) *Button {
 	return (&Button{}).SetPicPhotoOrAlbumButton(name, key)
 }
 
-//NewPicWeixinButton 弹出微信相册发图器类型按钮
+// NewPicWeixinButton 弹出微信相册发图器类型按钮
 func NewPicWeixinButton(name, key string) *Button {
 	return (&Button{}).SetPicWeixinButton(name, key)
 }
 
-//NewLocationSelectButton  弹出地理位置选择器 类型按钮
+// NewLocationSelectButton  弹出地理位置选择器 类型按钮
 func NewLocationSelectButton(name, key string) *Button {
 	return (&Button{}).SetLocationSelectButton(name, key)
 }
 
-//NewMediaIDButton  下发消息(除文本消息) 类型按钮
+// NewMediaIDButton  下发消息(除文本消息) 类型按钮
 func NewMediaIDButton(name, mediaID string) *Button {
 	return (&Button{}).SetMediaIDButton(name, mediaID)
 }
 
-//NewViewLimitedButton  跳转图文消息URL 类型按钮
+// NewViewLimitedButton  跳转图文消息URL 类型按钮
 func NewViewLimitedButton(name, mediaID string) *Button {
 	return (&Button{}).SetViewLimitedButton(name, mediaID)
 }
 
-//NewMiniprogramButton  跳转小程序 类型按钮 (公众号后台必须已经关联小程序)
+// NewMiniprogramButton  跳转小程序 类型按钮 (公众号后台必须已经关联小程序)
 func NewMiniprogramButton(name, url, appID, pagePath string) *Button {
 	return (&Button{}).SetMiniprogramButton(name, url, appID, pagePath)
 }

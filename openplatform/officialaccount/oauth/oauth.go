@@ -28,14 +28,14 @@ func NewOauth(context *context.Context) *Oauth {
 	return auth
 }
 
-//GetRedirectURL 第三方平台 - 获取跳转的url地址
+// GetRedirectURL 第三方平台 - 获取跳转的url地址
 func (oauth *Oauth) GetRedirectURL(redirectURI, scope, state, appID string) (string, error) {
-	//url encode
+	// url encode
 	urlStr := url.QueryEscape(redirectURI)
 	return fmt.Sprintf(platformRedirectOauthURL, appID, urlStr, scope, state, oauth.AppID), nil
 }
 
-//Redirect 第三方平台 - 跳转到网页授权
+// Redirect 第三方平台 - 跳转到网页授权
 func (oauth *Oauth) Redirect(writer http.ResponseWriter, req *http.Request, redirectURI, scope, state, appID string) error {
 	location, err := oauth.GetRedirectURL(redirectURI, scope, state, appID)
 	if err != nil {

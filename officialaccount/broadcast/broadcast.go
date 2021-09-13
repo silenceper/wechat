@@ -17,42 +17,42 @@ const (
 	setSpeedSendURL   = "https://api.weixin.qq.com/cgi-bin/message/mass/speed/set"
 )
 
-//MsgType 发送消息类型
+// MsgType 发送消息类型
 type MsgType string
 
 const (
-	//MsgTypeNews 图文消息
+	// MsgTypeNews 图文消息
 	MsgTypeNews MsgType = "mpnews"
-	//MsgTypeText 文本
+	// MsgTypeText 文本
 	MsgTypeText MsgType = "text"
-	//MsgTypeVoice 语音/音频
+	// MsgTypeVoice 语音/音频
 	MsgTypeVoice MsgType = "voice"
-	//MsgTypeImage 图片
+	// MsgTypeImage 图片
 	MsgTypeImage MsgType = "image"
-	//MsgTypeVideo 视频
+	// MsgTypeVideo 视频
 	MsgTypeVideo MsgType = "mpvideo"
-	//MsgTypeWxCard 卡券
+	// MsgTypeWxCard 卡券
 	MsgTypeWxCard MsgType = "wxcard"
 )
 
-//Broadcast 群发消息
+// Broadcast 群发消息
 type Broadcast struct {
 	*context.Context
 	preview bool
 }
 
-//NewBroadcast new
+// NewBroadcast new
 func NewBroadcast(ctx *context.Context) *Broadcast {
 	return &Broadcast{ctx, false}
 }
 
-//User 发送的用户
+// User 发送的用户
 type User struct {
 	TagID  int64
 	OpenID []string
 }
 
-//Result 群发返回结果
+// Result 群发返回结果
 type Result struct {
 	util.CommonError
 	MsgID     int64  `json:"msg_id"`
@@ -60,34 +60,34 @@ type Result struct {
 	MsgStatus string `json:"msg_status"`
 }
 
-//SpeedResult 群发速度返回结果
+// SpeedResult 群发速度返回结果
 type SpeedResult struct {
 	util.CommonError
 	Speed     int64 `json:"speed"`
 	RealSpeed int64 `json:"realspeed"`
 }
 
-//sendRequest 发送请求的数据
+// sendRequest 发送请求的数据
 type sendRequest struct {
-	//根据tag获全部发送
+	// 根据tag获全部发送
 	Filter map[string]interface{} `json:"filter,omitempty"`
-	//根据OpenID发送
+	// 根据OpenID发送
 	ToUser interface{} `json:"touser,omitempty"`
-	//发送文本
+	// 发送文本
 	Text map[string]interface{} `json:"text,omitempty"`
-	//发送图文消息
+	// 发送图文消息
 	Mpnews map[string]interface{} `json:"mpnews,omitempty"`
-	//发送语音
+	// 发送语音
 	Voice map[string]interface{} `json:"voice,omitempty"`
-	//发送图片
+	// 发送图片
 	Images *Image `json:"images,omitempty"`
-	//发送卡券
+	// 发送卡券
 	WxCard            map[string]interface{} `json:"wxcard,omitempty"`
 	MsgType           MsgType                `json:"msgtype"`
 	SendIgnoreReprint int32                  `json:"send_ignore_reprint,omitempty"`
 }
 
-//Image 发送图片
+// Image 发送图片
 type Image struct {
 	MediaIDs           []string `json:"media_ids"`
 	Recommend          string   `json:"recommend"`
@@ -95,10 +95,10 @@ type Image struct {
 	OnlyFansCanComment int32    `json:"only_fans_can_comment"`
 }
 
-//SendText 群发文本
-//user 为nil，表示全员发送
-//&User{TagID:2} 根据tag发送
-//&User{OpenID:[]string("xxx","xxx")} 根据openid发送
+// SendText 群发文本
+// user 为nil，表示全员发送
+// &User{TagID:2} 根据tag发送
+// &User{OpenID:[]string("xxx","xxx")} 根据openid发送
 func (broadcast *Broadcast) SendText(user *User, content string) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
@@ -122,7 +122,7 @@ func (broadcast *Broadcast) SendText(user *User, content string) (*Result, error
 	return res, err
 }
 
-//SendNews 发送图文
+// SendNews 发送图文
 func (broadcast *Broadcast) SendNews(user *User, mediaID string, ignoreReprint bool) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
@@ -149,7 +149,7 @@ func (broadcast *Broadcast) SendNews(user *User, mediaID string, ignoreReprint b
 	return res, err
 }
 
-//SendVoice 发送语音
+// SendVoice 发送语音
 func (broadcast *Broadcast) SendVoice(user *User, mediaID string) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
@@ -173,7 +173,7 @@ func (broadcast *Broadcast) SendVoice(user *User, mediaID string) (*Result, erro
 	return res, err
 }
 
-//SendImage 发送图片
+// SendImage 发送图片
 func (broadcast *Broadcast) SendImage(user *User, images *Image) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
@@ -195,7 +195,7 @@ func (broadcast *Broadcast) SendImage(user *User, images *Image) (*Result, error
 	return res, err
 }
 
-//SendVideo 发送视频
+// SendVideo 发送视频
 func (broadcast *Broadcast) SendVideo(user *User, mediaID string, title, description string) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
@@ -221,7 +221,7 @@ func (broadcast *Broadcast) SendVideo(user *User, mediaID string, title, descrip
 	return res, err
 }
 
-//SendWxCard 发送卡券
+// SendWxCard 发送卡券
 func (broadcast *Broadcast) SendWxCard(user *User, cardID string) (*Result, error) {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {
@@ -245,7 +245,7 @@ func (broadcast *Broadcast) SendWxCard(user *User, cardID string) (*Result, erro
 	return res, err
 }
 
-//Delete 删除群发消息
+// Delete 删除群发消息
 func (broadcast *Broadcast) Delete(msgID int64, articleIDx int64) error {
 	ak, err := broadcast.GetAccessToken()
 	if err != nil {

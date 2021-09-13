@@ -15,19 +15,19 @@ const (
 	templateDelURL  = "https://api.weixin.qq.com/cgi-bin/template/del_private_template"
 )
 
-//Template 模板消息
+// Template 模板消息
 type Template struct {
 	*context.Context
 }
 
-//NewTemplate 实例化
+// NewTemplate 实例化
 func NewTemplate(context *context.Context) *Template {
 	tpl := new(Template)
 	tpl.Context = context
 	return tpl
 }
 
-//TemplateMessage 发送的模板消息内容
+// TemplateMessage 发送的模板消息内容
 type TemplateMessage struct {
 	ToUser     string                       `json:"touser"`          // 必须, 接受者OpenID
 	TemplateID string                       `json:"template_id"`     // 必须, 模版ID
@@ -36,12 +36,12 @@ type TemplateMessage struct {
 	Data       map[string]*TemplateDataItem `json:"data"`            // 必须, 模板数据
 
 	MiniProgram struct {
-		AppID    string `json:"appid"`    //所需跳转到的小程序appid（该小程序appid必须与发模板消息的公众号是绑定关联关系）
-		PagePath string `json:"pagepath"` //所需跳转到小程序的具体页面路径，支持带参数,（示例index?foo=bar）
-	} `json:"miniprogram"` //可选,跳转至小程序地址
+		AppID    string `json:"appid"`    // 所需跳转到的小程序appid（该小程序appid必须与发模板消息的公众号是绑定关联关系）
+		PagePath string `json:"pagepath"` // 所需跳转到小程序的具体页面路径，支持带参数,（示例index?foo=bar）
+	} `json:"miniprogram"` // 可选,跳转至小程序地址
 }
 
-//TemplateDataItem 模版内某个 .DATA 的值
+// TemplateDataItem 模版内某个 .DATA 的值
 type TemplateDataItem struct {
 	Value string `json:"value"`
 	Color string `json:"color,omitempty"`
@@ -53,7 +53,7 @@ type resTemplateSend struct {
 	MsgID int64 `json:"msgid"`
 }
 
-//Send 发送模板消息
+// Send 发送模板消息
 func (tpl *Template) Send(msg *TemplateMessage) (msgID int64, err error) {
 	var accessToken string
 	accessToken, err = tpl.GetAccessToken()
@@ -95,7 +95,7 @@ type resTemplateList struct {
 	TemplateList []*TemplateItem `json:"template_list"`
 }
 
-//List 获取模板列表
+// List 获取模板列表
 func (tpl *Template) List() (templateList []*TemplateItem, err error) {
 	var accessToken string
 	accessToken, err = tpl.GetAccessToken()

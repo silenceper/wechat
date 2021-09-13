@@ -8,12 +8,12 @@ import (
 	"github.com/silenceper/wechat/v2/pay/transfer"
 )
 
-//Pay 微信支付相关API
+// Pay 微信支付相关API
 type Pay struct {
 	cfg *config.Config
 }
 
-//NewPay 实例化微信支付相关API
+// NewPay 实例化微信支付相关API
 func NewPay(cfg *config.Config) *Pay {
 	return &Pay{cfg}
 }

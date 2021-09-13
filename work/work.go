@@ -14,7 +14,7 @@ type Work struct {
 	ctx *context.Context
 }
 
-//NewWork init work
+// NewWork init work
 func NewWork(cfg *config.Config) *Work {
 	defaultAkHandle := credential.NewWorkAccessToken(cfg.CorpID, cfg.CorpSecret, credential.CacheKeyWorkPrefix, cfg.Cache)
 	ctx := &context.Context{
@@ -24,12 +24,12 @@ func NewWork(cfg *config.Config) *Work {
 	return &Work{ctx: ctx}
 }
 
-//GetContext get Context
+// GetContext get Context
 func (wk *Work) GetContext() *context.Context {
 	return wk.ctx
 }
 
-//GetOauth get oauth
+// GetOauth get oauth
 func (wk *Work) GetOauth() *oauth.Oauth {
 	return oauth.NewOauth(wk.ctx)
 }

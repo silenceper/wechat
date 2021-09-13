@@ -12,13 +12,13 @@ type EventType string
 type InfoType string
 
 const (
-	//MsgTypeText 文本消息
+	// MsgTypeText 文本消息
 	MsgTypeText MsgType = "text"
-	//MsgTypeImage 图片消息
+	// MsgTypeImage 图片消息
 	MsgTypeImage = "image"
-	//MsgTypeLink 图文链接
+	// MsgTypeLink 图文链接
 	MsgTypeLink = "link"
-	//MsgTypeMiniProgramPage 小程序卡片
+	// MsgTypeMiniProgramPage 小程序卡片
 	MsgTypeMiniProgramPage = "miniprogrampage"
 )
 

@@ -19,12 +19,12 @@ const (
 	uriState        = "https://api.weixin.qq.com/device/get_stat"
 )
 
-//Device struct
+// Device struct
 type Device struct {
 	*context.Context
 }
 
-//NewDevice 实例
+// NewDevice 实例
 func NewDevice(context *context.Context) *Device {
 	device := new(Device)
 	device.Context = context
