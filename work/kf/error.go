@@ -56,52 +56,38 @@ func (r Error) Error() string {
 	return reflect.ValueOf(r).String()
 }
 
+var codeDic = map[int64]error{
+	50001: SDKInitFailed,
+	50002: SDKCacheUnavailable,
+	50003: SDKUnknownError,
+	40001: SDKInvalidCredential,
+	40009: SDKInvalidImageSize,
+	40013: SDKInvalidCorpID,
+	40014: SDKAccessTokenInvalid,
+	40015: SDKValidateSignatureFailed,
+	40016: SDKDecryptMSGFailed,
+	40058: SDKMediaIDExceedMinLength,
+	40201: SDKContentContainsSensitiveInformation,
+	41001: SDKAccessTokenMissing,
+	42001: SDKAccessTokenExpired,
+	45009: SDKApiFreqOutOfLimit,
+	48002: SDKApiForbidden,
+	95000: SDKInvalidOpenKFID,
+	95004: SDKOpenKFIDNotExist,
+	95011: SDKWeWorkAlready,
+	95012: SDKNotUseInWeCom,
+	95017: SDKApiNotOpen,
+}
+
 // NewSDKErr 初始化SDK实例错误信息
-func NewSDKErr(code int64, msgList ...string) Error {
-	switch code {
-	case 50001:
-		return SDKInitFailed
-	case 50002:
-		return SDKCacheUnavailable
-	case 40001:
-		return SDKInvalidCredential
-	case 41001:
-		return SDKAccessTokenMissing
-	case 40009:
-		return SDKInvalidImageSize
-	case 42001:
-		return SDKAccessTokenExpired
-	case 40013:
-		return SDKInvalidCorpID
-	case 40014:
-		return SDKAccessTokenInvalid
-	case 40015:
-		return SDKValidateSignatureFailed
-	case 40016:
-		return SDKDecryptMSGFailed
-	case 40058:
-		return SDKMediaIDExceedMinLength
-	case 40201:
-		return SDKContentContainsSensitiveInformation
-	case 45009:
-		return SDKApiFreqOutOfLimit
-	case 48002:
-		return SDKApiForbidden
-	case 95000:
-		return SDKInvalidOpenKFID
-	case 95004:
-		return SDKOpenKFIDNotExist
-	case 95011:
-		return SDKWeWorkAlready
-	case 95012:
-		return SDKNotUseInWeCom
-	case 95017:
-		return SDKApiNotOpen
-	default:
-		//返回未知的自定义错误
-		if len(msgList) > 0 {
-			return Error(strings.Join(msgList, ","))
-		}
-		return SDKUnknownError
+func NewSDKErr(code int64, msgList ...string) error {
+	if err := codeDic[code]; err != nil {
+		return err
 	}
+
+	//返回未知的自定义错误
+	if len(msgList) > 0 {
+		return Error(strings.Join(msgList, ","))
+	}
+	return SDKUnknownError
 }
