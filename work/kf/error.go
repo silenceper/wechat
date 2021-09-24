@@ -17,6 +17,8 @@ const (
 	SDKUnknownError Error = "未知错误"
 	// SDKInvalidCredential 错误码：40001
 	SDKInvalidCredential Error = "不合法的secret参数"
+	// SDKInvalidImageSize 错误码：40009
+	SDKInvalidImageSize Error = "无效的图片大小"
 	// SDKInvalidCorpID 错误码：40013
 	SDKInvalidCorpID Error = "无效的 CorpID"
 	// SDKAccessTokenInvalid 错误码：40014
@@ -25,6 +27,10 @@ const (
 	SDKValidateSignatureFailed Error = "校验签名错误"
 	// SDKDecryptMSGFailed 错误码：40016
 	SDKDecryptMSGFailed Error = "消息解密失败"
+	// SDKMediaIDExceedMinLength 错误码：40058
+	SDKMediaIDExceedMinLength Error = "media_id 小于最小长度 1"
+	// SDKContentContainsSensitiveInformation 错误码：40201
+	SDKContentContainsSensitiveInformation Error = "当前客服账号由于涉及敏感信息，已被封禁，请联系企业微信客服处理"
 	// SDKAccessTokenMissing 错误码：41001
 	SDKAccessTokenMissing Error = "缺少AccessToken参数"
 	// SDKAccessTokenExpired 错误码：42001
@@ -61,6 +67,8 @@ func NewSDKErr(code int64, msgList ...string) Error {
 		return SDKInvalidCredential
 	case 41001:
 		return SDKAccessTokenMissing
+	case 40009:
+		return SDKInvalidImageSize
 	case 42001:
 		return SDKAccessTokenExpired
 	case 40013:
@@ -71,6 +79,10 @@ func NewSDKErr(code int64, msgList ...string) Error {
 		return SDKValidateSignatureFailed
 	case 40016:
 		return SDKDecryptMSGFailed
+	case 40058:
+		return SDKMediaIDExceedMinLength
+	case 40201:
+		return SDKContentContainsSensitiveInformation
 	case 45009:
 		return SDKApiFreqOutOfLimit
 	case 48002:
