@@ -17,6 +17,8 @@ const (
 	SDKUnknownError Error = "未知错误"
 	// SDKInvalidCredential 错误码：40001
 	SDKInvalidCredential Error = "不合法的secret参数"
+	// SDKInvalidImageSize 错误码：40009
+	SDKInvalidImageSize Error = "无效的图片大小"
 	// SDKInvalidCorpID 错误码：40013
 	SDKInvalidCorpID Error = "无效的 CorpID"
 	// SDKAccessTokenInvalid 错误码：40014
@@ -25,6 +27,10 @@ const (
 	SDKValidateSignatureFailed Error = "校验签名错误"
 	// SDKDecryptMSGFailed 错误码：40016
 	SDKDecryptMSGFailed Error = "消息解密失败"
+	// SDKMediaIDExceedMinLength 错误码：40058
+	SDKMediaIDExceedMinLength Error = "media_id 小于最小长度 1"
+	// SDKContentContainsSensitiveInformation 错误码：40201
+	SDKContentContainsSensitiveInformation Error = "当前客服账号由于涉及敏感信息，已被封禁，请联系企业微信客服处理"
 	// SDKAccessTokenMissing 错误码：41001
 	SDKAccessTokenMissing Error = "缺少AccessToken参数"
 	// SDKAccessTokenExpired 错误码：42001
@@ -50,46 +56,38 @@ func (r Error) Error() string {
 	return reflect.ValueOf(r).String()
 }
 
+var codeDic = map[int64]error{
+	50001: SDKInitFailed,
+	50002: SDKCacheUnavailable,
+	50003: SDKUnknownError,
+	40001: SDKInvalidCredential,
+	40009: SDKInvalidImageSize,
+	40013: SDKInvalidCorpID,
+	40014: SDKAccessTokenInvalid,
+	40015: SDKValidateSignatureFailed,
+	40016: SDKDecryptMSGFailed,
+	40058: SDKMediaIDExceedMinLength,
+	40201: SDKContentContainsSensitiveInformation,
+	41001: SDKAccessTokenMissing,
+	42001: SDKAccessTokenExpired,
+	45009: SDKApiFreqOutOfLimit,
+	48002: SDKApiForbidden,
+	95000: SDKInvalidOpenKFID,
+	95004: SDKOpenKFIDNotExist,
+	95011: SDKWeWorkAlready,
+	95012: SDKNotUseInWeCom,
+	95017: SDKApiNotOpen,
+}
+
 // NewSDKErr 初始化SDK实例错误信息
-func NewSDKErr(code int64, msgList ...string) Error {
-	switch code {
-	case 50001:
-		return SDKInitFailed
-	case 50002:
-		return SDKCacheUnavailable
-	case 40001:
-		return SDKInvalidCredential
-	case 41001:
-		return SDKAccessTokenMissing
-	case 42001:
-		return SDKAccessTokenExpired
-	case 40013:
-		return SDKInvalidCorpID
-	case 40014:
-		return SDKAccessTokenInvalid
-	case 40015:
-		return SDKValidateSignatureFailed
-	case 40016:
-		return SDKDecryptMSGFailed
-	case 45009:
-		return SDKApiFreqOutOfLimit
-	case 48002:
-		return SDKApiForbidden
-	case 95000:
-		return SDKInvalidOpenKFID
-	case 95004:
-		return SDKOpenKFIDNotExist
-	case 95011:
-		return SDKWeWorkAlready
-	case 95012:
-		return SDKNotUseInWeCom
-	case 95017:
-		return SDKApiNotOpen
-	default:
-		//返回未知的自定义错误
-		if len(msgList) > 0 {
-			return Error(strings.Join(msgList, ","))
-		}
-		return SDKUnknownError
+func NewSDKErr(code int64, msgList ...string) error {
+	if err := codeDic[code]; err != nil {
+		return err
 	}
+
+	//返回未知的自定义错误
+	if len(msgList) > 0 {
+		return Error(strings.Join(msgList, ","))
+	}
+	return SDKUnknownError
 }
