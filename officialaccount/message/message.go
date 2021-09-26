@@ -86,7 +86,7 @@ const (
 	InfoTypeUnauthorized = "unauthorized"
 	// InfoTypeUpdateAuthorized 更新授权
 	InfoTypeUpdateAuthorized = "updateauthorized"
-	// notify_third_fasteregister 注册审核事件推送
+	// InfoTypeNotifyThirdFasterRegister 注册审核事件推送
 	InfoTypeNotifyThirdFasterRegister = "notify_third_fasteregister"
 )
 
