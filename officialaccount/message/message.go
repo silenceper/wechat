@@ -87,7 +87,7 @@ const (
 	// InfoTypeUpdateAuthorized 更新授权
 	InfoTypeUpdateAuthorized = "updateauthorized"
 	// notify_third_fasteregister 注册审核事件推送
-	InfoTypeNotifyThirdFasteregister = "notify_third_fasteregister"
+	InfoTypeNotifyThirdFasterRegister = "notify_third_fasteregister"
 )
 
 // MixMessage 存放所有微信发送过来的消息和事件
