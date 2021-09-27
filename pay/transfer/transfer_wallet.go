@@ -70,7 +70,7 @@ type Response struct {
 }
 
 // WalletTransfer 付款到零钱
-func (transfer *Transfer) WalletTransfer(p *Params) (rsp Response, err error) {
+func (transfer *Transfer) WalletTransfer(p *Params) (rsp *Response, err error) {
 	nonceStr := util.RandomStr(32)
 	param := make(map[string]string)
 	param["mch_appid"] = transfer.AppID
@@ -83,11 +83,10 @@ func (transfer *Transfer) WalletTransfer(p *Params) (rsp Response, err error) {
 	if p.DeviceInfo != "" {
 		param["device_info"] = p.DeviceInfo
 	}
+	param["check_name"] = "NO_CHECK"
 	if p.CheckName {
 		param["check_name"] = "FORCE_CHECK"
 		param["re_user_name"] = p.ReUserName
-	} else {
-		param["check_name"] = "NO_CHECK"
 	}
 	if p.SpbillCreateIP != "" {
 		param["spbill_create_ip"] = p.SpbillCreateIP
@@ -110,13 +109,11 @@ func (transfer *Transfer) WalletTransfer(p *Params) (rsp Response, err error) {
 		Desc:           p.Desc,
 		SpbillCreateIP: p.SpbillCreateIP,
 	}
+	req.CheckName = "NO_CHECK"
 	if p.CheckName {
 		req.CheckName = "FORCE_CHECK"
 		req.ReUserName = p.ReUserName
-	} else {
-		req.CheckName = "NO_CHECK"
 	}
-
 	rawRet, err := util.PostXMLWithTLS(walletTransferGateway, req, p.RootCa, transfer.MchID)
 	if err != nil {
 		return
