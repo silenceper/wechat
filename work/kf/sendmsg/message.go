@@ -82,7 +82,8 @@ type Menu struct {
 	MsgType string `json:"msgtype"` // 消息类型，此时固定为：msgmenu
 	MsgMenu struct {
 		HeadContent string        `json:"head_content"` // 消息内容，不多于1024字节
-		List        []interface{} `json:"list"`         // 菜单项配置
+		List        []interface{} `json:"list"`         // 菜单项配置，不能多余10个
+		TailContent string        `json:"tail_content"` // 结束文本, 不多于1024字
 	} `json:"msgmenu"`
 }
 

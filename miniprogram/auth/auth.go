@@ -1,6 +1,7 @@
 package auth
 
 import (
+	context2 "context"
 	"encoding/json"
 	"fmt"
 
@@ -43,8 +44,13 @@ type RspCheckEncryptedData struct {
 
 // Code2Session 登录凭证校验。
 func (auth *Auth) Code2Session(jsCode string) (result ResCode2Session, err error) {
+	return auth.Code2SessionContext(context2.Background(), jsCode)
+}
+
+// Code2SessionContext 登录凭证校验。
+func (auth *Auth) Code2SessionContext(ctx context2.Context, jsCode string) (result ResCode2Session, err error) {
 	var response []byte
-	if response, err = util.HTTPGet(fmt.Sprintf(code2SessionURL, auth.AppID, auth.AppSecret, jsCode)); err != nil {
+	if response, err = util.HTTPGetContext(ctx, fmt.Sprintf(code2SessionURL, auth.AppID, auth.AppSecret, jsCode)); err != nil {
 		return
 	}
 	if err = json.Unmarshal(response, &result); err != nil {
@@ -64,6 +70,11 @@ func (auth *Auth) GetPaidUnionID() {
 
 // CheckEncryptedData .检查加密信息是否由微信生成（当前只支持手机号加密数据），只能检测最近3天生成的加密数据
 func (auth *Auth) CheckEncryptedData(encryptedMsgHash string) (result RspCheckEncryptedData, err error) {
+	return auth.CheckEncryptedDataContext(context2.Background(), encryptedMsgHash)
+}
+
+// CheckEncryptedDataContext .检查加密信息是否由微信生成（当前只支持手机号加密数据），只能检测最近3天生成的加密数据
+func (auth *Auth) CheckEncryptedDataContext(ctx context2.Context, encryptedMsgHash string) (result RspCheckEncryptedData, err error) {
 	var response []byte
 	var (
 		at string
@@ -71,7 +82,7 @@ func (auth *Auth) CheckEncryptedData(encryptedMsgHash string) (result RspCheckEn
 	if at, err = auth.GetAccessToken(); err != nil {
 		return
 	}
-	if response, err = util.HTTPPost(fmt.Sprintf(checkEncryptedDataURL, at), "encrypted_msg_hash="+encryptedMsgHash); err != nil {
+	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(checkEncryptedDataURL, at), "encrypted_msg_hash="+encryptedMsgHash); err != nil {
 		return
 	}
 	if err = util.DecodeWithError(response, &result, "CheckEncryptedDataAuth"); err != nil {

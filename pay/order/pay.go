@@ -216,6 +216,11 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		p.NotifyURL = o.NotifyURL // 默认使用order.NotifyURL
 	}
 
+	// 签名类型
+	if p.SignType == "" {
+		p.SignType = util.SignTypeMD5
+	}
+
 	param := map[string]string{
 		"appid":            o.AppID,
 		"body":             p.Body,
@@ -231,10 +236,6 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 		"attach":           p.Attach,
 		"goods_tag":        p.GoodsTag,
 		"notify_url":       p.NotifyURL,
-	}
-	// 签名类型
-	if param["sign_type"] == "" {
-		param["sign_type"] = util.SignTypeMD5
 	}
 
 	if p.TimeExpire != "" {
