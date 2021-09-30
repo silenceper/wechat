@@ -2,15 +2,19 @@
 ![Go](https://github.com/silenceper/wechat/workflows/Go/badge.svg?branch=release-2.0)
 [![Go Report Card](https://goreportcard.com/badge/github.com/silenceper/wechat)](https://goreportcard.com/report/github.com/silenceper/wechat)
 [![pkg](https://img.shields.io/badge/dev-reference-007d9c?logo=go&logoColor=white&style=flat)](https://pkg.go.dev/github.com/silenceper/wechat/v2?tab=doc)
+![version](https://img.shields.io/badge/version-v2-green)
 
 使用Golang开发的微信SDK，简单、易用。
->当前版本为v2版本
+>注意：当前版本为v2版本，v1版本已废弃
 
 
 ## 文档 && 例子
+[API列表](https://github.com/silenceper/wechat/tree/v2/doc/api)
+
 [Wechat SDK 2.0 文档](https://silenceper.com/wechat)
 
 [Wechat SDK 2.0 例子](https://github.com/gowechat/example)
+
 
 ## 快速开始
 ```
@@ -61,8 +65,10 @@ server.Send()
 - openplatform:开放平台API
 - work:企业微信
 - aispeech:智能对话
+- doc: api文档
 
 ## 贡献
+- 在[API列表](https://github.com/silenceper/wechat/tree/v2/doc/api)中查看哪些API未实现
 - 提交issue，描述需要贡献的内容
 - 完成更改后，提交PR
 
