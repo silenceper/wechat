@@ -40,7 +40,7 @@ host: https://qyapi.weixin.qq.com/
 |   发送消息        | POST     | /cgi-bin/kf/send_msg            | YES        | (r *Client) SendMsg             | NICEXAI    |
 |   发送事件响应消息 | POST     | /cgi-bin/kf/send_msg_on_event   | YES        | (r *Client) SendMsgOnEvent      | NICEXAI    |
 
-###「升级服务」配置
+### 升级服务配置
 
 [官方文档](https://open.work.weixin.qq.com/api/doc/90001/90143/94702)
 
@@ -57,7 +57,7 @@ host: https://qyapi.weixin.qq.com/
 |       名称            | 请求方式  | URL                                     | 是否已实现   | 使用方法                            | 贡献者       |
 | :--------------:     | -------- | :---------------------------------------| ---------- | -------------------------------   |------------|
 | 获取客户基础信息        | POST     | /cgi-bin/kf/customer/batchget           | YES        | (r *Client) CustomerBatchGet      | NICEXAI    |
-| 获取视频号绑定状态      | POST     |  /cgi-bin/kf/get_corp_qualification      | YES        | (r *Client) GetCorpQualification  | NICEXAI    |
+| 获取视频号绑定状态      | GET      |  /cgi-bin/kf/get_corp_qualification      | YES        | (r *Client) GetCorpQualification  | NICEXAI    |
 
 ## 应用管理
 
