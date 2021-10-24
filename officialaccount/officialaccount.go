@@ -58,10 +58,16 @@ func (officialAccount *OfficialAccount) GetMenu() *menu.Menu {
 }
 
 // GetServer 消息管理：接收事件，被动回复消息管理
-func (officialAccount *OfficialAccount) GetServer(req *http.Request, writer http.ResponseWriter) *server.Server {
+func (officialAccount *OfficialAccount) GetServer(req *http.Request, writer http.ResponseWriter) server.Server {
 	srv := server.NewServer(officialAccount.ctx)
-	srv.Request = req
-	srv.Writer = writer
+	srv.SetRequestAndResponse(req, writer)
+	return srv
+}
+
+// GetServerByPool 消息管理：接收事件，被动回复消息管理,并且在获取后需要调用 defer Server.Close() 来回收。
+func (officialAccount *OfficialAccount) GetServerByPool(req *http.Request, writer http.ResponseWriter) server.Server {
+	srv := server.NewServerByPool(officialAccount.ctx)
+	srv.SetRequestAndResponse(req, writer)
 	return srv
 }
 

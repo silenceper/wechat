@@ -28,7 +28,7 @@ func NewOpenPlatform(cfg *config.Config) *OpenPlatform {
 }
 
 // GetServer get server
-func (openPlatform *OpenPlatform) GetServer(req *http.Request, writer http.ResponseWriter) *server.Server {
+func (openPlatform *OpenPlatform) GetServer(req *http.Request, writer http.ResponseWriter) server.Server {
 	off := officialaccount.NewOfficialAccount(openPlatform.Context, "")
 	return off.GetServer(req, writer)
 }
