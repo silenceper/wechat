@@ -1,8 +1,9 @@
 package server
 
 import (
-	"github.com/silenceper/wechat/v2/officialaccount/context"
 	"sync"
+
+	"github.com/silenceper/wechat/v2/officialaccount/context"
 )
 
 var serverPool *sync.Pool

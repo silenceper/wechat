@@ -4,15 +4,16 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"github.com/silenceper/wechat/v2/officialaccount/context"
-	"github.com/silenceper/wechat/v2/officialaccount/message"
-	"github.com/silenceper/wechat/v2/util"
-	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"reflect"
 	"runtime/debug"
 	"strconv"
+
+	"github.com/silenceper/wechat/v2/officialaccount/context"
+	"github.com/silenceper/wechat/v2/officialaccount/message"
+	"github.com/silenceper/wechat/v2/util"
+	log "github.com/sirupsen/logrus"
 )
 
 // OfficialServer struct
@@ -45,7 +46,7 @@ func NewServer(context *context.Context) Server {
 	return srv
 }
 
-// SkipValidate set skip validate
+// SetRequestAndResponse set skip validate
 func (srv *OfficialServer) SetRequestAndResponse(req *http.Request, writer http.ResponseWriter) {
 	srv.Request = req
 	srv.Writer = writer

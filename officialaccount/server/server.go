@@ -1,8 +1,9 @@
 package server
 
 import (
-	"github.com/silenceper/wechat/v2/officialaccount/message"
 	"net/http"
+
+	"github.com/silenceper/wechat/v2/officialaccount/message"
 )
 
 // Server interface
