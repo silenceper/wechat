@@ -17,7 +17,8 @@ func init() {
 	}
 }
 
-type ServerPool struct {
+// PoolServer 带有复用池的server
+type PoolServer struct {
 	*OfficialServer
 }
 
@@ -25,13 +26,13 @@ type ServerPool struct {
 func NewServerByPool(context *context.Context) Server {
 	srv := serverPool.Get().(*OfficialServer)
 	srv.Context = context
-	return &ServerPool{
+	return &PoolServer{
 		OfficialServer: srv,
 	}
 }
 
 // Close 回收这个 server
-func (s *ServerPool) Close() {
+func (s *PoolServer) Close() {
 	s.Context = nil
 	s.Writer = nil
 	s.Request = nil
