@@ -64,8 +64,14 @@ type ServiceStateTransOptions struct {
 	ServicerUserID string `json:"servicer_userid"` // 接待人员的userid，当state=3时要求必填，接待人员须处于“正在接待”中
 }
 
+// ServiceStateTransSchema 变更会话状态响应内容
+type ServiceStateTransSchema struct {
+	util.CommonError
+	MsgCode string `json:"msg_code"` // 用于发送响应事件消息的code，将会话初次变更为service_state为2和3时，返回回复语code，service_state为4时，返回结束语code。可用该code调用发送事件响应消息接口给客户发送事件响应消息
+}
+
 // ServiceStateTrans 变更会话状态
-func (r *Client) ServiceStateTrans(options ServiceStateTransOptions) (info util.CommonError, err error) {
+func (r *Client) ServiceStateTrans(options ServiceStateTransOptions) (info ServiceStateTransSchema, err error) {
 	var (
 		accessToken string
 		data        []byte
