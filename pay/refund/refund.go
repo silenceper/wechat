@@ -102,7 +102,11 @@ func (refund *Refund) Refund(p *Params) (rsp Response, err error) {
 		req.TransactionID = p.TransactionID
 	}
 
-	rawRet, err := util.PostXMLWithTLS(refundGateway, req, p.RootCa, refund.MchID)
+	rootCa := p.RootCa
+	if rootCa == "" {
+		rootCa = refund.RootCa
+	}
+	rawRet, err := util.PostXMLWithTLS(refundGateway, req, rootCa, refund.MchID)
 	if err != nil {
 		return
 	}

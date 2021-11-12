@@ -114,7 +114,13 @@ func (transfer *Transfer) WalletTransfer(p *Params) (rsp *Response, err error) {
 		req.CheckName = "FORCE_CHECK"
 		req.ReUserName = p.ReUserName
 	}
-	rawRet, err := util.PostXMLWithTLS(walletTransferGateway, req, p.RootCa, transfer.MchID)
+
+	// 优先使用参数传入的证书
+	rootCa := p.RootCa
+	if rootCa == "" {
+		rootCa = transfer.RootCa
+	}
+	rawRet, err := util.PostXMLWithTLS(walletTransferGateway, req, rootCa, transfer.MchID)
 	if err != nil {
 		return
 	}
