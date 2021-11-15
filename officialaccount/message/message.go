@@ -73,6 +73,8 @@ const (
 	EventMassSendJobFinish = "MASSSENDJOBFINISH"
 	// EventWxaMediaCheck 异步校验图片/音频是否含有违法违规内容推送事件
 	EventWxaMediaCheck = "wxa_media_check"
+	// EventSubscribeMsgPopupEvent 订阅通知事件推送
+	EventSubscribeMsgPopupEvent = "subscribe_msg_popup_event"
 )
 
 const (
@@ -144,6 +146,10 @@ type MixMessage struct {
 		Poiname   string  `xml:"Poiname"`
 	}
 
+	SubscribeMsgPopupEvent []struct {
+		List SubscribeMsgPopupEvent `xml:"List"`
+	} `xml:"SubscribeMsgPopupEvent"`
+
 	// 第三方平台相关
 	InfoType                     InfoType `xml:"InfoType"`
 	AppID                        string   `xml:"AppId"`
@@ -181,6 +187,13 @@ type MixMessage struct {
 
 	// 设备相关
 	device.MsgDevice
+}
+
+// SubscribeMsgPopupEvent 订阅通知事件推送的消息体
+type SubscribeMsgPopupEvent struct {
+	TemplateID            string `xml:"TemplateId"`
+	SubscribeStatusString string `xml:"SubscribeStatusString"`
+	PopupScene            int    `xml:"PopupScene"`
 }
 
 // EventPic 发图事件推送
