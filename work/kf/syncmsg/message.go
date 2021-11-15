@@ -144,6 +144,7 @@ type ReceptionistStatusChangeEvent struct {
 	Event   struct {
 		EventType          string `json:"event_type"`      // 事件类型。此处固定为：servicer_status_change
 		ReceptionistUserID string `json:"servicer_userid"` // 客服人员userid
+		OpenKFID           string `json:"open_kfid"`       // 客服帐号ID
 		Status             uint32 `json:"status"`          // 状态类型。1-接待中 2-停止接待
 	} `json:"event"`
 }
