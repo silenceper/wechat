@@ -2,6 +2,7 @@ package openplatform
 
 import (
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/code"
+	"github.com/silenceper/wechat/v2/openplatform/miniprogram/privacyconfig"
 	"net/http"
 
 	"github.com/silenceper/wechat/v2/officialaccount/server"
@@ -47,6 +48,11 @@ func (openPlatform *OpenPlatform) GetMiniProgram(appID string) *miniprogram.Mini
 //GetCode 小程序代码
 func (openPlatform *OpenPlatform) GetCode(appID string) *code.Code {
 	return code.NewCode(openPlatform.Context, appID)
+}
+
+//GetPrivacyConfig 小程序用户隐私保护指引
+func (openPlatform *OpenPlatform) GetPrivacyConfig(appID string) *privacyconfig.PrivacyConfig {
+	return privacyconfig.NewPrivacyConfig(openPlatform.Context, appID)
 }
 
 //GetAccountManager 账号管理
