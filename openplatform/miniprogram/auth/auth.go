@@ -53,7 +53,7 @@ func (auth *Auth) Code2SessionContext(ctx context2.Context, jsCode string) (resu
 	if err!=nil{
 		return
 	}
-	if response, err = util.HTTPGetContext(ctx, fmt.Sprintf(code2SessionURL, auth.appID,auth.Context.AppID,  jsCode,componentAccessToken)); err != nil {
+	if response, err = util.HTTPGetContext(ctx, fmt.Sprintf(code2SessionURL, auth.appID,  jsCode,auth.Context.AppID,componentAccessToken)); err != nil {
 		return
 	}
 	if err = json.Unmarshal(response, &result); err != nil {
