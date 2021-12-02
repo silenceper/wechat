@@ -3,14 +3,15 @@ package auth
 import (
 	context2 "context"
 	"encoding/json"
+
 	"fmt"
+
 	"github.com/silenceper/wechat/v2/openplatform/context"
 	"github.com/silenceper/wechat/v2/util"
 )
 
-
 const (
-	code2SessionURL = "https://api.weixin.qq.com/sns/component/jscode2session?appid=%s&js_code=%s&grant_type=authorization_code&component_appid=%s&component_access_token=%s"
+	code2SessionURL       = "https://api.weixin.qq.com/sns/component/jscode2session?appid=%s&js_code=%s&grant_type=authorization_code&component_appid=%s&component_access_token=%s"
 	checkEncryptedDataURL = "https://api.weixin.qq.com/wxa/business/checkencryptedmsg?access_token=%s"
 )
 
@@ -21,8 +22,8 @@ type Auth struct {
 }
 
 // NewAuth new auth (授权方appID)
-func NewAuth(ctx *context.Context,appID string) *Auth {
-	return &Auth{ctx,appID}
+func NewAuth(ctx *context.Context, appID string) *Auth {
+	return &Auth{ctx, appID}
 }
 
 // ResCode2Session 登录凭证校验的返回结果
@@ -49,11 +50,11 @@ func (auth *Auth) Code2Session(jsCode string) (result ResCode2Session, err error
 func (auth *Auth) Code2SessionContext(ctx context2.Context, jsCode string) (result ResCode2Session, err error) {
 	var response []byte
 	var componentAccessToken string
-	componentAccessToken,err=auth.GetComponentAccessToken()
-	if err!=nil{
+	componentAccessToken, err = auth.GetComponentAccessToken()
+	if err != nil {
 		return
 	}
-	if response, err = util.HTTPGetContext(ctx, fmt.Sprintf(code2SessionURL, auth.appID,  jsCode,auth.Context.AppID,componentAccessToken)); err != nil {
+	if response, err = util.HTTPGetContext(ctx, fmt.Sprintf(code2SessionURL, auth.appID, jsCode, auth.Context.AppID, componentAccessToken)); err != nil {
 		return
 	}
 	if err = json.Unmarshal(response, &result); err != nil {

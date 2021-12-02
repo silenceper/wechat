@@ -2,8 +2,8 @@ package miniprogram
 
 import (
 	"github.com/silenceper/wechat/v2/credential"
-	"github.com/silenceper/wechat/v2/openplatform/miniprogram/auth"
 	openContext "github.com/silenceper/wechat/v2/openplatform/context"
+	"github.com/silenceper/wechat/v2/openplatform/miniprogram/auth"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/basic"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/component"
 )
