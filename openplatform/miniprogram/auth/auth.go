@@ -4,6 +4,8 @@ import (
 	context2 "context"
 	"encoding/json"
 
+	miniprogramAuth "github.com/silenceper/wechat/v2/miniprogram/auth"
+
 	"fmt"
 
 	"github.com/silenceper/wechat/v2/openplatform/context"
@@ -11,8 +13,7 @@ import (
 )
 
 const (
-	code2SessionURL       = "https://api.weixin.qq.com/sns/component/jscode2session?appid=%s&js_code=%s&grant_type=authorization_code&component_appid=%s&component_access_token=%s"
-	checkEncryptedDataURL = "https://api.weixin.qq.com/wxa/business/checkencryptedmsg?access_token=%s"
+	code2SessionURL = "https://api.weixin.qq.com/sns/component/jscode2session?appid=%s&js_code=%s&grant_type=authorization_code&component_appid=%s&component_access_token=%s"
 )
 
 // Auth 登录/用户信息
@@ -26,28 +27,13 @@ func NewAuth(ctx *context.Context, appID string) *Auth {
 	return &Auth{ctx, appID}
 }
 
-// ResCode2Session 登录凭证校验的返回结果
-type ResCode2Session struct {
-	util.CommonError
-	OpenID     string `json:"openid"`      // 用户唯一标识
-	SessionKey string `json:"session_key"` // 会话密钥
-	UnionID    string `json:"unionid"`     // 用户在开放平台的唯一标识符，在满足UnionID下发条件的情况下会返回
-}
-
-// RspCheckEncryptedData .
-type RspCheckEncryptedData struct {
-	util.CommonError
-	Vaild      bool `json:"vaild"`       // 是否是合法的数据
-	CreateTime uint `json:"create_time"` // 加密数据生成的时间戳
-}
-
 // Code2Session 登录凭证校验。
-func (auth *Auth) Code2Session(jsCode string) (result ResCode2Session, err error) {
+func (auth *Auth) Code2Session(jsCode string) (result miniprogramAuth.ResCode2Session, err error) {
 	return auth.Code2SessionContext(context2.Background(), jsCode)
 }
 
 // Code2SessionContext 登录凭证校验。
-func (auth *Auth) Code2SessionContext(ctx context2.Context, jsCode string) (result ResCode2Session, err error) {
+func (auth *Auth) Code2SessionContext(ctx context2.Context, jsCode string) (result miniprogramAuth.ResCode2Session, err error) {
 	var response []byte
 	var componentAccessToken string
 	componentAccessToken, err = auth.GetComponentAccessToken()
@@ -73,24 +59,7 @@ func (auth *Auth) GetPaidUnionID() {
 }
 
 // CheckEncryptedData .检查加密信息是否由微信生成（当前只支持手机号加密数据），只能检测最近3天生成的加密数据
-func (auth *Auth) CheckEncryptedData(encryptedMsgHash string) (result RspCheckEncryptedData, err error) {
-	return auth.CheckEncryptedDataContext(context2.Background(), encryptedMsgHash)
-}
-
-// CheckEncryptedDataContext .检查加密信息是否由微信生成（当前只支持手机号加密数据），只能检测最近3天生成的加密数据
-func (auth *Auth) CheckEncryptedDataContext(ctx context2.Context, encryptedMsgHash string) (result RspCheckEncryptedData, err error) {
-	var response []byte
-	var (
-		at string
-	)
-	if at, err = auth.GetAccessToken(); err != nil {
-		return
-	}
-	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(checkEncryptedDataURL, at), "encrypted_msg_hash="+encryptedMsgHash); err != nil {
-		return
-	}
-	if err = util.DecodeWithError(response, &result, "CheckEncryptedDataAuth"); err != nil {
-		return
-	}
-	return
+func (auth *Auth) CheckEncryptedData(encryptedMsgHash string) (result miniprogramAuth.RspCheckEncryptedData, err error) {
+	var miniAuth = miniprogramAuth.Auth{}
+	return miniAuth.CheckEncryptedDataContext(context2.Background(), encryptedMsgHash)
 }
