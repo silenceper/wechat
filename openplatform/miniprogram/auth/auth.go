@@ -4,6 +4,8 @@ import (
 	context2 "context"
 	"encoding/json"
 
+	"github.com/silenceper/wechat/v2/miniprogram"
+
 	miniprogramAuth "github.com/silenceper/wechat/v2/miniprogram/auth"
 
 	"fmt"
@@ -60,6 +62,7 @@ func (auth *Auth) GetPaidUnionID() {
 
 // CheckEncryptedData .检查加密信息是否由微信生成（当前只支持手机号加密数据），只能检测最近3天生成的加密数据
 func (auth *Auth) CheckEncryptedData(encryptedMsgHash string) (result miniprogramAuth.RspCheckEncryptedData, err error) {
-	var miniAuth = miniprogramAuth.Auth{}
-	return miniAuth.CheckEncryptedDataContext(context2.Background(), encryptedMsgHash)
+	var miniProgram = miniprogram.MiniProgram{}
+	miniProgram.SetAccessTokenHandle(auth.AccessTokenHandle)
+	return miniProgram.GetAuth().CheckEncryptedDataContext(context2.Background(), encryptedMsgHash)
 }
