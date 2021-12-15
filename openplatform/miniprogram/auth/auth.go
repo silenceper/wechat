@@ -3,13 +3,10 @@ package auth
 import (
 	context2 "context"
 	"encoding/json"
-
-	"github.com/silenceper/wechat/v2/miniprogram"
-
-	miniprogramAuth "github.com/silenceper/wechat/v2/miniprogram/auth"
-
 	"fmt"
 
+	"github.com/silenceper/wechat/v2/miniprogram"
+	miniprogramAuth "github.com/silenceper/wechat/v2/miniprogram/auth"
 	"github.com/silenceper/wechat/v2/openplatform/context"
 	"github.com/silenceper/wechat/v2/util"
 )
