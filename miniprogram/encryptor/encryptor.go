@@ -11,7 +11,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 )
 
-// Encryptor struct
+// Encryptor struct 
 type Encryptor struct {
 	*context.Context
 }
