@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/util"
@@ -37,6 +36,12 @@ type SettingItem struct {
 	PrivacyText string `json:"privacy_text"`
 }
 
+type SettingResponseItem struct {
+	PrivacyKey   string `json:"privacy_key"`
+	PrivacyText  string `json:"privacy_text"`
+	PrivacyLabel string `json:"privacy_label"`
+}
+
 type SetPrivacySettingRequest struct {
 	PrivacyVer   int           `json:"privacy_ver"`
 	OwnerSetting OwnerSetting  `json:"owner_setting"`
@@ -44,10 +49,51 @@ type SetPrivacySettingRequest struct {
 }
 
 const (
-	setPrivacySettingUrl = "https://api.weixin.qq.com/cgi-bin/component/setprivacysetting"
-	PrivacyV1            = 1
-	PrivacyV2            = 2
+	setPrivacySettingUrl    = "https://api.weixin.qq.com/cgi-bin/component/setprivacysetting"
+	getPrivacySettingUrl    = "https://api.weixin.qq.com/cgi-bin/component/getprivacysetting"
+	uploadPrivacyExtFileUrl = "https://api.weixin.qq.com/cgi-bin/component/uploadprivacyextfile"
+
+	PrivacyV1 = 1
+	PrivacyV2 = 2
 )
+
+type GetPrivacySettingResponse struct {
+	util.CommonError
+	CodeExist    int                   `json:"code_exist"`
+	PrivacyList  []string              `json:"privacy_list"`
+	SettingList  []SettingResponseItem `json:"setting_list"`
+	UpdateTime   int64                 `json:"update_time"`
+	OwnerSetting OwnerSetting          `json:"owner_setting"`
+	PrivacyDesc  []PrivacyDesc         `json:"privacy_desc"`
+}
+
+type PrivacyDesc struct {
+	PrivacyDesc string `json:"privacy_desc"`
+	PrivacyKey  string `json:"privacy_key"`
+}
+
+func (s *Privacy) GetPrivacySetting(privacyVer int) (GetPrivacySettingResponse, error) {
+	accessToken, err := s.GetAccessToken()
+	if err != nil {
+		return GetPrivacySettingResponse{}, err
+	}
+
+	response, err := util.PostJSON(fmt.Sprintf("%s?access_token=%s", getPrivacySettingUrl, accessToken), map[string]int{
+		"privacy_ver": privacyVer,
+	})
+	if err != nil {
+		return GetPrivacySettingResponse{}, err
+	}
+	// 返回错误信息
+	var result GetPrivacySettingResponse
+	err = json.Unmarshal(response, &result)
+	if err == nil && result.ErrCode != 0 {
+		err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
+		return GetPrivacySettingResponse{}, err
+	}
+
+	return result, nil
+}
 
 func (s *Privacy) SetPrivacySetting(privacyVer int, ownerSetting OwnerSetting, settingList []SettingItem) error {
 	if privacyVer == PrivacyV1 && len(settingList) > 0 {
@@ -58,11 +104,7 @@ func (s *Privacy) SetPrivacySetting(privacyVer int, ownerSetting OwnerSetting, s
 		return err
 	}
 
-	var (
-		contentType string
-		response    []byte
-	)
-	response, contentType, err = util.PostJSONWithRespContentType(fmt.Sprintf("%s?access_token=%s", setPrivacySettingUrl, accessToken), SetPrivacySettingRequest{
+	response, err := util.PostJSON(fmt.Sprintf("%s?access_token=%s", setPrivacySettingUrl, accessToken), SetPrivacySettingRequest{
 		PrivacyVer:   privacyVer,
 		OwnerSetting: ownerSetting,
 		SettingList:  settingList,
@@ -70,16 +112,43 @@ func (s *Privacy) SetPrivacySetting(privacyVer int, ownerSetting OwnerSetting, s
 	if err != nil {
 		return err
 	}
-	if strings.HasPrefix(contentType, "application/json") {
-		// 返回错误信息
-		var result util.CommonError
-		err = json.Unmarshal(response, &result)
-		if err == nil && result.ErrCode != 0 {
-			err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
-			return err
-		}
-	} else {
-		err = fmt.Errorf("fetchCode error : unknown response content type - %v", contentType)
+
+	// 返回错误信息
+	var result util.CommonError
+	err = json.Unmarshal(response, &result)
+	if err == nil && result.ErrCode != 0 {
+		err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
+		return err
 	}
+
 	return err
+}
+
+type UploadPrivacyExtFileResponse struct {
+	util.CommonError
+	ExtFileMediaID string `json:"ext_file_media_id"`
+}
+
+func (s *Privacy) UploadPrivacyExtFile(fileData []byte) (UploadPrivacyExtFileResponse, error) {
+	accessToken, err := s.GetAccessToken()
+	if err != nil {
+		return UploadPrivacyExtFileResponse{}, err
+	}
+
+	response, err := util.PostJSON(fmt.Sprintf("%s?access_token=%s", uploadPrivacyExtFileUrl, accessToken), map[string][]byte{
+		"file": fileData,
+	})
+	if err != nil {
+		return UploadPrivacyExtFileResponse{}, err
+	}
+
+	// 返回错误信息
+	var result UploadPrivacyExtFileResponse
+	err = json.Unmarshal(response, &result)
+	if err == nil && result.ErrCode != 0 {
+		err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
+		return UploadPrivacyExtFileResponse{}, err
+	}
+
+	return result, err
 }
