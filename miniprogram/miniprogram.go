@@ -9,6 +9,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
+	"github.com/silenceper/wechat/v2/miniprogram/privacy"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
 	"github.com/silenceper/wechat/v2/miniprogram/shortlink"
 	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
@@ -55,6 +56,11 @@ func (miniProgram *MiniProgram) GetAuth() *auth.Auth {
 // GetAnalysis 数据分析
 func (miniProgram *MiniProgram) GetAnalysis() *analysis.Analysis {
 	return analysis.NewAnalysis(miniProgram.ctx)
+}
+
+// GetQRCode 小程序码相关API
+func (miniProgram *MiniProgram) GetPrivacy() *privacy.Privacy {
+	return privacy.NewPrivacy(miniProgram.ctx)
 }
 
 // GetQRCode 小程序码相关API
