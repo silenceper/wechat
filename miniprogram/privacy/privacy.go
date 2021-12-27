@@ -64,7 +64,11 @@ type GetPrivacySettingResponse struct {
 	SettingList  []SettingResponseItem `json:"setting_list"`
 	UpdateTime   int64                 `json:"update_time"`
 	OwnerSetting OwnerSetting          `json:"owner_setting"`
-	PrivacyDesc  []PrivacyDesc         `json:"privacy_desc"`
+	PrivacyDesc  PrivacyDescList       `json:"privacy_desc"`
+}
+
+type PrivacyDescList struct {
+	PrivacyDescList []PrivacyDesc `json:"privacy_desc_list"`
 }
 
 type PrivacyDesc struct {
