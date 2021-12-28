@@ -58,7 +58,7 @@ func (miniProgram *MiniProgram) GetAnalysis() *analysis.Analysis {
 	return analysis.NewAnalysis(miniProgram.ctx)
 }
 
-// GetQRCode 小程序码相关API
+// GetPrivacy 小程序隐私协议相关API
 func (miniProgram *MiniProgram) GetPrivacy() *privacy.Privacy {
 	return privacy.NewPrivacy(miniProgram.ctx)
 }

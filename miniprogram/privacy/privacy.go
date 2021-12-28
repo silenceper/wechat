@@ -67,7 +67,7 @@ type GetPrivacySettingResponse struct {
 	SettingList  []SettingResponseItem `json:"setting_list"`
 	UpdateTime   int64                 `json:"update_time"`
 	OwnerSetting OwnerSetting          `json:"owner_setting"`
-	PrivacyDesc  PrivacyDescList       `json:"privacy_desc"`
+	PrivacyDesc  DescList              `json:"privacy_desc"`
 }
 
 // SettingResponseItem 获取权限设置的响应明细
@@ -77,13 +77,13 @@ type SettingResponseItem struct {
 	PrivacyLabel string `json:"privacy_label"`
 }
 
-// PrivacyDescList 权限列表(保持与官方一致)
-type PrivacyDescList struct {
-	PrivacyDescList []PrivacyDesc `json:"privacy_desc_list"`
+// DescList 权限列表(保持与官方一致)
+type DescList struct {
+	PrivacyDescList []Desc `json:"privacy_desc_list"`
 }
 
-// PrivacyDesc 权限列表明细(保持与官方一致)
-type PrivacyDesc struct {
+// Desc 权限列表明细(保持与官方一致)
+type Desc struct {
 	PrivacyDesc string `json:"privacy_desc"`
 	PrivacyKey  string `json:"privacy_key"`
 }
