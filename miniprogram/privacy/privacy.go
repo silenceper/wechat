@@ -103,7 +103,7 @@ func (s *Privacy) GetPrivacySetting(privacyVer int) (GetPrivacySettingResponse, 
 	}
 	// 返回错误信息
 	var result GetPrivacySettingResponse
-	if err = util.DecodeWithError(response, &result, "getprivacysetting"); err == nil {
+	if err = util.DecodeWithError(response, &result, "getprivacysetting"); err != nil {
 		return GetPrivacySettingResponse{}, err
 	}
 
@@ -130,7 +130,7 @@ func (s *Privacy) SetPrivacySetting(privacyVer int, ownerSetting OwnerSetting, s
 	}
 
 	// 返回错误信息
-	if err = util.DecodeWithCommonError(response, "setprivacysetting"); err == nil {
+	if err = util.DecodeWithCommonError(response, "setprivacysetting"); err != nil {
 		return err
 	}
 
@@ -159,7 +159,7 @@ func (s *Privacy) UploadPrivacyExtFile(fileData []byte) (UploadPrivacyExtFileRes
 
 	// 返回错误信息
 	var result UploadPrivacyExtFileResponse
-	if err = util.DecodeWithError(response, &result, "setprivacysetting"); err == nil {
+	if err = util.DecodeWithError(response, &result, "setprivacysetting"); err != nil {
 		return UploadPrivacyExtFileResponse{}, err
 	}
 
