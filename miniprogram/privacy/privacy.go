@@ -115,8 +115,7 @@ func (s *Privacy) SetPrivacySetting(privacyVer int, ownerSetting OwnerSetting, s
 	}
 
 	// 返回错误信息
-	var result util.CommonError
-	if err = util.DecodeWithError(response, &result, "setprivacysetting"); err == nil {
+	if err = util.DecodeWithCommonError(response, "setprivacysetting"); err == nil {
 		return err
 	}
 
