@@ -1,7 +1,6 @@
 package privacy
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -90,9 +89,7 @@ func (s *Privacy) GetPrivacySetting(privacyVer int) (GetPrivacySettingResponse, 
 	}
 	// 返回错误信息
 	var result GetPrivacySettingResponse
-	err = json.Unmarshal(response, &result)
-	if err == nil && result.ErrCode != 0 {
-		err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
+	if err = util.DecodeWithError(response, &result, "getprivacysetting"); err == nil {
 		return GetPrivacySettingResponse{}, err
 	}
 
@@ -119,9 +116,7 @@ func (s *Privacy) SetPrivacySetting(privacyVer int, ownerSetting OwnerSetting, s
 
 	// 返回错误信息
 	var result util.CommonError
-	err = json.Unmarshal(response, &result)
-	if err == nil && result.ErrCode != 0 {
-		err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
+	if err = util.DecodeWithError(response, &result, "setprivacysetting"); err == nil {
 		return err
 	}
 
@@ -148,9 +143,7 @@ func (s *Privacy) UploadPrivacyExtFile(fileData []byte) (UploadPrivacyExtFileRes
 
 	// 返回错误信息
 	var result UploadPrivacyExtFileResponse
-	err = json.Unmarshal(response, &result)
-	if err == nil && result.ErrCode != 0 {
-		err = fmt.Errorf("fetchCode error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
+	if err = util.DecodeWithError(response, &result, "setprivacysetting"); err == nil {
 		return UploadPrivacyExtFileResponse{}, err
 	}
 
