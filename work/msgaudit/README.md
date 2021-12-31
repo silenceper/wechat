@@ -64,7 +64,7 @@ func main() {
 
 		if chatInfo.Type == "image" {
 			image, _ := chatInfo.GetImageMessage()
-			sdkfileid := image.Image.SdkFileId
+			sdkfileid := image.Image.SdkFileID
 
 			isFinish := false
 			buffer := bytes.Buffer{}
