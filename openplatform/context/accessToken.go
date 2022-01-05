@@ -26,6 +26,7 @@ const (
 
 // ComponentAccessToken 第三方平台
 type ComponentAccessToken struct {
+	util.CommonError
 	AccessToken string `json:"component_access_token"`
 	ExpiresIn   int64  `json:"expires_in"`
 }
@@ -55,6 +56,10 @@ func (ctx *Context) SetComponentAccessToken(verifyTicket string) (*ComponentAcce
 	at := &ComponentAccessToken{}
 	if err := json.Unmarshal(respBody, at); err != nil {
 		return nil, err
+	}
+
+	if at.ErrCode != 0 {
+		return nil, fmt.Errorf("SetComponentAccessToken Error , errcode=%d , errmsg=%s", at.ErrCode, at.ErrMsg)
 	}
 
 	accessTokenCacheKey := fmt.Sprintf("component_access_token_%s", ctx.AppID)
