@@ -100,9 +100,9 @@ type GetPhoneNumberResponse struct {
 }
 
 type PhoneInfo struct {
-	PhoneNumber     string `json:"phonePumber"`     // 用户绑定的手机号
+	PhoneNumber     string `json:"phoneNumber"`     // 用户绑定的手机号
 	PurePhoneNumber string `json:"purePhoneNumber"` // 没有区号的手机号
-	CountryCode     string `json:"contryCode"`      // 区号
+	CountryCode     string `json:"countryCode"`     // 区号
 	WaterMark       struct {
 		Timestamp int64  `json:"timestamp"`
 		AppID     string `json:"appid"`
