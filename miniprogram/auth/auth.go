@@ -120,7 +120,7 @@ func (auth *Auth) GetPhoneNumber(code string) (result GetPhoneNumberResponse, er
 	body := map[string]interface{}{
 		"code": code,
 	}
-	if response, err = util.PostJSON(fmt.Sprintf(checkEncryptedDataURL, at), body); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(getPhoneNumber, at), body); err != nil {
 		return
 	}
 	if err = util.DecodeWithError(response, &result, "phonenumber.getPhoneNumber"); err != nil {
