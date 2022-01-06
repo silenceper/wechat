@@ -93,12 +93,14 @@ func (auth *Auth) CheckEncryptedDataContext(ctx context2.Context, encryptedMsgHa
 	return
 }
 
+// GetPhoneNumberResponse 新版获取用户手机号响应结构体
 type GetPhoneNumberResponse struct {
 	util.CommonError
 
 	PhoneInfo PhoneInfo `json:"phone_info"`
 }
 
+// PhoneInfo 获取用户手机号内容
 type PhoneInfo struct {
 	PhoneNumber     string `json:"phoneNumber"`     // 用户绑定的手机号
 	PurePhoneNumber string `json:"purePhoneNumber"` // 没有区号的手机号
@@ -109,6 +111,7 @@ type PhoneInfo struct {
 	} `json:"watermark"` // 数据水印
 }
 
+// GetPhoneNumber 小程序通过code获取用户手机号
 func (auth *Auth) GetPhoneNumber(code string) (result GetPhoneNumberResponse, err error) {
 	var response []byte
 	var (
