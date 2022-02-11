@@ -132,6 +132,8 @@
 
 #### 群发任务管理
 
+[官方文档](https://developers.weixin.qq.com/doc/offiaccount/Shopping_Guide/task-account/shopping-guide.addGuideMassendJob.html)
+
 | 名称                 | 请求方式 | URL                                   | 是否已实现 | 使用方法 |
 | -------------------- | -------- | ------------------------------------- | ---------- | -------- |
 | 添加群发任务         | POST     | /cgi-bin/guide/addguidemassendjob     | NO         |          |
@@ -155,6 +157,30 @@
 | 获取jssdk需要的配置参数                                      | GET      | /cgi-bin/ticket/getticket                           | YES        | (js *Js) GetConfig                  |
 
 ## 素材管理
+
+## 草稿箱
+
+[官方文档](https://developers.weixin.qq.com/doc/offiaccount/Draft_Box/Add_draft.html)
+
+
+
+## 发布能力
+
+[官方文档](https://developers.weixin.qq.com/doc/offiaccount/Publish/Publish.html)
+
+说明：「发表记录」包括群发和发布。已群发内容会推送给用户。已发布内容不会推送，不占用群发次数，也不会展示在公众号主页中。
+
+注意：该接口，只能处理 "发布" 相关的信息，无法操作和获取 "群发" 相关内容！！[官方回复](https://developers.weixin.qq.com/community/develop/doc/0002a4fb2109d8f7a91d421c556c00)
+
+| 名称                           | 请求方式 | URL                             | 是否已实现 | 使用方法                                |
+| ------------------------------ | -------- | ------------------------------- | ---------- | --------------------------------------- |
+| 发布接口                       | POST     | /cgi-bin/freepublish/submit     | YES        | (freePublish *FreePublish) Publish      |
+| 发布状态轮询接口               | POST     | /cgi-bin/freepublish/get        | YES        | (freePublish *FreePublish) SelectStatus |
+| 事件推送发布结果               |          |                                 | NO         |                                         |
+| 删除发布                       | POST     | /cgi-bin/freepublish/delete     | YES        | (freePublish *FreePublish) Delete       |
+| 通过 article_id 获取已发布文章 | POST     | /cgi-bin/freepublish/getarticle | YES        | (freePublish *FreePublish) First        |
+| 获取成功发布列表               | POST     | /cgi-bin/freepublish/batchget   | YES        | (freePublish *FreePublish) Paginate     |
+
 
 ## 图文消息留言管理
 
