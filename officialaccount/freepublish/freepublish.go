@@ -20,15 +20,23 @@ const (
 type PublishStatus uint
 
 const (
-	PublishStatusSuccess      PublishStatus = iota // 0:成功
-	PublishStatusPublishing                        // 1:发布中
-	PublishStatusOriginalFail                      // 2:原创失败
-	PublishStatusFail                              // 3:常规失败
-	PublishStatusAuditRefused                      // 4:平台审核不通过
-	PublishStatusUserDeleted                       // 5:成功后用户删除所有文章
-	PublishStatusSystemBanned                      // 6:成功后系统封禁所有文章
+	// PublishStatusSuccess 0:成功
+	PublishStatusSuccess PublishStatus = iota
+	// PublishStatusPublishing 1:发布中
+	PublishStatusPublishing
+	// PublishStatusOriginalFail 2:原创失败
+	PublishStatusOriginalFail
+	// PublishStatusFail 3:常规失败
+	PublishStatusFail
+	// PublishStatusAuditRefused 4:平台审核不通过
+	PublishStatusAuditRefused
+	// PublishStatusUserDeleted 5:成功后用户删除所有文章
+	PublishStatusUserDeleted
+	// PublishStatusSystemBanned 6:成功后系统封禁所有文章
+	PublishStatusSystemBanned
 )
 
+// FreePublish 发布能力
 type FreePublish struct {
 	*context.Context
 }
@@ -97,6 +105,7 @@ type PublishArticleItem struct {
 	ArticleURL string `json:"article_url"` // 当发布状态为0时（即成功）时，返回图文的永久链接
 }
 
+// SelectStatus 发布状态轮询接口
 func (freePublish *FreePublish) SelectStatus(publishID string) (list *PublishStatusList, err error) {
 	accessToken, err := freePublish.GetAccessToken()
 	if err != nil {
@@ -152,12 +161,12 @@ type Article struct {
 	Author             string `json:"author"`                // 作者
 	Digest             string `json:"digest"`                // 图文消息的摘要，仅有单图文消息才有摘要，多图文此处为空
 	Content            string `json:"content"`               // 图文消息的具体内容，支持HTML标签，必须少于2万字符，小于1M，且此处会去除JS
-	ContentSourceUrl   string `json:"content_source_url"`    // 图文消息的原文地址，即点击“阅读原文”后的URL
-	ThumbMediaId       string `json:"thumb_media_id"`        // 图文消息的封面图片素材id（一定是永久MediaID）
+	ContentSourceURL   string `json:"content_source_url"`    // 图文消息的原文地址，即点击“阅读原文”后的URL
+	ThumbMediaID       string `json:"thumb_media_id"`        // 图文消息的封面图片素材id（一定是永久MediaID）
 	ShowCoverPic       uint   `json:"show_cover_pic"`        // 是否显示封面，0为false，即不显示，1为true，即显示(默认)
 	NeedOpenComment    uint   `json:"need_open_comment"`     // 是否打开评论，0不打开(默认)，1打开
 	OnlyFansCanComment uint   `json:"only_fans_can_comment"` // 是否粉丝才可评论，0所有人可评论(默认)，1粉丝才可评论
-	Url                string `json:"url"`                   // 图文消息的URL
+	URL                string `json:"url"`                   // 图文消息的URL
 	IsDeleted          bool   `json:"is_deleted"`            // 该图文是否被删除
 }
 
