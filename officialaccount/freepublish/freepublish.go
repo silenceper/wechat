@@ -62,8 +62,9 @@ func (freePublish *FreePublish) Publish(mediaID string) (publishID string, err e
 	}
 	req.MediaID = mediaID
 
+	var response []byte
 	uri := fmt.Sprintf("%s?access_token=%s", publishURL, accessToken)
-	response, err := util.PostJSON(uri, req)
+	response, err = util.PostJSON(uri, req)
 	if err != nil {
 		return
 	}
@@ -72,14 +73,11 @@ func (freePublish *FreePublish) Publish(mediaID string) (publishID string, err e
 		util.CommonError
 		PublishID string `json:"publish_id"`
 	}
-	err = json.Unmarshal(response, &res)
+	err = util.DecodeWithError(response, &res, "SubmitFreePublish")
 	if err != nil {
-		return
+		return "", err
 	}
-	if res.ErrCode != 0 {
-		err = fmt.Errorf("UploadImage error : errcode=%v , errmsg=%v", res.ErrCode, res.ErrMsg)
-		return
-	}
+
 	publishID = res.PublishID
 	return
 }
@@ -106,10 +104,10 @@ type PublishArticleItem struct {
 }
 
 // SelectStatus 发布状态轮询接口
-func (freePublish *FreePublish) SelectStatus(publishID string) (list *PublishStatusList, err error) {
+func (freePublish *FreePublish) SelectStatus(publishID string) (list PublishStatusList, err error) {
 	accessToken, err := freePublish.GetAccessToken()
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	var req struct {
@@ -117,23 +115,21 @@ func (freePublish *FreePublish) SelectStatus(publishID string) (list *PublishSta
 	}
 	req.PublishID = publishID
 
+	var response []byte
 	uri := fmt.Sprintf("%s?access_token=%s", selectStateURL, accessToken)
-	responseBytes, err := util.PostJSON(uri, req)
+	response, err = util.PostJSON(uri, req)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	var res PublishStatusList
-	err = json.Unmarshal(responseBytes, &res)
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
+	// 返回结果不包含失败信息，直接解码
+	err = json.Unmarshal(response, &list)
+	return
 }
 
 // Delete 删除发布。!!!此操作不可逆，请谨慎操作!!!
-func (freePublish *FreePublish) Delete(articleID string) (err error) {
+// index 要删除的文章在图文消息中的位置，第一篇编号为1，该字段不填或填0会删除全部文章
+func (freePublish *FreePublish) Delete(articleID string, index uint) (err error) {
 	accessToken, err := freePublish.GetAccessToken()
 	if err != nil {
 		return err
@@ -144,10 +140,11 @@ func (freePublish *FreePublish) Delete(articleID string) (err error) {
 		Index     uint   `json:"index"`
 	}
 	req.ArticleID = articleID
-	req.Index = 1
+	req.Index = index
 
+	var response []byte
 	uri := fmt.Sprintf("%s?access_token=%s", deleteURL, accessToken)
-	response, err := util.PostJSON(uri, req)
+	response, err = util.PostJSON(uri, req)
 	if err != nil {
 		return err
 	}
@@ -171,10 +168,10 @@ type Article struct {
 }
 
 // First 通过 article_id 获取已发布文章
-func (freePublish *FreePublish) First(articleID string) (list []*Article, err error) {
+func (freePublish *FreePublish) First(articleID string) (list []Article, err error) {
 	accessToken, err := freePublish.GetAccessToken()
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	var req struct {
@@ -182,26 +179,28 @@ func (freePublish *FreePublish) First(articleID string) (list []*Article, err er
 	}
 	req.ArticleID = articleID
 
+	var response []byte
 	uri := fmt.Sprintf("%s?access_token=%s", firstArticleURL, accessToken)
-	responseBytes, err := util.PostJSON(uri, req)
+	response, err = util.PostJSON(uri, req)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	var res struct {
-		NewsItem []*Article `json:"news_item"`
+		util.CommonError
+		NewsItem []Article `json:"news_item"`
 	}
-	err = json.Unmarshal(responseBytes, &res)
+	err = util.DecodeWithError(response, &res, "FirstFreePublish")
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	return res.NewsItem, nil
+	list = res.NewsItem
+	return
 }
 
 // ArticleList 发布列表
 type ArticleList struct {
-	util.CommonError
 	TotalCount int64             `json:"total_count"` // 成功发布素材的总数
 	ItemCount  int64             `json:"item_count"`  // 本次调用获取的素材的数量
 	Item       []ArticleListItem `json:"item"`
@@ -243,6 +242,7 @@ func (freePublish *FreePublish) Paginate(offset, count int64, noReturnContent bo
 		return
 	}
 
-	err = util.DecodeWithError(response, &list, "BatchGetFreePublish")
+	// 返回结果不包含失败信息，直接解码
+	err = json.Unmarshal(response, &list)
 	return
 }
