@@ -242,6 +242,6 @@ func (freePublish *FreePublish) Paginate(offset, count int64, noReturnContent bo
 		return
 	}
 
-	err = util.DecodeWithError(response, &list, "PaginateDraft")
+	err = util.DecodeWithError(response, &list, "PaginateFreePublish")
 	return
 }
