@@ -1,7 +1,6 @@
 package freepublish
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/silenceper/wechat/v2/officialaccount/context"
@@ -75,7 +74,7 @@ func (freePublish *FreePublish) Publish(mediaID string) (publishID string, err e
 	}
 	err = util.DecodeWithError(response, &res, "SubmitFreePublish")
 	if err != nil {
-		return "", err
+		return
 	}
 
 	publishID = res.PublishID
@@ -84,6 +83,7 @@ func (freePublish *FreePublish) Publish(mediaID string) (publishID string, err e
 
 // PublishStatusList 发布任务状态列表
 type PublishStatusList struct {
+	util.CommonError
 	PublishID     string               `json:"publish_id"`     // 发布任务id
 	PublishStatus PublishStatus        `json:"publish_status"` // 发布状态
 	ArticleID     string               `json:"article_id"`     // 当发布状态为0时（即成功）时，返回图文的 article_id，可用于“客服消息”场景
@@ -122,8 +122,7 @@ func (freePublish *FreePublish) SelectStatus(publishID string) (list PublishStat
 		return
 	}
 
-	// 返回结果不包含失败信息，直接解码
-	err = json.Unmarshal(response, &list)
+	err = util.DecodeWithError(response, &list, "SelectStatusFreePublish")
 	return
 }
 
@@ -201,6 +200,7 @@ func (freePublish *FreePublish) First(articleID string) (list []Article, err err
 
 // ArticleList 发布列表
 type ArticleList struct {
+	util.CommonError
 	TotalCount int64             `json:"total_count"` // 成功发布素材的总数
 	ItemCount  int64             `json:"item_count"`  // 本次调用获取的素材的数量
 	Item       []ArticleListItem `json:"item"`
@@ -242,7 +242,6 @@ func (freePublish *FreePublish) Paginate(offset, count int64, noReturnContent bo
 		return
 	}
 
-	// 返回结果不包含失败信息，直接解码
-	err = json.Unmarshal(response, &list)
+	err = util.DecodeWithError(response, &list, "PaginateDraft")
 	return
 }
