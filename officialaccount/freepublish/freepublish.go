@@ -49,7 +49,7 @@ func NewFreePublish(ctx *context.Context) *FreePublish {
 
 // Publish 发布接口。需要先将图文素材以草稿的形式保存（见“草稿箱/新建草稿”，
 // 如需从已保存的草稿中选择，见“草稿箱/获取草稿列表”），选择要发布的草稿 media_id 进行发布
-func (freePublish *FreePublish) Publish(mediaID string) (publishID string, err error) {
+func (freePublish *FreePublish) Publish(mediaID string) (publishID int64, err error) {
 	var accessToken string
 	accessToken, err = freePublish.GetAccessToken()
 	if err != nil {
@@ -70,7 +70,7 @@ func (freePublish *FreePublish) Publish(mediaID string) (publishID string, err e
 
 	var res struct {
 		util.CommonError
-		PublishID string `json:"publish_id"`
+		PublishID int64 `json:"publish_id"`
 	}
 	err = util.DecodeWithError(response, &res, "SubmitFreePublish")
 	if err != nil {
@@ -84,7 +84,7 @@ func (freePublish *FreePublish) Publish(mediaID string) (publishID string, err e
 // PublishStatusList 发布任务状态列表
 type PublishStatusList struct {
 	util.CommonError
-	PublishID     string               `json:"publish_id"`     // 发布任务id
+	PublishID     int64                `json:"publish_id"`     // 发布任务id
 	PublishStatus PublishStatus        `json:"publish_status"` // 发布状态
 	ArticleID     string               `json:"article_id"`     // 当发布状态为0时（即成功）时，返回图文的 article_id，可用于“客服消息”场景
 	ArticleDetail PublishArticleDetail `json:"article_detail"` // 发布任务文章成功状态详情
@@ -104,14 +104,14 @@ type PublishArticleItem struct {
 }
 
 // SelectStatus 发布状态轮询接口
-func (freePublish *FreePublish) SelectStatus(publishID string) (list PublishStatusList, err error) {
+func (freePublish *FreePublish) SelectStatus(publishID int64) (list PublishStatusList, err error) {
 	accessToken, err := freePublish.GetAccessToken()
 	if err != nil {
 		return
 	}
 
 	var req struct {
-		PublishID string `json:"publish_id"`
+		PublishID int64 `json:"publish_id"`
 	}
 	req.PublishID = publishID
 
@@ -126,8 +126,9 @@ func (freePublish *FreePublish) SelectStatus(publishID string) (list PublishStat
 	return
 }
 
-// Delete 删除发布。!!!此操作不可逆，请谨慎操作!!!
+// Delete 删除发布。
 // index 要删除的文章在图文消息中的位置，第一篇编号为1，该字段不填或填0会删除全部文章
+// !!!此操作不可逆，请谨慎操作!!!删除后微信公众号后台仍然会有记录!!!
 func (freePublish *FreePublish) Delete(articleID string, index uint) (err error) {
 	accessToken, err := freePublish.GetAccessToken()
 	if err != nil {

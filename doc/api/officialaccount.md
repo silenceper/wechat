@@ -189,7 +189,7 @@
 | ------------------------------ | -------- | ------------------------------- | ---------- | --------------------------------------- |
 | 发布接口                       | POST     | /cgi-bin/freepublish/submit     | YES        | (freePublish *FreePublish) Publish      |
 | 发布状态轮询接口               | POST     | /cgi-bin/freepublish/get        | YES        | (freePublish *FreePublish) SelectStatus |
-| 事件推送发布结果               |          |                                 | NO         |                                         |
+| 事件推送发布结果               |          |                                 | YES         | EventPublishJobFinish                  |
 | 删除发布                       | POST     | /cgi-bin/freepublish/delete     | YES        | (freePublish *FreePublish) Delete       |
 | 通过 article_id 获取已发布文章 | POST     | /cgi-bin/freepublish/getarticle | YES        | (freePublish *FreePublish) First        |
 | 获取成功发布列表               | POST     | /cgi-bin/freepublish/batchget   | YES        | (freePublish *FreePublish) Paginate     |
