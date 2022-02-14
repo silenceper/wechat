@@ -132,6 +132,8 @@
 
 #### 群发任务管理
 
+[官方文档](https://developers.weixin.qq.com/doc/offiaccount/Shopping_Guide/task-account/shopping-guide.addGuideMassendJob.html)
+
 | 名称                 | 请求方式 | URL                                   | 是否已实现 | 使用方法 |
 | -------------------- | -------- | ------------------------------------- | ---------- | -------- |
 | 添加群发任务         | POST     | /cgi-bin/guide/addguidemassendjob     | NO         |          |
@@ -155,6 +157,43 @@
 | 获取jssdk需要的配置参数                                      | GET      | /cgi-bin/ticket/getticket                           | YES        | (js *Js) GetConfig                  |
 
 ## 素材管理
+
+## 草稿箱
+
+[官方文档](https://developers.weixin.qq.com/doc/offiaccount/Draft_Box/Add_draft.html)
+
+| 名称                       | 请求方式 | URL                                                          | 是否已实现 | 使用方法                     |
+| -------------------------- | -------- | ------------------------------------------------------------ | ---------- | ---------------------------- |
+| 新建草稿                   | POST     | /cgi-bin/draft/add                                           | YES        | (draft *Draft) AddDraft      |
+| 获取草稿                   | POST     | /cgi-bin/draft/get                                           | YES        | (draft *Draft) GetDraft      |
+| 删除草稿                   | POST     | /cgi-bin/draft/delete                                        | YES        | (draft *Draft) DeleteDraft   |
+| 修改草稿                   | POST     | /cgi-bin/draft/update                                        | YES        | (draft *Draft) UpdateDraft   |
+| 获取草稿总数               | GET      | /cgi-bin/draft/count                                         | YES        | (draft *Draft) CountDraft    |
+| 获取草稿列表               | POST     | /cgi-bin/draft/batchget                                      | YES        | (draft *Draft) PaginateDraft |
+| MP端开关（仅内测期间使用） | POST     | /cgi-bin/draft/switch<br />/cgi-bin/draft/switch?checkonly=1 | NO         |                              |
+
+
+
+## 发布能力
+
+[官方文档](https://developers.weixin.qq.com/doc/offiaccount/Publish/Publish.html)
+
+说明：「发表记录」包括群发和发布。
+
+注意：该接口，只能处理 "发布" 相关的信息，无法操作和获取 "群发" 相关内容！！[官方回复](https://developers.weixin.qq.com/community/develop/doc/0002a4fb2109d8f7a91d421c556c00)
+
+- 群发：主动推送给粉丝，历史消息可看，被搜一搜收录，可以限定部分的粉丝接收到。
+- 发布：不会主动推给粉丝，历史消息列表看不到，但是是公开给所有人的文章。也不会占用群发的次数。每天可以发布多篇内容。可以用于自动回复、自定义菜单、页面模板和话题中，发布成功时会生成一个永久链接。
+
+| 名称                           | 请求方式 | URL                             | 是否已实现 | 使用方法                                |
+| ------------------------------ | -------- | ------------------------------- | ---------- | --------------------------------------- |
+| 发布接口                       | POST     | /cgi-bin/freepublish/submit     | YES        | (freePublish *FreePublish) Publish      |
+| 发布状态轮询接口               | POST     | /cgi-bin/freepublish/get        | YES        | (freePublish *FreePublish) SelectStatus |
+| 事件推送发布结果               |          |                                 | YES         | EventPublishJobFinish                  |
+| 删除发布                       | POST     | /cgi-bin/freepublish/delete     | YES        | (freePublish *FreePublish) Delete       |
+| 通过 article_id 获取已发布文章 | POST     | /cgi-bin/freepublish/getarticle | YES        | (freePublish *FreePublish) First        |
+| 获取成功发布列表               | POST     | /cgi-bin/freepublish/batchget   | YES        | (freePublish *FreePublish) Paginate     |
+
 
 ## 图文消息留言管理
 
