@@ -144,6 +144,7 @@ type ReceptionistStatusChangeEvent struct {
 	Event   struct {
 		EventType          string `json:"event_type"`      // 事件类型。此处固定为：servicer_status_change
 		ReceptionistUserID string `json:"servicer_userid"` // 客服人员userid
+		OpenKFID           string `json:"open_kfid"`       // 客服帐号ID
 		Status             uint32 `json:"status"`          // 状态类型。1-接待中 2-停止接待
 	} `json:"event"`
 }
@@ -159,5 +160,6 @@ type SessionStatusChangeEvent struct {
 		ChangeType            uint32 `json:"change_type"`         // 变更类型。1-从接待池接入会话 2-转接会话 3-结束会话
 		OldReceptionistUserID string `json:"old_servicer_userid"` // 老的客服人员userid。仅change_type为2和3有值
 		NewReceptionistUserID string `json:"new_servicer_userid"` // 新的客服人员userid。仅change_type为1和2有值
+		MsgCode               string `json:"msg_code"`            // 用于发送事件响应消息的code，仅change_type为1和3时，会返回该字段。可用该msg_code调用发送事件响应消息接口给客户发送回复语或结束语。
 	} `json:"event"` // 事件消息
 }

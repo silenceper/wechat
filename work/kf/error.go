@@ -28,7 +28,7 @@ const (
 	// SDKDecryptMSGFailed 错误码：40016
 	SDKDecryptMSGFailed Error = "消息解密失败"
 	// SDKMediaIDExceedMinLength 错误码：40058
-	SDKMediaIDExceedMinLength Error = "media_id 小于最小长度 1"
+	SDKMediaIDExceedMinLength Error = "不合法的参数, 请参照具体 API 接口说明进行传参"
 	// SDKContentContainsSensitiveInformation 错误码：40201
 	SDKContentContainsSensitiveInformation Error = "当前客服账号由于涉及敏感信息，已被封禁，请联系企业微信客服处理"
 	// SDKAccessTokenMissing 错误码：41001

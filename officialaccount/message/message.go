@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 
 	"github.com/silenceper/wechat/v2/officialaccount/device"
+	"github.com/silenceper/wechat/v2/officialaccount/freepublish"
 )
 
 // MsgType 基本消息类型
@@ -19,60 +20,64 @@ const (
 	// MsgTypeText 表示文本消息
 	MsgTypeText MsgType = "text"
 	// MsgTypeImage 表示图片消息
-	MsgTypeImage = "image"
+	MsgTypeImage MsgType = "image"
 	// MsgTypeVoice 表示语音消息
-	MsgTypeVoice = "voice"
+	MsgTypeVoice MsgType = "voice"
 	// MsgTypeVideo 表示视频消息
-	MsgTypeVideo = "video"
+	MsgTypeVideo MsgType = "video"
 	// MsgTypeMiniprogrampage 表示小程序卡片消息
-	MsgTypeMiniprogrampage = "miniprogrampage"
+	MsgTypeMiniprogrampage MsgType = "miniprogrampage"
 	// MsgTypeShortVideo 表示短视频消息[限接收]
-	MsgTypeShortVideo = "shortvideo"
+	MsgTypeShortVideo MsgType = "shortvideo"
 	// MsgTypeLocation 表示坐标消息[限接收]
-	MsgTypeLocation = "location"
+	MsgTypeLocation MsgType = "location"
 	// MsgTypeLink 表示链接消息[限接收]
-	MsgTypeLink = "link"
+	MsgTypeLink MsgType = "link"
 	// MsgTypeMusic 表示音乐消息[限回复]
-	MsgTypeMusic = "music"
+	MsgTypeMusic MsgType = "music"
 	// MsgTypeNews 表示图文消息[限回复]
-	MsgTypeNews = "news"
+	MsgTypeNews MsgType = "news"
 	// MsgTypeTransfer 表示消息消息转发到客服
-	MsgTypeTransfer = "transfer_customer_service"
+	MsgTypeTransfer MsgType = "transfer_customer_service"
 	// MsgTypeEvent 表示事件推送消息
-	MsgTypeEvent = "event"
+	MsgTypeEvent MsgType = "event"
 )
 
 const (
 	// EventSubscribe 订阅
 	EventSubscribe EventType = "subscribe"
 	// EventUnsubscribe 取消订阅
-	EventUnsubscribe = "unsubscribe"
+	EventUnsubscribe EventType = "unsubscribe"
 	// EventScan 用户已经关注公众号，则微信会将带场景值扫描事件推送给开发者
-	EventScan = "SCAN"
+	EventScan EventType = "SCAN"
 	// EventLocation 上报地理位置事件
-	EventLocation = "LOCATION"
+	EventLocation EventType = "LOCATION"
 	// EventClick 点击菜单拉取消息时的事件推送
-	EventClick = "CLICK"
+	EventClick EventType = "CLICK"
 	// EventView 点击菜单跳转链接时的事件推送
-	EventView = "VIEW"
+	EventView EventType = "VIEW"
 	// EventScancodePush 扫码推事件的事件推送
-	EventScancodePush = "scancode_push"
+	EventScancodePush EventType = "scancode_push"
 	// EventScancodeWaitmsg 扫码推事件且弹出“消息接收中”提示框的事件推送
-	EventScancodeWaitmsg = "scancode_waitmsg"
+	EventScancodeWaitmsg EventType = "scancode_waitmsg"
 	// EventPicSysphoto 弹出系统拍照发图的事件推送
-	EventPicSysphoto = "pic_sysphoto"
+	EventPicSysphoto EventType = "pic_sysphoto"
 	// EventPicPhotoOrAlbum 弹出拍照或者相册发图的事件推送
-	EventPicPhotoOrAlbum = "pic_photo_or_album"
+	EventPicPhotoOrAlbum EventType = "pic_photo_or_album"
 	// EventPicWeixin 弹出微信相册发图器的事件推送
-	EventPicWeixin = "pic_weixin"
+	EventPicWeixin EventType = "pic_weixin"
 	// EventLocationSelect 弹出地理位置选择器的事件推送
-	EventLocationSelect = "location_select"
+	EventLocationSelect EventType = "location_select"
 	// EventTemplateSendJobFinish 发送模板消息推送通知
-	EventTemplateSendJobFinish = "TEMPLATESENDJOBFINISH"
+	EventTemplateSendJobFinish EventType = "TEMPLATESENDJOBFINISH"
 	// EventMassSendJobFinish 群发消息推送通知
-	EventMassSendJobFinish = "MASSSENDJOBFINISH"
+	EventMassSendJobFinish EventType = "MASSSENDJOBFINISH"
 	// EventWxaMediaCheck 异步校验图片/音频是否含有违法违规内容推送事件
-	EventWxaMediaCheck = "wxa_media_check"
+	EventWxaMediaCheck EventType = "wxa_media_check"
+	// EventSubscribeMsgPopupEvent 订阅通知事件推送
+	EventSubscribeMsgPopupEvent EventType = "subscribe_msg_popup_event"
+	// EventPublishJobFinish 发布任务完成
+	EventPublishJobFinish EventType = "PUBLISHJOBFINISH"
 )
 
 const (
@@ -81,13 +86,13 @@ const (
 	// InfoTypeVerifyTicket 返回ticket
 	InfoTypeVerifyTicket InfoType = "component_verify_ticket"
 	// InfoTypeAuthorized 授权
-	InfoTypeAuthorized = "authorized"
+	InfoTypeAuthorized InfoType = "authorized"
 	// InfoTypeUnauthorized 取消授权
-	InfoTypeUnauthorized = "unauthorized"
+	InfoTypeUnauthorized InfoType = "unauthorized"
 	// InfoTypeUpdateAuthorized 更新授权
-	InfoTypeUpdateAuthorized = "updateauthorized"
+	InfoTypeUpdateAuthorized InfoType = "updateauthorized"
 	// InfoTypeNotifyThirdFasterRegister 注册审核事件推送
-	InfoTypeNotifyThirdFasterRegister = "notify_third_fasteregister"
+	InfoTypeNotifyThirdFasterRegister InfoType = "notify_third_fasteregister"
 )
 
 // MixMessage 存放所有微信发送过来的消息和事件
@@ -144,6 +149,25 @@ type MixMessage struct {
 		Poiname   string  `xml:"Poiname"`
 	}
 
+	SubscribeMsgPopupEvent []struct {
+		List SubscribeMsgPopupEvent `xml:"List"`
+	} `xml:"SubscribeMsgPopupEvent"`
+
+	// 事件相关：发布能力
+	PublishEventInfo struct {
+		PublishID     int64                     `xml:"publish_id"`     // 发布任务id
+		PublishStatus freepublish.PublishStatus `xml:"publish_status"` // 发布状态
+		ArticleID     string                    `xml:"article_id"`     // 当发布状态为0时（即成功）时，返回图文的 article_id，可用于“客服消息”场景
+		ArticleDetail struct {
+			Count uint `xml:"count"` // 文章数量
+			Item  []struct {
+				Index      uint   `xml:"idx"`         // 文章对应的编号
+				ArticleURL string `xml:"article_url"` // 图文的永久链接
+			} `xml:"item"`
+		} `xml:"article_detail"` // 当发布状态为0时（即成功）时，返回内容
+		FailIndex []uint `xml:"fail_idx"` // 当发布状态为2或4时，返回不通过的文章编号，第一篇为 1；其他发布状态则为空
+	} `xml:"PublishEventInfo"`
+
 	// 第三方平台相关
 	InfoType                     InfoType `xml:"InfoType"`
 	AppID                        string   `xml:"AppId"`
@@ -181,6 +205,13 @@ type MixMessage struct {
 
 	// 设备相关
 	device.MsgDevice
+}
+
+// SubscribeMsgPopupEvent 订阅通知事件推送的消息体
+type SubscribeMsgPopupEvent struct {
+	TemplateID            string `xml:"TemplateId"`
+	SubscribeStatusString string `xml:"SubscribeStatusString"`
+	PopupScene            int    `xml:"PopupScene"`
 }
 
 // EventPic 发图事件推送

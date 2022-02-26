@@ -13,6 +13,8 @@ const (
 	code2SessionURL = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
 
 	checkEncryptedDataURL = "https://api.weixin.qq.com/wxa/business/checkencryptedmsg?access_token=%s"
+
+	getPhoneNumber = "https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=%s"
 )
 
 // Auth 登录/用户信息
@@ -86,6 +88,45 @@ func (auth *Auth) CheckEncryptedDataContext(ctx context2.Context, encryptedMsgHa
 		return
 	}
 	if err = util.DecodeWithError(response, &result, "CheckEncryptedDataAuth"); err != nil {
+		return
+	}
+	return
+}
+
+// GetPhoneNumberResponse 新版获取用户手机号响应结构体
+type GetPhoneNumberResponse struct {
+	util.CommonError
+
+	PhoneInfo PhoneInfo `json:"phone_info"`
+}
+
+// PhoneInfo 获取用户手机号内容
+type PhoneInfo struct {
+	PhoneNumber     string `json:"phoneNumber"`     // 用户绑定的手机号
+	PurePhoneNumber string `json:"purePhoneNumber"` // 没有区号的手机号
+	CountryCode     string `json:"countryCode"`     // 区号
+	WaterMark       struct {
+		Timestamp int64  `json:"timestamp"`
+		AppID     string `json:"appid"`
+	} `json:"watermark"` // 数据水印
+}
+
+// GetPhoneNumber 小程序通过code获取用户手机号
+func (auth *Auth) GetPhoneNumber(code string) (result GetPhoneNumberResponse, err error) {
+	var response []byte
+	var (
+		at string
+	)
+	if at, err = auth.GetAccessToken(); err != nil {
+		return
+	}
+	body := map[string]interface{}{
+		"code": code,
+	}
+	if response, err = util.PostJSON(fmt.Sprintf(getPhoneNumber, at), body); err != nil {
+		return
+	}
+	if err = util.DecodeWithError(response, &result, "phonenumber.getPhoneNumber"); err != nil {
 		return
 	}
 	return

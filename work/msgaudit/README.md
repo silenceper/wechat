@@ -34,13 +34,13 @@ import (
 func main() {
 	//初始化客户端
 	wechatClient := wechat.NewWechat()
-	
+
 	workClient := wechatClient.GetWork(&config.Config{
 		CorpID:        "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 		CorpSecret:    "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 		RasPrivateKey: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 	})
-	
+
 	client, err := workClient.GetMsgAudit()
 	if err != nil {
 		fmt.Printf("SDK 初始化失败：%v \n", err)
@@ -64,13 +64,14 @@ func main() {
 
 		if chatInfo.Type == "image" {
 			image, _ := chatInfo.GetImageMessage()
-			sdkfileid := image.Image.SdkFileId
+			sdkFileID := image.Image.SdkFileID
 
 			isFinish := false
 			buffer := bytes.Buffer{}
+			indexBuf := ""
 			for !isFinish {
 				//获取媒体数据
-				mediaData, err := client.GetMediaData("", sdkfileid, "", "", 5)
+				mediaData, err := client.GetMediaData(indexBuf, sdkFileID, "", "", 5)
 				if err != nil {
 					fmt.Printf("媒体数据拉取失败：%v \n", err)
 					return
@@ -79,6 +80,7 @@ func main() {
 				if mediaData.IsFinish {
 					isFinish = mediaData.IsFinish
 				}
+				indexBuf = mediaData.OutIndexBuf
 			}
 			filePath, _ := os.Getwd()
 			filePath = path.Join(filePath, "test.png")
@@ -90,7 +92,7 @@ func main() {
 			break
 		}
 	}
-	
+
 	//释放SDK实例
 	client.Free()
 }

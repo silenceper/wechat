@@ -33,8 +33,10 @@ const (
 // ULParams 请求参数
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/url-link/urllink.generate.html#请求参数
 type ULParams struct {
-	Path           string      `json:"path"`
-	Query          string      `json:"query"`
+	Path  string `json:"path"`
+	Query string `json:"query"`
+	// envVersion 要打开的小程序版本。正式版为 "release"，体验版为 "trial"，开发版为 "develop"
+	EnvVersion     string      `json:"env_version,omitempty"`
 	IsExpire       bool        `json:"is_expire"`
 	ExpireType     TExpireType `json:"expire_type"`
 	ExpireTime     int64       `json:"expire_time"`
