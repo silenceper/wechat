@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	fastregisterweappURL = "https://api.weixin.qq.com/cgi-bin/component/fastregisterweapp"
+	fastregisterweappURL         = "https://api.weixin.qq.com/cgi-bin/component/fastregisterweapp"
+	fastregisterpersonalweappURL = "https://api.weixin.qq.com/wxa/component/fastregisterpersonalweapp"
 )
 
 // Component 快速创建小程序
@@ -21,7 +22,7 @@ func NewComponent(opContext *openContext.Context) *Component {
 	return &Component{opContext}
 }
 
-// RegisterMiniProgramParam 快速注册小程序参数
+// RegisterMiniProgramParam 快速注册企业小程序参数
 type RegisterMiniProgramParam struct {
 	Name               string `json:"name"`                 // 企业名
 	Code               string `json:"code"`                 // 企业代码
@@ -31,7 +32,7 @@ type RegisterMiniProgramParam struct {
 	ComponentPhone     string `json:"component_phone"`      // 第三方联系电话（方便法人与第三方联系）
 }
 
-// RegisterMiniProgram 快速创建小程
+// RegisterMiniProgram 快速创建企业小程
 // reference: https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Fast_Registration_Interface_document.html
 func (component *Component) RegisterMiniProgram(param *RegisterMiniProgramParam) error {
 	componentAK, err := component.GetComponentAccessToken()
@@ -66,4 +67,47 @@ func (component *Component) GetRegistrationStatus(param *GetRegistrationStatusPa
 		return err
 	}
 	return util.DecodeWithCommonError(data, "component/fastregisterweapp?action=search")
+}
+
+// RegisterPersonMiniProgramParam 快速注册个人小程序参数
+type RegisterPersonMiniProgramParam struct {
+	Idname         string `json:"idname"`          // 个人用户名字
+	Wxuser         string `json:"wxuser"`          // 个人用户微信号
+	ComponentPhone string `json:"component_phone"` // 第三方联系电话
+}
+
+// RegisterPersonMiniProgram 快速注册个人小程序参数
+func (component *Component) RegisterPersonMiniProgram(param *RegisterPersonMiniProgramParam) error {
+	componentAK, err := component.GetComponentAccessToken()
+	if err != nil {
+		return nil
+	}
+	url := fmt.Sprintf(fastregisterpersonalweappURL+"?action=create&component_access_token=%s", componentAK)
+	data, err := util.PostJSON(url, param)
+	if err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(data, "component/fastregisterpersonalweapp?action=create")
+}
+
+// GetPersonRegistrationStatusParam 查询创建任务状态接口详情
+type GetPersonRegistrationStatusParam struct {
+	Name               string `json:"name"`                 // 企业名
+	LegalPersonaWechat string `json:"legal_persona_wechat"` // 法人微信号
+	LegalPersonaName   string `json:"legal_persona_name"`   // 法人姓名（绑定银行卡）
+
+}
+
+// GetPersonRegistrationStatus 查询创建任务状态接口详情
+func (component *Component) GetPersonRegistrationStatus(param *GetPersonRegistrationStatusParam) error {
+	componentAK, err := component.GetComponentAccessToken()
+	if err != nil {
+		return nil
+	}
+	url := fmt.Sprintf(fastregisterpersonalweappURL+"?action=query&component_access_token=%s", componentAK)
+	data, err := util.PostJSON(url, param)
+	if err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(data, "component/fastregisterweapp?action=query")
 }
