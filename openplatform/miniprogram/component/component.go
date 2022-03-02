@@ -69,14 +69,14 @@ func (component *Component) GetRegistrationStatus(param *GetRegistrationStatusPa
 	return util.DecodeWithCommonError(data, "component/fastregisterweapp?action=search")
 }
 
-// 快速注册个人小程序参数
+// RegisterPersonMiniProgramParam 快速注册个人小程序参数
 type RegisterPersonMiniProgramParam struct {
 	Idname         string `json:"idname"`          // 个人用户名字
 	Wxuser         string `json:"wxuser"`          // 个人用户微信号
 	ComponentPhone string `json:"component_phone"` // 第三方联系电话
 }
 
-// 快速注册个人小程序参数
+// RegisterPersonMiniProgram 快速注册个人小程序参数
 func (component *Component) RegisterPersonMiniProgram(param *RegisterPersonMiniProgramParam) error {
 	componentAK, err := component.GetComponentAccessToken()
 	if err != nil {
@@ -90,7 +90,7 @@ func (component *Component) RegisterPersonMiniProgram(param *RegisterPersonMiniP
 	return util.DecodeWithCommonError(data, "component/fastregisterpersonalweapp?action=create")
 }
 
-// 查询创建任务状态接口详情
+// GetPersonRegistrationStatusParam 查询创建任务状态接口详情
 type GetPersonRegistrationStatusParam struct {
 	Name               string `json:"name"`                 // 企业名
 	LegalPersonaWechat string `json:"legal_persona_wechat"` // 法人微信号
@@ -98,7 +98,7 @@ type GetPersonRegistrationStatusParam struct {
 
 }
 
-// 查询创建任务状态接口详情
+// GetPersonRegistrationStatus 查询创建任务状态接口详情
 func (component *Component) GetPersonRegistrationStatus(param *GetPersonRegistrationStatusParam) error {
 	componentAK, err := component.GetComponentAccessToken()
 	if err != nil {
