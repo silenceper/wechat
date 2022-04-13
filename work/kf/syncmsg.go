@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	//获取消息
+	// 获取消息
 	syncMsgAddr = "https://qyapi.weixin.qq.com/cgi-bin/kf/sync_msg?access_token=%s"
 )
 

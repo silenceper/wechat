@@ -43,7 +43,7 @@ func NewRedis(opts *RedisOpts, dialOpts ...redis.DialOption) *Redis {
 			return err
 		},
 	}
-	return &Redis{pool}
+	return &Redis{conn: pool}
 }
 
 // SetRedisPool 设置redis连接池

@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	//发送消息
+	// 发送消息
 	sendMsgAddr = "https://qyapi.weixin.qq.com/cgi-bin/kf/send_msg?access_token=%s"
 )
 

@@ -1,11 +1,11 @@
 # 微信开放平台
 
-
 [官方文档](https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Third_party_platform_appid.html)
 
 ## 快速入门
 
 ### 服务端处理
+
 ```go
 wc := wechat.NewWechat()
 memory := cache.NewMemory()
@@ -52,7 +52,9 @@ server.Send()
 
 
 ```
+
 ### 待授权处理消息
+
 ```go
 
 //授权的第三方公众号的appID
