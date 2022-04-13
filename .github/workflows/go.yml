@@ -36,9 +36,9 @@ jobs:
           - 11211:11211
 
     # strategy set
-        strategy:
-          matrix:
-            go: ["1.15", "1.16", "1.17"]
+    strategy:
+      matrix:
+        go: ["1.15", "1.16", "1.17"]
 
     steps:
       - uses: actions/checkout@v2
