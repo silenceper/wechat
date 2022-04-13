@@ -34,12 +34,18 @@ jobs:
         image: memcached
         ports:
           - 11211:11211
+
+    # strategy set
+        strategy:
+          matrix:
+            go: ["1.15", "1.16", "1.17"]
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
         with:
-          go-version: ^1.13
+          go-version: ${{ matrix.go }}
         id: go
       - name: Test
         run: go test -v -race ./...
