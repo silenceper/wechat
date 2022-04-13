@@ -45,9 +45,8 @@ func (r *GoRedis) Get(key string) interface{} {
 }
 
 // Set 设置一个值
-func (r *GoRedis) Set(key string, val interface{}, timeout time.Duration) (err error) {
-	err = r.conn.SetEX(r.ctx, key, val, timeout).Err()
-	return
+func (r *GoRedis) Set(key string, val interface{}, timeout time.Duration) error {
+	return r.conn.SetEX(r.ctx, key, val, timeout).Err()
 }
 
 // IsExist 判断key是否存在
