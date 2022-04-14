@@ -51,7 +51,7 @@ const (
 	SDKApiNotOpen Error = "API 功能没有被开启"
 )
 
-//Error 输出错误信息
+// Error 输出错误信息
 func (r Error) Error() string {
 	return reflect.ValueOf(r).String()
 }
@@ -85,7 +85,7 @@ func NewSDKErr(code int64, msgList ...string) error {
 		return err
 	}
 
-	//返回未知的自定义错误
+	// 返回未知的自定义错误
 	if len(msgList) > 0 {
 		return Error(strings.Join(msgList, ","))
 	}

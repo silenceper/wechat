@@ -23,7 +23,7 @@ func NewClient(cfg *config.Config) (client *Client, err error) {
 		return nil, NewSDKErr(50001)
 	}
 
-	//初始化 AccessToken Handle
+	// 初始化 AccessToken Handle
 	defaultAkHandle := credential.NewWorkAccessToken(cfg.CorpID, cfg.CorpSecret, credential.CacheKeyWorkPrefix, cfg.Cache)
 	ctx := &context.Context{
 		Config:            cfg,

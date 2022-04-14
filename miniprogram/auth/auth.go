@@ -112,7 +112,7 @@ type PhoneInfo struct {
 }
 
 // GetPhoneNumber 小程序通过code获取用户手机号
-func (auth *Auth) GetPhoneNumber(code string) (result GetPhoneNumberResponse, err error) {
+func (auth *Auth) GetPhoneNumber(code string) (result *GetPhoneNumberResponse, err error) {
 	var response []byte
 	var (
 		at string

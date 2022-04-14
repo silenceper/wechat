@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	//添加客服账号
+	// 添加客服账号
 	accountAddAddr = "https://qyapi.weixin.qq.com/cgi-bin/kf/account/add?access_token=%s"
 	// 删除客服账号
 	accountDelAddr = "https://qyapi.weixin.qq.com/cgi-bin/kf/account/del?access_token=%s"
@@ -16,7 +16,7 @@ const (
 	accountUpdateAddr = "https://qyapi.weixin.qq.com/cgi-bin/kf/account/update?access_token=%s"
 	// 获取客服账号列表
 	accountListAddr = "https://qyapi.weixin.qq.com/cgi-bin/kf/account/list?access_token=%s"
-	//获取客服账号链接
+	// 获取客服账号链接
 	addContactWayAddr = "https://qyapi.weixin.qq.com/cgi-bin/kf/add_contact_way?access_token=%s"
 )
 

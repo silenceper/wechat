@@ -31,7 +31,7 @@ type SendMsgOnEventSchema struct {
 // 从接待池接入会话，用于发送非工作时间的提示语或超时未回复的提示语等	1条	48小时	文本	事件回调、转接会话接口
 // 结束会话，用于发送结束会话提示语或满意度评价等	1条	20秒	文本、菜单	事件回调、转接会话接口
 //
-//「进入会话事件」响应消息：
+// 「进入会话事件」响应消息：
 // 如果满足通过API下发欢迎语条件（条件为：1. 企业没有在管理端配置了原生欢迎语；2. 用户在过去48小时里未收过欢迎语，且未向该用户发过消息），则用户进入会话事件会额外返回一个welcome_code，开发者以此为凭据调用接口（填到该接口code参数），即可向客户发送客服欢迎语。
 func (r *Client) SendMsgOnEvent(options interface{}) (info SendMsgOnEventSchema, err error) {
 	var (

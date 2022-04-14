@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	//获取视频号绑定状态
+	// 获取视频号绑定状态
 	corpQualification = "https://qyapi.weixin.qq.com/cgi-bin/kf/get_corp_qualification?access_token=%s"
 )
 

@@ -1,15 +1,16 @@
 package cache
 
 import (
-	"encoding/json"
+	"context"
 	"time"
 
-	"github.com/gomodule/redigo/redis"
+	"github.com/go-redis/redis/v8"
 )
 
 // Redis .redis cache
 type Redis struct {
-	conn *redis.Pool
+	ctx  context.Context
+	conn redis.UniversalClient
 }
 
 // RedisOpts redis 连接属性
@@ -23,90 +24,49 @@ type RedisOpts struct {
 }
 
 // NewRedis 实例化
-func NewRedis(opts *RedisOpts, dialOpts ...redis.DialOption) *Redis {
-	pool := &redis.Pool{
-		MaxActive:   opts.MaxActive,
-		MaxIdle:     opts.MaxIdle,
-		IdleTimeout: time.Second * time.Duration(opts.IdleTimeout),
-		Dial: func() (redis.Conn, error) {
-			dialOpts = append(dialOpts, []redis.DialOption{
-				redis.DialDatabase(opts.Database),
-				redis.DialPassword(opts.Password),
-			}...)
-			return redis.Dial("tcp", opts.Host, dialOpts...)
-		},
-		TestOnBorrow: func(conn redis.Conn, t time.Time) error {
-			if time.Since(t) < time.Minute {
-				return nil
-			}
-			_, err := conn.Do("PING")
-			return err
-		},
-	}
-	return &Redis{pool}
-}
-
-// SetRedisPool 设置redis连接池
-func (r *Redis) SetRedisPool(pool *redis.Pool) {
-	r.conn = pool
+func NewRedis(ctx context.Context, opts *RedisOpts) *Redis {
+	conn := redis.NewUniversalClient(&redis.UniversalOptions{
+		Addrs:        []string{opts.Host},
+		DB:           opts.Database,
+		Password:     opts.Password,
+		IdleTimeout:  time.Second * time.Duration(opts.IdleTimeout),
+		MinIdleConns: opts.MaxIdle,
+	})
+	return &Redis{ctx: ctx, conn: conn}
 }
 
 // SetConn 设置conn
-func (r *Redis) SetConn(conn *redis.Pool) {
+func (r *Redis) SetConn(conn redis.UniversalClient) {
 	r.conn = conn
+}
+
+// SetRedisCtx 设置redis ctx 参数
+func (r *Redis) SetRedisCtx(ctx context.Context) {
+	r.ctx = ctx
 }
 
 // Get 获取一个值
 func (r *Redis) Get(key string) interface{} {
-	conn := r.conn.Get()
-	defer conn.Close()
-
-	var data []byte
-	var err error
-	if data, err = redis.Bytes(conn.Do("GET", key)); err != nil {
+	result, err := r.conn.Do(r.ctx, "GET", key).Result()
+	if err != nil {
 		return nil
 	}
-	var reply interface{}
-	if err = json.Unmarshal(data, &reply); err != nil {
-		return nil
-	}
-
-	return reply
+	return result
 }
 
 // Set 设置一个值
-func (r *Redis) Set(key string, val interface{}, timeout time.Duration) (err error) {
-	conn := r.conn.Get()
-	defer conn.Close()
-
-	var data []byte
-	if data, err = json.Marshal(val); err != nil {
-		return
-	}
-
-	_, err = conn.Do("SETEX", key, int64(timeout/time.Second), data)
-
-	return
+func (r *Redis) Set(key string, val interface{}, timeout time.Duration) error {
+	return r.conn.SetEX(r.ctx, key, val, timeout).Err()
 }
 
 // IsExist 判断key是否存在
 func (r *Redis) IsExist(key string) bool {
-	conn := r.conn.Get()
-	defer conn.Close()
+	result, _ := r.conn.Exists(r.ctx, key).Result()
 
-	a, _ := conn.Do("EXISTS", key)
-	i := a.(int64)
-	return i > 0
+	return result > 0
 }
 
 // Delete 删除
 func (r *Redis) Delete(key string) error {
-	conn := r.conn.Get()
-	defer conn.Close()
-
-	if _, err := conn.Do("DEL", key); err != nil {
-		return err
-	}
-
-	return nil
+	return r.conn.Del(r.ctx, key).Err()
 }
