@@ -15,6 +15,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
 	"github.com/silenceper/wechat/v2/miniprogram/urllink"
+	"github.com/silenceper/wechat/v2/miniprogram/urlscheme"
 	"github.com/silenceper/wechat/v2/miniprogram/werun"
 )
 
@@ -101,4 +102,9 @@ func (miniProgram *MiniProgram) GetURLLink() *urllink.URLLink {
 // GetShortLink 小程序短链接口
 func (miniProgram *MiniProgram) GetShortLink() *shortlink.ShortLink {
 	return shortlink.NewShortLink(miniProgram.ctx)
+}
+
+// GetSURLScheme 小程序URL Scheme接口
+func (miniProgram *MiniProgram) GetSURLScheme() *urlscheme.URLScheme {
+	return urlscheme.NewURLScheme(miniProgram.ctx)
 }
