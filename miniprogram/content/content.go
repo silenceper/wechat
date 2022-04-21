@@ -24,6 +24,8 @@ func NewContent(ctx *context.Context) *Content {
 
 // CheckText 检测文字
 // @text 需要检测的文字
+// Deprecated
+// 采用 security.MsgCheckV1 替代，返回值更加丰富
 func (content *Content) CheckText(text string) error {
 	accessToken, err := content.GetAccessToken()
 	if err != nil {
@@ -44,6 +46,8 @@ func (content *Content) CheckText(text string) error {
 // CheckImage 检测图片
 // 所传参数为要检测的图片文件的绝对路径，图片格式支持PNG、JPEG、JPG、GIF, 像素不超过 750 x 1334，同时文件大小以不超过 300K 为宜，否则可能报错
 // @media 图片文件的绝对路径
+// Deprecated
+// 采用 security.ImageCheckV1 替代，返回值更加丰富
 func (content *Content) CheckImage(media string) error {
 	accessToken, err := content.GetAccessToken()
 	if err != nil {
