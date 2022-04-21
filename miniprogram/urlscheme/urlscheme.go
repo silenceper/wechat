@@ -22,12 +22,21 @@ const generateURL = "https://api.weixin.qq.com/wxa/generatescheme"
 // TExpireType 失效类型 (指定时间戳/指定间隔)
 type TExpireType int
 
+// EnvVersion 要打开的小程序版本
+type EnvVersion string
+
 const (
 	// ExpireTypeTime 指定时间戳后失效
 	ExpireTypeTime TExpireType = 0
-
 	// ExpireTypeInterval 间隔指定天数后失效
 	ExpireTypeInterval TExpireType = 1
+
+	// EnvVersionRelease 正式版为"release"
+	EnvVersionRelease EnvVersion = "release"
+	// EnvVersionTrial 体验版为"trial"
+	EnvVersionTrial EnvVersion = "trial"
+	// EnvVersionDevelop 开发版为"develop"
+	EnvVersionDevelop EnvVersion = "develop"
 )
 
 // JumpWxa 跳转到的目标小程序信息
@@ -35,7 +44,7 @@ type JumpWxa struct {
 	Path  string `json:"path"`
 	Query string `json:"query"`
 	// envVersion 要打开的小程序版本。正式版为 "release"，体验版为 "trial"，开发版为 "develop"
-	EnvVersion string `json:"env_version,omitempty"`
+	EnvVersion EnvVersion `json:"env_version,omitempty"`
 }
 
 // USParams 请求参数
