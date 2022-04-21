@@ -17,6 +17,7 @@ type QueryScheme struct {
 	Scheme string `json:"scheme"`
 }
 
+// SchemeInfo scheme 配置
 type SchemeInfo struct {
 	// 小程序 appid。
 	AppID string `json:"appid"`
