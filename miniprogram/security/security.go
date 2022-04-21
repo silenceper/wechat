@@ -125,6 +125,7 @@ func (security *Security) ImageCheckV1(filename string) (err error) {
 type CheckSuggest string
 
 const (
+	// CheckSuggestRisky 违规风险建议
 	CheckSuggestRisky  CheckSuggest = "risky"  // 违规风险
 	CheckSuggestPass   CheckSuggest = "pass"   // 安全
 	CheckSuggestReview CheckSuggest = "review" // 需要审查
@@ -134,6 +135,7 @@ const (
 type MsgScene uint8
 
 const (
+	// MsgSceneMaterial 资料文件检查场景
 	MsgSceneMaterial  MsgScene = iota + 1 // 资料
 	MsgSceneComment                       // 评论
 	MsgSceneForum                         // 论坛
