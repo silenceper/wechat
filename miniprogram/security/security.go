@@ -125,20 +125,19 @@ func (security *Security) ImageCheckV1(filename string) (err error) {
 type CheckSuggest string
 
 const (
-	CheckSuggestRisky  CheckSuggest = "risky"
-	CheckSuggestPass   CheckSuggest = "pass"
-	CheckSuggestReview CheckSuggest = "review"
+	CheckSuggestRisky  CheckSuggest = "risky"  // 违规风险
+	CheckSuggestPass   CheckSuggest = "pass"   // 安全
+	CheckSuggestReview CheckSuggest = "review" // 需要审查
 )
 
 // MsgScene 文本场景
 type MsgScene uint8
 
 const (
-	MsgSceneUnKnown   MsgScene = iota // 未知
-	MsgSceneMaterial                  // 资料
-	MsgSceneComment                   // 评论
-	MsgSceneForum                     // 论坛
-	MsgSceneSocialLog                 // 社交日志
+	MsgSceneMaterial  MsgScene = iota + 1 // 资料
+	MsgSceneComment                       // 评论
+	MsgSceneForum                         // 论坛
+	MsgSceneSocialLog                     // 社交日志
 )
 
 // CheckLabel 检查命中标签
@@ -186,8 +185,8 @@ type MsgCheckResponse struct {
 	util.CommonError
 	TraceID string `json:"trace_id"` // 唯一请求标识
 	Result  struct {
-		Suggest string     `json:"suggest"` // 建议
-		Label   CheckLabel `json:"label"`   // 命中标签
+		Suggest CheckSuggest `json:"suggest"` // 建议
+		Label   CheckLabel   `json:"label"`   // 命中标签
 	} `json:"result"` // 综合结果
 	Detail []struct {
 		ErrCode  int64      `json:"errcode"`  // 错误码，仅当该值为0时，该项结果有效
