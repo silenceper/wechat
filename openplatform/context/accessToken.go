@@ -226,6 +226,7 @@ type AuthorizerInfo struct {
 	}
 	Alias     string `json:"alias"`
 	QrcodeURL string `json:"qrcode_url"`
+	MiniProgramInfo interface{} `json:"MiniProgramInfo"`
 }
 
 // GetAuthrInfo 获取授权方的帐号基本信息
