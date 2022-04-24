@@ -143,7 +143,11 @@ func (ak *WorkAccessToken) GetAccessToken() (accessToken string, err error) {
 
 // GetTokenFromServer 强制从微信服务器获取token
 func GetTokenFromServer(url, proxyUrl string) (resAccessToken ResAccessToken, err error) {
-	resp, err := req.C().SetProxyURL(proxyUrl).R().Get(url)
+	client := req.C()
+	if proxyUrl != "" {
+		client.SetProxyURL(proxyUrl)
+	}
+	resp, err := client.R().Get(url)
 	if err != nil {
 		return
 	}
