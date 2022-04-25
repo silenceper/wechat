@@ -9,6 +9,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cast v1.4.1
 	github.com/stretchr/testify v1.7.1
+	github.com/tidwall/gjson v1.14.1 // indirect
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
 	gopkg.in/h2non/gock.v1 v1.1.2
 )
