@@ -112,22 +112,24 @@ type PhoneInfo struct {
 }
 
 // GetPhoneNumber 小程序通过code获取用户手机号
-func (auth *Auth) GetPhoneNumber(code string) (result GetPhoneNumberResponse, err error) {
+func (auth *Auth) GetPhoneNumber(code string) (*GetPhoneNumberResponse, error) {
 	var response []byte
 	var (
-		at string
+		at  string
+		err error
 	)
 	if at, err = auth.GetAccessToken(); err != nil {
-		return
+		return nil, err
 	}
 	body := map[string]interface{}{
 		"code": code,
 	}
 	if response, err = util.PostJSON(fmt.Sprintf(getPhoneNumber, at), body); err != nil {
-		return
+		return nil, err
 	}
+	var result GetPhoneNumberResponse
 	if err = util.DecodeWithError(response, &result, "phonenumber.getPhoneNumber"); err != nil {
-		return
+		return nil, err
 	}
-	return
+	return &result, nil
 }
