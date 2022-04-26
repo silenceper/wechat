@@ -117,7 +117,7 @@ type MixMessage struct {
 	URL           string  `xml:"Url"`
 
 	// 事件相关
-	Event       EventType `xml:"Event"`
+	Event       EventType `xml:"Event" json:"Event"`
 	EventKey    string    `xml:"EventKey"`
 	Ticket      string    `xml:"Ticket"`
 	Latitude    string    `xml:"Latitude"`
@@ -148,6 +148,8 @@ type MixMessage struct {
 		Label     string  `xml:"Label"`
 		Poiname   string  `xml:"Poiname"`
 	}
+
+	subscribeMsgPopupEventList []SubscribeMsgPopupEvent `json:"-"`
 
 	SubscribeMsgPopupEvent []struct {
 		List SubscribeMsgPopupEvent `xml:"List"`
@@ -209,9 +211,26 @@ type MixMessage struct {
 
 // SubscribeMsgPopupEvent 订阅通知事件推送的消息体
 type SubscribeMsgPopupEvent struct {
-	TemplateID            string `xml:"TemplateId"`
-	SubscribeStatusString string `xml:"SubscribeStatusString"`
-	PopupScene            int    `xml:"PopupScene"`
+	TemplateID            string `xml:"TemplateId" json:"TemplateId"`
+	SubscribeStatusString string `xml:"SubscribeStatusString" json:"SubscribeStatusString"`
+	PopupScene            int    `xml:"PopupScene" json:"PopupScene,string"`
+}
+
+// SetSubscribeMsgPopupEvents 设置订阅消息事件
+func (s *MixMessage) SetSubscribeMsgPopupEvents(list []SubscribeMsgPopupEvent) {
+	s.subscribeMsgPopupEventList = list
+}
+
+// GetSubscribeMsgPopupEvents 获取订阅消息事件数据
+func (s *MixMessage) GetSubscribeMsgPopupEvents() []SubscribeMsgPopupEvent {
+	if s.subscribeMsgPopupEventList != nil {
+		return s.subscribeMsgPopupEventList
+	}
+	list := make([]SubscribeMsgPopupEvent, len(s.SubscribeMsgPopupEvent))
+	for i, item := range s.SubscribeMsgPopupEvent {
+		list[i] = item.List
+	}
+	return list
 }
 
 // EventPic 发图事件推送
@@ -248,10 +267,10 @@ func (c CDATA) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 // CommonToken 消息中通用的结构
 type CommonToken struct {
 	XMLName      xml.Name `xml:"xml"`
-	ToUserName   CDATA    `xml:"ToUserName"`
-	FromUserName CDATA    `xml:"FromUserName"`
-	CreateTime   int64    `xml:"CreateTime"`
-	MsgType      MsgType  `xml:"MsgType"`
+	ToUserName   CDATA    `xml:"ToUserName" json:"ToUserName"`
+	FromUserName CDATA    `xml:"FromUserName" json:"FromUserName"`
+	CreateTime   int64    `xml:"CreateTime" json:"CreateTime"`
+	MsgType      MsgType  `xml:"MsgType" json:"MsgType"`
 }
 
 // SetToUserName set ToUserName

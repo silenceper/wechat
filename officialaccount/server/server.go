@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -9,13 +10,14 @@ import (
 	"reflect"
 	"runtime/debug"
 	"strconv"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/officialaccount/message"
-
 	"github.com/silenceper/wechat/v2/util"
+	"github.com/tidwall/gjson"
 )
 
 // Server struct
@@ -35,10 +37,11 @@ type Server struct {
 	ResponseRawXMLMsg []byte
 	ResponseMsg       interface{}
 
-	isSafeMode bool
-	random     []byte
-	nonce      string
-	timestamp  int64
+	isSafeMode    bool
+	isJSONContent bool
+	random        []byte
+	nonce         string
+	timestamp     int64
 }
 
 // NewServer init
@@ -98,6 +101,10 @@ func (srv *Server) handleRequest() (reply *message.Reply, err error) {
 		srv.isSafeMode = true
 	}
 
+	//set request contentType
+	contentType := srv.Request.Header.Get("Content-Type")
+	srv.isJSONContent = strings.Contains(contentType, "application/json")
+
 	// set openID
 	srv.openID = srv.Query("openid")
 
@@ -125,9 +132,9 @@ func (srv *Server) getMessage() (interface{}, error) {
 	var rawXMLMsgBytes []byte
 	var err error
 	if srv.isSafeMode {
-		var encryptedXMLMsg message.EncryptedXMLMsg
-		if err := xml.NewDecoder(srv.Request.Body).Decode(&encryptedXMLMsg); err != nil {
-			return nil, fmt.Errorf("从body中解析xml失败,err=%v", err)
+		encryptedXMLMsg, dataErr := srv.getEncryptBody()
+		if dataErr != nil {
+			return nil, dataErr
 		}
 
 		// 验证消息签名
@@ -161,9 +168,48 @@ func (srv *Server) getMessage() (interface{}, error) {
 	return srv.parseRequestMessage(rawXMLMsgBytes)
 }
 
+func (srv *Server) getEncryptBody() (*message.EncryptedXMLMsg, error) {
+	var encryptedXMLMsg = &message.EncryptedXMLMsg{}
+	if srv.isJSONContent {
+		if err := json.NewDecoder(srv.Request.Body).Decode(encryptedXMLMsg); err != nil {
+			return nil, fmt.Errorf("从body中解析json失败,err=%v", err)
+		}
+	} else {
+		if err := xml.NewDecoder(srv.Request.Body).Decode(encryptedXMLMsg); err != nil {
+			return nil, fmt.Errorf("从body中解析xml失败,err=%v", err)
+		}
+	}
+	return encryptedXMLMsg, nil
+}
+
 func (srv *Server) parseRequestMessage(rawXMLMsgBytes []byte) (msg *message.MixMessage, err error) {
 	msg = &message.MixMessage{}
-	err = xml.Unmarshal(rawXMLMsgBytes, msg)
+	if !srv.isJSONContent {
+		err = xml.Unmarshal(rawXMLMsgBytes, msg)
+		return
+	}
+	//parse json
+	err = json.Unmarshal(rawXMLMsgBytes, msg)
+	if err != nil {
+		return
+	}
+	// nonstandard json, 目前小程序订阅消息返回数据格式不标准，订阅消息模板单个List返回是对象，多个List返回是数组。
+	if msg.MsgType == message.MsgTypeEvent {
+		listData := gjson.Get(string(rawXMLMsgBytes), "List")
+		if listData.IsObject() {
+			listItem := message.SubscribeMsgPopupEvent{}
+			if parseErr := json.Unmarshal([]byte(listData.Raw), &listItem); parseErr != nil {
+				return msg, parseErr
+			}
+			msg.SetSubscribeMsgPopupEvents([]message.SubscribeMsgPopupEvent{listItem})
+		} else if listData.IsArray() {
+			listItems := make([]message.SubscribeMsgPopupEvent, 0)
+			if parseErr := json.Unmarshal([]byte(listData.Raw), &listItems); parseErr != nil {
+				return msg, parseErr
+			}
+			msg.SetSubscribeMsgPopupEvents(listItems)
+		}
+	}
 	return
 }
 
