@@ -4,6 +4,7 @@ import (
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/miniprogram/analysis"
 	"github.com/silenceper/wechat/v2/miniprogram/auth"
+	"github.com/silenceper/wechat/v2/miniprogram/business"
 	"github.com/silenceper/wechat/v2/miniprogram/config"
 	"github.com/silenceper/wechat/v2/miniprogram/content"
 	"github.com/silenceper/wechat/v2/miniprogram/context"
@@ -11,10 +12,13 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/message"
 	"github.com/silenceper/wechat/v2/miniprogram/privacy"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
+	"github.com/silenceper/wechat/v2/miniprogram/riskcontrol"
+	"github.com/silenceper/wechat/v2/miniprogram/security"
 	"github.com/silenceper/wechat/v2/miniprogram/shortlink"
 	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
 	"github.com/silenceper/wechat/v2/miniprogram/urllink"
+	"github.com/silenceper/wechat/v2/miniprogram/urlscheme"
 	"github.com/silenceper/wechat/v2/miniprogram/werun"
 )
 
@@ -58,6 +62,11 @@ func (miniProgram *MiniProgram) GetAnalysis() *analysis.Analysis {
 	return analysis.NewAnalysis(miniProgram.ctx)
 }
 
+// GetBusiness 业务接口
+func (miniProgram *MiniProgram) GetBusiness() *business.Business {
+	return business.NewBusiness(miniProgram.ctx)
+}
+
 // GetPrivacy 小程序隐私协议相关API
 func (miniProgram *MiniProgram) GetPrivacy() *privacy.Privacy {
 	return privacy.NewPrivacy(miniProgram.ctx)
@@ -98,7 +107,22 @@ func (miniProgram *MiniProgram) GetURLLink() *urllink.URLLink {
 	return urllink.NewURLLink(miniProgram.ctx)
 }
 
+// GetRiskControl 安全风控接口
+func (miniProgram *MiniProgram) GetRiskControl() *riskcontrol.RiskControl {
+	return riskcontrol.NewRiskControl(miniProgram.ctx)
+}
+
+// GetSecurity 内容安全接口
+func (miniProgram *MiniProgram) GetSecurity() *security.Security {
+	return security.NewSecurity(miniProgram.ctx)
+}
+
 // GetShortLink 小程序短链接口
 func (miniProgram *MiniProgram) GetShortLink() *shortlink.ShortLink {
 	return shortlink.NewShortLink(miniProgram.ctx)
+}
+
+// GetSURLScheme 小程序URL Scheme接口
+func (miniProgram *MiniProgram) GetSURLScheme() *urlscheme.URLScheme {
+	return urlscheme.NewURLScheme(miniProgram.ctx)
 }
