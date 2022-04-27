@@ -3,6 +3,7 @@ package externalcontact
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/silenceper/wechat/v2/util"
 )
 
@@ -203,7 +204,6 @@ func (r *Client) MarkTag(request MarkTagRequest) error {
 	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
-
 	}
 	var result util.CommonError
 	err = json.Unmarshal(response, &result)
