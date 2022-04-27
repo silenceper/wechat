@@ -38,7 +38,7 @@ type TagGroupTagItem struct {
 func (r *Client) GetCropTagList(req GetCropTagRequest) ([]TagGroup, error) {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_corp_tag?access_token=%v"
-	accessToken, err := r.ctx.GetAccessToken()
+	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +83,7 @@ type AddCropTagResponse struct {
 func (r *Client) AddCropTag(req AddCropTagRequest) (*TagGroup, error) {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_corp_tag?access_token=%v"
-	accessToken, err := r.ctx.GetAccessToken()
+	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +117,7 @@ type EditCropTagRequest struct {
 func (r *Client) EditCropTag(req EditCropTagRequest) error {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/edit_corp_tag?access_token=%v"
-	accessToken, err := r.ctx.GetAccessToken()
+	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
 	}
@@ -152,7 +152,7 @@ type DeleteCropTagRequest struct {
 func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/del_corp_tag?access_token=%v"
-	accessToken, err := r.ctx.GetAccessToken()
+	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
 	}
@@ -188,7 +188,7 @@ type MarkTagRequest struct {
 func (r *Client) MarkTag(request MarkTagRequest) error {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/mark_tag?access_token=%v"
-	accessToken, err := r.ctx.GetAccessToken()
+	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
 	}

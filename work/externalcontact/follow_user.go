@@ -16,7 +16,7 @@ type followerUserResponse struct {
 func (r *Client) GetFollowUserList() ([]string, error) {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_follow_user_list?access_token=%s"
-	accessToken, err := r.ctx.GetAccessToken()
+	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}

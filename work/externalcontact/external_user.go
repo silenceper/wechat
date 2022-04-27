@@ -16,7 +16,7 @@ type ExternalUserListResponse struct {
 func (r *Client) GetExternalUserList(userId string) ([]string, error) {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/list?access_token=%v&userid=%v"
-	accessToken, err := r.ctx.GetAccessToken()
+	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +86,7 @@ type WechatChannel struct {
 func (r *Client) GetExternalUserDetail(externalUserId string, nextCursor ...string) (*ExternalUser, error) {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get?access_token=%v&external_userid=%v&cursor=%v"
-	accessToken, err := r.ctx.GetAccessToken()
+	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ type ExternalUserDetailListResponse struct {
 func (r *Client) BatchGetExternalUserDetails(request BatchGetExternalUserDetailsRequest) ([]ExternalUser, error) {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/batch/get_by_user?access_token=%v"
-	accessToken, err := r.ctx.GetAccessToken()
+	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +155,7 @@ type UpdateUserRemarkRequest struct {
 func (r *Client) UpdateUserRemark(request UpdateUserRemarkRequest) error {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/remark?access_token=%v"
-	accessToken, err := r.ctx.GetAccessToken()
+	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
 	}
