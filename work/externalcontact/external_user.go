@@ -90,7 +90,7 @@ type WechatChannel struct {
 }
 
 // GetExternalUserDetail 获取外部联系人详情
-func (r *Client) GetExternalUserDetail(externalUserId string, nextCursor ...string) (*ExternalUser, error) {
+func (r *Client) GetExternalUserDetail(externalUserID string, nextCursor ...string) (*ExternalUser, error) {
 	var accessToken string
 	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get?access_token=%v&external_userid=%v&cursor=%v"
 	accessToken, err := r.GetAccessToken()
@@ -98,7 +98,7 @@ func (r *Client) GetExternalUserDetail(externalUserId string, nextCursor ...stri
 		return nil, err
 	}
 	var response []byte
-	response, err = util.HTTPGet(fmt.Sprintf(requestURL, accessToken, externalUserId, nextCursor))
+	response, err = util.HTTPGet(fmt.Sprintf(requestURL, accessToken, externalUserID, nextCursor))
 	if err != nil {
 		return nil, err
 	}

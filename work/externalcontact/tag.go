@@ -134,7 +134,6 @@ func (r *Client) EditCropTag(req EditCropTagRequest) error {
 	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
-
 	}
 	var result util.CommonError
 	err = json.Unmarshal(response, &result)
@@ -144,7 +143,6 @@ func (r *Client) EditCropTag(req EditCropTagRequest) error {
 	if result.ErrCode != 0 {
 		err = fmt.Errorf("edit_corp_tag error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return err
-
 	}
 	return nil
 }
@@ -170,7 +168,6 @@ func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
 	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
-
 	}
 	var result util.CommonError
 	err = json.Unmarshal(response, &result)
@@ -180,7 +177,6 @@ func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
 	if result.ErrCode != 0 {
 		err = fmt.Errorf("del_corp_tag error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return err
-
 	}
 	return nil
 }
@@ -217,7 +213,6 @@ func (r *Client) MarkTag(request MarkTagRequest) error {
 	if result.ErrCode != 0 {
 		err = fmt.Errorf("mark_tag error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return err
-
 	}
 	return nil
 }

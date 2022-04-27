@@ -28,6 +28,9 @@ func (r *Client) GetFollowUserList() ([]string, error) {
 	}
 	var result followerUserResponse
 	err = json.Unmarshal(response, &result)
+	if err != nil {
+		return nil, err
+	}
 	if result.ErrCode != 0 {
 		err = fmt.Errorf("get_follow_user_list error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return nil, err
