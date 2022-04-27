@@ -10,11 +10,8 @@ type Client struct {
 }
 
 // NewClient
-func NewClient(ctx *context.Context) (client *Client, err error) {
-
-	client = &Client{
+func NewClient(ctx *context.Context) *Client {
+	return &Client{
 		ctx,
 	}
-
-	return client, nil
 }

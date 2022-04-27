@@ -46,6 +46,6 @@ func (wk *Work) GetKF() (*kf.Client, error) {
 }
 
 // GetExternalContact get external_contact
-func (wk *Work) GetExternalContact() (*externalcontact.Client, error) {
+func (wk *Work) GetExternalContact() *externalcontact.Client {
 	return externalcontact.NewClient(wk.ctx)
 }
