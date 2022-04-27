@@ -173,10 +173,5 @@ func (r *Client) UpdateUserRemark(request UpdateUserRemarkRequest) error {
 	if err != nil {
 		return err
 	}
-	var result util.CommonError
-	err = util.DecodeWithError(response, &result, "UpdateUserRemark")
-	if err != nil {
-		return err
-	}
-	return nil
+	return util.DecodeWithCommonError(response, "UpdateUserRemark")
 }

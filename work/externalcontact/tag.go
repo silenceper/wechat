@@ -138,12 +138,7 @@ func (r *Client) EditCropTag(req EditCropTagRequest) error {
 	if err != nil {
 		return err
 	}
-	var result util.CommonError
-	err = util.DecodeWithError(response, &result, "EditCropTag")
-	if err != nil {
-		return err
-	}
-	return nil
+	return util.DecodeWithCommonError(response, "EditCropTag")
 }
 
 // DeleteCropTagRequest 删除企业标签请求
@@ -167,12 +162,7 @@ func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
 	if err != nil {
 		return err
 	}
-	var result util.CommonError
-	err = util.DecodeWithError(response, &result, "DeleteCropTag")
-	if err != nil {
-		return err
-	}
-	return nil
+	return util.DecodeWithCommonError(response, "DeleteCropTag")
 }
 
 // MarkTagRequest 给客户打标签请求
@@ -197,10 +187,5 @@ func (r *Client) MarkTag(request MarkTagRequest) error {
 	if err != nil {
 		return err
 	}
-	var result util.CommonError
-	err = util.DecodeWithError(response, &result, "MarkTag")
-	if err != nil {
-		return err
-	}
-	return nil
+	return util.DecodeWithCommonError(response, "MarkTag")
 }
