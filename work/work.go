@@ -4,6 +4,7 @@ import (
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/work/config"
 	"github.com/silenceper/wechat/v2/work/context"
+	"github.com/silenceper/wechat/v2/work/externalcontact"
 	"github.com/silenceper/wechat/v2/work/kf"
 	"github.com/silenceper/wechat/v2/work/msgaudit"
 	"github.com/silenceper/wechat/v2/work/oauth"
@@ -42,4 +43,9 @@ func (wk *Work) GetMsgAudit() (*msgaudit.Client, error) {
 // GetKF get kf
 func (wk *Work) GetKF() (*kf.Client, error) {
 	return kf.NewClient(wk.ctx.Config)
+}
+
+// GetExternalContact get external_contact
+func (wk *Work) GetExternalContact() *externalcontact.Client {
+	return externalcontact.NewClient(wk.ctx)
 }
