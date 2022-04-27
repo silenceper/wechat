@@ -6,12 +6,13 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
+// followerUserResponse 客户联系功能的成员列表响应
 type followerUserResponse struct {
 	util.CommonError
 	FollowUser []string `json:"follow_user"`
 }
 
-//获取配置了客户联系功能的成员列表
+//GetFollowUserList 获取配置了客户联系功能的成员列表
 //@see https://developer.work.weixin.qq.com/document/path/92571
 func (r *Client) GetFollowUserList() ([]string, error) {
 	var accessToken string

@@ -6,12 +6,13 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
+// ExternalUserListResponse 外部联系人列表响应
 type ExternalUserListResponse struct {
 	util.CommonError
 	ExternalUserId []string `json:"external_userid"`
 }
 
-// 获取客户列表
+// GetExternalUserList 获取客户列表
 // @see https://developer.work.weixin.qq.com/document/path/92113
 func (r *Client) GetExternalUserList(userId string) ([]string, error) {
 	var accessToken string
@@ -37,11 +38,13 @@ func (r *Client) GetExternalUserList(userId string) ([]string, error) {
 	return result.ExternalUserId, nil
 }
 
+// ExternalUserDetailResponse 外部联系人详情响应
 type ExternalUserDetailResponse struct {
 	util.CommonError
 	ExternalUser
 }
 
+// ExternalUser 外部联系人
 type ExternalUser struct {
 	ExternalUserId  string       `json:"external_userid"`
 	Name            string       `json:"name"`
@@ -57,6 +60,7 @@ type ExternalUser struct {
 	NextCursor      string       `json:"next_cursor"`
 }
 
+// FollowUser 跟进用户（指企业内部用户）
 type FollowUser struct {
 	UserId         string        `json:"userid"`
 	Remark         string        `json:"remark"`
@@ -71,6 +75,7 @@ type FollowUser struct {
 	State          string        `json:"state"`
 }
 
+// Tag 已绑定在外部联系人的标签
 type Tag struct {
 	GroupName string `json:"group_name"`
 	TagName   string `json:"tag_name"`
@@ -78,11 +83,13 @@ type Tag struct {
 	TagId     string `json:"tag_id"`
 }
 
+// WechatChannel 视频号添加的场景
 type WechatChannel struct {
 	NickName string `json:"nickname"`
 	Source   string `json:"source"`
 }
 
+// GetExternalUserDetail 获取外部联系人详情
 func (r *Client) GetExternalUserDetail(externalUserId string, nextCursor ...string) (*ExternalUser, error) {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get?access_token=%v&external_userid=%v&cursor=%v"
@@ -107,16 +114,19 @@ func (r *Client) GetExternalUserDetail(externalUserId string, nextCursor ...stri
 	return &result.ExternalUser, nil
 }
 
+// BatchGetExternalUserDetailsRequest 批量获取外部联系人详情请求
 type BatchGetExternalUserDetailsRequest struct {
 	UserIdList []string `json:"userid_list"`
 	Cursor     string   `json:"cursor"`
 }
 
+// ExternalUserDetailListResponse 批量获取外部联系人详情响应
 type ExternalUserDetailListResponse struct {
 	util.CommonError
 	ExternalContactList []ExternalUser `json:"external_contact_list"`
 }
 
+// BatchGetExternalUserDetails 批量获取外部联系人详情
 func (r *Client) BatchGetExternalUserDetails(request BatchGetExternalUserDetailsRequest) ([]ExternalUser, error) {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/batch/get_by_user?access_token=%v"
@@ -142,6 +152,7 @@ func (r *Client) BatchGetExternalUserDetails(request BatchGetExternalUserDetails
 	return result.ExternalContactList, nil
 }
 
+// UpdateUserRemarkRequest 修改客户备注信息请求体
 type UpdateUserRemarkRequest struct {
 	UserId           string   `json:"userid"`
 	ExternalUserId   string   `json:"external_userid"`
@@ -152,6 +163,7 @@ type UpdateUserRemarkRequest struct {
 	RemarkPicMediaid string   `json:"remark_pic_mediaid"`
 }
 
+// UpdateUserRemark 修改客户备注信息
 func (r *Client) UpdateUserRemark(request UpdateUserRemarkRequest) error {
 	var accessToken string
 	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/remark?access_token=%v"

@@ -6,16 +6,19 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
+// GetCropTagRequest 获取企业标签请求
 type GetCropTagRequest struct {
 	TagId   []string `json:"tag_id"`
 	GroupId []string `json:"group_id"`
 }
 
+// GetCropTagListResponse 获取企业标签列表响应
 type GetCropTagListResponse struct {
 	util.CommonError
 	TagGroup []TagGroup `json:"tag_group"`
 }
 
+// TagGroup 企业标签组
 type TagGroup struct {
 	GroupId    string            `json:"group_id"`
 	GroupName  string            `json:"group_name"`
@@ -25,6 +28,7 @@ type TagGroup struct {
 	Tag        []TagGroupTagItem `json:"tag"`
 }
 
+// TagGroupTagItem 企业标签内的子项
 type TagGroupTagItem struct {
 	Id         string `json:"id"`
 	Name       string `json:"name"`
@@ -33,7 +37,7 @@ type TagGroupTagItem struct {
 	Deleted    bool   `json:"deleted"`
 }
 
-// 获取企业标签库
+// GetCropTagList 获取企业标签库
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) GetCropTagList(req GetCropTagRequest) ([]TagGroup, error) {
 	var accessToken string
@@ -60,6 +64,7 @@ func (r *Client) GetCropTagList(req GetCropTagRequest) ([]TagGroup, error) {
 	return result.TagGroup, nil
 }
 
+// AddCropTagRequest 添加企业标签请求
 type AddCropTagRequest struct {
 	GroupId   string           `json:"group_id"`
 	GroupName string           `json:"group_name"`
@@ -68,17 +73,19 @@ type AddCropTagRequest struct {
 	AgentId   int              `json:"agentid"`
 }
 
+// AddCropTagItem 添加企业标签子项
 type AddCropTagItem struct {
 	Name  string `json:"name"`
 	Order int    `json:"order"`
 }
 
+// AddCropTagResponse 添加企业标签响应
 type AddCropTagResponse struct {
 	util.CommonError
 	TagGroup TagGroup `json:"tag_group"`
 }
 
-// 添加企业客户标签
+// AddCropTag 添加企业客户标签
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) AddCropTag(req AddCropTagRequest) (*TagGroup, error) {
 	var accessToken string
@@ -105,6 +112,7 @@ func (r *Client) AddCropTag(req AddCropTagRequest) (*TagGroup, error) {
 	return &result.TagGroup, nil
 }
 
+// EditCropTagRequest 编辑客户企业标签请求
 type EditCropTagRequest struct {
 	Id      string `json:"id"`
 	Name    string `json:"name"`
@@ -112,7 +120,7 @@ type EditCropTagRequest struct {
 	AgentId string `json:"agent_id"`
 }
 
-// 修改企业客户标签
+// EditCropTag 修改企业客户标签
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) EditCropTag(req EditCropTagRequest) error {
 	var accessToken string
@@ -141,13 +149,14 @@ func (r *Client) EditCropTag(req EditCropTagRequest) error {
 	return nil
 }
 
+// DeleteCropTagRequest 删除企业标签请求
 type DeleteCropTagRequest struct {
 	TagId   []string `json:"tag_id"`
 	GroupId []string `json:"group_id"`
 	AgentId string   `json:"agent_id"`
 }
 
-// 删除企业客户标签
+// DeleteCropTag 删除企业客户标签
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
 	var accessToken string
@@ -176,6 +185,7 @@ func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
 	return nil
 }
 
+// MarkTagRequest 给客户打标签请求
 type MarkTagRequest struct {
 	UserId         string   `json:"user_id"`
 	ExternalUserId string   `json:"external_userid"`
@@ -183,7 +193,7 @@ type MarkTagRequest struct {
 	RemoveTag      []string `json:"remove_tag"`
 }
 
-// 为客户打上标签
+// MarkTag 为客户打上标签
 // @see https://developer.work.weixin.qq.com/document/path/92118
 func (r *Client) MarkTag(request MarkTagRequest) error {
 	var accessToken string
