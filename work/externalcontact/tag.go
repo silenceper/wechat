@@ -8,8 +8,8 @@ import (
 
 // GetCropTagRequest 获取企业标签请求
 type GetCropTagRequest struct {
-	TagId   []string `json:"tag_id"`
-	GroupId []string `json:"group_id"`
+	TagID   []string `json:"tag_id"`
+	GroupID []string `json:"group_id"`
 }
 
 // GetCropTagListResponse 获取企业标签列表响应
@@ -20,7 +20,7 @@ type GetCropTagListResponse struct {
 
 // TagGroup 企业标签组
 type TagGroup struct {
-	GroupId    string            `json:"group_id"`
+	GroupID    string            `json:"group_id"`
 	GroupName  string            `json:"group_name"`
 	CreateTime string            `json:"create_time"`
 	GroupOrder int               `json:"group_order"`
@@ -30,7 +30,7 @@ type TagGroup struct {
 
 // TagGroupTagItem 企业标签内的子项
 type TagGroupTagItem struct {
-	Id         string `json:"id"`
+	ID         string `json:"id"`
 	Name       string `json:"name"`
 	CreateTime int    `json:"create_time"`
 	Order      int    `json:"order"`
@@ -41,14 +41,14 @@ type TagGroupTagItem struct {
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) GetCropTagList(req GetCropTagRequest) ([]TagGroup, error) {
 	var accessToken string
-	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_corp_tag?access_token=%v"
+	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_corp_tag?access_token=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	var response []byte
 	jsonData, _ := json.Marshal(req)
-	response, err = util.HTTPPost(fmt.Sprintf(requestUrl, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
 	}
@@ -66,11 +66,11 @@ func (r *Client) GetCropTagList(req GetCropTagRequest) ([]TagGroup, error) {
 
 // AddCropTagRequest 添加企业标签请求
 type AddCropTagRequest struct {
-	GroupId   string           `json:"group_id"`
+	GroupID   string           `json:"group_id"`
 	GroupName string           `json:"group_name"`
 	Order     int              `json:"order"`
 	Tag       []AddCropTagItem `json:"tag"`
-	AgentId   int              `json:"agentid"`
+	AgentID   int              `json:"agentid"`
 }
 
 // AddCropTagItem 添加企业标签子项
@@ -89,14 +89,14 @@ type AddCropTagResponse struct {
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) AddCropTag(req AddCropTagRequest) (*TagGroup, error) {
 	var accessToken string
-	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_corp_tag?access_token=%v"
+	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_corp_tag?access_token=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	var response []byte
 	jsonData, _ := json.Marshal(req)
-	response, err = util.HTTPPost(fmt.Sprintf(requestUrl, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
 	}
@@ -114,24 +114,24 @@ func (r *Client) AddCropTag(req AddCropTagRequest) (*TagGroup, error) {
 
 // EditCropTagRequest 编辑客户企业标签请求
 type EditCropTagRequest struct {
-	Id      string `json:"id"`
+	ID      string `json:"id"`
 	Name    string `json:"name"`
 	Order   int    `json:"order"`
-	AgentId string `json:"agent_id"`
+	AgentID string `json:"agent_id"`
 }
 
 // EditCropTag 修改企业客户标签
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) EditCropTag(req EditCropTagRequest) error {
 	var accessToken string
-	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/edit_corp_tag?access_token=%v"
+	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/edit_corp_tag?access_token=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
 	}
 	var response []byte
 	jsonData, _ := json.Marshal(req)
-	response, err = util.HTTPPost(fmt.Sprintf(requestUrl, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
 
@@ -151,23 +151,23 @@ func (r *Client) EditCropTag(req EditCropTagRequest) error {
 
 // DeleteCropTagRequest 删除企业标签请求
 type DeleteCropTagRequest struct {
-	TagId   []string `json:"tag_id"`
-	GroupId []string `json:"group_id"`
-	AgentId string   `json:"agent_id"`
+	TagID   []string `json:"tag_id"`
+	GroupID []string `json:"group_id"`
+	AgentID string   `json:"agent_id"`
 }
 
 // DeleteCropTag 删除企业客户标签
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
 	var accessToken string
-	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/del_corp_tag?access_token=%v"
+	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/del_corp_tag?access_token=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
 	}
 	var response []byte
 	jsonData, _ := json.Marshal(req)
-	response, err = util.HTTPPost(fmt.Sprintf(requestUrl, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
 
@@ -187,8 +187,8 @@ func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
 
 // MarkTagRequest 给客户打标签请求
 type MarkTagRequest struct {
-	UserId         string   `json:"user_id"`
-	ExternalUserId string   `json:"external_userid"`
+	UserID         string   `json:"user_id"`
+	ExternalUserID string   `json:"external_userid"`
 	AddTag         []string `json:"add_tag"`
 	RemoveTag      []string `json:"remove_tag"`
 }
@@ -197,14 +197,14 @@ type MarkTagRequest struct {
 // @see https://developer.work.weixin.qq.com/document/path/92118
 func (r *Client) MarkTag(request MarkTagRequest) error {
 	var accessToken string
-	var requestUrl = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/mark_tag?access_token=%v"
+	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/mark_tag?access_token=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
 	}
 	var response []byte
 	jsonData, _ := json.Marshal(request)
-	response, err = util.HTTPPost(fmt.Sprintf(requestUrl, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
 
