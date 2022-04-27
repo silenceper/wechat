@@ -7,6 +7,17 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
+const (
+	// FetchExternalContactUserListURL 获取客户列表
+	FetchExternalContactUserListURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/list"
+	// FetchExternalContactUserDetailURL 获取客户详情
+	FetchExternalContactUserDetailURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get"
+	// FetchBatchExternalContactUserDetailURL 批量获取客户详情
+	FetchBatchExternalContactUserDetailURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/batch/get_by_user"
+	// UpdateUserRemarkURL 更新客户备注信息
+	UpdateUserRemarkURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/remark"
+)
+
 // ExternalUserListResponse 外部联系人列表响应
 type ExternalUserListResponse struct {
 	util.CommonError
@@ -17,23 +28,18 @@ type ExternalUserListResponse struct {
 // @see https://developer.work.weixin.qq.com/document/path/92113
 func (r *Client) GetExternalUserList(userID string) ([]string, error) {
 	var accessToken string
-	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/list?access_token=%v&userid=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	var response []byte
-	response, err = util.HTTPGet(fmt.Sprintf(requestURL, accessToken, userID))
+	response, err = util.HTTPGet(fmt.Sprintf("%s?access_token=%v&userid=%v", FetchExternalContactUserListURL, accessToken, userID))
 	if err != nil {
 		return nil, err
 	}
 	var result ExternalUserListResponse
-	err = json.Unmarshal(response, &result)
+	err = util.DecodeWithError(response, &result, "GetExternalUserList")
 	if err != nil {
-		return nil, err
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("get_external_user_list error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return nil, err
 	}
 	return result.ExternalUserID, nil
@@ -93,23 +99,18 @@ type WechatChannel struct {
 // GetExternalUserDetail 获取外部联系人详情
 func (r *Client) GetExternalUserDetail(externalUserID string, nextCursor ...string) (*ExternalUser, error) {
 	var accessToken string
-	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get?access_token=%v&external_userid=%v&cursor=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	var response []byte
-	response, err = util.HTTPGet(fmt.Sprintf(requestURL, accessToken, externalUserID, nextCursor))
+	response, err = util.HTTPGet(fmt.Sprintf("%s?access_token=%v&external_userid=%v&cursor=%v", FetchExternalContactUserDetailURL, accessToken, externalUserID, nextCursor))
 	if err != nil {
 		return nil, err
 	}
 	var result ExternalUserDetailResponse
-	err = json.Unmarshal(response, &result)
+	err = util.DecodeWithError(response, &result, "get_external_user_detail")
 	if err != nil {
-		return nil, err
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("get_external_user_detail error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return nil, err
 	}
 	return &result.ExternalUser, nil
@@ -130,24 +131,19 @@ type ExternalUserDetailListResponse struct {
 // BatchGetExternalUserDetails 批量获取外部联系人详情
 func (r *Client) BatchGetExternalUserDetails(request BatchGetExternalUserDetailsRequest) ([]ExternalUser, error) {
 	var accessToken string
-	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/batch/get_by_user?access_token=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	var response []byte
 	jsonData, _ := json.Marshal(request)
-	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", FetchBatchExternalContactUserDetailURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
 	}
 	var result ExternalUserDetailListResponse
-	err = json.Unmarshal(response, &result)
+	err = util.DecodeWithError(response, &result, "BatchGetExternalUserDetails")
 	if err != nil {
-		return nil, err
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("get_external_user_detail error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return nil, err
 	}
 	return result.ExternalContactList, nil
@@ -167,24 +163,19 @@ type UpdateUserRemarkRequest struct {
 // UpdateUserRemark 修改客户备注信息
 func (r *Client) UpdateUserRemark(request UpdateUserRemarkRequest) error {
 	var accessToken string
-	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/remark?access_token=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
 	}
 	var response []byte
 	jsonData, _ := json.Marshal(request)
-	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", UpdateUserRemarkURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
 	}
 	var result util.CommonError
-	err = json.Unmarshal(response, &result)
+	err = util.DecodeWithError(response, &result, "UpdateUserRemark")
 	if err != nil {
-		return err
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("get_external_user_detail error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return err
 	}
 	return nil

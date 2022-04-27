@@ -7,6 +7,19 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
+const (
+	// GetCropTagURL 获取标签列表
+	GetCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_corp_tag_list"
+	// AddCropTagURL 添加标签
+	AddCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_corp_tag"
+	// EditCropTagURL 修改标签
+	EditCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/edit_corp_tag"
+	// DelCropTagURL 删除标签
+	DelCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/del_corp_tag"
+	// MarkCropTagURL 为客户打上、删除标签
+	MarkCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/mark_tag"
+)
+
 // GetCropTagRequest 获取企业标签请求
 type GetCropTagRequest struct {
 	TagID   []string `json:"tag_id"`
@@ -42,24 +55,19 @@ type TagGroupTagItem struct {
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) GetCropTagList(req GetCropTagRequest) ([]TagGroup, error) {
 	var accessToken string
-	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_corp_tag?access_token=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	var response []byte
 	jsonData, _ := json.Marshal(req)
-	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", GetCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
 	}
 	var result GetCropTagListResponse
-	err = json.Unmarshal(response, &result)
+	err = util.DecodeWithError(response, &result, "GetCropTagList")
 	if err != nil {
-		return nil, err
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("GetCropTagList error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return nil, err
 	}
 	return result.TagGroup, nil
@@ -90,24 +98,19 @@ type AddCropTagResponse struct {
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) AddCropTag(req AddCropTagRequest) (*TagGroup, error) {
 	var accessToken string
-	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_corp_tag?access_token=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	var response []byte
 	jsonData, _ := json.Marshal(req)
-	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", AddCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
 	}
 	var result AddCropTagResponse
-	err = json.Unmarshal(response, &result)
+	err = util.DecodeWithError(response, &result, "AddCropTag")
 	if err != nil {
-		return nil, err
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("add_corp_tag error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return nil, err
 	}
 	return &result.TagGroup, nil
@@ -125,24 +128,19 @@ type EditCropTagRequest struct {
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) EditCropTag(req EditCropTagRequest) error {
 	var accessToken string
-	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/edit_corp_tag?access_token=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
 	}
 	var response []byte
 	jsonData, _ := json.Marshal(req)
-	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", EditCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
 	}
 	var result util.CommonError
-	err = json.Unmarshal(response, &result)
+	err = util.DecodeWithError(response, &result, "EditCropTag")
 	if err != nil {
-		return err
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("edit_corp_tag error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return err
 	}
 	return nil
@@ -159,24 +157,19 @@ type DeleteCropTagRequest struct {
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
 	var accessToken string
-	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/del_corp_tag?access_token=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
 	}
 	var response []byte
 	jsonData, _ := json.Marshal(req)
-	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", DelCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
 	}
 	var result util.CommonError
-	err = json.Unmarshal(response, &result)
+	err = util.DecodeWithError(response, &result, "DeleteCropTag")
 	if err != nil {
-		return err
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("del_corp_tag error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return err
 	}
 	return nil
@@ -194,24 +187,19 @@ type MarkTagRequest struct {
 // @see https://developer.work.weixin.qq.com/document/path/92118
 func (r *Client) MarkTag(request MarkTagRequest) error {
 	var accessToken string
-	var requestURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/mark_tag?access_token=%v"
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
 	}
 	var response []byte
 	jsonData, _ := json.Marshal(request)
-	response, err = util.HTTPPost(fmt.Sprintf(requestURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", MarkCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
 	}
 	var result util.CommonError
-	err = json.Unmarshal(response, &result)
+	err = util.DecodeWithError(response, &result, "MarkTag")
 	if err != nil {
-		return err
-	}
-	if result.ErrCode != 0 {
-		err = fmt.Errorf("mark_tag error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return err
 	}
 	return nil
