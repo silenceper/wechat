@@ -2,9 +2,9 @@ package sendmsg
 
 // Message 发送消息
 type Message struct {
-	ToUser   string `json:"touser"`    // 指定接收消息的客户UserID
-	OpenKFID string `json:"open_kfid"` // 指定发送消息的客服帐号ID
-	MsgID    string `json:"msgid"`     // 指定消息ID
+	ToUser   string `json:"touser"`          // 指定接收消息的客户UserID
+	OpenKFID string `json:"open_kfid"`       // 指定发送消息的客服帐号ID
+	MsgID    string `json:"msgid,omitempty"` // 指定消息ID
 }
 
 // Text 发送文本消息
