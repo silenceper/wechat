@@ -172,7 +172,7 @@ func (o *Order) BridgeConfig(p *Params) (cfg Config, err error) {
 // BridgeAppConfig get app bridge config
 func (o *Order) BridgeAppConfig(p *Params) (cfg ConfigForApp, err error) {
 	var (
-		timestamp = strconv.FormatInt(time.Now().Unix(), 10)
+		timestamp = strconv.FormatInt(util.GetCurrTS(), 10)
 		noncestr  = util.RandomStr(32)
 		_package  = "Sign=WXPay"
 	)
@@ -273,7 +273,7 @@ func (o *Order) PrePayOrder(p *Params) (payOrder PreOrder, err error) {
 	return
 }
 
-// PrePayID will request wechat merchant api and request for a pre payment order id
+// PrePayID will request wechat merchant api and request for a pre-payment order id
 func (o *Order) PrePayID(p *Params) (prePayID string, err error) {
 	order, err := o.PrePayOrder(p)
 	if err != nil {

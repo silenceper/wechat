@@ -23,12 +23,12 @@ func (pay *Pay) GetOrder() *order.Order {
 	return order.NewOrder(pay.cfg)
 }
 
-// GetNotify  通知
+// GetNotify 通知
 func (pay *Pay) GetNotify() *notify.Notify {
 	return notify.NewNotify(pay.cfg)
 }
 
-// GetRefund  退款
+// GetRefund 退款
 func (pay *Pay) GetRefund() *refund.Refund {
 	return refund.NewRefund(pay.cfg)
 }

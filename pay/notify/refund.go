@@ -48,7 +48,6 @@ type RefundedResp struct {
 
 // DecryptReqInfo 对退款结果进行解密
 func (notify *Notify) DecryptReqInfo(result *RefundedResult) (*RefundedReqInfo, error) {
-	var err error
 	if result == nil || result.ReqInfo == nil {
 		return nil, errors.New("empty refunded_result or req_info")
 	}

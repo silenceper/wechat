@@ -9,7 +9,7 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
-// 付款到零钱
+// walletTransferGateway 付款到零钱
 // https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
 var walletTransferGateway = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers"
 
@@ -20,8 +20,7 @@ type Transfer struct {
 
 // NewTransfer return an instance of Transfer package
 func NewTransfer(cfg *config.Config) *Transfer {
-	transfer := Transfer{cfg}
-	return &transfer
+	return &Transfer{cfg}
 }
 
 // Params 调用参数
