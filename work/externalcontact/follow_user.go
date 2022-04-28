@@ -17,10 +17,9 @@ type followerUserResponse struct {
 	FollowUser []string `json:"follow_user"`
 }
 
-//GetFollowUserList 获取配置了客户联系功能的成员列表
-//@see https://developer.work.weixin.qq.com/document/path/92571
+// GetFollowUserList 获取配置了客户联系功能的成员列表
+// @see https://developer.work.weixin.qq.com/document/path/92571
 func (r *Client) GetFollowUserList() ([]string, error) {
-	var accessToken string
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err

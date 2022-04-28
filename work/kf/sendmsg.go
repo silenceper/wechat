@@ -31,12 +31,10 @@ func (r *Client) SendMsg(options interface{}) (info SendMsgSchema, err error) {
 		accessToken string
 		data        []byte
 	)
-	accessToken, err = r.ctx.GetAccessToken()
-	if err != nil {
+	if accessToken, err = r.ctx.GetAccessToken(); err != nil {
 		return
 	}
-	data, err = util.PostJSON(fmt.Sprintf(sendMsgAddr, accessToken), options)
-	if err != nil {
+	if data, err = util.PostJSON(fmt.Sprintf(sendMsgAddr, accessToken), options); err != nil {
 		return
 	}
 	if err = json.Unmarshal(data, &info); err != nil {

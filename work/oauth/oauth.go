@@ -33,23 +33,21 @@ func NewOauth(ctx *context.Context) *Oauth {
 // GetTargetURL 获取授权地址
 func (ctr *Oauth) GetTargetURL(callbackURL string) string {
 	// url encode
-	urlStr := url.QueryEscape(callbackURL)
 	return fmt.Sprintf(
 		oauthTargetURL,
 		ctr.CorpID,
-		urlStr,
+		url.QueryEscape(callbackURL),
 	)
 }
 
 // GetQrContentTargetURL 构造独立窗口登录二维码
 func (ctr *Oauth) GetQrContentTargetURL(callbackURL string) string {
 	// url encode
-	urlStr := url.QueryEscape(callbackURL)
 	return fmt.Sprintf(
 		oauthQrContentTargetURL,
 		ctr.CorpID,
 		ctr.AgentID,
-		urlStr,
+		url.QueryEscape(callbackURL),
 		util.RandomStr(16),
 	)
 }
@@ -67,15 +65,11 @@ type ResUserInfo struct {
 // UserFromCode 根据code获取用户信息
 func (ctr *Oauth) UserFromCode(code string) (result ResUserInfo, err error) {
 	var accessToken string
-	accessToken, err = ctr.GetAccessToken()
-	if err != nil {
+	if accessToken, err = ctr.GetAccessToken(); err != nil {
 		return
 	}
 	var response []byte
-	response, err = util.HTTPGet(
-		fmt.Sprintf(oauthUserInfoURL, accessToken, code),
-	)
-	if err != nil {
+	if response, err = util.HTTPGet(fmt.Sprintf(oauthUserInfoURL, accessToken, code)); err != nil {
 		return
 	}
 	err = json.Unmarshal(response, &result)
