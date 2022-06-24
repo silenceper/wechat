@@ -226,6 +226,36 @@ type AuthorizerInfo struct {
 	}
 	Alias     string `json:"alias"`
 	QrcodeURL string `json:"qrcode_url"`
+
+	MiniProgramInfo *MiniProgramInfo       `json:"MiniProgramInfo"`
+	RegisterType    int                    `json:"register_type"`
+	AccountStatus   int                    `json:"account_status"`
+	BasicConfig     *AuthorizerBasicConfig `json:"basic_config"`
+}
+
+// AuthorizerBasicConfig 授权账号的基础配置结构体
+type AuthorizerBasicConfig struct {
+	IsPhoneConfigured bool `json:"isPhoneConfigured"`
+	IsEmailConfigured bool `json:"isEmailConfigured"`
+}
+
+// MiniProgramInfo 授权账号小程序配置 授权账号为小程序时存在
+type MiniProgramInfo struct {
+	Network struct {
+		RequestDomain   []string `json:"RequestDomain"`
+		WsRequestDomain []string `json:"WsRequestDomain"`
+		UploadDomain    []string `json:"UploadDomain"`
+		DownloadDomain  []string `json:"DownloadDomain"`
+		BizDomain       []string `json:"BizDomain"`
+		UDPDomain       []string `json:"UDPDomain"`
+	} `json:"network"`
+	Categories []CategoriesInfo `json:"categories"`
+}
+
+// CategoriesInfo 授权账号小程序配置的类目信息
+type CategoriesInfo struct {
+	First  string `wx:"first"`
+	Second string `wx:"second"`
 }
 
 // GetAuthrInfo 获取授权方的帐号基本信息
