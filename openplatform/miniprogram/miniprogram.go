@@ -2,6 +2,7 @@ package miniprogram
 
 import (
 	"fmt"
+
 	context2 "github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/urllink"
 	openContext "github.com/silenceper/wechat/v2/openplatform/context"
