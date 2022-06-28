@@ -3,7 +3,7 @@ package miniprogram
 import (
 	"fmt"
 
-	context2 "github.com/silenceper/wechat/v2/miniprogram/context"
+	miniContext "github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/urllink"
 	openContext "github.com/silenceper/wechat/v2/openplatform/context"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/basic"
@@ -59,12 +59,9 @@ func (miniProgram *MiniProgram) GetBasic() *basic.Basic {
 	return basic.NewBasic(miniProgram.openContext, miniProgram.AppID)
 }
 
-/*
-GetURLLink 小程序URL Link接口
-调用前需确认已调用 SetAuthorizerRefreshToken 避免由于缓存中 authorizer_access_token 过期执行中断
-*/
+// GetURLLink 小程序URL Link接口 调用前需确认已调用 SetAuthorizerRefreshToken 避免由于缓存中 authorizer_access_token 过期执行中断
 func (miniProgram *MiniProgram) GetURLLink() *urllink.URLLink {
-	return urllink.NewURLLink(&context2.Context{
+	return urllink.NewURLLink(&miniContext.Context{
 		AccessTokenHandle: miniProgram,
 	})
 }
