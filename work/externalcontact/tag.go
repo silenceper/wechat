@@ -166,8 +166,9 @@ func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
 }
 
 // MarkTagRequest 给客户打标签请求
+// 相关文档地址：https://developer.work.weixin.qq.com/document/path/92118
 type MarkTagRequest struct {
-	UserID         string   `json:"user_id"`
+	UserID         string   `json:"userid"`
 	ExternalUserID string   `json:"external_userid"`
 	AddTag         []string `json:"add_tag"`
 	RemoveTag      []string `json:"remove_tag"`
