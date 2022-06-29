@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -209,7 +208,10 @@ func httpWithTLS(rootCa, key string) (*http.Client, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to find cert path=%s, error=%v", rootCa, err)
 	}
-	cert := pkcs12ToPem(certData, key)
+	cert, err := pkcs12ToPem(certData, key)
+	if err != nil {
+		return nil, err
+	}
 	config := &tls.Config{
 		Certificates: []tls.Certificate{cert},
 	}
@@ -222,15 +224,10 @@ func httpWithTLS(rootCa, key string) (*http.Client, error) {
 }
 
 // pkcs12ToPem 将Pkcs12转成Pem
-func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
+func pkcs12ToPem(p12 []byte, password string) (tls.Certificate, error) {
 	blocks, err := pkcs12.ToPEM(p12, password)
-	defer func() {
-		if x := recover(); x != nil {
-			log.Print(x)
-		}
-	}()
 	if err != nil {
-		panic(err)
+		return tls.Certificate{}, err
 	}
 	var pemData []byte
 	for _, b := range blocks {
@@ -238,9 +235,9 @@ func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
 	}
 	cert, err := tls.X509KeyPair(pemData, pemData)
 	if err != nil {
-		panic(err)
+		return tls.Certificate{}, err
 	}
-	return cert
+	return cert, nil
 }
 
 // PostXMLWithTLS perform a HTTP/POST request with XML body and TLS

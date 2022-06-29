@@ -5,14 +5,13 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"github.com/silenceper/wechat/v2/global"
 	"io/ioutil"
 	"net/http"
 	"reflect"
 	"runtime/debug"
 	"strconv"
 	"strings"
-
-	log "github.com/sirupsen/logrus"
 
 	"github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/officialaccount/message"
@@ -23,6 +22,9 @@ import (
 // Server struct
 type Server struct {
 	*context.Context
+
+	debug bool
+
 	Writer  http.ResponseWriter
 	Request *http.Request
 
@@ -51,6 +53,11 @@ func NewServer(context *context.Context) *Server {
 	return srv
 }
 
+// SetDebug set debug flag
+func (srv *Server) SetDebug(isDebug bool) {
+	srv.debug = isDebug
+}
+
 // SkipValidate set skip validate
 func (srv *Server) SkipValidate(skip bool) {
 	srv.skipValidate = skip
@@ -59,7 +66,9 @@ func (srv *Server) SkipValidate(skip bool) {
 // Serve 处理微信的请求消息
 func (srv *Server) Serve() error {
 	if !srv.Validate() {
-		log.Error("Validate Signature Failed.")
+		if srv.debug {
+			global.Logger.Error("Validate Signature Failed.")
+		}
 		return fmt.Errorf("请求校验失败")
 	}
 
@@ -75,7 +84,9 @@ func (srv *Server) Serve() error {
 	}
 
 	// debug print request msg
-	log.Debugf("request msg =%s", string(srv.RequestRawXMLMsg))
+	if srv.debug {
+		global.Logger.Debugf("request msg =%s", string(srv.RequestRawXMLMsg))
+	}
 
 	return srv.buildResponse(response)
 }
@@ -88,7 +99,9 @@ func (srv *Server) Validate() bool {
 	timestamp := srv.Query("timestamp")
 	nonce := srv.Query("nonce")
 	signature := srv.Query("signature")
-	log.Debugf("validate signature, timestamp=%s, nonce=%s", timestamp, nonce)
+	if srv.debug {
+		global.Logger.Debugf("validate signature, timestamp=%s, nonce=%s", timestamp, nonce)
+	}
 	return signature == util.Signature(srv.Token, timestamp, nonce)
 }
 
@@ -271,7 +284,9 @@ func (srv *Server) buildResponse(reply *message.Reply) (err error) {
 // Send 将自定义的消息发送
 func (srv *Server) Send() (err error) {
 	replyMsg := srv.ResponseMsg
-	log.Debugf("response msg =%+v", replyMsg)
+	if srv.debug {
+		global.Logger.Debugf("response msg =%+v", replyMsg)
+	}
 	if srv.isSafeMode {
 		// 安全模式下对消息进行加密
 		var encryptedMsg []byte

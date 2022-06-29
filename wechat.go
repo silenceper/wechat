@@ -1,11 +1,8 @@
 package wechat
 
 import (
-	"os"
-
-	log "github.com/sirupsen/logrus"
-
 	"github.com/silenceper/wechat/v2/cache"
+	"github.com/silenceper/wechat/v2/global"
 	"github.com/silenceper/wechat/v2/miniprogram"
 	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
 	"github.com/silenceper/wechat/v2/officialaccount"
@@ -16,18 +13,21 @@ import (
 	payConfig "github.com/silenceper/wechat/v2/pay/config"
 	"github.com/silenceper/wechat/v2/work"
 	workConfig "github.com/silenceper/wechat/v2/work/config"
+	"github.com/sirupsen/logrus"
+	"os"
 )
 
 func init() {
+	global.Logger = logrus.New()
 	// Log as JSON instead of the default ASCII formatter.
-	log.SetFormatter(&log.TextFormatter{})
+	global.Logger.SetFormatter(&logrus.TextFormatter{})
 
 	// Output to stdout instead of the default stderr
 	// Can be any io.Writer, see below for File example
-	log.SetOutput(os.Stdout)
+	global.Logger.SetOutput(os.Stdout)
 
 	// Only log the warning severity or above.
-	log.SetLevel(log.DebugLevel)
+	global.Logger.SetLevel(logrus.DebugLevel)
 }
 
 // Wechat struct
