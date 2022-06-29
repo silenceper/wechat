@@ -2,6 +2,5 @@ package global
 
 import "github.com/sirupsen/logrus"
 
-var (
-	Logger *logrus.Logger
-)
+// Logger 全局日志对象
+var Logger *logrus.Logger
