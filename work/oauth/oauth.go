@@ -59,7 +59,8 @@ type ResUserInfo struct {
 	UserID   string `json:"UserId"`
 	DeviceID string `json:"DeviceId"`
 	// 非企业成员授权时返回
-	OpenID string `json:"OpenId"`
+	OpenID         string `json:"OpenId"`
+	ExternalUserID string `json:"external_userid"`
 }
 
 // UserFromCode 根据code获取用户信息
