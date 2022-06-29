@@ -29,7 +29,7 @@ type MiniProgram struct {
 
 // NewMiniProgram 实例化小程序API
 func NewMiniProgram(cfg *config.Config) *MiniProgram {
-	defaultAkHandle := credential.NewDefaultAccessToken(cfg.AppID, cfg.AppSecret, credential.CacheKeyMiniProgramPrefix, cfg.Cache)
+	defaultAkHandle := credential.NewDefaultAccessToken(cfg.AppID, cfg.AppSecret, cfg.ProxyUrl, credential.CacheKeyMiniProgramPrefix, cfg.Cache)
 	ctx := &context.Context{
 		Config:            cfg,
 		AccessTokenHandle: defaultAkHandle,

@@ -1,8 +1,8 @@
 package credential
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/imroc/req/v3"
 	"sync"
 	"time"
 
@@ -27,19 +27,21 @@ const (
 type DefaultAccessToken struct {
 	appID           string
 	appSecret       string
+	proxyUrl        string
 	cacheKeyPrefix  string
 	cache           cache.Cache
 	accessTokenLock *sync.Mutex
 }
 
 // NewDefaultAccessToken new DefaultAccessToken
-func NewDefaultAccessToken(appID, appSecret, cacheKeyPrefix string, cache cache.Cache) AccessTokenHandle {
+func NewDefaultAccessToken(appID, appSecret, proxyUrl, cacheKeyPrefix string, cache cache.Cache) AccessTokenHandle {
 	if cache == nil {
 		panic("cache is ineed")
 	}
 	return &DefaultAccessToken{
 		appID:           appID,
 		appSecret:       appSecret,
+		proxyUrl:        proxyUrl,
 		cache:           cache,
 		cacheKeyPrefix:  cacheKeyPrefix,
 		accessTokenLock: new(sync.Mutex),
@@ -73,7 +75,7 @@ func (ak *DefaultAccessToken) GetAccessToken() (accessToken string, err error) {
 
 	// cache失效，从微信服务器获取
 	var resAccessToken ResAccessToken
-	resAccessToken, err = GetTokenFromServer(fmt.Sprintf(accessTokenURL, ak.appID, ak.appSecret))
+	resAccessToken, err = GetTokenFromServer(fmt.Sprintf(accessTokenURL, ak.appID, ak.appSecret), ak.proxyUrl)
 	if err != nil {
 		return
 	}
@@ -91,6 +93,7 @@ func (ak *DefaultAccessToken) GetAccessToken() (accessToken string, err error) {
 type WorkAccessToken struct {
 	CorpID          string
 	CorpSecret      string
+	ProxyUrl        string `json:"proxyUrl"` // 代理url
 	cacheKeyPrefix  string
 	cache           cache.Cache
 	accessTokenLock *sync.Mutex
@@ -124,7 +127,7 @@ func (ak *WorkAccessToken) GetAccessToken() (accessToken string, err error) {
 
 	// cache失效，从微信服务器获取
 	var resAccessToken ResAccessToken
-	resAccessToken, err = GetTokenFromServer(fmt.Sprintf(workAccessTokenURL, ak.CorpID, ak.CorpSecret))
+	resAccessToken, err = GetTokenFromServer(fmt.Sprintf(workAccessTokenURL, ak.CorpID, ak.CorpSecret), ak.cacheKeyPrefix)
 	if err != nil {
 		return
 	}
@@ -139,13 +142,16 @@ func (ak *WorkAccessToken) GetAccessToken() (accessToken string, err error) {
 }
 
 // GetTokenFromServer 强制从微信服务器获取token
-func GetTokenFromServer(url string) (resAccessToken ResAccessToken, err error) {
-	var body []byte
-	body, err = util.HTTPGet(url)
+func GetTokenFromServer(url, proxyUrl string) (resAccessToken ResAccessToken, err error) {
+	client := req.C()
+	if proxyUrl != "" {
+		client.SetProxyURL(proxyUrl)
+	}
+	resp, err := client.R().Get(url)
 	if err != nil {
 		return
 	}
-	err = json.Unmarshal(body, &resAccessToken)
+	err = resp.Unmarshal(&resAccessToken)
 	if err != nil {
 		return
 	}

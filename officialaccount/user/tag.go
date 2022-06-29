@@ -1,7 +1,6 @@
 package user
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/silenceper/wechat/v2/util"
@@ -42,14 +41,13 @@ func (user *User) CreateTag(tagName string) (tagInfo *TagInfo, err error) {
 		return
 	}
 	uri := fmt.Sprintf(tagCreateURL, accessToken)
-	var response []byte
 	var request struct {
 		Tag struct {
 			Name string `json:"name"`
 		} `json:"tag"`
 	}
 	request.Tag.Name = tagName
-	response, err = util.PostJSON(uri, &request)
+	response, err := user.Req().SetBody(&request).Post(uri)
 	if err != nil {
 		return
 	}
@@ -57,7 +55,7 @@ func (user *User) CreateTag(tagName string) (tagInfo *TagInfo, err error) {
 		util.CommonError
 		Tag *TagInfo `json:"tag"`
 	}
-	err = json.Unmarshal(response, &result)
+	err = response.Unmarshal(&result)
 	if err != nil {
 		return
 	}
@@ -81,11 +79,11 @@ func (user *User) DeleteTag(tagID int32) (err error) {
 		} `json:"tag"`
 	}
 	request.Tag.ID = tagID
-	resp, err := util.PostJSON(url, &request)
+	resp, err := user.Req().SetBody(&request).Post(url)
 	if err != nil {
 		return
 	}
-	return util.DecodeWithCommonError(resp, "DeleteTag")
+	return util.DecodeWithCommonError(resp.Bytes(), "DeleteTag")
 }
 
 // UpdateTag  编辑标签
@@ -103,11 +101,11 @@ func (user *User) UpdateTag(tagID int32, tagName string) (err error) {
 	}
 	request.Tag.ID = tagID
 	request.Tag.Name = tagName
-	resp, err := util.PostJSON(url, &request)
+	resp, err := user.Req().SetBody(&request).Post(url)
 	if err != nil {
 		return
 	}
-	return util.DecodeWithCommonError(resp, "UpdateTag")
+	return util.DecodeWithCommonError(resp.Bytes(), "UpdateTag")
 }
 
 // GetTag 获取公众号已创建的标签
@@ -117,7 +115,7 @@ func (user *User) GetTag() (tags []*TagInfo, err error) {
 		return nil, err
 	}
 	url := fmt.Sprintf(tagGetURL, accessToken)
-	response, err := util.HTTPGet(url)
+	response, err := user.Req().Get(url)
 	if err != nil {
 		return
 	}
@@ -125,7 +123,7 @@ func (user *User) GetTag() (tags []*TagInfo, err error) {
 		util.CommonError
 		Tags []*TagInfo `json:"tags"`
 	}
-	err = json.Unmarshal(response, &result)
+	err = response.Unmarshal(&result)
 	if err != nil {
 		return
 	}
@@ -148,12 +146,12 @@ func (user *User) OpenIDListByTag(tagID int32, nextOpenID ...string) (userList *
 	if len(nextOpenID) > 0 {
 		request.OpenID = nextOpenID[0]
 	}
-	response, err := util.PostJSON(url, &request)
+	response, err := user.Req().SetBody(&request).Post(url)
 	if err != nil {
 		return nil, err
 	}
 	userList = new(TagOpenIDList)
-	err = json.Unmarshal(response, &userList)
+	err = response.Unmarshal(&userList)
 	if err != nil {
 		return
 	}
@@ -177,11 +175,11 @@ func (user *User) BatchTag(openIDList []string, tagID int32) (err error) {
 		TagID:      tagID,
 	}
 	url := fmt.Sprintf(tagBatchtaggingURL, accessToken)
-	resp, err := util.PostJSON(url, &request)
+	resp, err := user.Req().SetBody(&request).Post(url)
 	if err != nil {
 		return
 	}
-	return util.DecodeWithCommonError(resp, "BatchTag")
+	return util.DecodeWithCommonError(resp.Bytes(), "BatchTag")
 }
 
 // BatchUntag 批量为用户取消标签
@@ -201,11 +199,11 @@ func (user *User) BatchUntag(openIDList []string, tagID int32) (err error) {
 		OpenIDList: openIDList,
 		TagID:      tagID,
 	}
-	resp, err := util.PostJSON(url, &request)
+	resp, err := user.Req().SetBody(&request).Post(url)
 	if err != nil {
 		return
 	}
-	return util.DecodeWithCommonError(resp, "BatchUntag")
+	return util.DecodeWithCommonError(resp.Bytes(), "BatchUntag")
 }
 
 // UserTidList 获取用户身上的标签列表
@@ -221,7 +219,7 @@ func (user *User) UserTidList(openID string) (tagIDList []int32, err error) {
 	}{
 		OpenID: openID,
 	}
-	resp, err := util.PostJSON(url, &request)
+	resp, err := user.Req().SetBody(&request).Post(url)
 	if err != nil {
 		return
 	}
@@ -229,7 +227,7 @@ func (user *User) UserTidList(openID string) (tagIDList []int32, err error) {
 		util.CommonError
 		TagIDList []int32 `json:"tagid_list"`
 	}
-	err = json.Unmarshal(resp, &result)
+	err = resp.UnmarshalJson(&result)
 	if err != nil {
 		return
 	}

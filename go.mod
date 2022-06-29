@@ -6,6 +6,7 @@ require (
 	github.com/bradfitz/gomemcache v0.0.0-20220106215444-fb4bf637b56d
 	github.com/fatih/structs v1.1.0
 	github.com/go-redis/redis/v8 v8.11.6-0.20220405070650-99c79f7041fc
+	github.com/imroc/req/v3 v3.10.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cast v1.4.1
 	github.com/stretchr/testify v1.7.1

@@ -1,14 +1,12 @@
 package config
 
 import (
-	"github.com/silenceper/wechat/v2/cache"
+	"github.com/silenceper/wechat/v2/core"
 )
 
 // Config .config for 微信开放平台
 type Config struct {
-	AppID          string `json:"app_id"`           // appid
-	AppSecret      string `json:"app_secret"`       // appsecret
+	*core.Config
 	Token          string `json:"token"`            // token
 	EncodingAESKey string `json:"encoding_aes_key"` // EncodingAESKey
-	Cache          cache.Cache
 }
