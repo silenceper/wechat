@@ -1,6 +1,8 @@
 package wechat
 
 import (
+	"os"
+
 	"github.com/silenceper/wechat/v2/cache"
 	"github.com/silenceper/wechat/v2/global"
 	"github.com/silenceper/wechat/v2/miniprogram"
@@ -14,7 +16,6 @@ import (
 	"github.com/silenceper/wechat/v2/work"
 	workConfig "github.com/silenceper/wechat/v2/work/config"
 	"github.com/sirupsen/logrus"
-	"os"
 )
 
 func init() {
