@@ -54,7 +54,6 @@ type TagGroupTagItem struct {
 // GetCropTagList 获取企业标签库
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) GetCropTagList(req GetCropTagRequest) ([]TagGroup, error) {
-	var accessToken string
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
@@ -127,7 +126,6 @@ type EditCropTagRequest struct {
 // EditCropTag 修改企业客户标签
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) EditCropTag(req EditCropTagRequest) error {
-	var accessToken string
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
@@ -151,7 +149,6 @@ type DeleteCropTagRequest struct {
 // DeleteCropTag 删除企业客户标签
 // @see https://developer.work.weixin.qq.com/document/path/92117
 func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
-	var accessToken string
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err
@@ -177,7 +174,6 @@ type MarkTagRequest struct {
 // MarkTag 为客户打上标签
 // @see https://developer.work.weixin.qq.com/document/path/92118
 func (r *Client) MarkTag(request MarkTagRequest) error {
-	var accessToken string
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return err

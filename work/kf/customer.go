@@ -38,12 +38,10 @@ func (r *Client) CustomerBatchGet(options CustomerBatchGetOptions) (info Custome
 		accessToken string
 		data        []byte
 	)
-	accessToken, err = r.ctx.GetAccessToken()
-	if err != nil {
+	if accessToken, err = r.ctx.GetAccessToken(); err != nil {
 		return
 	}
-	data, err = util.PostJSON(fmt.Sprintf(customerBatchGetAddr, accessToken), options)
-	if err != nil {
+	if data, err = util.PostJSON(fmt.Sprintf(customerBatchGetAddr, accessToken), options); err != nil {
 		return
 	}
 	if err = json.Unmarshal(data, &info); err != nil {

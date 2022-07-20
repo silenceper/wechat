@@ -34,12 +34,10 @@ func (r *Client) UpgradeServiceConfig() (info UpgradeServiceConfigSchema, err er
 		accessToken string
 		data        []byte
 	)
-	accessToken, err = r.ctx.GetAccessToken()
-	if err != nil {
+	if accessToken, err = r.ctx.GetAccessToken(); err != nil {
 		return
 	}
-	data, err = util.HTTPGet(fmt.Sprintf(upgradeServiceConfigAddr, accessToken))
-	if err != nil {
+	if data, err = util.HTTPGet(fmt.Sprintf(upgradeServiceConfigAddr, accessToken)); err != nil {
 		return
 	}
 	if err = json.Unmarshal(data, &info); err != nil {
@@ -72,12 +70,10 @@ func (r *Client) UpgradeService(options UpgradeServiceOptions) (info util.Common
 		accessToken string
 		data        []byte
 	)
-	accessToken, err = r.ctx.GetAccessToken()
-	if err != nil {
+	if accessToken, err = r.ctx.GetAccessToken(); err != nil {
 		return
 	}
-	data, err = util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options)
-	if err != nil {
+	if data, err = util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options); err != nil {
 		return
 	}
 	if err = json.Unmarshal(data, &info); err != nil {
@@ -106,12 +102,10 @@ func (r *Client) UpgradeMemberService(options UpgradeMemberServiceOptions) (info
 		accessToken string
 		data        []byte
 	)
-	accessToken, err = r.ctx.GetAccessToken()
-	if err != nil {
+	if accessToken, err = r.ctx.GetAccessToken(); err != nil {
 		return
 	}
-	data, err = util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options)
-	if err != nil {
+	if data, err = util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options); err != nil {
 		return
 	}
 	if err = json.Unmarshal(data, &info); err != nil {
@@ -169,12 +163,10 @@ func (r *Client) UpgradeServiceCancel(options UpgradeServiceCancelOptions) (info
 		accessToken string
 		data        []byte
 	)
-	accessToken, err = r.ctx.GetAccessToken()
-	if err != nil {
+	if accessToken, err = r.ctx.GetAccessToken(); err != nil {
 		return
 	}
-	data, err = util.PostJSON(fmt.Sprintf(upgradeServiceCancel, accessToken), options)
-	if err != nil {
+	if data, err = util.PostJSON(fmt.Sprintf(upgradeServiceCancel, accessToken), options); err != nil {
 		return
 	}
 	if err = json.Unmarshal(data, &info); err != nil {
