@@ -42,8 +42,8 @@ func HTTPGetContext(ctx context.Context, uri string) ([]byte, error) {
 }
 
 // HTTPPost post 请求
-func HTTPPost(uri string, data []byte) ([]byte, error) {
-	return HTTPPostContext(context.Background(), uri, data, "")
+func HTTPPost(uri string, data string) ([]byte, error) {
+	return HTTPPostContext(context.Background(), uri, []byte(data), "")
 }
 
 // HTTPPostContext post 请求
