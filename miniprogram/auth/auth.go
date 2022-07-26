@@ -84,6 +84,8 @@ func (auth *Auth) CheckEncryptedDataContext(ctx context2.Context, encryptedMsgHa
 	if at, err = auth.GetAccessToken(); err != nil {
 		return
 	}
+
+	// 由于GetPhoneNumberContext需要传入JSON，所以HTTPPostContext入参改为[]byte
 	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(checkEncryptedDataURL, at), []byte("encrypted_msg_hash="+encryptedMsgHash), nil); err != nil {
 		return
 	}
