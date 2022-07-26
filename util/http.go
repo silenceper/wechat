@@ -43,19 +43,19 @@ func HTTPGetContext(ctx context.Context, uri string) ([]byte, error) {
 
 // HTTPPost post 请求
 func HTTPPost(uri string, data string) ([]byte, error) {
-	return HTTPPostContext(context.Background(), uri, []byte(data), "")
+	return HTTPPostContext(context.Background(), uri, []byte(data), nil)
 }
 
 // HTTPPostContext post 请求
-func HTTPPostContext(ctx context.Context, uri string, data []byte, contentType string) ([]byte, error) {
+func HTTPPostContext(ctx context.Context, uri string, data []byte, header map[string]string) ([]byte, error) {
 	body := bytes.NewBuffer(data)
 	request, err := http.NewRequestWithContext(ctx, http.MethodPost, uri, body)
 	if err != nil {
 		return nil, err
 	}
 
-	if contentType != "" {
-		request.Header.Set("Content-Type", contentType)
+	for key, value := range header {
+		request.Header.Set(key, value)
 	}
 
 	response, err := http.DefaultClient.Do(request)

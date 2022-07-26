@@ -84,7 +84,7 @@ func (auth *Auth) CheckEncryptedDataContext(ctx context2.Context, encryptedMsgHa
 	if at, err = auth.GetAccessToken(); err != nil {
 		return
 	}
-	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(checkEncryptedDataURL, at), []byte("encrypted_msg_hash="+encryptedMsgHash), ""); err != nil {
+	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(checkEncryptedDataURL, at), []byte("encrypted_msg_hash="+encryptedMsgHash), nil); err != nil {
 		return
 	}
 	if err = util.DecodeWithError(response, &result, "CheckEncryptedDataAuth"); err != nil {
@@ -130,7 +130,8 @@ func (auth *Auth) GetPhoneNumberContext(ctx context2.Context, code string) (*Get
 		return nil, err
 	}
 
-	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(getPhoneNumber, at), bodyBytes, "application/json;charset=utf-8"); err != nil {
+	header := map[string]string{"Content-Type": "application/json;charset=utf-8"}
+	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(getPhoneNumber, at), bodyBytes, header); err != nil {
 		return nil, err
 	}
 
