@@ -43,16 +43,21 @@ func HTTPGetContext(ctx context.Context, uri string) ([]byte, error) {
 
 // HTTPPost post 请求
 func HTTPPost(uri string, data string) ([]byte, error) {
-	return HTTPPostContext(context.Background(), uri, data)
+	return HTTPPostContext(context.Background(), uri, []byte(data), nil)
 }
 
 // HTTPPostContext post 请求
-func HTTPPostContext(ctx context.Context, uri string, data string) ([]byte, error) {
-	body := bytes.NewBuffer([]byte(data))
+func HTTPPostContext(ctx context.Context, uri string, data []byte, header map[string]string) ([]byte, error) {
+	body := bytes.NewBuffer(data)
 	request, err := http.NewRequestWithContext(ctx, http.MethodPost, uri, body)
 	if err != nil {
 		return nil, err
 	}
+
+	for key, value := range header {
+		request.Header.Set(key, value)
+	}
+
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
 		return nil, err

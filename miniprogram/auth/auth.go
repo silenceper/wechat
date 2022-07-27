@@ -84,7 +84,9 @@ func (auth *Auth) CheckEncryptedDataContext(ctx context2.Context, encryptedMsgHa
 	if at, err = auth.GetAccessToken(); err != nil {
 		return
 	}
-	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(checkEncryptedDataURL, at), "encrypted_msg_hash="+encryptedMsgHash); err != nil {
+
+	// 由于GetPhoneNumberContext需要传入JSON，所以HTTPPostContext入参改为[]byte
+	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(checkEncryptedDataURL, at), []byte("encrypted_msg_hash="+encryptedMsgHash), nil); err != nil {
 		return
 	}
 	if err = util.DecodeWithError(response, &result, "CheckEncryptedDataAuth"); err != nil {
@@ -111,8 +113,8 @@ type PhoneInfo struct {
 	} `json:"watermark"` // 数据水印
 }
 
-// GetPhoneNumber 小程序通过code获取用户手机号
-func (auth *Auth) GetPhoneNumber(code string) (*GetPhoneNumberResponse, error) {
+// GetPhoneNumberContext 小程序通过code获取用户手机号
+func (auth *Auth) GetPhoneNumberContext(ctx context2.Context, code string) (*GetPhoneNumberResponse, error) {
 	var response []byte
 	var (
 		at  string
@@ -124,12 +126,25 @@ func (auth *Auth) GetPhoneNumber(code string) (*GetPhoneNumberResponse, error) {
 	body := map[string]interface{}{
 		"code": code,
 	}
-	if response, err = util.PostJSON(fmt.Sprintf(getPhoneNumber, at), body); err != nil {
+
+	bodyBytes, err := json.Marshal(body)
+	if err != nil {
 		return nil, err
 	}
+
+	header := map[string]string{"Content-Type": "application/json;charset=utf-8"}
+	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(getPhoneNumber, at), bodyBytes, header); err != nil {
+		return nil, err
+	}
+
 	var result GetPhoneNumberResponse
 	if err = util.DecodeWithError(response, &result, "phonenumber.getPhoneNumber"); err != nil {
 		return nil, err
 	}
 	return &result, nil
+}
+
+// GetPhoneNumber 小程序通过code获取用户手机号
+func (auth *Auth) GetPhoneNumber(code string) (*GetPhoneNumberResponse, error) {
+	return auth.GetPhoneNumberContext(context2.Background(), code)
 }
