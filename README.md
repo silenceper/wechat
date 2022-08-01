@@ -58,6 +58,19 @@ server.Send()
 
 ```
 
+
+如果你想自定义log级别,log输出目标,可以采用 `NewWechatWithLogConfig()` 方法新建实例:
+```go
+logConfig := LogConfig{
+    Level:     logrus.ErrorLevel,           // Level 是必填项
+    Output:    nil,                         // 可选,指定nil可采用默认 stdout
+    Formatter: &logrus.TextFormatter{},     // 可选,指定nil可采用默认格式TextFormatter
+}
+wc := wechat.NewWechatWithLogConfig(logConfig)
+
+...
+```
+
 ## 目录说明
 
 - officialaccount: 微信公众号API
