@@ -40,6 +40,17 @@ func NewWechat() *Wechat {
 	return &Wechat{}
 }
 
+func NewWechatWithLogConfig(config LogConfig) *Wechat {
+	if config.Formatter != nil {
+		log.SetFormatter(config.Formatter)
+	}
+	if config.Output != nil {
+		log.SetOutput(config.Output)
+	}
+	log.SetLevel(config.Level)
+	return &Wechat{}
+}
+
 // SetCache 设置cache
 func (wc *Wechat) SetCache(cache cache.Cache) {
 	wc.cache = cache
