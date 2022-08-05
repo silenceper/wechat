@@ -18,8 +18,8 @@ const (
 type (
 	// GetUserBehaviorRequest 获取「联系客户统计」数据请求
 	GetUserBehaviorRequest struct {
-		UserId    []string `json:"userid"`
-		PartyId   []int    `json:"partyid"`
+		UserID    []string `json:"userid"`
+		PartyID   []int    `json:"partyid"`
 		StartTime int      `json:"start_time"`
 		EndTime   int      `json:"end_time"`
 	}
