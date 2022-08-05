@@ -3,6 +3,7 @@ package externalcontact
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/silenceper/wechat/v2/util"
 )
 
