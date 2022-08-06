@@ -62,6 +62,3 @@ host: https://qyapi.weixin.qq.com/
 ## 应用管理
 
 TODO
-
-## 三方应用
-
