@@ -68,6 +68,8 @@ const (
 	EventPicWeixin EventType = "pic_weixin"
 	// EventLocationSelect 弹出地理位置选择器的事件推送
 	EventLocationSelect EventType = "location_select"
+	// EventViewMiniprogram 点击菜单跳转小程序的事件推送
+	EventViewMiniprogram EventType = "view_miniprogram"
 	// EventTemplateSendJobFinish 发送模板消息推送通知
 	EventTemplateSendJobFinish EventType = "TEMPLATESENDJOBFINISH"
 	// EventMassSendJobFinish 群发消息推送通知
