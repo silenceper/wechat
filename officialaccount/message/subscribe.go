@@ -149,6 +149,7 @@ func (tpl *Subscribe) Delete(templateID string) (err error) {
 	return util.DecodeWithCommonError(response, "DeleteSubscribe")
 }
 
+// PublicTemplateCategory 公众号类目
 type PublicTemplateCategory struct {
 	ID   int    `json:"id"`   //类目ID
 	Name string `json:"name"` //类目的中文名
@@ -181,6 +182,7 @@ func (tpl *Subscribe) GetCategory() (categoryList []*PublicTemplateCategory, err
 	return
 }
 
+// PublicTemplateKeyWords 模板中的关键词
 type PublicTemplateKeyWords struct {
 	KeyWordsID int    `json:"kid"`     // 关键词 id
 	Name       string `json:"name"`    // 关键词内容
@@ -215,6 +217,7 @@ func (tpl *Subscribe) GetPubTplKeyWordsByID(titleID string) (keyWordsList []*Pub
 	return
 }
 
+// PublicTemplateTitle 类目下的公共模板
 type PublicTemplateTitle struct {
 	TitleID    int    `json:"tid"`        // 模版标题 id
 	Title      string `json:"title"`      // 模版标题
