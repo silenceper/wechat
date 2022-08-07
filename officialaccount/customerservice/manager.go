@@ -8,6 +8,8 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
+type TypingStatus string
+
 const (
 	customerServiceListURL       = "https://api.weixin.qq.com/cgi-bin/customservice/getkflist"
 	customerServiceOnlineListURL = "https://api.weixin.qq.com/cgi-bin/customservice/getonlinekflist"
@@ -16,6 +18,12 @@ const (
 	customerServiceDeleteURL     = "https://api.weixin.qq.com/customservice/kfaccount/del"
 	customerServiceInviteURL     = "https://api.weixin.qq.com/customservice/kfaccount/inviteworker"
 	customerServiceUploadHeadImg = "https://api.weixin.qq.com/customservice/kfaccount/uploadheadimg"
+	customerServiceTypingURL     = "https://api.weixin.qq.com/cgi-bin/message/custom/typing"
+)
+
+const (
+	Typing       TypingStatus = "Typing"
+	CancelTyping TypingStatus = "CancelTyping"
 )
 
 type CustomerServiceManager struct {
@@ -213,5 +221,29 @@ func (csm *CustomerServiceManager) UploadHeadImg(kfAccount, fileName string) (er
 		return
 	}
 	err = util.DecodeWithCommonError(response, "UploadCustomerServiceHeadImg")
+	return
+}
+
+//SendTypingStatus 下发客服输入状态给用户
+func (csm *CustomerServiceManager) SendTypingStatus(openid string, cmd TypingStatus) (err error) {
+	var accessToken string
+	accessToken, err = csm.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", customerServiceTypingURL, accessToken)
+	data := struct {
+		ToUser  string `json:"touser"`
+		Command string `json:"command"`
+	}{
+		ToUser:  openid,
+		Command: string(cmd),
+	}
+	var response []byte
+	response, err = util.PostJSON(uri, data)
+	if err != nil {
+		return
+	}
+	err = util.DecodeWithCommonError(response, "SendTypingStatus")
 	return
 }
