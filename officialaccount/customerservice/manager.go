@@ -158,3 +158,20 @@ func (csm *CustomerServiceManager) InviteBind(kfAccount, inviteWX string) (err e
 	err = util.DecodeWithCommonError(response, "InviteBindCustomerService")
 	return
 }
+
+// UploadHeadImg 上传客服头像
+func (csm *CustomerServiceManager) UploadHeadImg(kfAccount, fileName string) (err error) {
+	var accessToken string
+	accessToken, err = csm.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s&kf_account=%s", customerServiceUploadHeadImg, accessToken, kfAccount)
+	var response []byte
+	response, err = util.PostFile("media", fileName, uri)
+	if err != nil {
+		return
+	}
+	err = util.DecodeWithCommonError(response, "UploadCustomerServiceHeadImg")
+	return
+}
