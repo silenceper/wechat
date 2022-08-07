@@ -8,6 +8,7 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
+// TypingStatus 输入状态类型
 type TypingStatus string
 
 const (
@@ -22,14 +23,18 @@ const (
 )
 
 const (
-	Typing       TypingStatus = "Typing"
+	// Typing 表示正在输入状态
+	Typing TypingStatus = "Typing"
+	// CancelTyping 表示取消正在输入状态
 	CancelTyping TypingStatus = "CancelTyping"
 )
 
+// CustomerServiceManager 客服管理者，可以管理客服
 type CustomerServiceManager struct {
 	*context.Context
 }
 
+// NewCustomerServiceManager 实例化客服管理
 func NewCustomerServiceManager(ctx *context.Context) *CustomerServiceManager {
 	csm := new(CustomerServiceManager)
 	csm.Context = ctx
@@ -41,7 +46,7 @@ type CustomerServiceInfo struct {
 	KfAccount     string `json:"kf_account"`         // 完整客服帐号，格式为：帐号前缀@公众号微信号
 	KfNick        string `json:"kf_nick"`            // 客服昵称
 	KfID          int    `json:"kf_id"`              // 客服编号
-	KfHeadImgUrl  string `json:"kf_headimgurl"`      // 客服头像
+	KfHeadImgURL  string `json:"kf_headimgurl"`      // 客服头像
 	KfWX          string `json:"kf_wx"`              // 如果客服帐号已绑定了客服人员微信号， 则此处显示微信号
 	InviteWX      string `json:"invite_wx"`          // 如果客服帐号尚未绑定微信号，但是已经发起了一个绑定邀请， 则此处显示绑定邀请的微信号
 	InviteExpTime int    `json:"invite_expire_time"` // 如果客服帐号尚未绑定微信号，但是已经发起过一个绑定邀请， 邀请的过期时间，为unix 时间戳
@@ -87,7 +92,7 @@ type resCustomerServiceOnlineList struct {
 	KfOnlineList []*CustomerServiceOnlineInfo `json:"kf_online_list"`
 }
 
-// ListOnline 获取在线客服列表
+// OnlineList 获取在线客服列表
 func (csm *CustomerServiceManager) OnlineList() (customerServiceOnlineList []*CustomerServiceOnlineInfo, err error) {
 	var accessToken string
 	accessToken, err = csm.GetAccessToken()
