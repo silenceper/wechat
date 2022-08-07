@@ -1,6 +1,7 @@
 package customerservice
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/silenceper/wechat/v2/officialaccount/context"
@@ -9,6 +10,7 @@ import (
 
 const (
 	customerServiceListURL       = "https://api.weixin.qq.com/cgi-bin/customservice/getkflist"
+	customerServiceOnlineListURL = "https://api.weixin.qq.com/cgi-bin/customservice/getonlinekflist"
 	customerServiceAddURL        = "https://api.weixin.qq.com/customservice/kfaccount/add"
 	customerServiceUpdateURL     = "https://api.weixin.qq.com/customservice/kfaccount/update"
 	customerServiceDeleteURL     = "https://api.weixin.qq.com/customservice/kfaccount/del"
@@ -30,7 +32,7 @@ func NewCustomerServiceManager(ctx *context.Context) *CustomerServiceManager {
 type CustomerServiceInfo struct {
 	KfAccount     string `json:"kf_account"`         // 完整客服帐号，格式为：帐号前缀@公众号微信号
 	KfNick        string `json:"kf_nick"`            // 客服昵称
-	KfID          string `json:"kf_id"`              // 客服编号
+	KfID          int    `json:"kf_id"`              // 客服编号
 	KfHeadImgUrl  string `json:"kf_headimgurl"`      // 客服头像
 	KfWX          string `json:"kf_wx"`              // 如果客服帐号已绑定了客服人员微信号， 则此处显示微信号
 	InviteWX      string `json:"invite_wx"`          // 如果客服帐号尚未绑定微信号，但是已经发起了一个绑定邀请， 则此处显示绑定邀请的微信号
@@ -56,11 +58,47 @@ func (csm *CustomerServiceManager) List() (customerServiceList []*CustomerServic
 		return
 	}
 	var res resCustomerServiceList
-	err = util.DecodeWithError(response, &res, "ListCustomerService")
+	err = json.Unmarshal(response, &res)
 	if err != nil {
+		err = fmt.Errorf("%s Error , errcode=%d , errmsg=%s", "ListCustomerService", 0, err.Error())
 		return
 	}
 	customerServiceList = res.KfList
+	return
+}
+
+// CustomerServiceOnlineInfo 客服在线信息
+type CustomerServiceOnlineInfo struct {
+	KfAccount    string `json:"kf_account"`
+	Status       int    `json:"status"`
+	KfID         int    `json:"kf_id"`
+	AcceptedCase int    `json:"accepted_case"`
+}
+
+type resCustomerServiceOnlineList struct {
+	KfOnlineList []*CustomerServiceOnlineInfo `json:"kf_online_list"`
+}
+
+// ListOnline 获取在线客服列表
+func (csm *CustomerServiceManager) OnlineList() (customerServiceOnlineList []*CustomerServiceOnlineInfo, err error) {
+	var accessToken string
+	accessToken, err = csm.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", customerServiceOnlineListURL, accessToken)
+	var response []byte
+	response, err = util.HTTPGet(uri)
+	if err != nil {
+		return
+	}
+	var res resCustomerServiceOnlineList
+	err = json.Unmarshal(response, &res)
+	if err != nil {
+		err = fmt.Errorf("%s Error , errcode=%d , errmsg=%s", "ListCustomerService", 0, err.Error())
+		return
+	}
+	customerServiceOnlineList = res.KfOnlineList
 	return
 }
 
@@ -147,8 +185,10 @@ func (csm *CustomerServiceManager) InviteBind(kfAccount, inviteWX string) (err e
 	uri := fmt.Sprintf("%s?access_token=%s", customerServiceInviteURL, accessToken)
 	data := struct {
 		KfAccount string `json:"kf_account"`
+		InviteWX  string `json:"invite_wx"`
 	}{
 		KfAccount: kfAccount,
+		InviteWX:  inviteWX,
 	}
 	var response []byte
 	response, err = util.PostJSON(uri, data)
