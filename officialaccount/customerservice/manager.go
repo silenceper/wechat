@@ -73,7 +73,7 @@ func (csm *Manager) List() (customerServiceList []*KeFuInfo, err error) {
 	var res resKeFuList
 	err = json.Unmarshal(response, &res)
 	if err != nil {
-		err = fmt.Errorf("%s Error , errcode=%d , errmsg=%s", "ListCustomerService", 0, err.Error())
+		err = util.NewCommonError("ListCustomerService", -1, err.Error())
 		return
 	}
 	customerServiceList = res.KfList
@@ -108,7 +108,7 @@ func (csm *Manager) OnlineList() (customerServiceOnlineList []*KeFuOnlineInfo, e
 	var res resKeFuOnlineList
 	err = json.Unmarshal(response, &res)
 	if err != nil {
-		err = fmt.Errorf("%s Error , errcode=%d , errmsg=%s", "ListCustomerService", 0, err.Error())
+		err = util.NewCommonError("ListOnlineCustomerService", -1, err.Error())
 		return
 	}
 	customerServiceOnlineList = res.KfOnlineList
