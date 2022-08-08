@@ -140,6 +140,6 @@ func (officialAccount *OfficialAccount) GetSubscribe() *message.Subscribe {
 }
 
 // GetCustomerServiceManager 客服管理
-func (officialAccount *OfficialAccount) GetCustomerServiceManager() *customerservice.CustomerServiceManager {
+func (officialAccount *OfficialAccount) GetCustomerServiceManager() *customerservice.Manager {
 	return customerservice.NewCustomerServiceManager(officialAccount.ctx)
 }
