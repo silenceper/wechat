@@ -29,20 +29,20 @@ const (
 	CancelTyping TypingStatus = "CancelTyping"
 )
 
-// CustomerServiceManager 客服管理者，可以管理客服
-type CustomerServiceManager struct {
+// Manager 客服管理者，可以管理客服
+type Manager struct {
 	*context.Context
 }
 
 // NewCustomerServiceManager 实例化客服管理
-func NewCustomerServiceManager(ctx *context.Context) *CustomerServiceManager {
-	csm := new(CustomerServiceManager)
+func NewCustomerServiceManager(ctx *context.Context) *Manager {
+	csm := new(Manager)
 	csm.Context = ctx
 	return csm
 }
 
-// CustomerServiceInfo 客服基本信息
-type CustomerServiceInfo struct {
+// KeFuInfo 客服基本信息
+type KeFuInfo struct {
 	KfAccount     string `json:"kf_account"`         // 完整客服帐号，格式为：帐号前缀@公众号微信号
 	KfNick        string `json:"kf_nick"`            // 客服昵称
 	KfID          int    `json:"kf_id"`              // 客服编号
@@ -53,12 +53,12 @@ type CustomerServiceInfo struct {
 	InviteStatus  string `json:"invite_status"`      // 邀请的状态，有等待确认“waiting”，被拒绝“rejected”， 过期“expired”
 }
 
-type resCustomerServiceList struct {
-	KfList []*CustomerServiceInfo `json:"kf_list"`
+type resKeFuList struct {
+	KfList []*KeFuInfo `json:"kf_list"`
 }
 
 // List 获取所有客服基本信息
-func (csm *CustomerServiceManager) List() (customerServiceList []*CustomerServiceInfo, err error) {
+func (csm *Manager) List() (customerServiceList []*KeFuInfo, err error) {
 	var accessToken string
 	accessToken, err = csm.GetAccessToken()
 	if err != nil {
@@ -70,7 +70,7 @@ func (csm *CustomerServiceManager) List() (customerServiceList []*CustomerServic
 	if err != nil {
 		return
 	}
-	var res resCustomerServiceList
+	var res resKeFuList
 	err = json.Unmarshal(response, &res)
 	if err != nil {
 		err = fmt.Errorf("%s Error , errcode=%d , errmsg=%s", "ListCustomerService", 0, err.Error())
@@ -80,20 +80,20 @@ func (csm *CustomerServiceManager) List() (customerServiceList []*CustomerServic
 	return
 }
 
-// CustomerServiceOnlineInfo 客服在线信息
-type CustomerServiceOnlineInfo struct {
+// KeFuOnlineInfo 客服在线信息
+type KeFuOnlineInfo struct {
 	KfAccount    string `json:"kf_account"`
 	Status       int    `json:"status"`
 	KfID         int    `json:"kf_id"`
 	AcceptedCase int    `json:"accepted_case"`
 }
 
-type resCustomerServiceOnlineList struct {
-	KfOnlineList []*CustomerServiceOnlineInfo `json:"kf_online_list"`
+type resKeFuOnlineList struct {
+	KfOnlineList []*KeFuOnlineInfo `json:"kf_online_list"`
 }
 
 // OnlineList 获取在线客服列表
-func (csm *CustomerServiceManager) OnlineList() (customerServiceOnlineList []*CustomerServiceOnlineInfo, err error) {
+func (csm *Manager) OnlineList() (customerServiceOnlineList []*KeFuOnlineInfo, err error) {
 	var accessToken string
 	accessToken, err = csm.GetAccessToken()
 	if err != nil {
@@ -105,7 +105,7 @@ func (csm *CustomerServiceManager) OnlineList() (customerServiceOnlineList []*Cu
 	if err != nil {
 		return
 	}
-	var res resCustomerServiceOnlineList
+	var res resKeFuOnlineList
 	err = json.Unmarshal(response, &res)
 	if err != nil {
 		err = fmt.Errorf("%s Error , errcode=%d , errmsg=%s", "ListCustomerService", 0, err.Error())
@@ -116,7 +116,7 @@ func (csm *CustomerServiceManager) OnlineList() (customerServiceOnlineList []*Cu
 }
 
 // Add 添加客服账号
-func (csm *CustomerServiceManager) Add(kfAccount, nickName string) (err error) {
+func (csm *Manager) Add(kfAccount, nickName string) (err error) {
 	// kfAccount：完整客服帐号，格式为：帐号前缀@公众号微信号，帐号前缀最多10个字符，必须是英文、数字字符或者下划线，后缀为公众号微信号，长度不超过30个字符
 	// nickName：客服昵称，最长16个字
 	// 参数此处均不做校验
@@ -143,7 +143,7 @@ func (csm *CustomerServiceManager) Add(kfAccount, nickName string) (err error) {
 }
 
 // Update 修改客服账号
-func (csm *CustomerServiceManager) Update(kfAccount, nickName string) (err error) {
+func (csm *Manager) Update(kfAccount, nickName string) (err error) {
 	var accessToken string
 	accessToken, err = csm.GetAccessToken()
 	if err != nil {
@@ -167,7 +167,7 @@ func (csm *CustomerServiceManager) Update(kfAccount, nickName string) (err error
 }
 
 // Delete 删除客服帐号
-func (csm *CustomerServiceManager) Delete(kfAccount string) (err error) {
+func (csm *Manager) Delete(kfAccount string) (err error) {
 	var accessToken string
 	accessToken, err = csm.GetAccessToken()
 	if err != nil {
@@ -189,7 +189,7 @@ func (csm *CustomerServiceManager) Delete(kfAccount string) (err error) {
 }
 
 // InviteBind 邀请绑定客服帐号和微信号
-func (csm *CustomerServiceManager) InviteBind(kfAccount, inviteWX string) (err error) {
+func (csm *Manager) InviteBind(kfAccount, inviteWX string) (err error) {
 	var accessToken string
 	accessToken, err = csm.GetAccessToken()
 	if err != nil {
@@ -213,7 +213,7 @@ func (csm *CustomerServiceManager) InviteBind(kfAccount, inviteWX string) (err e
 }
 
 // UploadHeadImg 上传客服头像
-func (csm *CustomerServiceManager) UploadHeadImg(kfAccount, fileName string) (err error) {
+func (csm *Manager) UploadHeadImg(kfAccount, fileName string) (err error) {
 	var accessToken string
 	accessToken, err = csm.GetAccessToken()
 	if err != nil {
@@ -230,7 +230,7 @@ func (csm *CustomerServiceManager) UploadHeadImg(kfAccount, fileName string) (er
 }
 
 //SendTypingStatus 下发客服输入状态给用户
-func (csm *CustomerServiceManager) SendTypingStatus(openid string, cmd TypingStatus) (err error) {
+func (csm *Manager) SendTypingStatus(openid string, cmd TypingStatus) (err error) {
 	var accessToken string
 	accessToken, err = csm.GetAccessToken()
 	if err != nil {
