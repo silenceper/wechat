@@ -34,12 +34,12 @@ func (r *Client) GetUserinfo3rd(code string) (*GetUserinfo3rdResponse, error) {
 	var (
 		response []byte
 		err      error
-		result   *GetUserinfo3rdResponse
 	)
 	response, err = util.HTTPGet(fmt.Sprintf(GetUserinfo3rdURL, r.SuiteAccessToken, code))
 	if err != nil {
 		return nil, err
 	}
+	result := &GetUserinfo3rdResponse{}
 	err = util.DecodeWithError(response, result, "GetUserinfo3rd")
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func (r *Client) GetUserDetail3rd(request *GetUserDetail3rdRequest) (*GetUserDet
 	if err != nil {
 		return nil, err
 	}
-	var result *GetUserDetail3rdResponse
+	result := &GetUserDetail3rdResponse{}
 	err = util.DecodeWithError(response, &result, "GetUserDetail3rd")
 	if err != nil {
 		return nil, err
