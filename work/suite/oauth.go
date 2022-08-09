@@ -77,7 +77,7 @@ func (r *Client) GetUserDetail3rd(request *GetUserDetail3rdRequest) (*GetUserDet
 		return nil, err
 	}
 	result := &GetUserDetail3rdResponse{}
-	err = util.DecodeWithError(response, &result, "GetUserDetail3rd")
+	err = util.DecodeWithError(response, result, "GetUserDetail3rd")
 	if err != nil {
 		return nil, err
 	}
