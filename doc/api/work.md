@@ -68,7 +68,11 @@ host: https://qyapi.weixin.qq.com/
 | 获取「群聊数据统计」数据 (按群主聚合的方式) | POST      |  /cgi-bin/externalcontact/groupchat/statistic      | YES        | (r *Client) GetGroupChatStat  | MARKWANG  |
 | 获取「群聊数据统计」数据 (按自然日聚合的方式) | POST      |  /cgi-bin/externalcontact/groupchat/statistic_group_by_day      | YES        | (r *Client) GetGroupChatStatByDay  | MARKWANG  |
 
-## 应用管理
+## 通讯录管理
+[官方文档](https://developer.work.weixin.qq.com/document/path/95406/90336)
 
-TODO
+|    名称     | 请求方式 | URL                                     | 是否已实现   | 使用方法                            | 贡献者      |
+|:---------:|------|:----------------------------------------| ---------- | -------------------------------   |----------|
+| 获取子部门ID列表 | GET  | /cgi-bin/department/simplelist          | YES        | (r *Client) DepartmentSimpleList| MARKWANG |
+|  获取部门成员   | GET | /cgi-bin/user/simplelist                | YES        | (r *Client) UserSimpleList  | MARKWANG  |
 

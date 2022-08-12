@@ -2,6 +2,7 @@ package work
 
 import (
 	"github.com/silenceper/wechat/v2/credential"
+	"github.com/silenceper/wechat/v2/work/addresslist"
 	"github.com/silenceper/wechat/v2/work/config"
 	"github.com/silenceper/wechat/v2/work/context"
 	"github.com/silenceper/wechat/v2/work/externalcontact"
@@ -48,4 +49,9 @@ func (wk *Work) GetKF() (*kf.Client, error) {
 // GetExternalContact get external_contact
 func (wk *Work) GetExternalContact() *externalcontact.Client {
 	return externalcontact.NewClient(wk.ctx)
+}
+
+// GetAddressList get address_list
+func (wk *Work) GetAddressList() *addresslist.Client {
+	return addresslist.NewClient(wk.ctx)
 }
