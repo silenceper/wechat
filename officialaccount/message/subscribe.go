@@ -8,10 +8,13 @@ import (
 )
 
 const (
-	subscribeSendURL         = "https://api.weixin.qq.com/cgi-bin/message/subscribe/bizsend"
-	subscribeTemplateListURL = "https://api.weixin.qq.com/wxaapi/newtmpl/gettemplate"
-	subscribeTemplateAddURL  = "https://api.weixin.qq.com/wxaapi/newtmpl/addtemplate"
-	subscribeTemplateDelURL  = "https://api.weixin.qq.com/wxaapi/newtmpl/deltemplate"
+	subscribeSendURL                      = "https://api.weixin.qq.com/cgi-bin/message/subscribe/bizsend"
+	subscribeTemplateListURL              = "https://api.weixin.qq.com/wxaapi/newtmpl/gettemplate"
+	subscribeTemplateAddURL               = "https://api.weixin.qq.com/wxaapi/newtmpl/addtemplate"
+	subscribeTemplateDelURL               = "https://api.weixin.qq.com/wxaapi/newtmpl/deltemplate"
+	subscribeTemplateGetCategoryURL       = "https://api.weixin.qq.com/wxaapi/newtmpl/getcategory"
+	subscribeTemplateGetPubTplKeyWorksURL = "https://api.weixin.qq.com/wxaapi/newtmpl/getpubtemplatekeywords"
+	subscribeTemplateGetPubTplTitles      = "https://api.weixin.qq.com/wxaapi/newtmpl/getpubtemplatetitles"
 )
 
 // Subscribe 订阅消息
@@ -144,4 +147,109 @@ func (tpl *Subscribe) Delete(templateID string) (err error) {
 		return
 	}
 	return util.DecodeWithCommonError(response, "DeleteSubscribe")
+}
+
+// PublicTemplateCategory 公众号类目
+type PublicTemplateCategory struct {
+	ID   int    `json:"id"`   //类目ID
+	Name string `json:"name"` //类目的中文名
+}
+
+type resSubscribeCategoryList struct {
+	util.CommonError
+	CategoryList []*PublicTemplateCategory `json:"data"`
+}
+
+// GetCategory 获取公众号类目
+func (tpl *Subscribe) GetCategory() (categoryList []*PublicTemplateCategory, err error) {
+	var accessToken string
+	accessToken, err = tpl.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s", subscribeTemplateGetCategoryURL, accessToken)
+	var response []byte
+	response, err = util.HTTPGet(uri)
+	if err != nil {
+		return
+	}
+	var result resSubscribeCategoryList
+	err = util.DecodeWithError(response, &result, "GetCategory")
+	if err != nil {
+		return
+	}
+	categoryList = result.CategoryList
+	return
+}
+
+// PublicTemplateKeyWords 模板中的关键词
+type PublicTemplateKeyWords struct {
+	KeyWordsID int    `json:"kid"`     // 关键词 id
+	Name       string `json:"name"`    // 关键词内容
+	Example    string `json:"example"` //关键词内容对应的示例
+	Rule       string `json:"rule"`    // 参数类型
+}
+
+type resPublicTemplateKeyWordsList struct {
+	util.CommonError
+	KeyWordsList []*PublicTemplateKeyWords `json:"data"` //关键词列表
+}
+
+// GetPubTplKeyWordsByID 获取模板中的关键词
+func (tpl *Subscribe) GetPubTplKeyWordsByID(titleID string) (keyWordsList []*PublicTemplateKeyWords, err error) {
+	var accessToken string
+	accessToken, err = tpl.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s&tid=%s", subscribeTemplateGetPubTplKeyWorksURL, accessToken, titleID)
+	var response []byte
+	response, err = util.HTTPGet(uri)
+	if err != nil {
+		return
+	}
+	var result resPublicTemplateKeyWordsList
+	err = util.DecodeWithError(response, &result, "GetPublicTemplateKeyWords")
+	if err != nil {
+		return
+	}
+	keyWordsList = result.KeyWordsList
+	return
+}
+
+// PublicTemplateTitle 类目下的公共模板
+type PublicTemplateTitle struct {
+	TitleID    int    `json:"tid"`        // 模版标题 id
+	Title      string `json:"title"`      // 模版标题
+	Type       int    `json:"type"`       // 模版类型，2 为一次性订阅，3 为长期订阅
+	CategoryID string `json:"categoryId"` // 模版所属类目 id
+}
+
+type resPublicTemplateTitleList struct {
+	util.CommonError
+	Count             int                    `json:"count"` //公共模板列表总数
+	TemplateTitleList []*PublicTemplateTitle `json:"data"`  //模板标题列表
+}
+
+// GetPublicTemplateTitleList 获取类目下的公共模板
+func (tpl *Subscribe) GetPublicTemplateTitleList(ids string, start int, limit int) (count int, templateTitleList []*PublicTemplateTitle, err error) {
+	var accessToken string
+	accessToken, err = tpl.GetAccessToken()
+	if err != nil {
+		return
+	}
+	uri := fmt.Sprintf("%s?access_token=%s&ids=%s&start=%d&limit=%d", subscribeTemplateGetPubTplTitles, accessToken, ids, start, limit)
+	var response []byte
+	response, err = util.HTTPGet(uri)
+	if err != nil {
+		return
+	}
+	var result resPublicTemplateTitleList
+	err = util.DecodeWithError(response, &result, "GetPublicTemplateTitle")
+	if err != nil {
+		return
+	}
+	count = result.Count
+	templateTitleList = result.TemplateTitleList
+	return
 }

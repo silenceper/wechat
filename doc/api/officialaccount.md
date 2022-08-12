@@ -19,9 +19,9 @@
 | -------------------- | -------- | -------------------------------------- | ---------- | ----------------------- |
 | 选用模板             | POST     | /wxaapi/newtmpl/addtemplate            | YES        | (tpl *Subscribe) Add    |
 | 删除模板             | POST     | /wxaapi/newtmpl/deltemplate            | YES        | (tpl *Subscribe) Delete |
-| 获取公众号类目       | GET      | /wxaapi/newtmpl/getcategory            | NO         |                         |
-| 获取模板中的关键词   | GET      | /wxaapi/newtmpl/getpubtemplatekeywords | NO         |                         |
-| 获取类目下的公共模板 | GET      | /wxaapi/newtmpl/getpubtemplatetitles   | NO         |                         |
+| 获取公众号类目       | GET      | /wxaapi/newtmpl/getcategory            | YES        | (tpl *Subscribe) GetCategory |
+| 获取模板中的关键词   | GET      | /wxaapi/newtmpl/getpubtemplatekeywords | YES        | (tpl *Subscribe) GetPubTplKeyWordsByID |
+| 获取类目下的公共模板 | GET      | /wxaapi/newtmpl/getpubtemplatetitles   | YES        | (tpl *Subscribe) GetPublicTemplateTitleList |
 | 获取私有模板列表     | GET      | /wxaapi/newtmpl/gettemplate            | YES        | (tpl *Subscribe) List() |
 | 发送订阅通知         | POST     | /cgi-bin/message/subscribe/bizsend     | YES        | (tpl *Subscribe) Send   |
 
