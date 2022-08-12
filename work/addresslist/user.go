@@ -19,6 +19,7 @@ type (
 		util.CommonError
 		UserList []*UserList
 	}
+	// UserList 部门成员
 	UserList struct {
 		UserID     string `json:"userid"`
 		Name       string `json:"name"`
@@ -29,7 +30,7 @@ type (
 
 // UserSimpleList 获取部门成员
 // @see https://developer.work.weixin.qq.com/document/path/90200
-func (r *Client) UserSimpleList(departmentId int) ([]*UserList, error) {
+func (r *Client) UserSimpleList(departmentID int) ([]*UserList, error) {
 	var (
 		accessToken string
 		err         error
@@ -38,7 +39,7 @@ func (r *Client) UserSimpleList(departmentId int) ([]*UserList, error) {
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.HTTPGet(fmt.Sprintf(UserSimpleListURL, accessToken, departmentId)); err != nil {
+	if response, err = util.HTTPGet(fmt.Sprintf(UserSimpleListURL, accessToken, departmentID)); err != nil {
 		return nil, err
 	}
 	result := &UserSimpleListResponse{}

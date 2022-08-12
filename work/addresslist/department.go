@@ -17,8 +17,9 @@ type (
 	// DepartmentSimpleListResponse 获取子部门ID列表响应
 	DepartmentSimpleListResponse struct {
 		util.CommonError
-		DepartmentId []*DepartmentID `json:"department_id"`
+		DepartmentID []*DepartmentID `json:"department_id"`
 	}
+	// DepartmentID 子部门ID
 	DepartmentID struct {
 		ID       int `json:"id"`
 		ParentID int `json:"parentid"`
@@ -28,7 +29,7 @@ type (
 
 // DepartmentSimpleList 获取子部门ID列表
 // see https://developer.work.weixin.qq.com/document/path/95350
-func (r *Client) DepartmentSimpleList(departmentId int) ([]*DepartmentID, error) {
+func (r *Client) DepartmentSimpleList(departmentID int) ([]*DepartmentID, error) {
 	var (
 		accessToken string
 		err         error
@@ -37,12 +38,12 @@ func (r *Client) DepartmentSimpleList(departmentId int) ([]*DepartmentID, error)
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.HTTPGet(fmt.Sprintf(DepartmentSimpleListURL, accessToken, departmentId)); err != nil {
+	if response, err = util.HTTPGet(fmt.Sprintf(DepartmentSimpleListURL, accessToken, departmentID)); err != nil {
 		return nil, err
 	}
 	result := &DepartmentSimpleListResponse{}
 	if err = util.DecodeWithError(response, result, "DepartmentSimpleList"); err != nil {
 		return nil, err
 	}
-	return result.DepartmentId, nil
+	return result.DepartmentID, nil
 }
