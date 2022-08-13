@@ -1,7 +1,6 @@
 package customerservice
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/silenceper/wechat/v2/officialaccount/context"
@@ -54,6 +53,7 @@ type KeFuInfo struct {
 }
 
 type resKeFuList struct {
+	util.CommonError
 	KfList []*KeFuInfo `json:"kf_list"`
 }
 
@@ -71,9 +71,8 @@ func (csm *Manager) List() (customerServiceList []*KeFuInfo, err error) {
 		return
 	}
 	var res resKeFuList
-	err = json.Unmarshal(response, &res)
+	err = util.DecodeWithError(response, &res, "ListCustomerService")
 	if err != nil {
-		err = util.NewCommonError("ListCustomerService", -1, err.Error())
 		return
 	}
 	customerServiceList = res.KfList
@@ -89,6 +88,7 @@ type KeFuOnlineInfo struct {
 }
 
 type resKeFuOnlineList struct {
+	util.CommonError
 	KfOnlineList []*KeFuOnlineInfo `json:"kf_online_list"`
 }
 
@@ -106,9 +106,8 @@ func (csm *Manager) OnlineList() (customerServiceOnlineList []*KeFuOnlineInfo, e
 		return
 	}
 	var res resKeFuOnlineList
-	err = json.Unmarshal(response, &res)
+	err = util.DecodeWithError(response, &res, "ListOnlineCustomerService")
 	if err != nil {
-		err = util.NewCommonError("ListOnlineCustomerService", -1, err.Error())
 		return
 	}
 	customerServiceOnlineList = res.KfOnlineList
