@@ -17,6 +17,15 @@ func (c *CommonError) Error() string {
 	return fmt.Sprintf("%s Error , errcode=%d , errmsg=%s", c.apiName, c.ErrCode, c.ErrMsg)
 }
 
+// NewCommonError 新建CommonError错误，对于无errcode和errmsg的返回也可以返回该通用错误
+func NewCommonError(apiName string, code int64, msg string) *CommonError {
+	return &CommonError{
+		apiName: apiName,
+		ErrCode: code,
+		ErrMsg:  msg,
+	}
+}
+
 // DecodeWithCommonError 将返回值按照CommonError解析
 func DecodeWithCommonError(response []byte, apiName string) (err error) {
 	var commError CommonError

@@ -35,12 +35,14 @@
 
 | 名称             | 请求方式  | URL                                    | 是否已实现 | 使用方法 |
 | ---------------- | --------- | -------------------------------------- | ---------- | -------- |
-| 获取客服基本信息 | GET       | /cgi-bin/customservice/getkflist       | NO         |          |
-| 添加客服帐号     | POST      | /customservice/kfaccount/add           | NO         |          |
-| 邀请绑定客服帐号 | POST      | /customservice/kfaccount/inviteworker  | NO         |          |
-| 设置客服信息     | POST      | /customservice/kfaccount/update        | NO         |          |
-| 上传客服头像     | POST/FORM | /customservice/kfaccount/uploadheadimg | NO         |          |
-| 删除客服帐号     | GET       | /customservice/kfaccount/del           | NO         |          |
+| 获取客服基本信息 | GET       | /cgi-bin/customservice/getkflist       | YES       | (csm *Manager) List |
+| 添加客服帐号     | POST      | /customservice/kfaccount/add           | YES       | (csm *Manager) Add |
+| 邀请绑定客服帐号 | POST      | /customservice/kfaccount/inviteworker  | YES       | (csm *Manager) InviteBind |
+| 设置客服信息     | POST      | /customservice/kfaccount/update        | YES       | (csm *Manager) Update |
+| 上传客服头像     | POST/FORM | /customservice/kfaccount/uploadheadimg | YES       | (csm *Manager) UploadHeadImg |
+| 删除客服帐号     | POST      | /customservice/kfaccount/del           | YES       | (csm *Manager) Delete |
+| 获取在线客服     | POST      |  /cgi-bin/customservice/getonlinekflist| YES       | (csm *Manager) OnlineList |
+| 下发客服输入状态 | POST      |  /cgi-bin/message/custom/typing        | YES       | (csm *Manager) SendTypingStatus |
 
 #### 会话控制
 
