@@ -70,7 +70,7 @@ host: https://qyapi.weixin.qq.com/
 
 
 ## 通讯录管理
-[官方文档](https://developer.work.weixin.qq.com/document/path/95406/90336)
+[官方文档](https://developer.work.weixin.qq.com/document/path/95350/90200)
 
 |    名称     | 请求方式 | URL                                     | 是否已实现   | 使用方法                            | 贡献者      |
 |:---------:|------|:----------------------------------------| ---------- | -------------------------------   |----------|

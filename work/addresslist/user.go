@@ -1,6 +1,3 @@
-// @Author markwang <wangyu@uniondrug.cn>
-// @Date   2022/8/12
-
 package addresslist
 
 import (
