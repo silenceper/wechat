@@ -190,9 +190,9 @@ func (analysis *Analysis) GetAnalysisWeeklyVisitTrend(beginDate, endDate string)
 
 // UserPortraitItem 用户画像项目
 type UserPortraitItem struct {
-	ID                  int    `json:"id"`                     // 属性值id
-	Name                string `json:"name"`                   // 属性值名称
-	AccessSourceVisitUV int    `json:"access_source_visit_uv"` // 该场景访问uv
+	ID    int    `json:"id"`    // 属性值id
+	Name  string `json:"name"`  // 属性值名称
+	Value int    `json:"value"` // 该场景访问uv
 }
 
 // UserPortrait 用户画像
