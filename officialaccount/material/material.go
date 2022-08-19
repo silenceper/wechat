@@ -302,6 +302,7 @@ type reqBatchGetMaterial struct {
 }
 
 // BatchGetMaterial 批量获取永久素材
+//
 //reference:https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/Get_materials_list.html
 func (material *Material) BatchGetMaterial(permanentMaterialType PermanentMaterialType, offset, count int64) (list ArticleList, err error) {
 	var accessToken string

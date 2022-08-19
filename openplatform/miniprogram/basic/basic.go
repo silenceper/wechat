@@ -28,6 +28,7 @@ type AccountBasicInfo struct {
 }
 
 // GetAccountBasicInfo 获取小程序基础信息
+//
 //reference:https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Mini_Program_Information_Settings.html
 func (basic *Basic) GetAccountBasicInfo() (*AccountBasicInfo, error) {
 	ak, err := basic.GetAuthrAccessToken(basic.AppID)
