@@ -32,7 +32,7 @@ type (
 	// ConclusionsLink 链接格式结束语
 	ConclusionsLink struct {
 		Title  string `json:"title"`
-		PicUrl string `json:"picurl"`
+		PicURL string `json:"picurl"`
 		Desc   string `json:"desc"`
 		URL    string `json:"url"`
 	}
@@ -52,7 +52,7 @@ type (
 	}
 	// ConclusionsImageResponse 图片格式结束语响应
 	ConclusionsImageResponse struct {
-		PicUrl string `json:"pic_url"`
+		PicURL string `json:"pic_url"`
 	}
 )
 
