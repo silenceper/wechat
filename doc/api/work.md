@@ -60,13 +60,15 @@ host: https://qyapi.weixin.qq.com/
 | 获取视频号绑定状态      | GET      |  /cgi-bin/kf/get_corp_qualification      | YES        | (r *Client) GetCorpQualification  | NICEXAI    |
 
 ### 客户联系
-[官方文档](https://developer.work.weixin.qq.com/document/path/92132/92133)
+[官方文档](https://developer.work.weixin.qq.com/document/path/92132/92133/92228)
 
 |       名称        | 请求方式  | URL                                     | 是否已实现   | 使用方法                            | 贡献者      |
 |:---------------:| -------- | :---------------------------------------| ---------- | -------------------------------   |----------|
 |  获取「联系客户统计」数据   | POST     | /cgi-bin/externalcontact/get_user_behavior_data           | YES        | (r *Client) GetUserBehaviorData      | MARKWANG |
 | 获取「群聊数据统计」数据 (按群主聚合的方式) | POST      |  /cgi-bin/externalcontact/groupchat/statistic      | YES        | (r *Client) GetGroupChatStat  | MARKWANG  |
 | 获取「群聊数据统计」数据 (按自然日聚合的方式) | POST      |  /cgi-bin/externalcontact/groupchat/statistic_group_by_day      | YES        | (r *Client) GetGroupChatStatByDay  | MARKWANG  |
+| 配置客户联系「联系我」方式 | POST      |  /cgi-bin/externalcontact/add_contact_way      | YES        | (r *Client) AddContactWay  | MARKWANG  |
+| 获取企业已配置的「联系我」方式 | POST      |  /cgi-bin/externalcontact/get_contact_way      | YES        | (r *Client) GetContactWay  | MARKWANG  |
 
 
 ## 通讯录管理
