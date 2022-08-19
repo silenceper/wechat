@@ -14,10 +14,11 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/tidwall/gjson"
+
 	"github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/officialaccount/message"
 	"github.com/silenceper/wechat/v2/util"
-	"github.com/tidwall/gjson"
 )
 
 // Server struct
@@ -106,7 +107,7 @@ func (srv *Server) handleRequest() (reply *message.Reply, err error) {
 		srv.isSafeMode = true
 	}
 
-	//set request contentType
+	// set request contentType
 	contentType := srv.Request.Header.Get("Content-Type")
 	srv.isJSONContent = strings.Contains(contentType, "application/json")
 
@@ -193,7 +194,7 @@ func (srv *Server) parseRequestMessage(rawXMLMsgBytes []byte) (msg *message.MixM
 		err = xml.Unmarshal(rawXMLMsgBytes, msg)
 		return
 	}
-	//parse json
+	// parse json
 	err = json.Unmarshal(rawXMLMsgBytes, msg)
 	if err != nil {
 		return
