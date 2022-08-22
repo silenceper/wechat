@@ -13,7 +13,6 @@ import (
 	"strings"
 
 	log "github.com/sirupsen/logrus"
-
 	"github.com/tidwall/gjson"
 
 	"github.com/silenceper/wechat/v2/officialaccount/context"
