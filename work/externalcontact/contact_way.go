@@ -11,6 +11,8 @@ const (
 	AddContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_contact_way?access_token=%s"
 	// GetContactWayURL 获取企业已配置的「联系我」方式
 	GetContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_contact_way?access_token=%s"
+	// UpdateContactWayURL 更新企业已配置的「联系我」方式
+	UpdateContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/update_contact_way?access_token=%s"
 )
 
 type (
@@ -148,6 +150,48 @@ func (r *Client) GetContactWay(req *GetContactWayRequest) (*GetContactWayRespons
 	}
 	result := &GetContactWayResponse{}
 	if err = util.DecodeWithError(response, result, "GetContactWay"); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+type (
+	// UpdateContactWayRequest 更新企业已配置的「联系我」方式请求
+	UpdateContactWayRequest struct {
+		ConfigID      string             `json:"config_id"`
+		Remark        string             `json:"remark"`
+		SkipVerify    bool               `json:"skip_verify"`
+		Style         int                `json:"style"`
+		State         string             `json:"state"`
+		User          []string           `json:"user"`
+		Party         []int              `json:"party"`
+		ExpiresIn     int                `json:"expires_in"`
+		ChatExpiresIn int                `json:"chat_expires_in"`
+		UnionID       string             `json:"unionid"`
+		Conclusions   ConclusionsRequest `json:"conclusions"`
+	}
+	// UpdateContactWayResponse 更新企业已配置的「联系我」方式响应
+	UpdateContactWayResponse struct {
+		util.CommonError
+	}
+)
+
+// UpdateContactWay 更新企业已配置的「联系我」方式
+// see https://developer.work.weixin.qq.com/document/path/92228
+func (r *Client) UpdateContactWay(req *UpdateContactWayRequest) (*UpdateContactWayResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(UpdateContactWayURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &UpdateContactWayResponse{}
+	if err = util.DecodeWithError(response, result, "UpdateContactWay"); err != nil {
 		return nil, err
 	}
 	return result, nil
