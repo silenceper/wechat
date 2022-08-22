@@ -69,6 +69,7 @@ host: https://qyapi.weixin.qq.com/
 | 获取「群聊数据统计」数据 (按自然日聚合的方式) | POST      |  /cgi-bin/externalcontact/groupchat/statistic_group_by_day      | YES        | (r *Client) GetGroupChatStatByDay  | MARKWANG  |
 | 配置客户联系「联系我」方式 | POST      |  /cgi-bin/externalcontact/add_contact_way      | YES        | (r *Client) AddContactWay  | MARKWANG  |
 | 获取企业已配置的「联系我」方式 | POST      |  /cgi-bin/externalcontact/get_contact_way      | YES        | (r *Client) GetContactWay  | MARKWANG  |
+| 更新企业已配置的「联系我」方式 | POST      |  /cgi-bin/externalcontact/update_contact_way      | YES        | (r *Client) UpdateContactWay  | MARKWANG  |
 
 
 ## 通讯录管理
