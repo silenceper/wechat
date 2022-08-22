@@ -14,6 +14,7 @@ import (
 	"github.com/silenceper/wechat/v2/officialaccount/broadcast"
 	"github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/officialaccount/context"
+	"github.com/silenceper/wechat/v2/officialaccount/customerservice"
 	"github.com/silenceper/wechat/v2/officialaccount/device"
 	"github.com/silenceper/wechat/v2/officialaccount/js"
 	"github.com/silenceper/wechat/v2/officialaccount/material"
@@ -196,4 +197,9 @@ func (officialAccount *OfficialAccount) GetSubscribe() *message.Subscribe {
 		officialAccount.subscribeMsg = message.NewSubscribe(officialAccount.ctx)
 	}
 	return officialAccount.subscribeMsg
+}
+
+// GetCustomerServiceManager 客服管理
+func (officialAccount *OfficialAccount) GetCustomerServiceManager() *customerservice.Manager {
+	return customerservice.NewCustomerServiceManager(officialAccount.ctx)
 }
