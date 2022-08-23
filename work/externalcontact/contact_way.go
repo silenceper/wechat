@@ -13,6 +13,10 @@ const (
 	GetContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_contact_way?access_token=%s"
 	// UpdateContactWayURL 更新企业已配置的「联系我」方式
 	UpdateContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/update_contact_way?access_token=%s"
+	// ListContactWayURL 获取企业已配置的「联系我」列表
+	ListContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/list_contact_way?access_token=%s"
+	// DelContactWayURL 删除企业已配置的「联系我」方式
+	DelContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/del_contact_way?access_token=%s"
 )
 
 type (
@@ -192,6 +196,79 @@ func (r *Client) UpdateContactWay(req *UpdateContactWayRequest) (*UpdateContactW
 	}
 	result := &UpdateContactWayResponse{}
 	if err = util.DecodeWithError(response, result, "UpdateContactWay"); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+type (
+	//ListContactWayRequest 获取企业已配置的「联系我」列表请求
+	ListContactWayRequest struct {
+		StartTime int    `json:"start_time"`
+		EndTime   int    `json:"end_time"`
+		Cursor    string `json:"cursor"`
+		Limit     int    `json:"limit"`
+	}
+	//ListContactWayResponse 获取企业已配置的「联系我」列表响应
+	ListContactWayResponse struct {
+		util.CommonError
+		ContactWay []*ContactWayForList `json:"contact_way"`
+		NextCursor string               `json:"next_cursor"`
+	}
+	// ContactWayForList 「联系我」配置
+	ContactWayForList struct {
+		ConfigID string `json:"config_id"`
+	}
+)
+
+// ListContactWay 获取企业已配置的「联系我」列表
+// see https://developer.work.weixin.qq.com/document/path/92228
+func (r *Client) ListContactWay(req *ListContactWayRequest) (*ListContactWayResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(ListContactWayURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &ListContactWayResponse{}
+	if err = util.DecodeWithError(response, result, "ListContactWay"); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+type (
+	// DelContactWayRequest 删除企业已配置的「联系我」方式请求
+	DelContactWayRequest struct {
+		ConfigID string `json:"config_id"`
+	}
+	// DelContactWayResponse 删除企业已配置的「联系我」方式响应
+	DelContactWayResponse struct {
+		util.CommonError
+	}
+)
+
+// DelContactWay 删除企业已配置的「联系我」方式
+// see https://developer.work.weixin.qq.com/document/path/92228
+func (r *Client) DelContactWay(req *DelContactWayRequest) (*DelContactWayResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(DelContactWayURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &DelContactWayResponse{}
+	if err = util.DecodeWithError(response, result, "DelContactWay"); err != nil {
 		return nil, err
 	}
 	return result, nil

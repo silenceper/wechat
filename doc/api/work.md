@@ -70,6 +70,8 @@ host: https://qyapi.weixin.qq.com/
 | 配置客户联系「联系我」方式 | POST      |  /cgi-bin/externalcontact/add_contact_way      | YES        | (r *Client) AddContactWay  | MARKWANG  |
 | 获取企业已配置的「联系我」方式 | POST      |  /cgi-bin/externalcontact/get_contact_way      | YES        | (r *Client) GetContactWay  | MARKWANG  |
 | 更新企业已配置的「联系我」方式 | POST      |  /cgi-bin/externalcontact/update_contact_way      | YES        | (r *Client) UpdateContactWay  | MARKWANG  |
+| 获取企业已配置的「联系我」列表 | POST      |  /cgi-bin/externalcontact/list_contact_way      | YES        | (r *Client) ListContactWay  | MARKWANG  |
+| 删除企业已配置的「联系我」方式 | POST      |  /cgi-bin/externalcontact/del_contact_way      | YES        | (r *Client) DelContactWay  | MARKWANG  |
 
 ## 通讯录管理
 [官方文档](https://developer.work.weixin.qq.com/document/path/95350/90200)
@@ -83,5 +85,3 @@ host: https://qyapi.weixin.qq.com/
 ## 应用管理
 
 TODO
-
-
