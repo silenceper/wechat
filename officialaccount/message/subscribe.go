@@ -151,8 +151,8 @@ func (tpl *Subscribe) Delete(templateID string) (err error) {
 
 // PublicTemplateCategory 公众号类目
 type PublicTemplateCategory struct {
-	ID   int    `json:"id"`   //类目ID
-	Name string `json:"name"` //类目的中文名
+	ID   int    `json:"id"`   // 类目ID
+	Name string `json:"name"` // 类目的中文名
 }
 
 type resSubscribeCategoryList struct {
@@ -186,13 +186,13 @@ func (tpl *Subscribe) GetCategory() (categoryList []*PublicTemplateCategory, err
 type PublicTemplateKeyWords struct {
 	KeyWordsID int    `json:"kid"`     // 关键词 id
 	Name       string `json:"name"`    // 关键词内容
-	Example    string `json:"example"` //关键词内容对应的示例
+	Example    string `json:"example"` // 关键词内容对应的示例
 	Rule       string `json:"rule"`    // 参数类型
 }
 
 type resPublicTemplateKeyWordsList struct {
 	util.CommonError
-	KeyWordsList []*PublicTemplateKeyWords `json:"data"` //关键词列表
+	KeyWordsList []*PublicTemplateKeyWords `json:"data"` // 关键词列表
 }
 
 // GetPubTplKeyWordsByID 获取模板中的关键词
@@ -227,8 +227,8 @@ type PublicTemplateTitle struct {
 
 type resPublicTemplateTitleList struct {
 	util.CommonError
-	Count             int                    `json:"count"` //公共模板列表总数
-	TemplateTitleList []*PublicTemplateTitle `json:"data"`  //模板标题列表
+	Count             int                    `json:"count"` // 公共模板列表总数
+	TemplateTitleList []*PublicTemplateTitle `json:"data"`  // 模板标题列表
 }
 
 // GetPublicTemplateTitleList 获取类目下的公共模板
