@@ -59,7 +59,10 @@ func (r *Client) GetCropTagList(req GetCropTagRequest) ([]TagGroup, error) {
 		return nil, err
 	}
 	var response []byte
-	jsonData, _ := json.Marshal(req)
+	jsonData, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
 	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", GetCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
@@ -102,7 +105,10 @@ func (r *Client) AddCropTag(req AddCropTagRequest) (*TagGroup, error) {
 		return nil, err
 	}
 	var response []byte
-	jsonData, _ := json.Marshal(req)
+	jsonData, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
 	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", AddCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
@@ -131,7 +137,10 @@ func (r *Client) EditCropTag(req EditCropTagRequest) error {
 		return err
 	}
 	var response []byte
-	jsonData, _ := json.Marshal(req)
+	jsonData, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
 	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", EditCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
@@ -154,7 +163,10 @@ func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
 		return err
 	}
 	var response []byte
-	jsonData, _ := json.Marshal(req)
+	jsonData, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
 	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", DelCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
@@ -179,7 +191,10 @@ func (r *Client) MarkTag(request MarkTagRequest) error {
 		return err
 	}
 	var response []byte
-	jsonData, _ := json.Marshal(request)
+	jsonData, err := json.Marshal(request)
+	if err != nil {
+		return err
+	}
 	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", MarkCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
