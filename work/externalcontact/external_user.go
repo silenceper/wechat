@@ -133,7 +133,10 @@ func (r *Client) BatchGetExternalUserDetails(request BatchGetExternalUserDetails
 		return nil, err
 	}
 	var response []byte
-	jsonData, _ := json.Marshal(request)
+	jsonData, err := json.Marshal(request)
+	if err != nil {
+		return nil, err
+	}
 	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", FetchBatchExternalContactUserDetailURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
@@ -164,7 +167,10 @@ func (r *Client) UpdateUserRemark(request UpdateUserRemarkRequest) error {
 		return err
 	}
 	var response []byte
-	jsonData, _ := json.Marshal(request)
+	jsonData, err := json.Marshal(request)
+	if err != nil {
+		return err
+	}
 	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", UpdateUserRemarkURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
