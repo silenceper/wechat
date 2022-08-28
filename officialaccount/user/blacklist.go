@@ -63,7 +63,7 @@ func (user *User) BatchUnBlackList(openidList ...string) (err error) {
 }
 
 // batch 公共方法
-func (user *User) batch(url, api string, openidList ...string) (err error) {
+func (user *User) batch(url, apiName string, openidList ...string) (err error) {
 	// 检查参数
 	if len(openidList) == 0 || len(openidList) > 20 {
 		return errors.New("参数 openidList 错误：每次操作黑名单用户数量为1-20个。")
@@ -85,5 +85,5 @@ func (user *User) batch(url, api string, openidList ...string) (err error) {
 		return
 	}
 
-	return util.DecodeWithCommonError(resp, api)
+	return util.DecodeWithCommonError(resp, apiName)
 }
