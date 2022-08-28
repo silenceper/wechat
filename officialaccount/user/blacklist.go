@@ -56,7 +56,7 @@ func (user *User) BatchBlackList(openidList ...string) (err error) {
 	return user.batch(batchblacklistURL, "BatchBlackList", openidList...)
 }
 
-// BatchunBlackList 取消拉黑用户
+// BatchUnBlackList 取消拉黑用户
 // 参数 openidList：需要取消拉入黑名单的用户的openid，每次拉黑最多允许20个
 func (user *User) BatchUnBlackList(openidList ...string) (err error) {
 	return user.batch(batchunblacklistURL, "BatchUnBlackList", openidList...)
