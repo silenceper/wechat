@@ -22,30 +22,28 @@ const (
 // 该接口每次调用最多可拉取 1000 个OpenID，当列表数较多时，可以通过多次拉取的方式来满足需求。
 // 参数 beginOpenid：当 begin_openid 为空时，默认从开头拉取。
 func (user *User) GetBlackList(beginOpenid ...string) (userlist *OpenidList, err error) {
-	//* 获取 AccessToken
+	// 获取 AccessToken
 	var accessToken string
-	accessToken, err = user.GetAccessToken()
-	if err != nil {
+	if accessToken, err = user.GetAccessToken(); err != nil {
 		return
 	}
 
-	//* 处理 request 内容
+	// 处理 request 内容
 	request := map[string]string{"begin_openid": ""}
 	if len(beginOpenid) == 1 {
 		request["begin_openid"] = beginOpenid[0]
 	}
 
-	//* 调用接口
+	// 调用接口
+	var resp []byte
 	url := fmt.Sprintf(getblacklistURL, accessToken)
-	resp, err := util.PostJSON(url, &request)
-	if err != nil {
+	if resp, err = util.PostJSON(url, &request); err != nil {
 		return nil, err
 	}
 
-	//* 处理返回
+	// 处理返回
 	userlist = &OpenidList{}
-	err = util.DecodeWithError(resp, userlist, "GetBlackList")
-	if err != nil {
+	if err = util.DecodeWithError(resp, userlist, "GetBlackList"); err != nil {
 		return nil, err
 	}
 
@@ -55,51 +53,37 @@ func (user *User) GetBlackList(beginOpenid ...string) (userlist *OpenidList, err
 // BatchBlackList 拉黑用户
 // 参数 openidList：需要拉入黑名单的用户的openid，每次拉黑最多允许20个
 func (user *User) BatchBlackList(openidList ...string) (err error) {
-	//* 检查参数
-	if len(openidList) == 0 || len(openidList) > 20 {
-		return errors.New("参数 openidList 错误：每次拉黑用户数量为1-20个。")
-	}
-
-	//* 获取 AccessToken
-	var accessToken string
-	accessToken, err = user.GetAccessToken()
-	if err != nil {
-		return
-	}
-
-	//* 调用接口
-	url := fmt.Sprintf(batchblacklistURL, accessToken)
-	request := map[string][]string{"openid_list": openidList}
-	resp, err := util.PostJSON(url, &request)
-	if err != nil {
-		return
-	}
-
-	return util.DecodeWithCommonError(resp, "BatchBlackList")
+	return user.batch(batchblacklistURL, "BatchBlackList", openidList...)
 }
 
 // BatchunBlackList 取消拉黑用户
 // 参数 openidList：需要取消拉入黑名单的用户的openid，每次拉黑最多允许20个
-func (user *User) BatchunBlackList(openidList ...string) (err error) {
-	//* 检查参数
+func (user *User) BatchUnBlackList(openidList ...string) (err error) {
+	return user.batch(batchunblacklistURL, "BatchUnBlackList", openidList...)
+}
+
+// batch 公共方法
+func (user *User) batch(url, api string, openidList ...string) (err error) {
+	// 检查参数
 	if len(openidList) == 0 || len(openidList) > 20 {
-		return errors.New("参数 openidList 错误：每次取消拉黑用户数量为1-20个。")
+		return errors.New("参数 openidList 错误：每次操作黑名单用户数量为1-20个。")
 	}
 
-	//* 获取 AccessToken
+	// 获取 AccessToken
 	var accessToken string
-	accessToken, err = user.GetAccessToken()
-	if err != nil {
+	if accessToken, err = user.GetAccessToken(); err != nil {
 		return
 	}
 
-	//* 调用接口
-	url := fmt.Sprintf(batchunblacklistURL, accessToken)
+	// 处理 request 内容
 	request := map[string][]string{"openid_list": openidList}
-	resp, err := util.PostJSON(url, &request)
-	if err != nil {
+
+	// 调用接口
+	var resp []byte
+	url = fmt.Sprintf(url, accessToken)
+	if resp, err = util.PostJSON(url, &request); err != nil {
 		return
 	}
 
-	return util.DecodeWithCommonError(resp, "BatchunBlackList")
+	return util.DecodeWithCommonError(resp, api)
 }
