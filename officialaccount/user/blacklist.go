@@ -29,26 +29,22 @@ func (user *User) GetBlackList(beginOpenid ...string) (userlist *OpenidList, err
 		return
 	}
 
-	//* 调用接口
-	var (
-		resp    []byte
-		request map[string]string
-	)
-	url := fmt.Sprintf(getblacklistURL, accessToken)
+	//* 处理 request 内容
+	request := map[string]string{"begin_openid": ""}
 	if len(beginOpenid) == 1 {
-		// 传入 begin_openid
 		request["begin_openid"] = beginOpenid[0]
-		resp, err = util.PostJSON(url, &request)
-	} else {
-		// 无requestBody
-		resp, err = util.PostJSON(url, nil)
 	}
+
+	//* 调用接口
+	url := fmt.Sprintf(getblacklistURL, accessToken)
+	resp, err := util.PostJSON(url, &request)
 	if err != nil {
 		return nil, err
 	}
 
+	//* 处理返回
 	userlist = &OpenidList{}
-	err = util.DecodeWithError(resp, userlist, "ListUserOpenIDs")
+	err = util.DecodeWithError(resp, userlist, "GetBlackList")
 	if err != nil {
 		return nil, err
 	}
