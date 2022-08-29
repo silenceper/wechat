@@ -50,6 +50,30 @@ func (user *User) GetBlackList(beginOpenid ...string) (userlist *OpenidList, err
 	return
 }
 
+// GetAllBlackList 获取公众号的所有黑名单列表
+func (user *User) GetAllBlackList() (openIdList []string, err error) {
+	var (
+		beginOpenid string
+		count       int
+		userlist    *OpenidList
+	)
+
+	for {
+		// 获取列表（每次1k条）
+		if userlist, err = user.GetBlackList(beginOpenid); err != nil {
+			return nil, err
+		}
+		openIdList = append(openIdList, userlist.Data.OpenIDs...) // 存储本次获得的OpenIDs
+		count += userlist.Count                                   // 记录获得的总数量
+		beginOpenid = userlist.NextOpenID                         // 记录下次循环的起始openID
+		if count >= userlist.Total {
+			break // 获得的数量=total，结束循环
+		}
+	}
+
+	return
+}
+
 // BatchBlackList 拉黑用户
 // 参数 openidList：需要拉入黑名单的用户的openid，每次拉黑最多允许20个
 func (user *User) BatchBlackList(openidList ...string) (err error) {
