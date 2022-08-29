@@ -51,7 +51,7 @@ func (user *User) GetBlackList(beginOpenid ...string) (userlist *OpenidList, err
 }
 
 // GetAllBlackList 获取公众号的所有黑名单列表
-func (user *User) GetAllBlackList() (openIdList []string, err error) {
+func (user *User) GetAllBlackList() (openIDList []string, err error) {
 	var (
 		beginOpenid string
 		count       int
@@ -63,7 +63,7 @@ func (user *User) GetAllBlackList() (openIdList []string, err error) {
 		if userlist, err = user.GetBlackList(beginOpenid); err != nil {
 			return nil, err
 		}
-		openIdList = append(openIdList, userlist.Data.OpenIDs...) // 存储本次获得的OpenIDs
+		openIDList = append(openIDList, userlist.Data.OpenIDs...) // 存储本次获得的OpenIDs
 		count += userlist.Count                                   // 记录获得的总数量
 		beginOpenid = userlist.NextOpenID                         // 记录下次循环的起始openID
 		if count >= userlist.Total {
