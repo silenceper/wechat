@@ -22,6 +22,9 @@ const (
 // 该接口每次调用最多可拉取 1000 个OpenID，当列表数较多时，可以通过多次拉取的方式来满足需求。
 // 参数 beginOpenid：当 begin_openid 为空时，默认从开头拉取。
 func (user *User) GetBlackList(beginOpenid ...string) (userlist *OpenidList, err error) {
+	if len(beginOpenid) > 1 {
+		return nil, errors.New("参数 beginOpenid 错误：请传递 1 个openID，若需要从头开始拉取列表请留空。")
+	}
 	// 获取 AccessToken
 	var accessToken string
 	if accessToken, err = user.GetAccessToken(); err != nil {
