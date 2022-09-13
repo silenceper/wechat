@@ -36,7 +36,7 @@ type GetCropTagListResponse struct {
 type TagGroup struct {
 	GroupID    string            `json:"group_id"`
 	GroupName  string            `json:"group_name"`
-	CreateTime string            `json:"create_time"`
+	CreateTime int               `json:"create_time"`
 	GroupOrder int               `json:"group_order"`
 	Deleted    bool              `json:"deleted"`
 	Tag        []TagGroupTagItem `json:"tag"`
