@@ -121,7 +121,7 @@ type UniformMessage struct {
 		URL         string `json:"url"`
 		Miniprogram struct {
 			Appid    string `json:"appid"`
-			Pagepath string `json:"page"`
+			Pagepath string `json:"pagepath"`
 		} `json:"miniprogram"`
 		Data map[string]*DataItem `json:"data"`
 	} `json:"mp_template_msg"`
