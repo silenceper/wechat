@@ -52,11 +52,6 @@ func (auth *Auth) Code2SessionContext(ctx context2.Context, jsCode string) (resu
 	return
 }
 
-// GetPaidUnionID 用户支付完成后，获取该用户的 UnionId，无需用户授权
-func (auth *Auth) GetPaidUnionID() {
-	// TODO
-}
-
 // CheckEncryptedData .检查加密信息是否由微信生成（当前只支持手机号加密数据），只能检测最近3天生成的加密数据
 func (auth *Auth) CheckEncryptedData(encryptedMsgHash string) (result miniprogramAuth.RspCheckEncryptedData, err error) {
 	var miniProgram = miniprogram.MiniProgram{}
