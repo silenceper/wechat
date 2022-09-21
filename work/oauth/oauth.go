@@ -42,7 +42,7 @@ func (ctr *Oauth) GetTargetURL(callbackURL string) string {
 	)
 }
 
-// GetTargetPrivateURL 获取授权地址
+// GetTargetPrivateURL 获取个人信息授权地址
 func (ctr *Oauth) GetTargetPrivateURL(callbackURL string, agentID string) string {
 	// url encode
 	return fmt.Sprintf(

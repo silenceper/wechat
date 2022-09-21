@@ -77,7 +77,7 @@ type TemplateCard struct {
 
 // CardSource 卡片来源样式信息，不需要来源样式可不填写
 type CardSource struct {
-	IconUrl   string `json:"icon_url"`   // 来源图片的url
+	IconURL   string `json:"icon_url"`   // 来源图片的url
 	Desc      string `json:"desc"`       // 来源图片的描述，建议不超过13个字
 	DescColor int    `json:"desc_color"` // 来源文字的颜色，目前支持：0(默认) 灰色，1 黑色，2 红色，3 绿色
 }
@@ -91,7 +91,7 @@ type CardTitle struct {
 // CardQuoteArea 引用文献样式，建议不与关键数据共用
 type CardQuoteArea struct {
 	Type      int    `json:"type"`               // 引用文献样式区域点击事件，0或不填代表没有点击事件，1 代表跳转url，2 代表跳转小程序
-	Url       string `json:"url,omitempty"`      // 点击跳转的url，quote_area.type是1时必填
+	URL       string `json:"url,omitempty"`      // 点击跳转的url，quote_area.type是1时必填
 	Appid     string `json:"appid,omitempty"`    // 点击跳转的小程序的appid，quote_area.type是2时必填
 	Pagepath  string `json:"pagepath,omitempty"` // 点击跳转的小程序的pagepath，quote_area.type是2时选填
 	Title     string `json:"title"`              // 引用文献样式的标题
@@ -103,7 +103,7 @@ type CardContent struct {
 	KeyName string `json:"keyname"`            // 链接类型，0或不填代表是普通文本，1 代表跳转url，2 代表下载附件，3 代表@员工
 	Value   string `json:"value"`              // 二级标题，建议不超过5个字
 	Type    int    `json:"type,omitempty"`     // 二级文本，如果horizontal_content_list.type是2，该字段代表文件名称（要包含文件类型），建议不超过26个字
-	Url     string `json:"url,omitempty"`      // 链接跳转的url，horizontal_content_list.type是1时必填
+	URL     string `json:"url,omitempty"`      // 链接跳转的url，horizontal_content_list.type是1时必填
 	MediaID string `json:"media_id,omitempty"` // 附件的media_id，horizontal_content_list.type是2时必填
 	UserID  string `json:"userid,omitempty"`   // 被@的成员的userid，horizontal_content_list.type是3时必填
 }
@@ -111,7 +111,7 @@ type CardContent struct {
 // JumpContent 跳转指引样式的列表，该字段可为空数组，但有数据的话需确认对应字段是否必填，列表长度不超过3
 type JumpContent struct {
 	Type     int    `json:"type"`               // 跳转链接类型，0或不填代表不是链接，1 代表跳转url，2 代表跳转小程序
-	Url      string `json:"url,omitempty"`      // 跳转链接的url，jump_list.type是1时必填
+	URL      string `json:"url,omitempty"`      // 跳转链接的url，jump_list.type是1时必填
 	Title    string `json:"title"`              // 跳转链接样式的文案内容，建议不超过13个字
 	AppID    string `json:"appid,omitempty"`    // 跳转链接的小程序的appid，jump_list.type是2时必填
 	PagePath string `json:"pagepath,omitempty"` // 跳转链接的小程序的pagepath，jump_list.type是2时选填
@@ -120,7 +120,7 @@ type JumpContent struct {
 // CardAction 整体卡片的点击跳转事件，text_notice模版卡片中该字段为必填项
 type CardAction struct {
 	Type     int    `json:"type"`               // 卡片跳转类型，1 代表跳转url，2 代表打开小程序。text_notice模版卡片中该字段取值范围为[1,2]
-	Url      string `json:"url,omitempty"`      // 跳转事件的url，card_action.type是1时必填
+	URL      string `json:"url,omitempty"`      // 跳转事件的url，card_action.type是1时必填
 	Appid    string `json:"appid,omitempty"`    // 跳转事件的小程序的appid，card_action.type是2时必填
 	PagePath string `json:"pagepath,omitempty"` // 跳转事件的小程序的pagepath，card_action.type是2时选填
 }
