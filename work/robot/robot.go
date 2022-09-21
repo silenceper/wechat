@@ -3,6 +3,7 @@ package robot
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/silenceper/wechat/v2/util"
 )
 
@@ -11,7 +12,7 @@ const (
 	WebhookSendURL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s"
 )
 
-// RobotBroadcast 群机器人消息发送
+// RobotBroadcast 群机器人消息发送s
 // @see https://developer.work.weixin.qq.com/document/path/91770
 func (r *Client) RobotBroadcast(webhookKey string, options interface{}) (info util.CommonError, err error) {
 	var data []byte
