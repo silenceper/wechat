@@ -77,7 +77,7 @@ func (r *Client) GetCropTagList(req GetCropTagRequest) ([]TagGroup, error) {
 
 // AddCropTagRequest 添加企业标签请求
 type AddCropTagRequest struct {
-	GroupID   string           `json:"group_id"`
+	GroupID   string           `json:"group_id,omitempty"`
 	GroupName string           `json:"group_name"`
 	Order     int              `json:"order"`
 	Tag       []AddCropTagItem `json:"tag"`
