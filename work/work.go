@@ -9,6 +9,7 @@ import (
 	"github.com/silenceper/wechat/v2/work/kf"
 	"github.com/silenceper/wechat/v2/work/msgaudit"
 	"github.com/silenceper/wechat/v2/work/oauth"
+	"github.com/silenceper/wechat/v2/work/robot"
 )
 
 // Work 企业微信
@@ -54,4 +55,9 @@ func (wk *Work) GetExternalContact() *externalcontact.Client {
 // GetAddressList get address_list
 func (wk *Work) GetAddressList() *addresslist.Client {
 	return addresslist.NewClient(wk.ctx)
+}
+
+// GetRobot get robot
+func (wk *Work) GetRobot() *robot.Client {
+	return robot.NewClient(wk.ctx)
 }

@@ -17,6 +17,8 @@ type Oauth struct {
 var (
 	// oauthTargetURL 企业微信内跳转地址
 	oauthTargetURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect"
+	// oauthTargetURL 企业微信内跳转地址(获取成员的详细信息)
+	oauthTargetPrivateURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_privateinfo&agentid=%s&state=STATE#wechat_redirect"
 	// oauthUserInfoURL 获取用户信息地址
 	oauthUserInfoURL = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=%s&code=%s"
 	// oauthQrContentTargetURL 构造独立窗口登录二维码
@@ -37,6 +39,17 @@ func (ctr *Oauth) GetTargetURL(callbackURL string) string {
 		oauthTargetURL,
 		ctr.CorpID,
 		url.QueryEscape(callbackURL),
+	)
+}
+
+// GetTargetPrivateURL 获取授权地址
+func (ctr *Oauth) GetTargetPrivateURL(callbackURL string, agentID string) string {
+	// url encode
+	return fmt.Sprintf(
+		oauthTargetPrivateURL,
+		ctr.CorpID,
+		url.QueryEscape(callbackURL),
+		agentID,
 	)
 }
 
