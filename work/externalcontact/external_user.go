@@ -123,11 +123,42 @@ type BatchGetExternalUserDetailsRequest struct {
 // ExternalUserDetailListResponse 批量获取外部联系人详情响应
 type ExternalUserDetailListResponse struct {
 	util.CommonError
-	ExternalContactList []ExternalUser `json:"external_contact_list"`
+	ExternalContactList []ExternalUserForBatch `json:"external_contact_list"`
+}
+
+type ExternalUserForBatch struct {
+	ExternalContact ExternalContact `json:"external_contact"`
+	FollowInfo      FollowInfo      `json:"follow_info"`
+}
+
+type ExternalContact struct {
+	ExternalUserID  string `json:"external_userid"`
+	Name            string `json:"name"`
+	Position        string `json:"position"`
+	Avatar          string `json:"avatar"`
+	CorpName        string `json:"corp_name"`
+	CorpFullName    string `json:"corp_full_name"`
+	Type            int64  `json:"type"`
+	Gender          int64  `json:"gender"`
+	UnionID         string `json:"unionid"`
+	ExternalProfile string `json:"external_profile"`
+}
+
+type FollowInfo struct {
+	UserID         string        `json:"userid"`
+	Remark         string        `json:"remark"`
+	Description    string        `json:"description"`
+	CreateTime     int           `json:"create_time"`
+	TagID          []string      `json:"tag_id"`
+	RemarkCorpName string        `json:"remark_corp_name"`
+	RemarkMobiles  []string      `json:"remark_mobiles"`
+	OperUserID     string        `json:"oper_userid"`
+	AddWay         int64         `json:"add_way"`
+	WeChatChannels WechatChannel `json:"wechat_channels"`
 }
 
 // BatchGetExternalUserDetails 批量获取外部联系人详情
-func (r *Client) BatchGetExternalUserDetails(request BatchGetExternalUserDetailsRequest) ([]ExternalUser, error) {
+func (r *Client) BatchGetExternalUserDetails(request BatchGetExternalUserDetailsRequest) ([]ExternalUserForBatch, error) {
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
