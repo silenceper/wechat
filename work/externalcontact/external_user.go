@@ -126,11 +126,13 @@ type ExternalUserDetailListResponse struct {
 	ExternalContactList []ExternalUserForBatch `json:"external_contact_list"`
 }
 
+// ExternalUserForBatch 批量获取外部联系人客户列表
 type ExternalUserForBatch struct {
 	ExternalContact ExternalContact `json:"external_contact"`
 	FollowInfo      FollowInfo      `json:"follow_info"`
 }
 
+// ExternalContact 批量获取外部联系人用户信息
 type ExternalContact struct {
 	ExternalUserID  string `json:"external_userid"`
 	Name            string `json:"name"`
@@ -144,6 +146,7 @@ type ExternalContact struct {
 	ExternalProfile string `json:"external_profile"`
 }
 
+// FollowInfo 批量获取外部联系人跟进人信息
 type FollowInfo struct {
 	UserID         string        `json:"userid"`
 	Remark         string        `json:"remark"`
