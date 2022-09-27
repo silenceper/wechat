@@ -61,6 +61,7 @@ func (wk *Work) GetAddressList() *addresslist.Client {
 // GetMaterial get material
 func (wk *Work) GetMaterial() *material.Client {
 	return material.NewClient(wk.ctx)
+}
 
 // GetRobot get robot
 func (wk *Work) GetRobot() *robot.Client {
