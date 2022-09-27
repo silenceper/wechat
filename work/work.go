@@ -7,6 +7,7 @@ import (
 	"github.com/silenceper/wechat/v2/work/context"
 	"github.com/silenceper/wechat/v2/work/externalcontact"
 	"github.com/silenceper/wechat/v2/work/kf"
+	"github.com/silenceper/wechat/v2/work/material"
 	"github.com/silenceper/wechat/v2/work/msgaudit"
 	"github.com/silenceper/wechat/v2/work/oauth"
 )
@@ -54,4 +55,9 @@ func (wk *Work) GetExternalContact() *externalcontact.Client {
 // GetAddressList get address_list
 func (wk *Work) GetAddressList() *addresslist.Client {
 	return addresslist.NewClient(wk.ctx)
+}
+
+// GetMaterial get material
+func (wk *Work) GetMaterial() *material.Client {
+	return material.NewClient(wk.ctx)
 }
