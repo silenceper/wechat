@@ -10,6 +10,7 @@ import (
 	"github.com/silenceper/wechat/v2/work/material"
 	"github.com/silenceper/wechat/v2/work/msgaudit"
 	"github.com/silenceper/wechat/v2/work/oauth"
+	"github.com/silenceper/wechat/v2/work/robot"
 )
 
 // Work 企业微信
@@ -60,4 +61,8 @@ func (wk *Work) GetAddressList() *addresslist.Client {
 // GetMaterial get material
 func (wk *Work) GetMaterial() *material.Client {
 	return material.NewClient(wk.ctx)
+
+// GetRobot get robot
+func (wk *Work) GetRobot() *robot.Client {
+	return robot.NewClient(wk.ctx)
 }
