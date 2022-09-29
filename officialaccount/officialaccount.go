@@ -1,6 +1,7 @@
 package officialaccount
 
 import (
+	stdcontext "context"
 	"net/http"
 
 	"github.com/silenceper/wechat/v2/officialaccount/draft"
@@ -91,6 +92,14 @@ func (officialAccount *OfficialAccount) GetServer(req *http.Request, writer http
 
 // GetAccessToken 获取access_token
 func (officialAccount *OfficialAccount) GetAccessToken() (string, error) {
+	return officialAccount.ctx.GetAccessToken()
+}
+
+// GetAccessTokenContext 获取access_token
+func (officialAccount *OfficialAccount) GetAccessTokenContext(ctx stdcontext.Context) (string, error) {
+	if c, ok := officialAccount.ctx.AccessTokenHandle.(credential.AccessTokenContextHandle); ok {
+		return c.GetAccessTokenContext(ctx)
+	}
 	return officialAccount.ctx.GetAccessToken()
 }
 
