@@ -73,6 +73,7 @@ host: https://qyapi.weixin.qq.com/
 |     获取企业已配置的「联系我」列表      | POST      |  /cgi-bin/externalcontact/list_contact_way      | YES        | (r *Client) ListContactWay  | MARKWANG  |
 |     删除企业已配置的「联系我」方式      | POST      |  /cgi-bin/externalcontact/del_contact_way      | YES        | (r *Client) DelContactWay  | MARKWANG  |
 |          创建企业群发          | POST      |  /cgi-bin/externalcontact/add_msg_template      | YES        | (r *Client) AddMsgTemplate  | MARKWANG  |
+|          获取群发记录列表          | POST      |  /cgi-bin/externalcontact/get_groupmsg_list_v2      | YES        | (r *Client) GetGroupMsgListV2  | MARKWANG  |
 |          获取群发成员发送任务列表          | POST      |  /cgi-bin/externalcontact/get_groupmsg_task      | YES        | (r *Client) GetGroupMsgTask  | MARKWANG  |
 |          获取企业群发成员执行结果          | POST      |  /cgi-bin/externalcontact/get_groupmsg_send_result      | YES        | (r *Client) GetGroupMsgSendResult  | MARKWANG  |
 |          发送新客户欢迎语          | POST      |  /cgi-bin/externalcontact/send_welcome_msg      | YES        | (r *Client) SendWelcomeMsg  | MARKWANG  |
