@@ -1,7 +1,8 @@
 package miniprogram
 
 import (
-	"fmt"
+	"errors"
+
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/miniprogram"
 	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
@@ -27,7 +28,7 @@ func (miniProgram *MiniProgram) GetAccessToken() (string, error) {
 		return ak, nil
 	}
 	if miniProgram.authorizerRefreshToken == "" {
-		return "", fmt.Errorf("please set the authorizer_refresh_token first")
+		return "", errors.New("please set the authorizer_refresh_token first")
 	}
 	akRes, akResErr := miniProgram.GetComponent().RefreshAuthrToken(miniProgram.AppID, miniProgram.authorizerRefreshToken)
 	if akResErr != nil {
@@ -77,7 +78,7 @@ type DefaultAuthrAccessToken struct {
 	appID string
 }
 
-// NewDefaultAuthrAccessToken New
+// NewDefaultAuthrAccessToken 设置access_token
 func NewDefaultAuthrAccessToken(opCtx *openContext.Context, appID string) credential.AccessTokenHandle {
 	return &DefaultAuthrAccessToken{
 		opCtx: opCtx,
