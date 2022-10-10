@@ -1,7 +1,7 @@
 package miniprogram
 
 import (
-	"errors"
+	"fmt"
 
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/miniprogram"
@@ -28,7 +28,7 @@ func (miniProgram *MiniProgram) GetAccessToken() (string, error) {
 		return ak, nil
 	}
 	if miniProgram.authorizerRefreshToken == "" {
-		return "", errors.New("please set the authorizer_refresh_token first")
+		return "", fmt.Errorf("please set the authorizer_refresh_token first")
 	}
 	akRes, akResErr := miniProgram.GetComponent().RefreshAuthrToken(miniProgram.AppID, miniProgram.authorizerRefreshToken)
 	if akResErr != nil {
