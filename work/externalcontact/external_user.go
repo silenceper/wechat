@@ -47,23 +47,23 @@ func (r *Client) GetExternalUserList(userID string) ([]string, error) {
 // ExternalUserDetailResponse 外部联系人详情响应
 type ExternalUserDetailResponse struct {
 	util.CommonError
-	ExternalUser
+	ExternalContact ExternalUser `json:"external_contact"`
+	FollowUser      []FollowUser `json:"follow_user"`
+	NextCursor      string       `json:"next_cursor"`
 }
 
 // ExternalUser 外部联系人
 type ExternalUser struct {
-	ExternalUserID  string       `json:"external_userid"`
-	Name            string       `json:"name"`
-	Avatar          string       `json:"avatar"`
-	Type            int64        `json:"type"`
-	Gender          int64        `json:"gender"`
-	UnionID         string       `json:"unionid"`
-	Position        string       `json:"position"`
-	CorpName        string       `json:"corp_name"`
-	CorpFullName    string       `json:"corp_full_name"`
-	ExternalProfile string       `json:"external_profile"`
-	FollowUser      []FollowUser `json:"follow_user"`
-	NextCursor      string       `json:"next_cursor"`
+	ExternalUserID  string `json:"external_userid"`
+	Name            string `json:"name"`
+	Avatar          string `json:"avatar"`
+	Type            int64  `json:"type"`
+	Gender          int64  `json:"gender"`
+	UnionID         string `json:"unionid"`
+	Position        string `json:"position"`
+	CorpName        string `json:"corp_name"`
+	CorpFullName    string `json:"corp_full_name"`
+	ExternalProfile string `json:"external_profile"`
 }
 
 // FollowUser 跟进用户（指企业内部用户）
@@ -96,7 +96,8 @@ type WechatChannel struct {
 }
 
 // GetExternalUserDetail 获取外部联系人详情
-func (r *Client) GetExternalUserDetail(externalUserID string, nextCursor ...string) (*ExternalUser, error) {
+// @see https://developer.work.weixin.qq.com/document/path/92114
+func (r *Client) GetExternalUserDetail(externalUserID string, nextCursor ...string) (*ExternalUserDetailResponse, error) {
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
@@ -106,12 +107,12 @@ func (r *Client) GetExternalUserDetail(externalUserID string, nextCursor ...stri
 	if err != nil {
 		return nil, err
 	}
-	var result ExternalUserDetailResponse
-	err = util.DecodeWithError(response, &result, "get_external_user_detail")
+	result := &ExternalUserDetailResponse{}
+	err = util.DecodeWithError(response, result, "get_external_user_detail")
 	if err != nil {
 		return nil, err
 	}
-	return &result.ExternalUser, nil
+	return result, nil
 }
 
 // BatchGetExternalUserDetailsRequest 批量获取外部联系人详情请求
@@ -161,6 +162,7 @@ type FollowInfo struct {
 }
 
 // BatchGetExternalUserDetails 批量获取外部联系人详情
+// @see https://developer.work.weixin.qq.com/document/path/92994
 func (r *Client) BatchGetExternalUserDetails(request BatchGetExternalUserDetailsRequest) ([]ExternalUserForBatch, error) {
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
@@ -195,6 +197,7 @@ type UpdateUserRemarkRequest struct {
 }
 
 // UpdateUserRemark 修改客户备注信息
+// @see https://developer.work.weixin.qq.com/document/path/92115
 func (r *Client) UpdateUserRemark(request UpdateUserRemarkRequest) error {
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
