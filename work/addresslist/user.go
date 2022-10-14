@@ -11,8 +11,8 @@ const (
 	UserSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/user/simplelist?access_token=%s&department_id=%d"
 	// UserGetURL 读取成员
 	UserGetURL = "https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=%s&userid=%s"
-	// UserListIdURL 获取成员ID列表
-	UserListIdURL = "https://qyapi.weixin.qq.com/cgi-bin/user/list_id?access_token=%s"
+	// UserListIDURL 获取成员ID列表
+	UserListIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/list_id?access_token=%s"
 )
 
 type (
@@ -85,7 +85,7 @@ type UserGetResponse struct {
 				Title string `json:"title"`
 			} `json:"web,omitempty"`
 		} `json:"attrs"`
-	} `json:"extattr"` // 扩展属性，代开发自建应用需要管理员授权才返回；第三方仅通讯录应用可获取；对于非第三方创建的成员，第三方通讯录应用也不可获取；上游企业不可获取下游企业成员该字段
+	} `json:"extattr"`                                 // 扩展属性，代开发自建应用需要管理员授权才返回；第三方仅通讯录应用可获取；对于非第三方创建的成员，第三方通讯录应用也不可获取；上游企业不可获取下游企业成员该字段
 	Status           int    `json:"status"`            // 激活状态: 1=已激活，2=已禁用，4=未激活，5=退出企业。 已激活代表已激活企业微信或已关注微信插件（原企业号）。未激活代表既未激活企业微信又未关注微信插件（原企业号）。
 	QrCode           string `json:"qr_code"`           // 员工个人二维码，扫描可添加为外部联系人(注意返回的是一个url，可在浏览器上打开该url以展示二维码)；代开发自建应用需要管理员授权且成员oauth2授权获取；第三方仅通讯录应用可获取；对于非第三方创建的成员，第三方通讯录应用也不可获取；上游企业不可获取下游企业成员该字段
 	ExternalPosition string `json:"external_position"` // 对外职务，如果设置了该值，则以此作为对外展示的职务，否则以position来展示。代开发自建应用需要管理员授权才返回；第三方仅通讯录应用可获取；对于非第三方创建的成员，第三方通讯录应用也不可获取；上游企业不可获取下游企业成员该字段
@@ -136,14 +136,14 @@ func (r *Client) UserGet(UserID string) (*UserGetResponse, error) {
 	return result, nil
 }
 
-// UserListIdRequest 获取成员ID列表请求
-type UserListIdRequest struct {
+// UserListIDRequest 获取成员ID列表请求
+type UserListIDRequest struct {
 	Cursor string `json:"cursor"`
 	Limit  int    `json:"limit"`
 }
 
-// UserListIdResponse 获取成员ID列表响应
-type UserListIdResponse struct {
+// UserListIDResponse 获取成员ID列表响应
+type UserListIDResponse struct {
 	util.CommonError
 	NextCursor string      `json:"next_cursor"`
 	DeptUser   []*DeptUser `json:"dept_user"`
@@ -155,9 +155,9 @@ type DeptUser struct {
 	Department int    `json:"department"`
 }
 
-// UserListId 获取成员ID列表
+// UserListID 获取成员ID列表
 // see https://developer.work.weixin.qq.com/document/path/96067
-func (r *Client) UserListId(req *UserListIdRequest) (*UserListIdResponse, error) {
+func (r *Client) UserListID(req *UserListIDRequest) (*UserListIDResponse, error) {
 	var (
 		accessToken string
 		err         error
@@ -166,11 +166,11 @@ func (r *Client) UserListId(req *UserListIdRequest) (*UserListIdResponse, error)
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(UserListIdURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(UserListIDURL, accessToken), req); err != nil {
 		return nil, err
 	}
-	result := &UserListIdResponse{}
-	if err = util.DecodeWithError(response, result, "UserListId"); err != nil {
+	result := &UserListIDResponse{}
+	if err = util.DecodeWithError(response, result, "UserListID"); err != nil {
 		return nil, err
 	}
 	return result, nil
