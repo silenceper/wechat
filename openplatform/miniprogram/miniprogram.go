@@ -3,6 +3,9 @@ package miniprogram
 import (
 	"fmt"
 
+	"github.com/silenceper/wechat/v2/credential"
+	"github.com/silenceper/wechat/v2/miniprogram"
+	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
 	miniContext "github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/urllink"
 	openContext "github.com/silenceper/wechat/v2/openplatform/context"
@@ -14,7 +17,7 @@ import (
 type MiniProgram struct {
 	AppID       string
 	openContext *openContext.Context
-
+	*miniprogram.MiniProgram
 	authorizerRefreshToken string
 }
 
@@ -42,10 +45,13 @@ func (miniProgram *MiniProgram) SetAuthorizerRefreshToken(authorizerRefreshToken
 
 // NewMiniProgram 实例化
 func NewMiniProgram(opCtx *openContext.Context, appID string) *MiniProgram {
-	return &MiniProgram{
-		openContext: opCtx,
-		AppID:       appID,
-	}
+	miniProgram := miniprogram.NewMiniProgram(&miniConfig.Config{
+		AppID: opCtx.AppID,
+		Cache: opCtx.Cache,
+	})
+	// 设置获取access_token的函数
+	miniProgram.SetAccessTokenHandle(NewDefaultAuthrAccessToken(opCtx, appID))
+	return &MiniProgram{AppID: appID, MiniProgram: miniProgram, openContext: opCtx}
 }
 
 // GetComponent get component
@@ -64,4 +70,23 @@ func (miniProgram *MiniProgram) GetURLLink() *urllink.URLLink {
 	return urllink.NewURLLink(&miniContext.Context{
 		AccessTokenHandle: miniProgram,
 	})
+}
+
+// DefaultAuthrAccessToken 默认获取授权ak的方法
+type DefaultAuthrAccessToken struct {
+	opCtx *openContext.Context
+	appID string
+}
+
+// NewDefaultAuthrAccessToken 设置access_token
+func NewDefaultAuthrAccessToken(opCtx *openContext.Context, appID string) credential.AccessTokenHandle {
+	return &DefaultAuthrAccessToken{
+		opCtx: opCtx,
+		appID: appID,
+	}
+}
+
+// GetAccessToken 获取ak
+func (ak *DefaultAuthrAccessToken) GetAccessToken() (string, error) {
+	return ak.opCtx.GetAuthrAccessToken(ak.appID)
 }
