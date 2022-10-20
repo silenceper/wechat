@@ -11,6 +11,8 @@ const (
 	UserSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/user/simplelist?access_token=%s&department_id=%d"
 	// UserGetURL 读取成员
 	UserGetURL = "https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=%s&userid=%s"
+	// UserListIDURL 获取成员ID列表
+	UserListIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/list_id?access_token=%s"
 )
 
 type (
@@ -129,6 +131,46 @@ func (r *Client) UserGet(UserID string) (*UserGetResponse, error) {
 	result := &UserGetResponse{}
 	err = util.DecodeWithError(response, result, "UserGet")
 	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// UserListIDRequest 获取成员ID列表请求
+type UserListIDRequest struct {
+	Cursor string `json:"cursor"`
+	Limit  int    `json:"limit"`
+}
+
+// UserListIDResponse 获取成员ID列表响应
+type UserListIDResponse struct {
+	util.CommonError
+	NextCursor string      `json:"next_cursor"`
+	DeptUser   []*DeptUser `json:"dept_user"`
+}
+
+// DeptUser 用户-部门关系
+type DeptUser struct {
+	UserID     string `json:"userid"`
+	Department int    `json:"department"`
+}
+
+// UserListID 获取成员ID列表
+// see https://developer.work.weixin.qq.com/document/path/96067
+func (r *Client) UserListID(req *UserListIDRequest) (*UserListIDResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(UserListIDURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &UserListIDResponse{}
+	if err = util.DecodeWithError(response, result, "UserListID"); err != nil {
 		return nil, err
 	}
 	return result, nil
