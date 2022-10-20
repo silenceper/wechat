@@ -77,10 +77,10 @@ host: https://qyapi.weixin.qq.com/
 |          获取群发成员发送任务列表          | POST      | /cgi-bin/externalcontact/get_groupmsg_task                   | YES        | (r *Client) GetGroupMsgTask  | MARKWANG  |
 |          获取企业群发成员执行结果          | POST      | /cgi-bin/externalcontact/get_groupmsg_send_result            | YES        | (r *Client) GetGroupMsgSendResult  | MARKWANG  |
 |          发送新客户欢迎语          | POST      | /cgi-bin/externalcontact/send_welcome_msg                    | YES        | (r *Client) SendWelcomeMsg  | MARKWANG  |
-|          添加入群欢迎语素材          | POST      | /cgi-bin/externalcontact/group_welcome_template/add          | YES        | (r *Client) GroupWelcomeTemplateAdd  | MARKWANG  |
-|          编辑入群欢迎语素材          | POST      | /cgi-bin/externalcontact/group_welcome_template/edit         | YES        | (r *Client) GroupWelcomeTemplateEdit  | MARKWANG  |
-|          获取入群欢迎语素材          | POST      | /cgi-bin/externalcontact/group_welcome_template/get          | YES        | (r *Client) GroupWelcomeTemplateGet  | MARKWANG  |
-|          删除入群欢迎语素材          | POST      | /cgi-bin/externalcontact/group_welcome_template/del          | YES        | (r *Client) GroupWelcomeTemplateDel  | MARKWANG  |
+|          添加入群欢迎语素材          | POST      | /cgi-bin/externalcontact/group_welcome_template/add          | YES        | (r *Client) AddGroupWelcomeTemplate  | MARKWANG  |
+|          编辑入群欢迎语素材          | POST      | /cgi-bin/externalcontact/group_welcome_template/edit         | YES        | (r *Client) EditGroupWelcomeTemplate  | MARKWANG  |
+|          获取入群欢迎语素材          | POST      | /cgi-bin/externalcontact/group_welcome_template/get          | YES        | (r *Client) GetGroupWelcomeTemplate  | MARKWANG  |
+|          删除入群欢迎语素材          | POST      | /cgi-bin/externalcontact/group_welcome_template/del          | YES        | (r *Client) DelGroupWelcomeTemplate  | MARKWANG  |
 
 ## 通讯录管理
 [官方文档](https://developer.work.weixin.qq.com/document/path/90193)

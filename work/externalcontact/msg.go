@@ -17,14 +17,14 @@ const (
 	GetGroupMsgSendResultURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_send_result?access_token=%s"
 	// SendWelcomeMsgURL 发送新客户欢迎语
 	SendWelcomeMsgURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/send_welcome_msg?access_token=%s"
-	// GroupWelcomeTemplateAddURL 添加入群欢迎语素材
-	GroupWelcomeTemplateAddURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/add?access_token=%s"
-	// GroupWelcomeTemplateEditURL 编辑入群欢迎语素材
-	GroupWelcomeTemplateEditURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/edit?access_token=%s"
-	// GroupWelcomeTemplateGetURL 获取入群欢迎语素材
-	GroupWelcomeTemplateGetURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/get?access_token=%s"
-	// GroupWelcomeTemplateDelURL 删除入群欢迎语素材
-	GroupWelcomeTemplateDelURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/del?access_token=%s"
+	// AddGroupWelcomeTemplateURL 添加入群欢迎语素材
+	AddGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/add?access_token=%s"
+	// EditGroupWelcomeTemplateURL 编辑入群欢迎语素材
+	EditGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/edit?access_token=%s"
+	// GetGroupWelcomeTemplateURL 获取入群欢迎语素材
+	GetGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/get?access_token=%s"
+	// DelGroupWelcomeTemplateURL 删除入群欢迎语素材
+	DelGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/del?access_token=%s"
 )
 
 // AddMsgTemplateRequest 创建企业群发请求
@@ -277,8 +277,8 @@ func (r *Client) SendWelcomeMsg(req *SendWelcomeMsgRequest) error {
 	return nil
 }
 
-// GroupWelcomeTemplateAddRequest 添加入群欢迎语素材请求
-type GroupWelcomeTemplateAddRequest struct {
+// AddGroupWelcomeTemplateRequest 添加入群欢迎语素材请求
+type AddGroupWelcomeTemplateRequest struct {
 	Text        MsgText               `json:"text"`
 	Image       AttachmentImg         `json:"image"`
 	Link        AttachmentLink        `json:"link"`
@@ -289,15 +289,15 @@ type GroupWelcomeTemplateAddRequest struct {
 	Notify      int                   `json:"notify"`
 }
 
-// GroupWelcomeTemplateAddResponse 添加入群欢迎语素材响应
-type GroupWelcomeTemplateAddResponse struct {
+// AddGroupWelcomeTemplateResponse 添加入群欢迎语素材响应
+type AddGroupWelcomeTemplateResponse struct {
 	util.CommonError
 	TemplateID string `json:"template_id"`
 }
 
-// GroupWelcomeTemplateAdd 添加入群欢迎语素材
+// AddGroupWelcomeTemplate 添加入群欢迎语素材
 // see https://developer.work.weixin.qq.com/document/path/92366#%E6%B7%BB%E5%8A%A0%E5%85%A5%E7%BE%A4%E6%AC%A2%E8%BF%8E%E8%AF%AD%E7%B4%A0%E6%9D%90
-func (r *Client) GroupWelcomeTemplateAdd(req *GroupWelcomeTemplateAddRequest) (*GroupWelcomeTemplateAddResponse, error) {
+func (r *Client) AddGroupWelcomeTemplate(req *AddGroupWelcomeTemplateRequest) (*AddGroupWelcomeTemplateResponse, error) {
 	var (
 		accessToken string
 		err         error
@@ -306,18 +306,18 @@ func (r *Client) GroupWelcomeTemplateAdd(req *GroupWelcomeTemplateAddRequest) (*
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GroupWelcomeTemplateAddURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(AddGroupWelcomeTemplateURL, accessToken), req); err != nil {
 		return nil, err
 	}
-	result := &GroupWelcomeTemplateAddResponse{}
-	if err = util.DecodeWithError(response, result, "GroupWelcomeTemplateAdd"); err != nil {
+	result := &AddGroupWelcomeTemplateResponse{}
+	if err = util.DecodeWithError(response, result, "AddGroupWelcomeTemplate"); err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-// GroupWelcomeTemplateEditRequest 编辑入群欢迎语素材请求
-type GroupWelcomeTemplateEditRequest struct {
+// EditGroupWelcomeTemplateRequest 编辑入群欢迎语素材请求
+type EditGroupWelcomeTemplateRequest struct {
 	TemplateID  string                `json:"template_id"`
 	Text        MsgText               `json:"text"`
 	Image       AttachmentImg         `json:"image"`
@@ -328,14 +328,14 @@ type GroupWelcomeTemplateEditRequest struct {
 	AgentID     int                   `json:"agentid"`
 }
 
-// GroupWelcomeTemplateEditResponse 编辑入群欢迎语素材响应
-type GroupWelcomeTemplateEditResponse struct {
+// EditGroupWelcomeTemplateResponse 编辑入群欢迎语素材响应
+type EditGroupWelcomeTemplateResponse struct {
 	util.CommonError
 }
 
-// GroupWelcomeTemplateEdit 编辑入群欢迎语素材
+// EditGroupWelcomeTemplate 编辑入群欢迎语素材
 // see https://developer.work.weixin.qq.com/document/path/92366#%E7%BC%96%E8%BE%91%E5%85%A5%E7%BE%A4%E6%AC%A2%E8%BF%8E%E8%AF%AD%E7%B4%A0%E6%9D%90
-func (r *Client) GroupWelcomeTemplateEdit(req *GroupWelcomeTemplateEditRequest) error {
+func (r *Client) EditGroupWelcomeTemplate(req *EditGroupWelcomeTemplateRequest) error {
 	var (
 		accessToken string
 		err         error
@@ -344,23 +344,23 @@ func (r *Client) GroupWelcomeTemplateEdit(req *GroupWelcomeTemplateEditRequest) 
 		return err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GroupWelcomeTemplateEditURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(EditGroupWelcomeTemplateURL, accessToken), req); err != nil {
 		return err
 	}
-	result := &GroupWelcomeTemplateEditResponse{}
-	if err = util.DecodeWithError(response, result, "GroupWelcomeTemplateEdit"); err != nil {
+	result := &EditGroupWelcomeTemplateResponse{}
+	if err = util.DecodeWithError(response, result, "EditGroupWelcomeTemplate"); err != nil {
 		return err
 	}
 	return nil
 }
 
-// GroupWelcomeTemplateGetRequest 获取入群欢迎语素材请求
-type GroupWelcomeTemplateGetRequest struct {
+// GetGroupWelcomeTemplateRequest 获取入群欢迎语素材请求
+type GetGroupWelcomeTemplateRequest struct {
 	TemplateID string `json:"template_id"`
 }
 
-// GroupWelcomeTemplateGetResponse 获取入群欢迎语素材响应
-type GroupWelcomeTemplateGetResponse struct {
+// GetGroupWelcomeTemplateResponse 获取入群欢迎语素材响应
+type GetGroupWelcomeTemplateResponse struct {
 	util.CommonError
 	Text        MsgText               `json:"text"`
 	Image       AttachmentImg         `json:"image"`
@@ -370,9 +370,9 @@ type GroupWelcomeTemplateGetResponse struct {
 	Video       AttachmentVideo       `json:"video"`
 }
 
-// GroupWelcomeTemplateGet 获取入群欢迎语素材
+// GetGroupWelcomeTemplate 获取入群欢迎语素材
 // see https://developer.work.weixin.qq.com/document/path/92366#%E8%8E%B7%E5%8F%96%E5%85%A5%E7%BE%A4%E6%AC%A2%E8%BF%8E%E8%AF%AD%E7%B4%A0%E6%9D%90
-func (r *Client) GroupWelcomeTemplateGet(req *GroupWelcomeTemplateGetRequest) (*GroupWelcomeTemplateGetResponse, error) {
+func (r *Client) GetGroupWelcomeTemplate(req *GetGroupWelcomeTemplateRequest) (*GetGroupWelcomeTemplateResponse, error) {
 	var (
 		accessToken string
 		err         error
@@ -381,30 +381,30 @@ func (r *Client) GroupWelcomeTemplateGet(req *GroupWelcomeTemplateGetRequest) (*
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GroupWelcomeTemplateGetURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(GetGroupWelcomeTemplateURL, accessToken), req); err != nil {
 		return nil, err
 	}
-	result := &GroupWelcomeTemplateGetResponse{}
-	if err = util.DecodeWithError(response, result, "GroupWelcomeTemplateGet"); err != nil {
+	result := &GetGroupWelcomeTemplateResponse{}
+	if err = util.DecodeWithError(response, result, "GetGroupWelcomeTemplate"); err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-// GroupWelcomeTemplateDelRequest 删除入群欢迎语素材请求
-type GroupWelcomeTemplateDelRequest struct {
+// DelGroupWelcomeTemplateRequest 删除入群欢迎语素材请求
+type DelGroupWelcomeTemplateRequest struct {
 	TemplateID string `json:"template_id"`
 	AgentID    int    `json:"agentid"`
 }
 
-// GroupWelcomeTemplateDelResponse 删除入群欢迎语素材响应
-type GroupWelcomeTemplateDelResponse struct {
+// DelGroupWelcomeTemplateResponse 删除入群欢迎语素材响应
+type DelGroupWelcomeTemplateResponse struct {
 	util.CommonError
 }
 
-// GroupWelcomeTemplateDel 删除入群欢迎语素材
+// DelGroupWelcomeTemplate 删除入群欢迎语素材
 // see https://developer.work.weixin.qq.com/document/path/92366#%E5%88%A0%E9%99%A4%E5%85%A5%E7%BE%A4%E6%AC%A2%E8%BF%8E%E8%AF%AD%E7%B4%A0%E6%9D%90
-func (r *Client) GroupWelcomeTemplateDel(req *GroupWelcomeTemplateDelRequest) error {
+func (r *Client) DelGroupWelcomeTemplate(req *DelGroupWelcomeTemplateRequest) error {
 	var (
 		accessToken string
 		err         error
@@ -413,11 +413,11 @@ func (r *Client) GroupWelcomeTemplateDel(req *GroupWelcomeTemplateDelRequest) er
 		return err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GroupWelcomeTemplateDelURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(DelGroupWelcomeTemplateURL, accessToken), req); err != nil {
 		return err
 	}
-	result := &GroupWelcomeTemplateDelResponse{}
-	if err = util.DecodeWithError(response, result, "GroupWelcomeTemplateDel"); err != nil {
+	result := &DelGroupWelcomeTemplateResponse{}
+	if err = util.DecodeWithError(response, result, "DelGroupWelcomeTemplate"); err != nil {
 		return err
 	}
 	return nil
