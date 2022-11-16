@@ -5,7 +5,7 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
-const OpengidToChatid = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/opengid_to_chatid"
+const OpengIDToChatIDURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/opengid_to_chatid"
 
 type (
 	//GroupChatListRequest 获取客户群列表的请求参数
@@ -73,7 +73,8 @@ type (
 	GroupChatAdmin struct {
 		UserID string `json:"userid"` //群管理员userid
 	}
-	GroupChat struct { //客户群详情
+	//GroupChat 客户群详情
+	GroupChat struct {
 		ChatID     string            `json:"chat_id"`     //客户群ID
 		Name       string            `json:"name"`        //群名
 		Owner      string            `json:"owner"`       //群主ID
@@ -120,15 +121,15 @@ type (
 	}
 )
 
-// OpengidToChatid 客户群opengid转换
+// OpengIDToChatID 客户群opengid转换
 // @see https://developer.work.weixin.qq.com/document/path/94822
-func (r *Client) OpengidToChatid(req *OpengIDToChatIDRequest) (*OpengIDToChatIDResponse, error) {
+func (r *Client) OpengIDToChatID(req *OpengIDToChatIDRequest) (*OpengIDToChatIDResponse, error) {
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	var response []byte
-	response, err = util.PostJSON(fmt.Sprintf("%s?access_token=%s", OpengidToChatid, accessToken), req)
+	response, err = util.PostJSON(fmt.Sprintf("%s?access_token=%s", OpengIDToChatIDURL, accessToken), req)
 	if err != nil {
 		return nil, err
 	}
