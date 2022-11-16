@@ -2,7 +2,7 @@ package externalcontact
 
 import (
 	"fmt"
-	
+
 	"github.com/silenceper/wechat/v2/util"
 )
 
@@ -133,7 +133,7 @@ func (r *Client) UpdateJoinWay(req *UpdateJoinWayRequest) (*util.CommonError, er
 
 // DelJoinWay 删除客户群进群方式配置
 // @see https://developer.work.weixin.qq.com/document/path/92229
-func (r *Client) DelJoinWay(req *JoinWayConfigRequest) (any, error) {
+func (r *Client) DelJoinWay(req *JoinWayConfigRequest) (*util.CommonError, error) {
 	var (
 		accessToken string
 		err         error
