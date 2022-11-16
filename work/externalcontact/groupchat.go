@@ -2,9 +2,11 @@ package externalcontact
 
 import (
 	"fmt"
+	
 	"github.com/silenceper/wechat/v2/util"
 )
 
+// OpengIDToChatIDURL .
 const OpengIDToChatIDURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/opengid_to_chatid"
 
 type (
