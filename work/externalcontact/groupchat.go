@@ -2,11 +2,11 @@ package externalcontact
 
 import (
 	"fmt"
-	
+
 	"github.com/silenceper/wechat/v2/util"
 )
 
-// OpengIDToChatIDURL .
+// OpengIDToChatIDURL 客户群opengid转换URL
 const OpengIDToChatIDURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/opengid_to_chatid"
 
 type (
@@ -124,7 +124,7 @@ type (
 )
 
 // OpengIDToChatID 客户群opengid转换
-// @see https://developer.work.weixin.qq.com/document/path/94822
+// @see https://developer.work.weixin.qq.com/document/path/94828
 func (r *Client) OpengIDToChatID(req *OpengIDToChatIDRequest) (*OpengIDToChatIDResponse, error) {
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
