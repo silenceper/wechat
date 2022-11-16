@@ -111,44 +111,36 @@ type UpdateJoinWayRequest struct {
 
 // UpdateJoinWay 更新客户群进群方式配置
 // @see https://developer.work.weixin.qq.com/document/path/92229
-func (r *Client) UpdateJoinWay(req *UpdateJoinWayRequest) (*util.CommonError, error) {
+func (r *Client) UpdateJoinWay(req *UpdateJoinWayRequest) error {
 	var (
 		accessToken string
 		err         error
 		response    []byte
 	)
 	if accessToken, err = r.GetAccessToken(); err != nil {
-		return nil, err
+		return err
 	}
 	response, err = util.PostJSON(fmt.Sprintf("%s/update_join_way?access_token=%s", GroupChatURL, accessToken), req)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	result := &util.CommonError{}
-	if err = util.DecodeWithError(response, result, "UpdateJoinWay"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	return util.DecodeWithCommonError(response, "UpdateJoinWay")
 }
 
 // DelJoinWay 删除客户群进群方式配置
 // @see https://developer.work.weixin.qq.com/document/path/92229
-func (r *Client) DelJoinWay(req *JoinWayConfigRequest) (*util.CommonError, error) {
+func (r *Client) DelJoinWay(req *JoinWayConfigRequest) error {
 	var (
 		accessToken string
 		err         error
 		response    []byte
 	)
 	if accessToken, err = r.GetAccessToken(); err != nil {
-		return nil, err
+		return err
 	}
 	response, err = util.PostJSON(fmt.Sprintf("%s/del_join_way?access_token=%s", GroupChatURL, accessToken), req)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	result := &util.CommonError{}
-	if err = util.DecodeWithError(response, result, "DelJoinWay"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	return util.DecodeWithCommonError(response, "DelJoinWay")
 }
