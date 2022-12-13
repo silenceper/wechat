@@ -1,7 +1,7 @@
 package auth
 
 import (
-	context2 "context"
+	stdcontext "context"
 	"encoding/json"
 	"fmt"
 
@@ -28,11 +28,11 @@ func NewAuth(ctx *context.Context, appID string) *Auth {
 
 // Code2Session 登录凭证校验。
 func (auth *Auth) Code2Session(jsCode string) (result miniprogramAuth.ResCode2Session, err error) {
-	return auth.Code2SessionContext(context2.Background(), jsCode)
+	return auth.Code2SessionContext(stdcontext.Background(), jsCode)
 }
 
 // Code2SessionContext 登录凭证校验。
-func (auth *Auth) Code2SessionContext(ctx context2.Context, jsCode string) (result miniprogramAuth.ResCode2Session, err error) {
+func (auth *Auth) Code2SessionContext(ctx stdcontext.Context, jsCode string) (result miniprogramAuth.ResCode2Session, err error) {
 	var response []byte
 	var componentAccessToken string
 	componentAccessToken, err = auth.GetComponentAccessToken()
@@ -56,5 +56,5 @@ func (auth *Auth) Code2SessionContext(ctx context2.Context, jsCode string) (resu
 func (auth *Auth) CheckEncryptedData(encryptedMsgHash string) (result miniprogramAuth.RspCheckEncryptedData, err error) {
 	var miniProgram = miniprogram.MiniProgram{}
 	miniProgram.SetAccessTokenHandle(auth.AccessTokenHandle)
-	return miniProgram.GetAuth().CheckEncryptedDataContext(context2.Background(), encryptedMsgHash)
+	return miniProgram.GetAuth().CheckEncryptedDataContext(stdcontext.Background(), encryptedMsgHash)
 }
