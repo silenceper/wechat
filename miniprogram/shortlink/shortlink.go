@@ -37,7 +37,7 @@ type ShortLinker struct {
 // resShortLinker 返回结构体
 type resShortLinker struct {
 	// 通用错误
-	*util.CommonError
+	util.CommonError
 
 	// 返回的 shortLink
 	Link string `json:"link"`
