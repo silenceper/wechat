@@ -193,7 +193,7 @@ func (ctx *Context) RefreshAuthrToken(appid, refreshToken string) (*AuthrAccessT
 	}
 
 	authrTokenKey := "authorizer_access_token_" + appid
-	if err := ctx.Cache.Set(authrTokenKey, ret.AccessToken, time.Minute*80); err != nil {
+	if err := ctx.Cache.Set(authrTokenKey, ret.AccessToken, time.Second*time.Duration(ret.ExpiresIn)); err != nil {
 		return nil, err
 	}
 	return ret, nil
