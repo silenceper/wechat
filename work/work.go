@@ -8,6 +8,7 @@ import (
 	"github.com/silenceper/wechat/v2/work/externalcontact"
 	"github.com/silenceper/wechat/v2/work/kf"
 	"github.com/silenceper/wechat/v2/work/material"
+	"github.com/silenceper/wechat/v2/work/message"
 	"github.com/silenceper/wechat/v2/work/msgaudit"
 	"github.com/silenceper/wechat/v2/work/oauth"
 	"github.com/silenceper/wechat/v2/work/robot"
@@ -66,4 +67,9 @@ func (wk *Work) GetMaterial() *material.Client {
 // GetRobot get robot
 func (wk *Work) GetRobot() *robot.Client {
 	return robot.NewClient(wk.ctx)
+}
+
+// GetMessage get robot
+func (wk *Work) GetMessage() *message.Client {
+	return message.NewClient(wk.ctx)
 }
