@@ -160,9 +160,7 @@ func (ocr *OCR) IDCard(path string) (ResIDCard ResIDCard, err error) {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrIDCardURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrIDCardURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
@@ -179,9 +177,7 @@ func (ocr *OCR) BankCard(path string) (ResBankCard ResBankCard, err error) {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrBankCardURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrBankCardURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
@@ -198,9 +194,7 @@ func (ocr *OCR) Driving(path string) (ResDriving ResDriving, err error) {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrDrivingURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrDrivingURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
@@ -217,9 +211,7 @@ func (ocr *OCR) DrivingLicense(path string) (ResDrivingLicense ResDrivingLicense
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrDrivingLicenseURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrDrivingLicenseURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
@@ -236,9 +228,7 @@ func (ocr *OCR) BizLicense(path string) (ResBizLicense ResBizLicense, err error)
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrBizLicenseURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrBizLicenseURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
@@ -255,9 +245,7 @@ func (ocr *OCR) Common(path string) (ResCommon ResCommon, err error) {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrCommonURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrCommonURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
@@ -274,9 +262,7 @@ func (ocr *OCR) PlateNumber(path string) (ResPlateNumber ResPlateNumber, err err
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrPlateNumberURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrPlateNumberURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
