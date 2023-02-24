@@ -2,11 +2,13 @@
 package context
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/url"
 	"time"
 
+	"github.com/silenceper/wechat/v2/cache"
 	"github.com/silenceper/wechat/v2/util"
 )
 
@@ -31,24 +33,29 @@ type ComponentAccessToken struct {
 	ExpiresIn   int64  `json:"expires_in"`
 }
 
-// GetComponentAccessToken 获取 ComponentAccessToken
-func (ctx *Context) GetComponentAccessToken() (string, error) {
+// GetComponentAccessTokenContext 获取 ComponentAccessToken
+func (ctx *Context) GetComponentAccessTokenContext(stdCtx context.Context) (string, error) {
 	accessTokenCacheKey := fmt.Sprintf("component_access_token_%s", ctx.AppID)
-	val := ctx.Cache.Get(accessTokenCacheKey)
+	val := cache.GetContext(stdCtx, ctx.Cache, accessTokenCacheKey)
 	if val == nil {
 		return "", fmt.Errorf("cann't get component access token")
 	}
 	return val.(string), nil
 }
 
-// SetComponentAccessToken 通过component_verify_ticket 获取 ComponentAccessToken
-func (ctx *Context) SetComponentAccessToken(verifyTicket string) (*ComponentAccessToken, error) {
+// GetComponentAccessToken 获取 ComponentAccessToken
+func (ctx *Context) GetComponentAccessToken() (string, error) {
+	return ctx.GetComponentAccessTokenContext(context.Background())
+}
+
+// SetComponentAccessTokenContext 通过component_verify_ticket 获取 ComponentAccessToken
+func (ctx *Context) SetComponentAccessTokenContext(stdCtx context.Context, verifyTicket string) (*ComponentAccessToken, error) {
 	body := map[string]string{
 		"component_appid":         ctx.AppID,
 		"component_appsecret":     ctx.AppSecret,
 		"component_verify_ticket": verifyTicket,
 	}
-	respBody, err := util.PostJSON(componentAccessTokenURL, body)
+	respBody, err := util.PostJSONContext(stdCtx, componentAccessTokenURL, body)
 	if err != nil {
 		return nil, err
 	}
@@ -64,15 +71,20 @@ func (ctx *Context) SetComponentAccessToken(verifyTicket string) (*ComponentAcce
 
 	accessTokenCacheKey := fmt.Sprintf("component_access_token_%s", ctx.AppID)
 	expires := at.ExpiresIn - 1500
-	if err := ctx.Cache.Set(accessTokenCacheKey, at.AccessToken, time.Duration(expires)*time.Second); err != nil {
+	if err := cache.SetContext(stdCtx, ctx.Cache, accessTokenCacheKey, at.AccessToken, time.Duration(expires)*time.Second); err != nil {
 		return nil, nil
 	}
 	return at, nil
 }
 
-// GetPreCode 获取预授权码
-func (ctx *Context) GetPreCode() (string, error) {
-	cat, err := ctx.GetComponentAccessToken()
+// SetComponentAccessToken 通过component_verify_ticket 获取 ComponentAccessToken
+func (ctx *Context) SetComponentAccessToken(stdCtx context.Context, verifyTicket string) (*ComponentAccessToken, error) {
+	return ctx.SetComponentAccessTokenContext(stdCtx, verifyTicket)
+}
+
+// GetPreCodeContext 获取预授权码
+func (ctx *Context) GetPreCodeContext(stdCtx context.Context) (string, error) {
+	cat, err := ctx.GetComponentAccessTokenContext(stdCtx)
 	if err != nil {
 		return "", err
 	}
@@ -80,7 +92,7 @@ func (ctx *Context) GetPreCode() (string, error) {
 		"component_appid": ctx.AppID,
 	}
 	uri := fmt.Sprintf(getPreCodeURL, cat)
-	body, err := util.PostJSON(uri, req)
+	body, err := util.PostJSONContext(stdCtx, uri, req)
 	if err != nil {
 		return "", err
 	}
@@ -95,22 +107,37 @@ func (ctx *Context) GetPreCode() (string, error) {
 	return ret.PreCode, nil
 }
 
-// GetComponentLoginPage 获取第三方公众号授权链接(扫码授权)
-func (ctx *Context) GetComponentLoginPage(redirectURI string, authType int, bizAppID string) (string, error) {
-	code, err := ctx.GetPreCode()
+// GetPreCode 获取预授权码
+func (ctx *Context) GetPreCode() (string, error) {
+	return ctx.GetPreCodeContext(context.Background())
+}
+
+// GetComponentLoginPageContext 获取第三方公众号授权链接(扫码授权)
+func (ctx *Context) GetComponentLoginPageContext(stdCtx context.Context, redirectURI string, authType int, bizAppID string) (string, error) {
+	code, err := ctx.GetPreCodeContext(stdCtx)
 	if err != nil {
 		return "", err
 	}
 	return fmt.Sprintf(componentLoginURL, ctx.AppID, code, url.QueryEscape(redirectURI), authType, bizAppID), nil
 }
 
-// GetBindComponentURL 获取第三方公众号授权链接(链接跳转，适用移动端)
-func (ctx *Context) GetBindComponentURL(redirectURI string, authType int, bizAppID string) (string, error) {
-	code, err := ctx.GetPreCode()
+// GetComponentLoginPage 获取第三方公众号授权链接(扫码授权)
+func (ctx *Context) GetComponentLoginPage(redirectURI string, authType int, bizAppID string) (string, error) {
+	return ctx.GetComponentLoginPageContext(context.Background(), redirectURI, authType, bizAppID)
+}
+
+// GetBindComponentURLContext 获取第三方公众号授权链接(链接跳转，适用移动端)
+func (ctx *Context) GetBindComponentURLContext(stdCtx context.Context, redirectURI string, authType int, bizAppID string) (string, error) {
+	code, err := ctx.GetPreCodeContext(stdCtx)
 	if err != nil {
 		return "", err
 	}
 	return fmt.Sprintf(bindComponentURL, authType, ctx.AppID, code, url.QueryEscape(redirectURI), bizAppID), nil
+}
+
+// GetBindComponentURL 获取第三方公众号授权链接(链接跳转，适用移动端)
+func (ctx *Context) GetBindComponentURL(redirectURI string, authType int, bizAppID string) (string, error) {
+	return ctx.GetBindComponentURLContext(context.Background(), redirectURI, authType, bizAppID)
 }
 
 // ID 微信返回接口中各种类型字段
@@ -137,9 +164,9 @@ type AuthrAccessToken struct {
 	RefreshToken string `json:"authorizer_refresh_token"`
 }
 
-// QueryAuthCode 使用授权码换取公众号或小程序的接口调用凭据和授权信息
-func (ctx *Context) QueryAuthCode(authCode string) (*AuthBaseInfo, error) {
-	cat, err := ctx.GetComponentAccessToken()
+// QueryAuthCodeContext 使用授权码换取公众号或小程序的接口调用凭据和授权信息
+func (ctx *Context) QueryAuthCodeContext(stdCtx context.Context, authCode string) (*AuthBaseInfo, error) {
+	cat, err := ctx.GetComponentAccessTokenContext(stdCtx)
 	if err != nil {
 		return nil, err
 	}
@@ -149,7 +176,7 @@ func (ctx *Context) QueryAuthCode(authCode string) (*AuthBaseInfo, error) {
 		"authorization_code": authCode,
 	}
 	uri := fmt.Sprintf(queryAuthURL, cat)
-	body, err := util.PostJSON(uri, req)
+	body, err := util.PostJSONContext(stdCtx, uri, req)
 	if err != nil {
 		return nil, err
 	}
@@ -169,9 +196,14 @@ func (ctx *Context) QueryAuthCode(authCode string) (*AuthBaseInfo, error) {
 	return ret.Info, nil
 }
 
-// RefreshAuthrToken 获取（刷新）授权公众号或小程序的接口调用凭据（令牌）
-func (ctx *Context) RefreshAuthrToken(appid, refreshToken string) (*AuthrAccessToken, error) {
-	cat, err := ctx.GetComponentAccessToken()
+// QueryAuthCode 使用授权码换取公众号或小程序的接口调用凭据和授权信息
+func (ctx *Context) QueryAuthCode(authCode string) (*AuthBaseInfo, error) {
+	return ctx.QueryAuthCodeContext(context.Background(), authCode)
+}
+
+// RefreshAuthrTokenContext 获取（刷新）授权公众号或小程序的接口调用凭据（令牌）
+func (ctx *Context) RefreshAuthrTokenContext(stdCtx context.Context, appid, refreshToken string) (*AuthrAccessToken, error) {
+	cat, err := ctx.GetComponentAccessTokenContext(stdCtx)
 	if err != nil {
 		return nil, err
 	}
@@ -182,7 +214,7 @@ func (ctx *Context) RefreshAuthrToken(appid, refreshToken string) (*AuthrAccessT
 		"authorizer_refresh_token": refreshToken,
 	}
 	uri := fmt.Sprintf(refreshTokenURL, cat)
-	body, err := util.PostJSON(uri, req)
+	body, err := util.PostJSONContext(stdCtx, uri, req)
 	if err != nil {
 		return nil, err
 	}
@@ -193,20 +225,30 @@ func (ctx *Context) RefreshAuthrToken(appid, refreshToken string) (*AuthrAccessT
 	}
 
 	authrTokenKey := "authorizer_access_token_" + appid
-	if err := ctx.Cache.Set(authrTokenKey, ret.AccessToken, time.Second*time.Duration(ret.ExpiresIn-30)); err != nil {
+	if err := cache.SetContext(stdCtx, ctx.Cache, authrTokenKey, ret.AccessToken, time.Second*time.Duration(ret.ExpiresIn-30)); err != nil {
 		return nil, err
 	}
 	return ret, nil
 }
 
-// GetAuthrAccessToken 获取授权方AccessToken
-func (ctx *Context) GetAuthrAccessToken(appid string) (string, error) {
+// RefreshAuthrToken 获取（刷新）授权公众号或小程序的接口调用凭据（令牌）
+func (ctx *Context) RefreshAuthrToken(appid, refreshToken string) (*AuthrAccessToken, error) {
+	return ctx.RefreshAuthrTokenContext(context.Background(), appid, refreshToken)
+}
+
+// GetAuthrAccessTokenContext 获取授权方AccessToken
+func (ctx *Context) GetAuthrAccessTokenContext(stdCtx context.Context, appid string) (string, error) {
 	authrTokenKey := "authorizer_access_token_" + appid
-	val := ctx.Cache.Get(authrTokenKey)
+	val := cache.GetContext(stdCtx, ctx.Cache, authrTokenKey)
 	if val == nil {
 		return "", fmt.Errorf("cannot get authorizer %s access token", appid)
 	}
 	return val.(string), nil
+}
+
+// GetAuthrAccessToken 获取授权方AccessToken
+func (ctx *Context) GetAuthrAccessToken(appid string) (string, error) {
+	return ctx.GetAuthrAccessTokenContext(context.Background(), appid)
 }
 
 // AuthorizerInfo 授权方详细信息
@@ -258,9 +300,9 @@ type CategoriesInfo struct {
 	Second string `wx:"second"`
 }
 
-// GetAuthrInfo 获取授权方的帐号基本信息
-func (ctx *Context) GetAuthrInfo(appid string) (*AuthorizerInfo, *AuthBaseInfo, error) {
-	cat, err := ctx.GetComponentAccessToken()
+// GetAuthrInfoContext 获取授权方的帐号基本信息
+func (ctx *Context) GetAuthrInfoContext(stdCtx context.Context, appid string) (*AuthorizerInfo, *AuthBaseInfo, error) {
+	cat, err := ctx.GetComponentAccessTokenContext(stdCtx)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -271,7 +313,7 @@ func (ctx *Context) GetAuthrInfo(appid string) (*AuthorizerInfo, *AuthBaseInfo, 
 	}
 
 	uri := fmt.Sprintf(getComponentInfoURL, cat)
-	body, err := util.PostJSON(uri, req)
+	body, err := util.PostJSONContext(stdCtx, uri, req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -285,4 +327,9 @@ func (ctx *Context) GetAuthrInfo(appid string) (*AuthorizerInfo, *AuthBaseInfo, 
 	}
 
 	return ret.AuthorizerInfo, ret.AuthorizationInfo, nil
+}
+
+// GetAuthrInfo 获取授权方的帐号基本信息
+func (ctx *Context) GetAuthrInfo(appid string) (*AuthorizerInfo, *AuthBaseInfo, error) {
+	return ctx.GetAuthrInfoContext(context.Background(), appid)
 }
