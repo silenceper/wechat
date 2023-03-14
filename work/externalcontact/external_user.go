@@ -119,6 +119,7 @@ func (r *Client) GetExternalUserDetail(externalUserID string, nextCursor ...stri
 type BatchGetExternalUserDetailsRequest struct {
 	UserIDList []string `json:"userid_list"`
 	Cursor     string   `json:"cursor"`
+	Limit      int      `json:"limit,omitempty"`
 }
 
 // ExternalUserDetailListResponse 批量获取外部联系人详情响应
