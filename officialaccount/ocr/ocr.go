@@ -154,134 +154,120 @@ func NewOCR(c *context.Context) *OCR {
 }
 
 // IDCard 身份证OCR识别接口
-func (ocr *OCR) IDCard(path string) (ResIDCard ResIDCard, err error) {
+func (ocr *OCR) IDCard(path string) (resIDCard ResIDCard, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrIDCardURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrIDCardURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResIDCard, "OCRIDCard")
+	err = util.DecodeWithError(response, &resIDCard, "OCRIDCard")
 
 	return
 }
 
 // BankCard 银行卡OCR识别接口
-func (ocr *OCR) BankCard(path string) (ResBankCard ResBankCard, err error) {
+func (ocr *OCR) BankCard(path string) (resBankCard ResBankCard, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrBankCardURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrBankCardURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResBankCard, "OCRBankCard")
+	err = util.DecodeWithError(response, &resBankCard, "OCRBankCard")
 
 	return
 }
 
 // Driving 行驶证OCR识别接口
-func (ocr *OCR) Driving(path string) (ResDriving ResDriving, err error) {
+func (ocr *OCR) Driving(path string) (resDriving ResDriving, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrDrivingURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrDrivingURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResDriving, "OCRDriving")
+	err = util.DecodeWithError(response, &resDriving, "OCRDriving")
 
 	return
 }
 
 // DrivingLicense 驾驶证OCR识别接口
-func (ocr *OCR) DrivingLicense(path string) (ResDrivingLicense ResDrivingLicense, err error) {
+func (ocr *OCR) DrivingLicense(path string) (resDrivingLicense ResDrivingLicense, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrDrivingLicenseURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrDrivingLicenseURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResDrivingLicense, "OCRDrivingLicense")
+	err = util.DecodeWithError(response, &resDrivingLicense, "OCRDrivingLicense")
 
 	return
 }
 
 // BizLicense 营业执照OCR识别接口
-func (ocr *OCR) BizLicense(path string) (ResBizLicense ResBizLicense, err error) {
+func (ocr *OCR) BizLicense(path string) (resBizLicense ResBizLicense, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrBizLicenseURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrBizLicenseURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResBizLicense, "OCRBizLicense")
+	err = util.DecodeWithError(response, &resBizLicense, "OCRBizLicense")
 
 	return
 }
 
 // Common 通用印刷体OCR识别接口
-func (ocr *OCR) Common(path string) (ResCommon ResCommon, err error) {
+func (ocr *OCR) Common(path string) (resCommon ResCommon, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrCommonURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrCommonURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResCommon, "OCRCommon")
+	err = util.DecodeWithError(response, &resCommon, "OCRCommon")
 
 	return
 }
 
 // PlateNumber 车牌OCR识别接口
-func (ocr *OCR) PlateNumber(path string) (ResPlateNumber ResPlateNumber, err error) {
+func (ocr *OCR) PlateNumber(path string) (resPlateNumber ResPlateNumber, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrPlateNumberURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrPlateNumberURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResPlateNumber, "OCRPlateNumber")
+	err = util.DecodeWithError(response, &resPlateNumber, "OCRPlateNumber")
 
 	return
 }

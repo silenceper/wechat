@@ -103,7 +103,11 @@ func (r *Client) GetExternalUserDetail(externalUserID string, nextCursor ...stri
 		return nil, err
 	}
 	var response []byte
-	response, err = util.HTTPGet(fmt.Sprintf("%s?access_token=%v&external_userid=%v&cursor=%v", FetchExternalContactUserDetailURL, accessToken, externalUserID, nextCursor))
+	var cursor string
+	if len(nextCursor) > 0 {
+		cursor = nextCursor[0]
+	}
+	response, err = util.HTTPGet(fmt.Sprintf("%s?access_token=%v&external_userid=%v&cursor=%v", FetchExternalContactUserDetailURL, accessToken, externalUserID, cursor))
 	if err != nil {
 		return nil, err
 	}

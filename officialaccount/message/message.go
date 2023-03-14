@@ -80,6 +80,12 @@ const (
 	EventSubscribeMsgPopupEvent EventType = "subscribe_msg_popup_event"
 	// EventPublishJobFinish 发布任务完成
 	EventPublishJobFinish EventType = "PUBLISHJOBFINISH"
+	// EventWeappAuditSuccess 审核通过
+	EventWeappAuditSuccess EventType = "weapp_audit_success"
+	// EventWeappAuditFail 审核不通过
+	EventWeappAuditFail EventType = "weapp_audit_fail"
+	// EventWeappAuditDelay 审核延后
+	EventWeappAuditDelay EventType = "weapp_audit_delay"
 )
 
 const (
@@ -209,6 +215,13 @@ type MixMessage struct {
 
 	// 设备相关
 	device.MsgDevice
+
+	//小程序审核通知
+	SuccTime   int    `xml:"SuccTime"`   //审核成功时的时间戳
+	FailTime   int    `xml:"FailTime"`   //审核不通过的时间戳
+	DelayTime  int    `xml:"DelayTime"`  //审核延后时的时间戳
+	Reason     string `xml:"Reason"`     //审核不通过的原因
+	ScreenShot string `xml:"ScreenShot"` //审核不通过的截图示例。用 | 分隔的 media_id 的列表，可通过获取永久素材接口拉取截图内容
 }
 
 // SubscribeMsgPopupEvent 订阅通知事件推送的消息体
