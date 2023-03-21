@@ -7,12 +7,12 @@ import (
 )
 
 const (
-	// CreateTagURL 创建标签
-	CreateTagURL = "https://qyapi.weixin.qq.com/cgi-bin/tag/create?access_token=%s"
-	// UpdateTagURL 更新标签名字
-	UpdateTagURL = "https://qyapi.weixin.qq.com/cgi-bin/tag/update?access_token=%s"
-	// DeleteTagURL 删除标签
-	DeleteTagURL = "https://qyapi.weixin.qq.com/cgi-bin/tag/delete?access_token=%s&tagid=%d"
+	// createTagURL 创建标签
+	createTagURL = "https://qyapi.weixin.qq.com/cgi-bin/tag/create?access_token=%s"
+	// updateTagURL 更新标签名字
+	updateTagURL = "https://qyapi.weixin.qq.com/cgi-bin/tag/update?access_token=%s"
+	// deleteTagURL 删除标签
+	deleteTagURL = "https://qyapi.weixin.qq.com/cgi-bin/tag/delete?access_token=%s&tagid=%d"
 )
 
 type (
@@ -39,7 +39,7 @@ func (r *Client) CreateTag(req *CreateTagRequest) (*CreateTagResponse, error) {
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(CreateTagURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(createTagURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &CreateTagResponse{}
@@ -68,7 +68,7 @@ func (r *Client) UpdateTag(req *UpdateTagRequest) error {
 		return err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(UpdateTagURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(updateTagURL, accessToken), req); err != nil {
 		return err
 	}
 	return util.DecodeWithCommonError(response, "UpdateTag")
@@ -85,7 +85,7 @@ func (r *Client) DeleteTag(tagID int) error {
 		return err
 	}
 	var response []byte
-	if response, err = util.HTTPGet(fmt.Sprintf(DeleteTagURL, accessToken, tagID)); err != nil {
+	if response, err = util.HTTPGet(fmt.Sprintf(deleteTagURL, accessToken, tagID)); err != nil {
 		return err
 	}
 	return util.DecodeWithCommonError(response, "DeleteTag")
