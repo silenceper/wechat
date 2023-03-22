@@ -7,16 +7,16 @@ import (
 )
 
 const (
-	// AddContactWayURL 配置客户联系「联系我」方式
-	AddContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_contact_way?access_token=%s"
-	// GetContactWayURL 获取企业已配置的「联系我」方式
-	GetContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_contact_way?access_token=%s"
-	// UpdateContactWayURL 更新企业已配置的「联系我」方式
-	UpdateContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/update_contact_way?access_token=%s"
-	// ListContactWayURL 获取企业已配置的「联系我」列表
-	ListContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/list_contact_way?access_token=%s"
-	// DelContactWayURL 删除企业已配置的「联系我」方式
-	DelContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/del_contact_way?access_token=%s"
+	// addContactWayURL 配置客户联系「联系我」方式
+	addContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_contact_way?access_token=%s"
+	// getContactWayURL 获取企业已配置的「联系我」方式
+	getContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_contact_way?access_token=%s"
+	// updateContactWayURL 更新企业已配置的「联系我」方式
+	updateContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/update_contact_way?access_token=%s"
+	// listContactWayURL 获取企业已配置的「联系我」列表
+	listContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/list_contact_way?access_token=%s"
+	// delContactWayURL 删除企业已配置的「联系我」方式
+	delContactWayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/del_contact_way?access_token=%s"
 )
 
 type (
@@ -98,7 +98,7 @@ func (r *Client) AddContactWay(req *AddContactWayRequest) (*AddContactWayRespons
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(AddContactWayURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(addContactWayURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &AddContactWayResponse{}
@@ -149,7 +149,7 @@ func (r *Client) GetContactWay(req *GetContactWayRequest) (*GetContactWayRespons
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GetContactWayURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(getContactWayURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &GetContactWayResponse{}
@@ -191,7 +191,7 @@ func (r *Client) UpdateContactWay(req *UpdateContactWayRequest) (*UpdateContactW
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(UpdateContactWayURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(updateContactWayURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &UpdateContactWayResponse{}
@@ -232,7 +232,7 @@ func (r *Client) ListContactWay(req *ListContactWayRequest) (*ListContactWayResp
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(ListContactWayURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(listContactWayURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &ListContactWayResponse{}
@@ -264,7 +264,7 @@ func (r *Client) DelContactWay(req *DelContactWayRequest) (*DelContactWayRespons
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(DelContactWayURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(delContactWayURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &DelContactWayResponse{}

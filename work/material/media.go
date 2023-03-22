@@ -7,11 +7,10 @@ import (
 )
 
 const (
-	// UploadImgURL 上传图片
-	UploadImgURL = "https://qyapi.weixin.qq.com/cgi-bin/media/uploadimg?access_token=%s"
-
-	// UploadTempFile 上传临时素材
-	UploadTempFile = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s"
+	// uploadImgURL 上传图片
+	uploadImgURL = "https://qyapi.weixin.qq.com/cgi-bin/media/uploadimg?access_token=%s"
+	// uploadTempFile 上传临时素材
+	uploadTempFile = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s"
 )
 
 // UploadImgResponse 上传图片响应
@@ -39,7 +38,7 @@ func (r *Client) UploadImg(filename string) (*UploadImgResponse, error) {
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostFile("media", filename, fmt.Sprintf(UploadImgURL, accessToken)); err != nil {
+	if response, err = util.PostFile("media", filename, fmt.Sprintf(uploadImgURL, accessToken)); err != nil {
 		return nil, err
 	}
 	result := &UploadImgResponse{}
@@ -61,7 +60,7 @@ func (r *Client) UploadTempFile(filename string, mediaType string) (*UploadTempF
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostFile("media", filename, fmt.Sprintf(UploadTempFile, accessToken, mediaType)); err != nil {
+	if response, err = util.PostFile("media", filename, fmt.Sprintf(uploadTempFile, accessToken, mediaType)); err != nil {
 		return nil, err
 	}
 	result := &UploadTempFileResponse{}

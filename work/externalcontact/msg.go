@@ -7,24 +7,24 @@ import (
 )
 
 const (
-	// AddMsgTemplateURL 创建企业群发
-	AddMsgTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_msg_template?access_token=%s"
-	// GetGroupMsgListV2URL 获取群发记录列表
-	GetGroupMsgListV2URL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_list_v2?access_token=%s"
-	// GetGroupMsgTaskURL 获取群发成员发送任务列表
-	GetGroupMsgTaskURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_task?access_token=%s"
-	// GetGroupMsgSendResultURL 获取企业群发成员执行结果
-	GetGroupMsgSendResultURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_send_result?access_token=%s"
-	// SendWelcomeMsgURL 发送新客户欢迎语
-	SendWelcomeMsgURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/send_welcome_msg?access_token=%s"
-	// AddGroupWelcomeTemplateURL 添加入群欢迎语素材
-	AddGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/add?access_token=%s"
-	// EditGroupWelcomeTemplateURL 编辑入群欢迎语素材
-	EditGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/edit?access_token=%s"
-	// GetGroupWelcomeTemplateURL 获取入群欢迎语素材
-	GetGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/get?access_token=%s"
-	// DelGroupWelcomeTemplateURL 删除入群欢迎语素材
-	DelGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/del?access_token=%s"
+	// addMsgTemplateURL 创建企业群发
+	addMsgTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_msg_template?access_token=%s"
+	// getGroupMsgListV2URL 获取群发记录列表
+	getGroupMsgListV2URL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_list_v2?access_token=%s"
+	// getGroupMsgTaskURL 获取群发成员发送任务列表
+	getGroupMsgTaskURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_task?access_token=%s"
+	// getGroupMsgSendResultURL 获取企业群发成员执行结果
+	getGroupMsgSendResultURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_send_result?access_token=%s"
+	// sendWelcomeMsgURL 发送新客户欢迎语
+	sendWelcomeMsgURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/send_welcome_msg?access_token=%s"
+	// addGroupWelcomeTemplateURL 添加入群欢迎语素材
+	addGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/add?access_token=%s"
+	// editGroupWelcomeTemplateURL 编辑入群欢迎语素材
+	editGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/edit?access_token=%s"
+	// getGroupWelcomeTemplateURL 获取入群欢迎语素材
+	getGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/get?access_token=%s"
+	// delGroupWelcomeTemplateURL 删除入群欢迎语素材
+	delGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/del?access_token=%s"
 )
 
 // AddMsgTemplateRequest 创建企业群发请求
@@ -98,7 +98,7 @@ func (r *Client) AddMsgTemplate(req *AddMsgTemplateRequest) (*AddMsgTemplateResp
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(AddMsgTemplateURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(addMsgTemplateURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &AddMsgTemplateResponse{}
@@ -147,7 +147,7 @@ func (r *Client) GetGroupMsgListV2(req *GetGroupMsgListV2Request) (*GetGroupMsgL
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GetGroupMsgListV2URL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(getGroupMsgListV2URL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &GetGroupMsgListV2Response{}
@@ -189,7 +189,7 @@ func (r *Client) GetGroupMsgTask(req *GetGroupMsgTaskRequest) (*GetGroupMsgTaskR
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GetGroupMsgTaskURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(getGroupMsgTaskURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &GetGroupMsgTaskResponse{}
@@ -234,7 +234,7 @@ func (r *Client) GetGroupMsgSendResult(req *GetGroupMsgSendResultRequest) (*GetG
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GetGroupMsgSendResultURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(getGroupMsgSendResultURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &GetGroupMsgSendResultResponse{}
@@ -267,7 +267,7 @@ func (r *Client) SendWelcomeMsg(req *SendWelcomeMsgRequest) error {
 		return err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(SendWelcomeMsgURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(sendWelcomeMsgURL, accessToken), req); err != nil {
 		return err
 	}
 	result := &SendWelcomeMsgResponse{}
@@ -306,7 +306,7 @@ func (r *Client) AddGroupWelcomeTemplate(req *AddGroupWelcomeTemplateRequest) (*
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(AddGroupWelcomeTemplateURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(addGroupWelcomeTemplateURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &AddGroupWelcomeTemplateResponse{}
@@ -344,7 +344,7 @@ func (r *Client) EditGroupWelcomeTemplate(req *EditGroupWelcomeTemplateRequest) 
 		return err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(EditGroupWelcomeTemplateURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(editGroupWelcomeTemplateURL, accessToken), req); err != nil {
 		return err
 	}
 	result := &EditGroupWelcomeTemplateResponse{}
@@ -381,7 +381,7 @@ func (r *Client) GetGroupWelcomeTemplate(req *GetGroupWelcomeTemplateRequest) (*
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GetGroupWelcomeTemplateURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(getGroupWelcomeTemplateURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &GetGroupWelcomeTemplateResponse{}
@@ -413,7 +413,7 @@ func (r *Client) DelGroupWelcomeTemplate(req *DelGroupWelcomeTemplateRequest) er
 		return err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(DelGroupWelcomeTemplateURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(delGroupWelcomeTemplateURL, accessToken), req); err != nil {
 		return err
 	}
 	result := &DelGroupWelcomeTemplateResponse{}

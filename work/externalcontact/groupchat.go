@@ -6,8 +6,8 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
-// OpengIDToChatIDURL 客户群opengid转换URL
-const OpengIDToChatIDURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/opengid_to_chatid"
+// opengIDToChatIDURL 客户群opengid转换URL
+const opengIDToChatIDURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/opengid_to_chatid"
 
 type (
 	//GroupChatListRequest 获取客户群列表的请求参数
@@ -39,7 +39,7 @@ func (r *Client) GetGroupChatList(req *GroupChatListRequest) (*GroupChatListResp
 		return nil, err
 	}
 	var response []byte
-	response, err = util.PostJSON(fmt.Sprintf("%s/list?access_token=%s", GroupChatURL, accessToken), req)
+	response, err = util.PostJSON(fmt.Sprintf("%s/list?access_token=%s", groupChatURL, accessToken), req)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +100,7 @@ func (r *Client) GetGroupChatDetail(req *GroupChatDetailRequest) (*GroupChatDeta
 		return nil, err
 	}
 	var response []byte
-	response, err = util.PostJSON(fmt.Sprintf("%s/get?access_token=%s", GroupChatURL, accessToken), req)
+	response, err = util.PostJSON(fmt.Sprintf("%s/get?access_token=%s", groupChatURL, accessToken), req)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +131,7 @@ func (r *Client) OpengIDToChatID(req *OpengIDToChatIDRequest) (*OpengIDToChatIDR
 		return nil, err
 	}
 	var response []byte
-	response, err = util.PostJSON(fmt.Sprintf("%s?access_token=%s", OpengIDToChatIDURL, accessToken), req)
+	response, err = util.PostJSON(fmt.Sprintf("%s?access_token=%s", opengIDToChatIDURL, accessToken), req)
 	if err != nil {
 		return nil, err
 	}
