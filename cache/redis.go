@@ -2,9 +2,8 @@ package cache
 
 import (
 	"context"
+	"github.com/redis/go-redis/v9"
 	"time"
-
-	"github.com/go-redis/redis/v8"
 )
 
 // Redis .redis cache
@@ -26,11 +25,11 @@ type RedisOpts struct {
 // NewRedis 实例化
 func NewRedis(ctx context.Context, opts *RedisOpts) *Redis {
 	conn := redis.NewUniversalClient(&redis.UniversalOptions{
-		Addrs:        []string{opts.Host},
-		DB:           opts.Database,
-		Password:     opts.Password,
-		IdleTimeout:  time.Second * time.Duration(opts.IdleTimeout),
-		MinIdleConns: opts.MaxIdle,
+		Addrs:           []string{opts.Host},
+		DB:              opts.Database,
+		Password:        opts.Password,
+		ConnMaxIdleTime: time.Second * time.Duration(opts.IdleTimeout),
+		MinIdleConns:    opts.MaxIdle,
 	})
 	return &Redis{ctx: ctx, conn: conn}
 }
@@ -56,7 +55,7 @@ func (r *Redis) Get(key string) interface{} {
 
 // Set 设置一个值
 func (r *Redis) Set(key string, val interface{}, timeout time.Duration) error {
-	return r.conn.SetEX(r.ctx, key, val, timeout).Err()
+	return r.conn.SetEx(r.ctx, key, val, timeout).Err()
 }
 
 // IsExist 判断key是否存在
