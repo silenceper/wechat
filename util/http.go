@@ -69,8 +69,8 @@ func HTTPPostContext(ctx context.Context, uri string, data []byte, header map[st
 	return io.ReadAll(response.Body)
 }
 
-// PostJSON post json 数据请求
-func PostJSON(uri string, obj interface{}) ([]byte, error) {
+// PostJSONContext post json 数据请求
+func PostJSONContext(ctx context.Context, uri string, obj interface{}) ([]byte, error) {
 	jsonBuf := new(bytes.Buffer)
 	enc := json.NewEncoder(jsonBuf)
 	enc.SetEscapeHTML(false)
@@ -78,7 +78,12 @@ func PostJSON(uri string, obj interface{}) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	response, err := http.Post(uri, "application/json;charset=utf-8", jsonBuf)
+	req, err := http.NewRequestWithContext(ctx, "POST", uri, jsonBuf)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json;charset=utf-8")
+	response, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -88,6 +93,11 @@ func PostJSON(uri string, obj interface{}) ([]byte, error) {
 		return nil, fmt.Errorf("http get error : uri=%v , statusCode=%v", uri, response.StatusCode)
 	}
 	return io.ReadAll(response.Body)
+}
+
+// PostJSON post json 数据请求
+func PostJSON(uri string, obj interface{}) ([]byte, error) {
+	return PostJSONContext(context.Background(), uri, obj)
 }
 
 // PostJSONWithRespContentType post json数据请求，且返回数据类型
