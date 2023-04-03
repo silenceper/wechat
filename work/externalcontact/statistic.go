@@ -8,12 +8,12 @@ import (
 )
 
 const (
-	// GetUserBehaviorDataURL 获取「联系客户统计」数据
-	GetUserBehaviorDataURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_user_behavior_data"
-	// GetGroupChatStatURL 获取「群聊数据统计」数据 按群主聚合的方式
-	GetGroupChatStatURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/groupchat/statistic"
-	// GetGroupChatStatByDayURL 获取「群聊数据统计」数据 按自然日聚合的方式
-	GetGroupChatStatByDayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/groupchat/statistic_group_by_day"
+	// getUserBehaviorDataURL 获取「联系客户统计」数据
+	getUserBehaviorDataURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_user_behavior_data"
+	// getGroupChatStatURL 获取「群聊数据统计」数据 按群主聚合的方式
+	getGroupChatStatURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/groupchat/statistic"
+	// getGroupChatStatByDayURL 获取「群聊数据统计」数据 按自然日聚合的方式
+	getGroupChatStatByDayURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/groupchat/statistic_group_by_day"
 )
 
 type (
@@ -54,7 +54,7 @@ func (r *Client) GetUserBehaviorData(req *GetUserBehaviorRequest) ([]BehaviorDat
 	if err != nil {
 		return nil, err
 	}
-	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", GetUserBehaviorDataURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", getUserBehaviorDataURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func (r *Client) GetGroupChatStat(req *GetGroupChatStatRequest) (*GetGroupChatSt
 	if err != nil {
 		return nil, err
 	}
-	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", GetGroupChatStatURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", getGroupChatStatURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +163,7 @@ func (r *Client) GetGroupChatStatByDay(req *GetGroupChatStatByDayRequest) ([]Get
 	if err != nil {
 		return nil, err
 	}
-	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", GetGroupChatStatByDayURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", getGroupChatStatByDayURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
 	}

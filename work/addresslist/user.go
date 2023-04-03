@@ -7,12 +7,12 @@ import (
 )
 
 const (
-	// UserSimpleListURL 获取部门成员
-	UserSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/user/simplelist?access_token=%s&department_id=%d"
-	// UserGetURL 读取成员
-	UserGetURL = "https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=%s&userid=%s"
-	// UserListIDURL 获取成员ID列表
-	UserListIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/list_id?access_token=%s"
+	// userSimpleListURL 获取部门成员
+	userSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/user/simplelist?access_token=%s&department_id=%d"
+	// userGetURL 读取成员
+	userGetURL = "https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=%s&userid=%s"
+	// userListIDURL 获取成员ID列表
+	userListIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/list_id?access_token=%s"
 )
 
 type (
@@ -41,7 +41,7 @@ func (r *Client) UserSimpleList(departmentID int) ([]*UserList, error) {
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.HTTPGet(fmt.Sprintf(UserSimpleListURL, accessToken, departmentID)); err != nil {
+	if response, err = util.HTTPGet(fmt.Sprintf(userSimpleListURL, accessToken, departmentID)); err != nil {
 		return nil, err
 	}
 	result := &UserSimpleListResponse{}
@@ -125,7 +125,7 @@ func (r *Client) UserGet(UserID string) (*UserGetResponse, error) {
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.HTTPGet(fmt.Sprintf(UserGetURL, accessToken, UserID)); err != nil {
+	if response, err = util.HTTPGet(fmt.Sprintf(userGetURL, accessToken, UserID)); err != nil {
 		return nil, err
 	}
 	result := &UserGetResponse{}
@@ -166,7 +166,7 @@ func (r *Client) UserListID(req *UserListIDRequest) (*UserListIDResponse, error)
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(UserListIDURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(userListIDURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &UserListIDResponse{}

@@ -8,14 +8,14 @@ import (
 )
 
 const (
-	// FetchExternalContactUserListURL 获取客户列表
-	FetchExternalContactUserListURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/list"
-	// FetchExternalContactUserDetailURL 获取客户详情
-	FetchExternalContactUserDetailURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get"
-	// FetchBatchExternalContactUserDetailURL 批量获取客户详情
-	FetchBatchExternalContactUserDetailURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/batch/get_by_user"
-	// UpdateUserRemarkURL 更新客户备注信息
-	UpdateUserRemarkURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/remark"
+	// fetchExternalContactUserListURL 获取客户列表
+	fetchExternalContactUserListURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/list"
+	// fetchExternalContactUserDetailURL 获取客户详情
+	fetchExternalContactUserDetailURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get"
+	// fetchBatchExternalContactUserDetailURL 批量获取客户详情
+	fetchBatchExternalContactUserDetailURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/batch/get_by_user"
+	// updateUserRemarkURL 更新客户备注信息
+	updateUserRemarkURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/remark"
 )
 
 // ExternalUserListResponse 外部联系人列表响应
@@ -32,7 +32,7 @@ func (r *Client) GetExternalUserList(userID string) ([]string, error) {
 		return nil, err
 	}
 	var response []byte
-	response, err = util.HTTPGet(fmt.Sprintf("%s?access_token=%v&userid=%v", FetchExternalContactUserListURL, accessToken, userID))
+	response, err = util.HTTPGet(fmt.Sprintf("%s?access_token=%v&userid=%v", fetchExternalContactUserListURL, accessToken, userID))
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ func (r *Client) GetExternalUserDetail(externalUserID string, nextCursor ...stri
 	if len(nextCursor) > 0 {
 		cursor = nextCursor[0]
 	}
-	response, err = util.HTTPGet(fmt.Sprintf("%s?access_token=%v&external_userid=%v&cursor=%v", FetchExternalContactUserDetailURL, accessToken, externalUserID, cursor))
+	response, err = util.HTTPGet(fmt.Sprintf("%s?access_token=%v&external_userid=%v&cursor=%v", fetchExternalContactUserDetailURL, accessToken, externalUserID, cursor))
 	if err != nil {
 		return nil, err
 	}
@@ -178,7 +178,7 @@ func (r *Client) BatchGetExternalUserDetails(request BatchGetExternalUserDetails
 	if err != nil {
 		return nil, err
 	}
-	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", FetchBatchExternalContactUserDetailURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", fetchBatchExternalContactUserDetailURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
 	}
@@ -213,7 +213,7 @@ func (r *Client) UpdateUserRemark(request UpdateUserRemarkRequest) error {
 	if err != nil {
 		return err
 	}
-	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", UpdateUserRemarkURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", updateUserRemarkURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
 	}

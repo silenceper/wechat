@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	// DepartmentSimpleListURL 获取子部门ID列表
-	DepartmentSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/department/simplelist?access_token=%s&id=%d"
+	// departmentSimpleListURL 获取子部门ID列表
+	departmentSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/department/simplelist?access_token=%s&id=%d"
 )
 
 type (
@@ -36,7 +36,7 @@ func (r *Client) DepartmentSimpleList(departmentID int) ([]*DepartmentID, error)
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.HTTPGet(fmt.Sprintf(DepartmentSimpleListURL, accessToken, departmentID)); err != nil {
+	if response, err = util.HTTPGet(fmt.Sprintf(departmentSimpleListURL, accessToken, departmentID)); err != nil {
 		return nil, err
 	}
 	result := &DepartmentSimpleListResponse{}
