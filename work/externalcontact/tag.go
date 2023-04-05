@@ -8,16 +8,16 @@ import (
 )
 
 const (
-	// GetCropTagURL 获取标签列表
-	GetCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_corp_tag_list"
-	// AddCropTagURL 添加标签
-	AddCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_corp_tag"
-	// EditCropTagURL 修改标签
-	EditCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/edit_corp_tag"
-	// DelCropTagURL 删除标签
-	DelCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/del_corp_tag"
-	// MarkCropTagURL 为客户打上、删除标签
-	MarkCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/mark_tag"
+	// getCropTagURL 获取标签列表
+	getCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_corp_tag_list"
+	// addCropTagURL 添加标签
+	addCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_corp_tag"
+	// editCropTagURL 修改标签
+	editCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/edit_corp_tag"
+	// delCropTagURL 删除标签
+	delCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/del_corp_tag"
+	// markCropTagURL 为客户打上、删除标签
+	markCropTagURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/mark_tag"
 )
 
 // GetCropTagRequest 获取企业标签请求
@@ -63,7 +63,7 @@ func (r *Client) GetCropTagList(req GetCropTagRequest) ([]TagGroup, error) {
 	if err != nil {
 		return nil, err
 	}
-	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", GetCropTagURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", getCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func (r *Client) AddCropTag(req AddCropTagRequest) (*TagGroup, error) {
 	if err != nil {
 		return nil, err
 	}
-	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", AddCropTagURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", addCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +141,7 @@ func (r *Client) EditCropTag(req EditCropTagRequest) error {
 	if err != nil {
 		return err
 	}
-	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", EditCropTagURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", editCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
 	}
@@ -167,7 +167,7 @@ func (r *Client) DeleteCropTag(req DeleteCropTagRequest) error {
 	if err != nil {
 		return err
 	}
-	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", DelCropTagURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", delCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
 	}
@@ -195,7 +195,7 @@ func (r *Client) MarkTag(request MarkTagRequest) error {
 	if err != nil {
 		return err
 	}
-	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", MarkCropTagURL, accessToken), string(jsonData))
+	response, err = util.HTTPPost(fmt.Sprintf("%s?access_token=%v", markCropTagURL, accessToken), string(jsonData))
 	if err != nil {
 		return err
 	}
