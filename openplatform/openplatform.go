@@ -18,9 +18,6 @@ type OpenPlatform struct {
 
 // NewOpenPlatform new openplatform
 func NewOpenPlatform(cfg *config.Config) *OpenPlatform {
-	if cfg.Cache == nil {
-		panic("cache 未设置")
-	}
 	ctx := &context.Context{
 		Config: cfg,
 	}
