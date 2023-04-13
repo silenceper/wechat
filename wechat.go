@@ -68,6 +68,9 @@ func (wc *Wechat) GetPay(cfg *payConfig.Config) *pay.Pay {
 
 // GetOpenPlatform 获取微信开放平台的实例
 func (wc *Wechat) GetOpenPlatform(cfg *openConfig.Config) *openplatform.OpenPlatform {
+	if cfg.Cache == nil {
+		cfg.Cache = wc.cache
+	}
 	return openplatform.NewOpenPlatform(cfg)
 }
 
