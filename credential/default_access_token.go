@@ -81,11 +81,11 @@ func (ak *DefaultAccessToken) GetAccessTokenContext(ctx context.Context) (access
 
 	// cache失效，从微信服务器获取
 	var resAccessToken ResAccessToken
-	if resAccessToken, err = GetTokenFromServerContext(ctx, fmt.Sprintf(accessTokenURL, ak.appID, ak.appSecret));err != nil {
+	if resAccessToken, err = GetTokenFromServerContext(ctx, fmt.Sprintf(accessTokenURL, ak.appID, ak.appSecret)); err != nil {
 		return
 	}
 
-	if err = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(resAccessToken.ExpiresIn - 1500)*time.Second);err != nil {
+	if err = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(resAccessToken.ExpiresIn-1500)*time.Second); err != nil {
 		return
 	}
 	accessToken = resAccessToken.AccessToken
