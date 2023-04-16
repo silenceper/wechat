@@ -57,6 +57,7 @@ type CallbackMessage struct {
 	MsgType    string `json:"msgtype"`      // 消息的类型，此时固定为 event
 	Event      string `json:"event"`        // 事件的类型，此时固定为 kf_msg_or_event
 	Token      string `json:"token"`        // 调用拉取消息接口时，需要传此token，用于校验请求的合法性
+	OpenKfId   string `json:"open_kfid"`    // 有新消息的客服帐号。可通过sync_msg接口指定open_kfid获取此客服帐号的消息
 }
 
 // GetCallbackMessage 获取回调事件中的消息内容
