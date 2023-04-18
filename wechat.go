@@ -76,5 +76,8 @@ func (wc *Wechat) GetOpenPlatform(cfg *openConfig.Config) *openplatform.OpenPlat
 
 // GetWork 获取企业微信的实例
 func (wc *Wechat) GetWork(cfg *workConfig.Config) *work.Work {
+	if cfg.Cache == nil {
+		cfg.Cache = wc.cache
+	}
 	return work.NewWork(cfg)
 }
