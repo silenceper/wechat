@@ -52,12 +52,12 @@ type callbackOriginMessage struct {
 
 // CallbackMessage 微信客服回调消息
 type CallbackMessage struct {
-	ToUserName string `json:"to_user_name"`             // 微信客服组件ID
-	CreateTime int    `json:"create_time"`              // 消息创建时间，unix时间戳
-	MsgType    string `json:"msgtype"`                  // 消息的类型，此时固定为 event
-	Event      string `json:"event"`                    // 事件的类型，此时固定为 kf_msg_or_event
-	Token      string `json:"token"`                    // 调用拉取消息接口时，需要传此token，用于校验请求的合法性
-	OpenKfID   string `json:"open_kfid" xml:"OpenKfId"` // 有新消息的客服帐号。可通过sync_msg接口指定open_kfid获取此客服帐号的消息
+	ToUserName string `json:"to_user_name" xml:"ToUserName"` // 微信客服组件ID
+	CreateTime int    `json:"create_time" xml:"CreateTime"`  // 消息创建时间，unix时间戳
+	MsgType    string `json:"msgtype" xml:"MsgType"`         // 消息的类型，此时固定为 event
+	Event      string `json:"event" xml:"Event"`             // 事件的类型，此时固定为 kf_msg_or_event
+	Token      string `json:"token" xml:"Token"`             // 调用拉取消息接口时，需要传此token，用于校验请求的合法性
+	OpenKfID   string `json:"open_kfid" xml:"OpenKfId"`      // 有新消息的客服帐号。可通过sync_msg接口指定open_kfid获取此客服帐号的消息
 }
 
 // GetCallbackMessage 获取回调事件中的消息内容
