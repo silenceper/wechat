@@ -47,7 +47,12 @@ func (r *Redis) SetRedisCtx(ctx context.Context) {
 
 // Get 获取一个值
 func (r *Redis) Get(key string) interface{} {
-	result, err := r.conn.Do(r.ctx, "GET", key).Result()
+	return r.GetContext(r.ctx, key)
+}
+
+// GetContext 获取一个值
+func (r *Redis) GetContext(ctx context.Context, key string) interface{} {
+	result, err := r.conn.Do(ctx, "GET", key).Result()
 	if err != nil {
 		return nil
 	}
@@ -56,17 +61,32 @@ func (r *Redis) Get(key string) interface{} {
 
 // Set 设置一个值
 func (r *Redis) Set(key string, val interface{}, timeout time.Duration) error {
-	return r.conn.SetEX(r.ctx, key, val, timeout).Err()
+	return r.SetContext(r.ctx, key, val, timeout)
+}
+
+// SetContext 设置一个值
+func (r *Redis) SetContext(ctx context.Context, key string, val interface{}, timeout time.Duration) error {
+	return r.conn.SetEX(ctx, key, val, timeout).Err()
 }
 
 // IsExist 判断key是否存在
 func (r *Redis) IsExist(key string) bool {
-	result, _ := r.conn.Exists(r.ctx, key).Result()
+	return r.IsExistContext(r.ctx, key)
+}
+
+// IsExistContext 判断key是否存在
+func (r *Redis) IsExistContext(ctx context.Context, key string) bool {
+	result, _ := r.conn.Exists(ctx, key).Result()
 
 	return result > 0
 }
 
 // Delete 删除
 func (r *Redis) Delete(key string) error {
-	return r.conn.Del(r.ctx, key).Err()
+	return r.DeleteContext(r.ctx, key)
+}
+
+// DeleteContext 删除
+func (r *Redis) DeleteContext(ctx context.Context, key string) error {
+	return r.conn.Del(ctx, key).Err()
 }

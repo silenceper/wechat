@@ -4,17 +4,23 @@ import (
 	"context"
 	"testing"
 	"time"
+
+	"github.com/alicebob/miniredis/v2"
 )
 
 func TestRedis(t *testing.T) {
+	server, err := miniredis.Run()
+	if err != nil {
+		t.Error("miniredis.Run Error", err)
+	}
+	t.Cleanup(server.Close)
 	var (
 		timeoutDuration = time.Second
 		ctx             = context.Background()
 		opts            = &RedisOpts{
-			Host: "127.0.0.1:6379",
+			Host: server.Addr(),
 		}
 		redis = NewRedis(ctx, opts)
-		err   error
 		val   = "silenceper"
 		key   = "username"
 	)
