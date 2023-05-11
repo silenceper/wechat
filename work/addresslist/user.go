@@ -13,6 +13,10 @@ const (
 	userGetURL = "https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=%s&userid=%s"
 	// userListIDURL 获取成员ID列表
 	userListIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/list_id?access_token=%s"
+	// convertToOpenIDURL userID转openID
+	convertToOpenIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/convert_to_openid?access_token=%s"
+	// convertToUserIDURL openID转userID
+	convertToUserIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/convert_to_userid?access_token=%s"
 )
 
 type (
@@ -174,4 +178,76 @@ func (r *Client) UserListID(req *UserListIDRequest) (*UserListIDResponse, error)
 		return nil, err
 	}
 	return result, nil
+}
+
+type (
+	// convertToOpenIDRequest userID转openID请求
+	convertToOpenIDRequest struct {
+		UserID string `json:"userid"`
+	}
+
+	// convertToOpenIDResponse userID转openID响应
+	convertToOpenIDResponse struct {
+		util.CommonError
+		OpenID string `json:"openid"`
+	}
+)
+
+// ConvertToOpenID userID转openID
+// see https://developer.work.weixin.qq.com/document/path/90202
+func (r *Client) ConvertToOpenID(userID string) (string, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return "", err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(convertToOpenIDURL, accessToken), &convertToOpenIDRequest{
+		UserID: userID,
+	}); err != nil {
+		return "", err
+	}
+	result := &convertToOpenIDResponse{}
+	if err = util.DecodeWithError(response, result, "ConvertToOpenID"); err != nil {
+		return "", err
+	}
+	return result.OpenID, nil
+}
+
+type (
+	// convertToUserIDRequest openID转userID请求
+	convertToUserIDRequest struct {
+		OpenID string `json:"openid"`
+	}
+
+	// convertToUserIDResponse openID转userID响应
+	convertToUserIDResponse struct {
+		util.CommonError
+		UserID string `json:"userid"`
+	}
+)
+
+// ConvertToUserID openID转userID
+// see https://developer.work.weixin.qq.com/document/path/90202
+func (r *Client) ConvertToUserID(openID string) (string, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return "", err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(convertToUserIDURL, accessToken), &convertToUserIDRequest{
+		OpenID: openID,
+	}); err != nil {
+		return "", err
+	}
+	result := &convertToUserIDResponse{}
+	if err = util.DecodeWithError(response, result, "ConvertToUserID"); err != nil {
+		return "", err
+	}
+	return result.UserID, nil
 }
