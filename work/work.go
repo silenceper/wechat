@@ -69,7 +69,7 @@ func (wk *Work) GetRobot() *robot.Client {
 	return robot.NewClient(wk.ctx)
 }
 
-// GetMessage get robot
+// GetMessage 获取发送应用消息接口实例
 func (wk *Work) GetMessage() *message.Client {
 	return message.NewClient(wk.ctx)
 }
