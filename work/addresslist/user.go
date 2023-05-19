@@ -1,7 +1,6 @@
 package addresslist
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/silenceper/wechat/v2/util"
