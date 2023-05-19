@@ -2,21 +2,22 @@ package addresslist
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/silenceper/wechat/v2/util"
 )
 
 const (
 	// userSimpleListURL 获取部门成员
-	userSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/user/simplelist?access_token=%s&department_id=%d"
+	userSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/user/simplelist"
 	// userGetURL 读取成员
-	userGetURL = "https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=%s&userid=%s"
+	userGetURL = "https://qyapi.weixin.qq.com/cgi-bin/user/get"
 	// userListIDURL 获取成员ID列表
-	userListIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/list_id?access_token=%s"
+	userListIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/list_id"
 	// convertToOpenIDURL userID转openID
-	convertToOpenIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/convert_to_openid?access_token=%s"
+	convertToOpenIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/convert_to_openid"
 	// convertToUserIDURL openID转userID
-	convertToUserIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/convert_to_userid?access_token=%s"
+	convertToUserIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/convert_to_userid"
 )
 
 type (
@@ -45,7 +46,13 @@ func (r *Client) UserSimpleList(departmentID int) ([]*UserList, error) {
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.HTTPGet(fmt.Sprintf(userSimpleListURL, accessToken, departmentID)); err != nil {
+	if response, err = util.HTTPGet(strings.Join([]string{
+		userSimpleListURL,
+		util.Query(map[string]interface{}{
+			"access_token":  accessToken,
+			"department_id": departmentID,
+		}),
+	}, "?")); err != nil {
 		return nil, err
 	}
 	result := &UserSimpleListResponse{}
@@ -129,7 +136,15 @@ func (r *Client) UserGet(UserID string) (*UserGetResponse, error) {
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.HTTPGet(fmt.Sprintf(userGetURL, accessToken, UserID)); err != nil {
+
+	if response, err = util.HTTPGet(
+		strings.Join([]string{
+			userGetURL,
+			util.Query(map[string]interface{}{
+				"access_token":  accessToken,
+				"department_id": UserID,
+			}),
+		}, "?")); err != nil {
 		return nil, err
 	}
 	result := &UserGetResponse{}
@@ -170,7 +185,12 @@ func (r *Client) UserListID(req *UserListIDRequest) (*UserListIDResponse, error)
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(userListIDURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(strings.Join([]string{
+		userListIDURL,
+		util.Query(map[string]interface{}{
+			"access_token": accessToken,
+		}),
+	}, "?"), req); err != nil {
 		return nil, err
 	}
 	result := &UserListIDResponse{}
@@ -204,7 +224,13 @@ func (r *Client) ConvertToOpenID(userID string) (string, error) {
 		return "", err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(convertToOpenIDURL, accessToken), &convertToOpenIDRequest{
+
+	if response, err = util.PostJSON(strings.Join([]string{
+		convertToOpenIDURL,
+		util.Query(map[string]interface{}{
+			"access_token": accessToken,
+		}),
+	}, "?"), &convertToOpenIDRequest{
 		UserID: userID,
 	}); err != nil {
 		return "", err
@@ -240,7 +266,13 @@ func (r *Client) ConvertToUserID(openID string) (string, error) {
 		return "", err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(convertToUserIDURL, accessToken), &convertToUserIDRequest{
+
+	if response, err = util.PostJSON(strings.Join([]string{
+		convertToUserIDURL,
+		util.Query(map[string]interface{}{
+			"access_token": accessToken,
+		}),
+	}, "?"), &convertToUserIDRequest{
 		OpenID: openID,
 	}); err != nil {
 		return "", err
