@@ -3,7 +3,7 @@ package util
 import (
 	"testing"
 )
-
+// TestTemplate testing case about Template method
 func TestTemplate(t *testing.T) {
 	result := Template("{name}={age};{with}={another}", map[string]string{
 		"name":    "Helan",
