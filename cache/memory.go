@@ -26,25 +26,31 @@ func NewMemory() *Memory {
 
 // Get return cached value
 func (mem *Memory) Get(key string) interface{} {
+	mem.Lock()
 	if ret, ok := mem.data[key]; ok {
+		mem.Unlock()
 		if ret.Expired.Before(time.Now()) {
 			mem.deleteKey(key)
 			return nil
 		}
 		return ret.Data
 	}
+	mem.Unlock()
 	return nil
 }
 
 // IsExist check value exists in memcache.
 func (mem *Memory) IsExist(key string) bool {
+	mem.Lock()
 	if ret, ok := mem.data[key]; ok {
+		mem.Unlock()
 		if ret.Expired.Before(time.Now()) {
 			mem.deleteKey(key)
 			return false
 		}
 		return true
 	}
+	mem.Unlock()
 	return false
 }
 
