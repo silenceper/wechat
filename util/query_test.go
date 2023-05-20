@@ -13,7 +13,7 @@ func TestQuery(t *testing.T) {
 		"cat":  "Peter",
 	})
 	if result != "age=12&name=Alan&cat=Peter" {
-		fmt.Printf("%v",result)
+		fmt.Printf("%v", result)
 		t.Error("NOT PASS")
 	}
 }
