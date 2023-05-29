@@ -10,6 +10,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
+	"github.com/silenceper/wechat/v2/miniprogram/openapi"
 	"github.com/silenceper/wechat/v2/miniprogram/privacy"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
 	"github.com/silenceper/wechat/v2/miniprogram/riskcontrol"
@@ -125,4 +126,9 @@ func (miniProgram *MiniProgram) GetShortLink() *shortlink.ShortLink {
 // GetSURLScheme 小程序URL Scheme接口
 func (miniProgram *MiniProgram) GetSURLScheme() *urlscheme.URLScheme {
 	return urlscheme.NewURLScheme(miniProgram.ctx)
+}
+
+// GetOpenApi openApi管理接口
+func (miniProgram *MiniProgram) GetOpenApi() *openapi.OpenApi {
+	return openapi.NewOpenApi(miniProgram.ctx)
 }
