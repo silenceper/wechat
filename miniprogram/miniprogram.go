@@ -2,6 +2,7 @@ package miniprogram
 
 import (
 	"github.com/silenceper/wechat/v2/credential"
+	"github.com/silenceper/wechat/v2/internal/openapi"
 	"github.com/silenceper/wechat/v2/miniprogram/analysis"
 	"github.com/silenceper/wechat/v2/miniprogram/auth"
 	"github.com/silenceper/wechat/v2/miniprogram/business"
@@ -10,7 +11,6 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
-	"github.com/silenceper/wechat/v2/miniprogram/openapi"
 	"github.com/silenceper/wechat/v2/miniprogram/privacy"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
 	"github.com/silenceper/wechat/v2/miniprogram/riskcontrol"

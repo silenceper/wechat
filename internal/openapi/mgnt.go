@@ -1,9 +1,12 @@
 package openapi
 
 import (
+	"errors"
 	"fmt"
 
-	"github.com/silenceper/wechat/v2/miniprogram/context"
+	"github.com/silenceper/wechat/v2/domain/openapi"
+	mpContext "github.com/silenceper/wechat/v2/miniprogram/context"
+	ocContext "github.com/silenceper/wechat/v2/officialaccount/context"
 	"github.com/silenceper/wechat/v2/util"
 )
 
@@ -16,19 +19,26 @@ const (
 
 // OpenAPI openApi管理
 type OpenAPI struct {
-	*context.Context
+	ctx interface{}
 }
 
 // NewOpenAPI 实例化
-func NewOpenAPI(ctx *context.Context) *OpenAPI {
-	return &OpenAPI{Context: ctx}
+func NewOpenAPI(ctx interface{}) *OpenAPI {
+	return &OpenAPI{ctx: ctx}
 }
 
 // ClearQuota 重置API调用次数
 // https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/openApi-mgnt/clearQuota.html
 func (o *OpenAPI) ClearQuota() error {
-	payload := map[string]string{
-		"appid": o.AppID,
+	appID, _, err := o.getAppIDAndSecret()
+	if err != nil {
+		return err
+	}
+
+	var payload = struct {
+		AppID string `json:"appid"`
+	}{
+		AppID: appID,
 	}
 	res, err := o.doPostRequest(clearQuotaURL, payload)
 	if err != nil {
@@ -38,23 +48,10 @@ func (o *OpenAPI) ClearQuota() error {
 	return util.DecodeWithCommonError(res, "ClearQuota")
 }
 
-// APIQuota API调用额度
-type APIQuota struct {
-	util.CommonError
-	Quota struct {
-		DailyLimit int64 `json:"daily_limit"` // 当天该账号可调用该接口的次数
-		Used       int64 `json:"used"`        // 当天已经调用的次数
-		Remain     int64 `json:"remain"`      // 当天剩余调用次数
-	} `json:"quota"` // 详情
-}
-
 // GetAPIQuota 查询API调用额度
 // https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/openApi-mgnt/getApiQuota.html
-func (o *OpenAPI) GetAPIQuota(cgiPath string) (quota APIQuota, err error) {
-	payload := map[string]string{
-		"cgi_path": cgiPath,
-	}
-	res, err := o.doPostRequest(getAPIQuotaURL, payload)
+func (o *OpenAPI) GetAPIQuota(params openapi.GetAPIQuotaParams) (quota openapi.APIQuota, err error) {
+	res, err := o.doPostRequest(getAPIQuotaURL, params)
 	if err != nil {
 		return
 	}
@@ -63,26 +60,10 @@ func (o *OpenAPI) GetAPIQuota(cgiPath string) (quota APIQuota, err error) {
 	return
 }
 
-// RidInfo rid信息
-type RidInfo struct {
-	util.CommonError
-	Request struct {
-		InvokeTime   int64  `json:"invoke_time"`   // 发起请求的时间戳
-		CostInMs     int64  `json:"cost_in_ms"`    // 请求毫秒级耗时
-		RequestURL   string `json:"request_url"`   // 请求的URL参数
-		RequestBody  string `json:"request_body"`  // post请求的请求参数
-		ResponseBody string `json:"response_body"` // 接口请求返回参数
-		ClientIP     string `json:"client_ip"`     // 接口请求的客户端ip
-	} `json:"request"` // 该rid对应的请求详情
-}
-
 // GetRidInfo 查询rid信息
 // https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/openApi-mgnt/getRidInfo.html
-func (o *OpenAPI) GetRidInfo(rid string) (r RidInfo, err error) {
-	payload := map[string]string{
-		"rid": rid,
-	}
-	res, err := o.doPostRequest(getRidInfoURL, payload)
+func (o *OpenAPI) GetRidInfo(params openapi.GetRidInfoParams) (r openapi.RidInfo, err error) {
+	res, err := o.doPostRequest(getRidInfoURL, params)
 	if err != nil {
 		return
 	}
@@ -94,7 +75,12 @@ func (o *OpenAPI) GetRidInfo(rid string) (r RidInfo, err error) {
 // ClearQuotaByAppSecret 使用AppSecret重置 API 调用次数
 // https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/openApi-mgnt/clearQuotaByAppSecret.html
 func (o *OpenAPI) ClearQuotaByAppSecret() error {
-	uri := fmt.Sprintf("%s?appid=%s&appsecret=%s", clearQuotaByAppSecretURL, o.AppID, o.AppSecret)
+	id, secret, err := o.getAppIDAndSecret()
+	if err != nil {
+		return err
+	}
+
+	uri := fmt.Sprintf("%s?appid=%s&appsecret=%s", clearQuotaByAppSecretURL, id, secret)
 	res, err := util.HTTPPost(uri, "")
 	if err != nil {
 		return err
@@ -103,8 +89,35 @@ func (o *OpenAPI) ClearQuotaByAppSecret() error {
 	return util.DecodeWithCommonError(res, "ClearQuotaByAppSecret")
 }
 
+// 获取 AppID 和 AppSecret
+func (o *OpenAPI) getAppIDAndSecret() (string, string, error) {
+	switch o.ctx.(type) {
+	case *mpContext.Context:
+		c := o.ctx.(*mpContext.Context)
+		return c.AppID, c.AppSecret, nil
+	case *ocContext.Context:
+		c := o.ctx.(*ocContext.Context)
+		return c.AppID, c.AppSecret, nil
+	default:
+		return "", "", errors.New("invalid context type")
+	}
+}
+
+// 获取 AccessToken
+func (o *OpenAPI) getAccessToken() (string, error) {
+	switch o.ctx.(type) {
+	case *mpContext.Context:
+		return o.ctx.(*mpContext.Context).GetAccessToken()
+	case *ocContext.Context:
+		return o.ctx.(*ocContext.Context).GetAccessToken()
+	default:
+		return "", errors.New("invalid context type")
+	}
+}
+
+// 创建 POST 请求
 func (o *OpenAPI) doPostRequest(uri string, payload interface{}) ([]byte, error) {
-	ak, err := o.GetAccessToken()
+	ak, err := o.getAccessToken()
 	if err != nil {
 		return nil, err
 	}

@@ -4,6 +4,7 @@ import (
 	stdcontext "context"
 	"net/http"
 
+	"github.com/silenceper/wechat/v2/internal/openapi"
 	"github.com/silenceper/wechat/v2/officialaccount/draft"
 	"github.com/silenceper/wechat/v2/officialaccount/freepublish"
 	"github.com/silenceper/wechat/v2/officialaccount/ocr"
@@ -22,7 +23,6 @@ import (
 	"github.com/silenceper/wechat/v2/officialaccount/menu"
 	"github.com/silenceper/wechat/v2/officialaccount/message"
 	"github.com/silenceper/wechat/v2/officialaccount/oauth"
-	"github.com/silenceper/wechat/v2/officialaccount/openapi"
 	"github.com/silenceper/wechat/v2/officialaccount/server"
 	"github.com/silenceper/wechat/v2/officialaccount/user"
 )
