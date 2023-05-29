@@ -215,6 +215,6 @@ func (officialAccount *OfficialAccount) GetCustomerServiceManager() *customerser
 }
 
 // GetOpenApi openApi管理接口
-func (officialAccount *OfficialAccount) GetOpenApi() *openapi.OpenApi {
-	return openapi.NewOpenApi(officialAccount.ctx)
+func (officialAccount *OfficialAccount) GetOpenApi() *openapi.OpenAPI {
+	return openapi.NewOpenAPI(officialAccount.ctx)
 }

@@ -129,6 +129,6 @@ func (miniProgram *MiniProgram) GetSURLScheme() *urlscheme.URLScheme {
 }
 
 // GetOpenApi openApi管理接口
-func (miniProgram *MiniProgram) GetOpenApi() *openapi.OpenApi {
-	return openapi.NewOpenApi(miniProgram.ctx)
+func (miniProgram *MiniProgram) GetOpenApi() *openapi.OpenAPI {
+	return openapi.NewOpenAPI(miniProgram.ctx)
 }
