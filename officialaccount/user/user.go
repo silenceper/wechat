@@ -96,6 +96,11 @@ func (user *User) GetUserInfo(openID string) (userInfo *Info, err error) {
 
 // BatchGetUserInfoParams 批量获取用户基本信息参数
 type BatchGetUserInfoParams struct {
+	UserList []BatchGetUserList `json:"user_list"` // 需要获取基本信息的用户列表
+}
+
+// BatchGetUserList 需要获取基本信息的用户列表
+type BatchGetUserList struct {
 	OpenID string `json:"openid"` // 用户的标识，对当前公众号唯一
 	Lang   string `json:"lang"`   // 国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语，默认为zh-CN
 }
@@ -107,8 +112,8 @@ type InfoList struct {
 }
 
 // BatchGetUserInfo 批量获取用户基本信息
-func (user *User) BatchGetUserInfo(params ...BatchGetUserInfoParams) (*InfoList, error) {
-	if len(params) > 100 {
+func (user *User) BatchGetUserInfo(params BatchGetUserInfoParams) (*InfoList, error) {
+	if len(params.UserList) > 100 {
 		return nil, errors.New("params length must be less than or equal to 100")
 	}
 
@@ -117,13 +122,8 @@ func (user *User) BatchGetUserInfo(params ...BatchGetUserInfoParams) (*InfoList,
 		return nil, err
 	}
 
-	var payload = struct {
-		UserList []BatchGetUserInfoParams `json:"user_list"`
-	}{
-		UserList: params,
-	}
 	uri := fmt.Sprintf("%s?access_token=%s", userInfoBatchURL, ak)
-	res, err := util.PostJSON(uri, payload)
+	res, err := util.PostJSON(uri, params)
 	if err != nil {
 		return nil, err
 	}
