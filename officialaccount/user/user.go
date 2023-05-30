@@ -96,11 +96,11 @@ func (user *User) GetUserInfo(openID string) (userInfo *Info, err error) {
 
 // BatchGetUserInfoParams 批量获取用户基本信息参数
 type BatchGetUserInfoParams struct {
-	UserList []BatchGetUserList `json:"user_list"` // 需要获取基本信息的用户列表
+	UserList []BatchGetUserListItem `json:"user_list"` // 需要批量获取基本信息的用户列表
 }
 
-// BatchGetUserList 需要获取基本信息的用户列表
-type BatchGetUserList struct {
+// BatchGetUserListItem 需要获取基本信息的用户
+type BatchGetUserListItem struct {
 	OpenID string `json:"openid"` // 用户的标识，对当前公众号唯一
 	Lang   string `json:"lang"`   // 国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语，默认为zh-CN
 }
