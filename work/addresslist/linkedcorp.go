@@ -92,7 +92,7 @@ type ExtattrItemText struct {
 
 // ExtattrItemWeb 互联企业成员详细信息自定义属性(网页)
 type ExtattrItemWeb struct {
-	Url   string `json:"url"`
+	URL   string `json:"url"`
 	Title string `json:"title"`
 }
 
