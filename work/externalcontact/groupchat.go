@@ -80,7 +80,7 @@ type (
 		ChatID     string            `json:"chat_id"`     //客户群ID
 		Name       string            `json:"name"`        //群名
 		Owner      string            `json:"owner"`       //群主ID
-		CreateTime int               `json:"create_time"` //群的创建时间
+		CreateTime int64             `json:"create_time"` //群的创建时间
 		Notice     string            `json:"notice"`      //群公告
 		MemberList []GroupChatMember `json:"member_list"` //群成员列表
 		AdminList  []GroupChatAdmin  `json:"admin_list"`  //群管理员列表
