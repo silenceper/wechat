@@ -169,7 +169,7 @@ type CollectMessage struct {
 	Collect struct {
 		RoomName   string           `json:"room_name,omitempty"`   // 填表消息所在的群名称。
 		Creator    string           `json:"creator,omitempty"`     // 创建者在群中的名字
-		CreateTime int64           `json:"create_time,omitempty"` // 创建的时间
+		CreateTime int64            `json:"create_time,omitempty"` // 创建的时间
 		Details    []CollectDetails `json:"details,omitempty"`     // 表内容
 	} `json:"collect,omitempty"`
 }
