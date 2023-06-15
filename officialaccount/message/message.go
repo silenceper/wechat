@@ -123,6 +123,7 @@ type MixMessage struct {
 	Title         string  `xml:"Title"`
 	Description   string  `xml:"Description"`
 	URL           string  `xml:"Url"`
+	BizMsgMenuID  int64   `xml:"bizmsgmenuid"`
 
 	// 事件相关
 	Event       EventType `xml:"Event" json:"Event"`
