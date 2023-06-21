@@ -7,6 +7,7 @@ import (
 	"github.com/silenceper/wechat/v2/work/config"
 	"github.com/silenceper/wechat/v2/work/context"
 	"github.com/silenceper/wechat/v2/work/externalcontact"
+	"github.com/silenceper/wechat/v2/work/invoice"
 	"github.com/silenceper/wechat/v2/work/kf"
 	"github.com/silenceper/wechat/v2/work/material"
 	"github.com/silenceper/wechat/v2/work/message"
@@ -78,4 +79,9 @@ func (wk *Work) GetMessage() *message.Client {
 // GetAppChat 获取应用发送消息到群聊会话接口实例
 func (wk *Work) GetAppChat() *appchat.Client {
 	return appchat.NewClient(wk.ctx)
+}
+
+// GetInvoice get invoice
+func (wk *Work) GetInvoice() *invoice.Client {
+	return invoice.NewClient(wk.ctx)
 }
