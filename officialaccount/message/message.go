@@ -197,9 +197,9 @@ type MixMessage struct {
 		ComponentPhone     string `xml:"component_phone"`
 	} `xml:"info"`
 	ResultInfo struct {
-		ApiName   string `xml:"api_name"`
+		APIName   string `xml:"api_name"`
 		ApplyTime string `xml:"apply_time"`
-		AuditId   string `xml:"audit_id"`
+		AuditID   string `xml:"audit_id"`
 		AuditTime string `xml:"audit_time"`
 		Reason    string `xml:"reason"`
 		Status    string `xml:"status"`
