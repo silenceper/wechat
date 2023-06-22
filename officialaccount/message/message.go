@@ -196,14 +196,13 @@ type MixMessage struct {
 		LegalPersonaName   string `xml:"legal_persona_name"`
 		ComponentPhone     string `xml:"component_phone"`
 	} `xml:"info"`
-	Result_info struct {
-		Api_name   string `xml:"api_name"`
-		Apply_time string `xml:"apply_time"`
-		CodeType   int    `xml:"code_type"`
-		Audit_id   string `xml:"audit_id"`
-		Audit_time string `xml:"audit_time"`
-		Reason     string `xml:"reason"`
-		Status     string `xml:"status"`
+	ResultInfo struct {
+		ApiName   string `xml:"api_name"`
+		ApplyTime string `xml:"apply_time"`
+		AuditId   string `xml:"audit_id"`
+		AuditTime string `xml:"audit_time"`
+		Reason    string `xml:"reason"`
+		Status    string `xml:"status"`
 	} `xml:"result_info"`
 
 	// 卡券相关
