@@ -222,6 +222,10 @@ type MixMessage struct {
 	TraceID       string `xml:"trace_id"`
 	StatusCode    int    `xml:"status_code"`
 
+	//小程序名称审核结果事件推送
+	Ret      int32  `xml:"ret"`      //审核结果 2：失败，3：成功
+	NickName string `xml:"nickname"` //小程序昵称
+
 	// 设备相关
 	device.MsgDevice
 
