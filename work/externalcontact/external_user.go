@@ -16,6 +16,18 @@ const (
 	fetchBatchExternalContactUserDetailURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/batch/get_by_user"
 	// updateUserRemarkURL 更新客户备注信息
 	updateUserRemarkURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/remark"
+	// listCustomerStrategyURL 获取规则组列表
+	listCustomerStrategyURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_strategy/list?access_token=%s"
+	// getCustomerStrategyURL 获取规则组详情
+	getCustomerStrategyURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_strategy/get?access_token=%s"
+	// getRangeCustomerStrategyURL 获取规则组管理范围
+	getRangeCustomerStrategyURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_strategy/get_range?access_token=%s"
+	// createCustomerStrategyURL 创建新的规则组
+	createCustomerStrategyURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_strategy/create?access_token=%s"
+	// editCustomerStrategyURL 编辑规则组及其管理范围
+	editCustomerStrategyURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_strategy/edit?access_token=%s"
+	// delCustomerStrategyURL 删除规则组
+	delCustomerStrategyURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_strategy/del?access_token=%s"
 )
 
 // ExternalUserListResponse 外部联系人列表响应
@@ -218,4 +230,237 @@ func (r *Client) UpdateUserRemark(request UpdateUserRemarkRequest) error {
 		return err
 	}
 	return util.DecodeWithCommonError(response, "UpdateUserRemark")
+}
+
+// ListCustomerStrategyRequest 获取规则组列表请求
+type ListCustomerStrategyRequest struct {
+	Cursor string `json:"cursor"`
+	Limit  int    `json:"limit"`
+}
+
+// ListCustomerStrategyResponse 获取规则组列表响应
+type ListCustomerStrategyResponse struct {
+	util.CommonError
+	Strategy   []StrategyID `json:"strategy"`
+	NextCursor string       `json:"next_cursor"`
+}
+
+// StrategyID 规则组ID
+type StrategyID struct {
+	StrategyID int `json:"strategy_id"`
+}
+
+// ListCustomerStrategy 获取规则组列表
+// @see https://developer.work.weixin.qq.com/document/path/94883#%E8%8E%B7%E5%8F%96%E8%A7%84%E5%88%99%E7%BB%84%E5%88%97%E8%A1%A8
+func (r *Client) ListCustomerStrategy(req *ListCustomerStrategyRequest) (*ListCustomerStrategyResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(listCustomerStrategyURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &ListCustomerStrategyResponse{}
+	if err = util.DecodeWithError(response, result, "ListCustomerStrategy"); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// GetCustomerStrategyRequest 获取规则组详情请求
+type GetCustomerStrategyRequest struct {
+	StrategyID int `json:"strategy_id"`
+}
+
+// GetCustomerStrategyResponse 获取规则组详情响应
+type GetCustomerStrategyResponse struct {
+	util.CommonError
+	Strategy Strategy `json:"strategy"`
+}
+
+// Strategy 规则组
+type Strategy struct {
+	StrategyID   int       `json:"strategy_id"`
+	ParentID     int       `json:"parent_id"`
+	StrategyName string    `json:"strategy_name"`
+	CreateTime   int64     `json:"create_time"`
+	AdminList    []string  `json:"admin_list"`
+	Privilege    Privilege `json:"privilege"`
+}
+
+// Privilege 权限
+type Privilege struct {
+	ViewCustomerList        bool `json:"view_customer_list"`
+	ViewCustomerData        bool `json:"view_customer_data"`
+	ViewRoomList            bool `json:"view_room_list"`
+	ContactMe               bool `json:"contact_me"`
+	JoinRoom                bool `json:"join_room"`
+	ShareCustomer           bool `json:"share_customer"`
+	OperResignCustomer      bool `json:"oper_resign_customer"`
+	OperResignGroup         bool `json:"oper_resign_group"`
+	SendCustomerMsg         bool `json:"send_customer_msg"`
+	EditWelcomeMsg          bool `json:"edit_welcome_msg"`
+	ViewBehaviorData        bool `json:"view_behavior_data"`
+	ViewRoomData            bool `json:"view_room_data"`
+	SendGroupMsg            bool `json:"send_group_msg"`
+	RoomDeduplication       bool `json:"room_deduplication"`
+	RapidReply              bool `json:"rapid_reply"`
+	OnjobCustomerTransfer   bool `json:"onjob_customer_transfer"`
+	EditAntiSpamRule        bool `json:"edit_anti_spam_rule"`
+	ExportCustomerList      bool `json:"export_customer_list"`
+	ExportCustomerData      bool `json:"export_customer_data"`
+	ExportCustomerGroupList bool `json:"export_customer_group_list"`
+	ManageCustomerTag       bool `json:"manage_customer_tag"`
+}
+
+// GetCustomerStrategy 获取规则组详情
+// @see https://developer.work.weixin.qq.com/document/path/94883#%E8%8E%B7%E5%8F%96%E8%A7%84%E5%88%99%E7%BB%84%E8%AF%A6%E6%83%85
+func (r *Client) GetCustomerStrategy(req *GetCustomerStrategyRequest) (*GetCustomerStrategyResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(getCustomerStrategyURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &GetCustomerStrategyResponse{}
+	if err = util.DecodeWithError(response, result, "GetCustomerStrategy"); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// GetRangeCustomerStrategyRequest 获取规则组管理范围请求
+type GetRangeCustomerStrategyRequest struct {
+	StrategyID int    `json:"strategy_id"`
+	Cursor     string `json:"cursor"`
+	Limit      int    `json:"limit"`
+}
+
+// GetRangeCustomerStrategyResponse 获取规则组管理范围响应
+type GetRangeCustomerStrategyResponse struct {
+	util.CommonError
+	Range      []Range `json:"range"`
+	NextCursor string  `json:"next_cursor"`
+}
+
+// Range 管理范围节点
+type Range struct {
+	Type    int    `json:"type"`
+	UserID  string `json:"userid,omitempty"`
+	PartyID int    `json:"partyid,omitempty"`
+}
+
+// GetRangeCustomerStrategy 获取规则组管理范围
+// @see https://developer.work.weixin.qq.com/document/path/94883#%E8%8E%B7%E5%8F%96%E8%A7%84%E5%88%99%E7%BB%84%E7%AE%A1%E7%90%86%E8%8C%83%E5%9B%B4
+func (r *Client) GetRangeCustomerStrategy(req *GetRangeCustomerStrategyRequest) (*GetRangeCustomerStrategyResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(getRangeCustomerStrategyURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &GetRangeCustomerStrategyResponse{}
+	if err = util.DecodeWithError(response, result, "GetRangeCustomerStrategy"); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// CreateCustomerStrategyRequest 创建新的规则组请求
+type CreateCustomerStrategyRequest struct {
+	ParentID     int       `json:"parent_id"`
+	StrategyName string    `json:"strategy_name"`
+	AdminList    []string  `json:"admin_list"`
+	Privilege    Privilege `json:"privilege"`
+	Range        []Range   `json:"range"`
+}
+
+// CreateCustomerStrategyResponse 创建新的规则组响应
+type CreateCustomerStrategyResponse struct {
+	util.CommonError
+	StrategyID int `json:"strategy_id"`
+}
+
+// CreateCustomerStrategy 创建新的规则组
+// @see https://developer.work.weixin.qq.com/document/path/94883#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E8%A7%84%E5%88%99%E7%BB%84
+func (r *Client) CreateCustomerStrategy(req *CreateCustomerStrategyRequest) (*CreateCustomerStrategyResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(createCustomerStrategyURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &CreateCustomerStrategyResponse{}
+	if err = util.DecodeWithError(response, result, "CreateCustomerStrategy"); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// EditCustomerStrategyRequest 编辑规则组及其管理范围请求
+type EditCustomerStrategyRequest struct {
+	StrategyID   int       `json:"strategy_id"`
+	StrategyName string    `json:"strategy_name"`
+	AdminList    []string  `json:"admin_list"`
+	Privilege    Privilege `json:"privilege"`
+	RangeAdd     []Range   `json:"range_add"`
+	RangeDel     []Range   `json:"range_del"`
+}
+
+// EditCustomerStrategy 编辑规则组及其管理范围
+// see https://developer.work.weixin.qq.com/document/path/94883#%E7%BC%96%E8%BE%91%E8%A7%84%E5%88%99%E7%BB%84%E5%8F%8A%E5%85%B6%E7%AE%A1%E7%90%86%E8%8C%83%E5%9B%B4
+func (r *Client) EditCustomerStrategy(req *EditCustomerStrategyRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(editCustomerStrategyURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "EditCustomerStrategy")
+}
+
+// DelCustomerStrategyRequest 删除规则组请求
+type DelCustomerStrategyRequest struct {
+	StrategyID int `json:"strategy_id"`
+}
+
+// DelCustomerStrategy 删除规则组
+// see https://developer.work.weixin.qq.com/document/path/94883#%E5%88%A0%E9%99%A4%E8%A7%84%E5%88%99%E7%BB%84
+func (r *Client) DelCustomerStrategy(req *DelCustomerStrategyRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(delCustomerStrategyURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "DelCustomerStrategy")
 }
