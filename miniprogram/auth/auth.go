@@ -40,8 +40,8 @@ type ResCode2Session struct {
 type RspCheckEncryptedData struct {
 	util.CommonError
 
-	Vaild      bool `json:"vaild"`       // 是否是合法的数据
-	CreateTime uint `json:"create_time"` // 加密数据生成的时间戳
+	Vaild      bool   `json:"vaild"`       // 是否是合法的数据
+	CreateTime uint64 `json:"create_time"` // 加密数据生成的时间戳
 }
 
 // Code2Session 登录凭证校验。
