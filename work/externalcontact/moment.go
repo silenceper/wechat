@@ -544,6 +544,7 @@ type GetRangeMomentStrategyResponse struct {
 	NextCursor string                `json:"next_cursor"`
 }
 
+// RangeMomentStrategy 	管理范围内配置的成员或部门
 type RangeMomentStrategy struct {
 	Type    int    `json:"type"`
 	UserID  string `json:"userid,omitempty"`
