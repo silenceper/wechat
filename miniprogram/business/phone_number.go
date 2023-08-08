@@ -28,12 +28,22 @@ type PhoneInfo struct {
 
 // GetPhoneNumber code换取用户手机号。 每个code只能使用一次，code的有效期为5min
 func (business *Business) GetPhoneNumber(in *GetPhoneNumberRequest) (info PhoneInfo, err error) {
-	accessToken, err := business.GetAccessToken()
-	if err != nil {
-		return
+	var uri string
+	if business.Config.NoAccessToken {
+		uri = getPhoneNumberURL[:len(getPhoneNumberURL)-16] // ?access_token=%s
+	} else {
+		accessToken, err := business.GetAccessToken()
+		if err != nil {
+			return info, err
+		}
+
+		uri = fmt.Sprintf(getPhoneNumberURL, accessToken)
 	}
 
-	uri := fmt.Sprintf(getPhoneNumberURL, accessToken)
+	if business.Config.UsingHTTP {
+		uri = "http" + uri[5:]
+	}
+
 	response, err := util.PostJSON(uri, in)
 	if err != nil {
 		return
