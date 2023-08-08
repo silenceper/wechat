@@ -254,10 +254,6 @@ func (r *Client) GetCustomerInfoWithCustomerAcquisitionLink(req *GetCustomerInfo
 }
 
 type (
-	// CustomerAcquisitionQuotaRequest 查询剩余使用量请求
-	CustomerAcquisitionQuotaRequest struct {
-		LinkID string `json:"link_id"`
-	}
 	// CustomerAcquisitionQuotaResponse 查询剩余使用量响应
 	CustomerAcquisitionQuotaResponse struct {
 		util.CommonError
@@ -274,7 +270,7 @@ type (
 
 // CustomerAcquisitionQuota 获客助手额度管理与使用统计--查询剩余使用量
 // see https://developer.work.weixin.qq.com/document/path/97299
-func (r *Client) CustomerAcquisitionQuota(req *CustomerAcquisitionQuotaRequest) (*CustomerAcquisitionQuotaResponse, error) {
+func (r *Client) CustomerAcquisitionQuota() (*CustomerAcquisitionQuotaResponse, error) {
 	var (
 		accessToken string
 		err         error
@@ -283,7 +279,7 @@ func (r *Client) CustomerAcquisitionQuota(req *CustomerAcquisitionQuotaRequest) 
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(customerAcquisitionQuotaURL, accessToken), req); err != nil {
+	if response, err = util.HTTPGet((fmt.Sprintf(customerAcquisitionQuotaURL, accessToken))); err != nil {
 		return nil, err
 	}
 	result := &CustomerAcquisitionQuotaResponse{}
