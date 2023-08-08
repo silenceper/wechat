@@ -269,7 +269,7 @@ type (
 )
 
 // CustomerAcquisitionQuota 获客助手额度管理与使用统计--查询剩余使用量
-// see https://developer.work.weixin.qq.com/document/path/97299
+// see https://developer.work.weixin.qq.com/document/path/97375
 func (r *Client) CustomerAcquisitionQuota() (*CustomerAcquisitionQuotaResponse, error) {
 	var (
 		accessToken string
