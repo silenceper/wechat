@@ -123,6 +123,7 @@ type MixMessage struct {
 	Title         string  `xml:"Title"`
 	Description   string  `xml:"Description"`
 	URL           string  `xml:"Url"`
+	BizMsgMenuID  int64   `xml:"bizmsgmenuid"`
 
 	// 事件相关
 	Event       EventType `xml:"Event" json:"Event"`
@@ -195,6 +196,14 @@ type MixMessage struct {
 		LegalPersonaName   string `xml:"legal_persona_name"`
 		ComponentPhone     string `xml:"component_phone"`
 	} `xml:"info"`
+	ResultInfo struct {
+		APIName   string `xml:"api_name"`
+		ApplyTime string `xml:"apply_time"`
+		AuditID   string `xml:"audit_id"`
+		AuditTime string `xml:"audit_time"`
+		Reason    string `xml:"reason"`
+		Status    string `xml:"status"`
+	} `xml:"result_info"`
 
 	// 卡券相关
 	CardID              string `xml:"CardId"`
@@ -212,6 +221,10 @@ type MixMessage struct {
 	ExtraInfoJSON string `xml:"extra_info_json"`
 	TraceID       string `xml:"trace_id"`
 	StatusCode    int    `xml:"status_code"`
+
+	//小程序名称审核结果事件推送
+	Ret      int32  `xml:"ret"`      //审核结果 2：失败，3：成功
+	NickName string `xml:"nickname"` //小程序昵称
 
 	// 设备相关
 	device.MsgDevice

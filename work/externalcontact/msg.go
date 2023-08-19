@@ -111,8 +111,8 @@ func (r *Client) AddMsgTemplate(req *AddMsgTemplateRequest) (*AddMsgTemplateResp
 // GetGroupMsgListV2Request 获取群发记录列表请求
 type GetGroupMsgListV2Request struct {
 	ChatType   string `json:"chat_type"`
-	StartTime  int    `json:"start_time"`
-	EndTime    int    `json:"end_time"`
+	StartTime  int64  `json:"start_time"`
+	EndTime    int64  `json:"end_time"`
 	Creator    string `json:"creator,omitempty"`
 	FilterType int    `json:"filter_type"`
 	Limit      int    `json:"limit"`
@@ -130,7 +130,7 @@ type GetGroupMsgListV2Response struct {
 type GroupMsg struct {
 	MsgID       string        `json:"msgid"`
 	Creator     string        `json:"creator"`
-	CreateTime  int           `json:"create_time"`
+	CreateTime  int64         `json:"create_time"`
 	CreateType  int           `json:"create_type"`
 	Text        MsgText       `json:"text"`
 	Attachments []*Attachment `json:"attachments"`

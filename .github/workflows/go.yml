@@ -10,17 +10,21 @@ jobs:
   golangci:
     strategy:
       matrix:
-        go-version: [1.18.x,1.19.x,1.20.x]
+        go-version: [1.18,1.19,1.20,1.21]
     name: golangci-lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-go@v3
-      - uses: actions/checkout@v3
+      - name: Setup Golang ${{ matrix.go-version }}
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3.2.0
+        uses: golangci/golangci-lint-action@v3
         with:
           # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
-          version: latest
+          version: v1.52.2
   build:
     name: Test
     runs-on: ubuntu-latest
@@ -28,7 +32,7 @@ jobs:
       redis:
         image: redis
         ports:
-        - 6379:6379
+          - 6379:6379
         options: --entrypoint redis-server
       memcached:
         image: memcached
@@ -38,12 +42,12 @@ jobs:
     # strategy set
     strategy:
       matrix:
-        go: ["1.18.x","1.19.x","1.20.x"]
+        go: ["1.18","1.19","1.20",""1.21]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Go 1.x
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go }}
         id: go
