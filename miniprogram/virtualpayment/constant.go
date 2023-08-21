@@ -119,7 +119,7 @@ const (
 	queryPublishGoods = "/xpay/query_publish_goods"
 )
 
-var (
+const (
 	// signature user mode signature
 	signature = "signature"
 
