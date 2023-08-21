@@ -27,7 +27,7 @@ const (
 	PermanentMaterialTypeImage PermanentMaterialType = "image"
 	// PermanentMaterialTypeVideo 永久素材视频类型（video）
 	PermanentMaterialTypeVideo PermanentMaterialType = "video"
-	// PermanentMaterialTypeVoice 永久素材语音类型 （voice）
+	// PermanentMaterialTypeVoice 永久素材语音类型（voice）
 	PermanentMaterialTypeVoice PermanentMaterialType = "voice"
 	// PermanentMaterialTypeNews 永久素材图文类型（news）
 	PermanentMaterialTypeNews PermanentMaterialType = "news"
@@ -278,7 +278,7 @@ type ArticleList struct {
 	Item       []ArticleListItem `json:"item"`
 }
 
-// ArticleListItem 用于ArticleList的item节点
+// ArticleListItem 用于 ArticleList 的 item 节点
 type ArticleListItem struct {
 	MediaID    string             `json:"media_id"`
 	Content    ArticleListContent `json:"content"`
@@ -287,14 +287,14 @@ type ArticleListItem struct {
 	UpdateTime int64              `json:"update_time"`
 }
 
-// ArticleListContent 用于ArticleListItem的content节点
+// ArticleListContent 用于 ArticleListItem 的 content 节点
 type ArticleListContent struct {
 	NewsItem   []Article `json:"news_item"`
 	UpdateTime int64     `json:"update_time"`
 	CreateTime int64     `json:"create_time"`
 }
 
-// reqBatchGetMaterial BatchGetMaterial请求参数
+// reqBatchGetMaterial BatchGetMaterial 请求参数
 type reqBatchGetMaterial struct {
 	Type   PermanentMaterialType `json:"type"`
 	Count  int64                 `json:"count"`
@@ -337,7 +337,7 @@ type ResMaterialCount struct {
 	NewsCount  int64 `json:"news_count"`  // 图文总数量
 }
 
-// GetMaterialCount 获取素材总数.
+// GetMaterialCount 获取素材总数。
 func (material *Material) GetMaterialCount() (res ResMaterialCount, err error) {
 	var accessToken string
 	accessToken, err = material.GetAccessToken()

@@ -100,7 +100,7 @@ func PostJSON(uri string, obj interface{}) ([]byte, error) {
 	return PostJSONContext(context.Background(), uri, obj)
 }
 
-// PostJSONWithRespContentType post json数据请求，且返回数据类型
+// PostJSONWithRespContentType post json 数据请求，且返回数据类型
 func PostJSONWithRespContentType(uri string, obj interface{}) ([]byte, string, error) {
 	jsonBuf := new(bytes.Buffer)
 	enc := json.NewEncoder(jsonBuf)
@@ -216,7 +216,7 @@ func PostXML(uri string, obj interface{}) ([]byte, error) {
 	return io.ReadAll(response.Body)
 }
 
-// httpWithTLS CA证书
+// httpWithTLS CA 证书
 func httpWithTLS(rootCa, key string) (*http.Client, error) {
 	var client *http.Client
 	certData, err := os.ReadFile(rootCa)
@@ -235,7 +235,7 @@ func httpWithTLS(rootCa, key string) (*http.Client, error) {
 	return client, nil
 }
 
-// pkcs12ToPem 将Pkcs12转成Pem
+// pkcs12ToPem 将 Pkcs12 转成 Pem
 func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
 	blocks, err := pkcs12.ToPEM(p12, password)
 	defer func() {

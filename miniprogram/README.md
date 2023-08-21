@@ -4,7 +4,7 @@
 
 ## 包说明
 
-- analysis 数据分析相关API
+- analysis 数据分析相关 API
 
 ## 快速入门
 
@@ -18,4 +18,35 @@ cfg := &miniConfig.Config{
 }
 miniprogram := wc.GetMiniProgram(cfg)
 miniprogram.GetAnalysis().GetAnalysisDailyRetain()
+```
+
+### 小程序虚拟支付 
+#### `注意：需要传入 Appkey 的值`
+相关文档：[小程序虚拟支付](https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/virtual-payment.html)
+```go
+wc := wechat.NewWechat()
+miniprogram := wc.GetMiniProgram(&miniConfig.Config{
+    AppID:     "xxx",
+    AppSecret: "xxx",
+    AppKey:    "xxx",
+    Cache: cache.NewRedis(&redis.Options{
+        Addr: "",
+    }),
+})
+virtualPayment := miniprogram.GetVirtualPayment()
+virtualPayment.SetSessionKey("xxx")
+// 查询用户余额
+var (
+    res *virtualPayment.QueryUserBalanceResponse
+    err error
+)
+
+if res, err = virtualPayment.QueryUserBalance(context.TODO(), &virtualPayment.QueryUserBalanceRequest{
+    OpenID: "xxx",
+    Env: virtualPayment.EnvProduction,
+    UserIP: "xxx",
+}); err != nil {
+    panic(err)
+}
+
 ```
