@@ -40,7 +40,7 @@ func NewWechat() *Wechat {
 	return &Wechat{}
 }
 
-// SetCache 设置cache
+// SetCache 设置 cache
 func (wc *Wechat) SetCache(cache cache.Cache) {
 	wc.cache = cache
 }

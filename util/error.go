@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-// CommonError 微信返回的通用错误json
+// CommonError 微信返回的通用错误 json
 type CommonError struct {
 	apiName string
 	ErrCode int64  `json:"errcode"`
@@ -17,7 +17,7 @@ func (c *CommonError) Error() string {
 	return fmt.Sprintf("%s Error , errcode=%d , errmsg=%s", c.apiName, c.ErrCode, c.ErrMsg)
 }
 
-// NewCommonError 新建CommonError错误，对于无errcode和errmsg的返回也可以返回该通用错误
+// NewCommonError 新建 CommonError 错误，对于无 errcode 和 errmsg 的返回也可以返回该通用错误
 func NewCommonError(apiName string, code int64, msg string) *CommonError {
 	return &CommonError{
 		apiName: apiName,
@@ -26,7 +26,7 @@ func NewCommonError(apiName string, code int64, msg string) *CommonError {
 	}
 }
 
-// DecodeWithCommonError 将返回值按照CommonError解析
+// DecodeWithCommonError 将返回值按照 CommonError 解析
 func DecodeWithCommonError(response []byte, apiName string) (err error) {
 	var commError CommonError
 	err = json.Unmarshal(response, &commError)

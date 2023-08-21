@@ -20,15 +20,16 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
 	"github.com/silenceper/wechat/v2/miniprogram/urllink"
 	"github.com/silenceper/wechat/v2/miniprogram/urlscheme"
+	"github.com/silenceper/wechat/v2/miniprogram/virtualpayment"
 	"github.com/silenceper/wechat/v2/miniprogram/werun"
 )
 
-// MiniProgram 微信小程序相关API
+// MiniProgram 微信小程序相关 API
 type MiniProgram struct {
 	ctx *context.Context
 }
 
-// NewMiniProgram 实例化小程序API
+// NewMiniProgram 实例化小程序 API
 func NewMiniProgram(cfg *config.Config) *MiniProgram {
 	defaultAkHandle := credential.NewDefaultAccessToken(cfg.AppID, cfg.AppSecret, credential.CacheKeyMiniProgramPrefix, cfg.Cache)
 	ctx := &context.Context{
@@ -38,7 +39,7 @@ func NewMiniProgram(cfg *config.Config) *MiniProgram {
 	return &MiniProgram{ctx}
 }
 
-// SetAccessTokenHandle 自定义access_token获取方式
+// SetAccessTokenHandle 自定义 access_token 获取方式
 func (miniProgram *MiniProgram) SetAccessTokenHandle(accessTokenHandle credential.AccessTokenHandle) {
 	miniProgram.ctx.AccessTokenHandle = accessTokenHandle
 }
@@ -68,17 +69,17 @@ func (miniProgram *MiniProgram) GetBusiness() *business.Business {
 	return business.NewBusiness(miniProgram.ctx)
 }
 
-// GetPrivacy 小程序隐私协议相关API
+// GetPrivacy 小程序隐私协议相关 API
 func (miniProgram *MiniProgram) GetPrivacy() *privacy.Privacy {
 	return privacy.NewPrivacy(miniProgram.ctx)
 }
 
-// GetQRCode 小程序码相关API
+// GetQRCode 小程序码相关 API
 func (miniProgram *MiniProgram) GetQRCode() *qrcode.QRCode {
 	return qrcode.NewQRCode(miniProgram.ctx)
 }
 
-// GetTcb 小程序云开发API
+// GetTcb 小程序云开发 API
 func (miniProgram *MiniProgram) GetTcb() *tcb.Tcb {
 	return tcb.NewTcb(miniProgram.ctx)
 }
@@ -103,7 +104,7 @@ func (miniProgram *MiniProgram) GetContentSecurity() *content.Content {
 	return content.NewContent(miniProgram.ctx)
 }
 
-// GetURLLink 小程序URL Link接口
+// GetURLLink 小程序 URL Link 接口
 func (miniProgram *MiniProgram) GetURLLink() *urllink.URLLink {
 	return urllink.NewURLLink(miniProgram.ctx)
 }
@@ -123,12 +124,17 @@ func (miniProgram *MiniProgram) GetShortLink() *shortlink.ShortLink {
 	return shortlink.NewShortLink(miniProgram.ctx)
 }
 
-// GetSURLScheme 小程序URL Scheme接口
+// GetSURLScheme 小程序 URL Scheme 接口
 func (miniProgram *MiniProgram) GetSURLScheme() *urlscheme.URLScheme {
 	return urlscheme.NewURLScheme(miniProgram.ctx)
 }
 
-// GetOpenAPI openApi管理接口
+// GetOpenAPI openApi 管理接口
 func (miniProgram *MiniProgram) GetOpenAPI() *openapi.OpenAPI {
 	return openapi.NewOpenAPI(miniProgram.ctx)
+}
+
+// GetVirtualPayment 小程序虚拟支付
+func (miniProgram *MiniProgram) GetVirtualPayment() *virtualpayment.VirtualPayment {
+	return virtualpayment.NewVirtualPayment(miniProgram.ctx)
 }

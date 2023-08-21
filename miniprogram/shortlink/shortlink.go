@@ -24,10 +24,10 @@ func NewShortLink(ctx *context.Context) *ShortLink {
 // ShortLinker 请求结构体
 type ShortLinker struct {
 
-	// pageUrl 通过 Short Link 进入的小程序页面路径，必须是已经发布的小程序存在的页面，可携带 query，最大1024个字符
+	// pageUrl 通过 Short Link 进入的小程序页面路径，必须是已经发布的小程序存在的页面，可携带 query，最大 1024 个字符
 	PageURL string `json:"page_url"`
 
-	// pageTitle 页面标题，不能包含违法信息，超过20字符会用... 截断代替
+	// pageTitle 页面标题，不能包含违法信息，超过 20 字符会用... 截断代替
 	PageTitle string `json:"page_title"`
 
 	// isPermanent 生成的 Short Link 类型，短期有效：false，永久有效：true
@@ -67,7 +67,7 @@ func (shortLink *ShortLink) generate(shortLinkParams ShortLinker) (string, error
 	return res.Link, nil
 }
 
-// GenerateShortLinkPermanent 生成永久shortLink
+// GenerateShortLinkPermanent 生成永久 shortLink
 func (shortLink *ShortLink) GenerateShortLinkPermanent(PageURL, pageTitle string) (string, error) {
 	return shortLink.generate(ShortLinker{
 		PageURL:     PageURL,
@@ -76,7 +76,7 @@ func (shortLink *ShortLink) GenerateShortLinkPermanent(PageURL, pageTitle string
 	})
 }
 
-// GenerateShortLinkTemp 生成临时shortLink
+// GenerateShortLinkTemp 生成临时 shortLink
 func (shortLink *ShortLink) GenerateShortLinkTemp(PageURL, pageTitle string) (string, error) {
 	return shortLink.generate(ShortLinker{
 		PageURL:     PageURL,
