@@ -85,7 +85,7 @@ func (s *MiniDrama) SingleFileUpload(ctx context.Context, in *SingleFileUploadRe
 // PullUpload 拉取上传
 func (s *MiniDrama) PullUpload(ctx context.Context, in *PullUploadRequest) (out *PullUploadResponse, err error) {
 	var address string
-	if address, err = s.requestAddress(ctx, singleFileUpload); err != nil {
+	if address, err = s.requestAddress(ctx, pullUpload); err != nil {
 		return
 	}
 	var response []byte
