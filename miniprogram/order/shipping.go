@@ -163,7 +163,7 @@ const (
 	LogisticsTypeSelfPickup LogisticsType = 4
 )
 
-// OrderNumberType 订单单号类型
+// NumberType 订单单号类型
 type NumberType uint8
 
 const (
