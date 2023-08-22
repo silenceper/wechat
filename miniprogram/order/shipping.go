@@ -238,17 +238,17 @@ const (
 
 // GetShippingOrderListRequest 查询订单列表请求参数
 type GetShippingOrderListRequest struct {
-	PayTimeRange *TimeRange `json:"pay_time_range"` // 支付时间范围
-	OrderState   State      `json:"order_state"`    // 订单状态
-	Openid       string     `json:"openid"`         // 支付者openid
-	LastIndex    string     `json:"last_index"`     // 	翻页时使用，获取第一页时不用传入，如果查询结果中 has_more 字段为 true，则传入该次查询结果中返回的 last_index 字段可获取下一页
-	PageSize     int64      `json:"page_size"`      // 每页数量，最多50条
+	PayTimeRange *TimeRange `json:"pay_time_range"`        // 支付时间范围
+	OrderState   State      `json:"order_state,omitempty"` // 订单状态
+	Openid       string     `json:"openid,omitempty"`      // 支付者openid
+	LastIndex    string     `json:"last_index,omitempty"`  // 	翻页时使用，获取第一页时不用传入，如果查询结果中 has_more 字段为 true，则传入该次查询结果中返回的 last_index 字段可获取下一页
+	PageSize     int64      `json:"page_size"`             // 每页数量，最多50条
 }
 
 // TimeRange 时间范围
 type TimeRange struct {
-	BeginTime int64 `json:"begin_time"` // 查询开始时间，时间戳形式
-	EndTime   int64 `json:"end_time"`   // 查询结束时间，时间戳形式
+	BeginTime int64 `json:"begin_time,omitempty"` // 查询开始时间，时间戳形式
+	EndTime   int64 `json:"end_time,omitempty"`   // 查询结束时间，时间戳形式
 }
 
 // GetShippingOrderListResponse 查询订单列表返回参数
