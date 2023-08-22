@@ -11,8 +11,7 @@ import (
 const (
 	// 发货信息录入
 	uploadShippingInfoURL = "https://api.weixin.qq.com/wxa/sec/order/upload_shipping_info?access_token=%s"
-	// // 发货信息合单录入
-	// uploadCombinedShippingInfoURL = "https://api.weixin.qq.com/wxa/sec/order/upload_combined_shipping_info?access_token=%s"
+
 	// 查询订单发货状态
 	getShippingOrderURL = "https://api.weixin.qq.com/wxa/sec/order/get_order?access_token=%s"
 
@@ -34,7 +33,7 @@ func NewShipping(ctx *context.Context) *Shipping {
 }
 
 // UploadShippingInfo 发货信息录入
-// https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/order-shipping/order-shipping.html
+// see https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/order-shipping/order-shipping.html
 func (shipping *Shipping) UploadShippingInfo(in *UploadShippingInfoRequest) (err error) {
 	accessToken, err := shipping.GetAccessToken()
 	if err != nil {
@@ -113,7 +112,7 @@ type UploadShippingInfoRequest struct {
 	Payer          *ShippingPayer  `json:"payer"`            // 支付人信息
 }
 
-// 订单
+// OrderKey 订单
 type OrderKey struct {
 	OrderNumberType OrderNumberType `json:"order_number_type"` // 订单单号类型，用于确认需要上传详情的订单。枚举值1，使用下单商户号和商户侧单号；枚举值2，使用微信支付单号。
 	TransactionID   string          `json:"transaction_id"`    // 原支付交易对应的微信订单号
@@ -121,12 +120,12 @@ type OrderKey struct {
 	OutTradeNo      string          `json:"out_trade_no"`      // 商户系统内部订单号，只能是数字、大小写字母`_-*`且在同一个商户号下唯一
 }
 
-// 支付者信息
+// ShippingPayer 支付者信息
 type ShippingPayer struct {
 	Openid string `json:"openid"` // 用户标识，用户在小程序appid下的唯一标识
 }
 
-// 物流信息
+// ShippingInfo 物流信息
 type ShippingInfo struct {
 	TrackingNo     string          `json:"tracking_no"`     // 物流单号，物流快递发货时必填
 	ExpressCompany string          `json:"express_company"` // 物流公司编码，快递公司ID，物流快递发货时必填；参见「查询物流公司编码列表」
@@ -134,13 +133,13 @@ type ShippingInfo struct {
 	Contact        ShippingContact `json:"contact"`         // 联系方式，当发货的物流公司为顺丰时，联系方式为必填，收件人或寄件人联系方式二选一
 }
 
-// 联系方式
+// ShippingContact 联系方式
 type ShippingContact struct {
 	ConsignorContact string `json:"consignor_contact"` // 寄件人联系方式，寄件人联系方式，采用掩码传输，最后4位数字不能打掩码
 	ReceiverContact  string `json:"receiver_contact"`  // 收件人联系方式，收件人联系方式，采用掩码传输，最后4位数字不能打掩码
 }
 
-// 发货模式
+// DeliveryMode 发货模式
 type DeliveryMode uint8
 
 const (
@@ -148,7 +147,7 @@ const (
 	DELIVERY_MODE_SPLIT_DELIVERY   DeliveryMode = 2 // 分拆发货
 )
 
-// 物流模式
+// LogisticsType 物流模式
 type LogisticsType uint8
 
 const (
@@ -158,7 +157,7 @@ const (
 	LOGISTICS_TYPE_SELF_PICKUP LogisticsType = 4 // 用户自提
 )
 
-// 订单单号类型
+// OrderNumberType 订单单号类型
 type OrderNumberType uint8
 
 const (
@@ -166,7 +165,7 @@ const (
 	ORDER_NUMBER_TYPE_TRANSACTION_ID OrderNumberType = 2 // 使用微信支付单号
 )
 
-// 查询订单发货状态参数
+// GetShippingOrderRequest 查询订单发货状态参数
 type GetShippingOrderRequest struct {
 	TransactionID   string `json:"transaction_id"`    // 原支付交易对应的微信订单号
 	MerchantId      string `json:"merchant_id"`       // 支付下单商户的商户号，由微信支付生成并下发
@@ -174,14 +173,14 @@ type GetShippingOrderRequest struct {
 	MerchantTradeNo string `json:"merchant_trade_no"` //商户系统内部订单号，只能是数字、大小写字母`_-*`且在同一个商户号下唯一。
 }
 
-// 物流信息
+// OrderShippingItem 物流信息
 type OrderShippingItem struct {
 	TrackingNo     string `json:"tracking_no"`     // 物流单号，示例值: "323244567777
 	ExpressCompany string `json:"express_company"` // 物流公司编码，快递公司ID，物流快递发货时必填；参见「查询物流公司编码列表」
 	UploadTime     int64  `json:"upload_time"`     // 上传物流信息时间，时间戳形式
 }
 
-// 发货信息
+// OrderShipping 发货信息
 type OrderShipping struct {
 	DeliveryMode        DeliveryMode         `json:"delivery_mode"`         // 发货模式
 	LogisticsType       LogisticsType        `json:"logistics_type"`        // 物流模式
@@ -191,7 +190,7 @@ type OrderShipping struct {
 	ShippingList        []*OrderShippingItem `json:"shipping_list"`         // 物流信息列表
 }
 
-// 订单发货状态
+// ShippingOrder 订单发货状态
 type ShippingOrder struct {
 	TransactionID   string         `json:"transaction_id"`    // 原支付交易对应的微信订单号
 	MerchantTradeNo string         `json:"merchant_trade_no"` // 商户系统内部订单号，只能是数字、大小写字母`_-*`且在同一个商户号下唯一
@@ -207,12 +206,12 @@ type ShippingOrder struct {
 	Shipping        *OrderShipping `json:"shipping"`          // 订单发货信息
 }
 
-type ShippingOrderResponse struct {
+type ShippingOrderResponse ShippingOrderResponse struct {
 	util.CommonError
 	Order ShippingOrder `json:"order"` // 订单发货信息
 }
 
-// 订单状态
+// OrderState 订单状态
 type OrderState uint8
 
 const (
@@ -232,12 +231,13 @@ type GetShippingOrderListRequest struct {
 	PageSize     int64      `json:"page_size"`      // 每页数量，最多50条
 }
 
-// 时间范围
+// TimeRange 时间范围
 type TimeRange struct {
 	BeginTime int64 `json:"begin_time"` // 查询开始时间，时间戳形式
 	EndTime   int64 `json:"end_time"`   // 查询结束时间，时间戳形式
 }
 
+// GetShippingOrderListResponse 查询订单列表返回参数
 type GetShippingOrderListResponse struct {
 	util.CommonError
 	OrderList []*ShippingOrder `json:"order_list"`
