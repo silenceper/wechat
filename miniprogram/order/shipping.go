@@ -206,7 +206,8 @@ type ShippingOrder struct {
 	Shipping        *OrderShipping `json:"shipping"`          // 订单发货信息
 }
 
-type ShippingOrderResponse ShippingOrderResponse struct {
+// ShippingOrderResponse 查询订单发货状态返回参数
+type ShippingOrderResponse struct {
 	util.CommonError
 	Order ShippingOrder `json:"order"` // 订单发货信息
 }
