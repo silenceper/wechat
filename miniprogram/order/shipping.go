@@ -114,10 +114,10 @@ type UploadShippingInfoRequest struct {
 
 // OrderKey 订单
 type OrderKey struct {
-	OrderNumberType OrderNumberType `json:"order_number_type"` // 订单单号类型，用于确认需要上传详情的订单。枚举值1，使用下单商户号和商户侧单号；枚举值2，使用微信支付单号。
-	TransactionID   string          `json:"transaction_id"`    // 原支付交易对应的微信订单号
-	Mchid           string          `json:"mchid"`             // 支付下单商户的商户号，由微信支付生成并下发
-	OutTradeNo      string          `json:"out_trade_no"`      // 商户系统内部订单号，只能是数字、大小写字母`_-*`且在同一个商户号下唯一
+	OrderNumberType NumberType `json:"order_number_type"` // 订单单号类型，用于确认需要上传详情的订单。枚举值1，使用下单商户号和商户侧单号；枚举值2，使用微信支付单号。
+	TransactionID   string     `json:"transaction_id"`    // 原支付交易对应的微信订单号
+	Mchid           string     `json:"mchid"`             // 支付下单商户的商户号，由微信支付生成并下发
+	OutTradeNo      string     `json:"out_trade_no"`      // 商户系统内部订单号，只能是数字、大小写字母`_-*`且在同一个商户号下唯一
 }
 
 // ShippingPayer 支付者信息
@@ -143,38 +143,38 @@ type ShippingContact struct {
 type DeliveryMode uint8
 
 const (
-	DELIVERY_MODE_UNIFIED_DELIVERY DeliveryMode = 1 // 统一发货
-	DELIVERY_MODE_SPLIT_DELIVERY   DeliveryMode = 2 // 分拆发货
+	DeliveryModeUnifiedDelivery DeliveryMode = 1 // 统一发货
+	DeliveryModeSplitDelivery   DeliveryMode = 2 // 分拆发货
 )
 
 // LogisticsType 物流模式
 type LogisticsType uint8
 
 const (
-	LOGISTICS_TYPE_EXPRESS     LogisticsType = 1 // 实体物流配送采用快递公司进行实体物流配送形式
-	LOGISTICS_TYPE_SAME_CITY   LogisticsType = 2 // 同城配送
-	LOGISTICS_TYPE_VIRTUAL     LogisticsType = 3 // 虚拟商品，虚拟商品，例如话费充值，点卡等，无实体配送形式
-	LOGISTICS_TYPE_SELF_PICKUP LogisticsType = 4 // 用户自提
+	LogisticsTypeExpress    LogisticsType = 1 // 实体物流配送采用快递公司进行实体物流配送形式
+	LogisticsTypeSameCity   LogisticsType = 2 // 同城配送
+	LogisticsTypeVirtual    LogisticsType = 3 // 虚拟商品，虚拟商品，例如话费充值，点卡等，无实体配送形式
+	LogisticsTypeSelfPickup LogisticsType = 4 // 用户自提
 )
 
 // OrderNumberType 订单单号类型
-type OrderNumberType uint8
+type NumberType uint8
 
 const (
-	ORDER_NUMBER_TYPE_OUT_TRADE_NO   OrderNumberType = 1 // 使用下单商户号和商户侧单号
-	ORDER_NUMBER_TYPE_TRANSACTION_ID OrderNumberType = 2 // 使用微信支付单号
+	NumberTypeOutTradeNo    NumberType = 1 // 使用下单商户号和商户侧单号
+	NumberTypeTransactionID NumberType = 2 // 使用微信支付单号
 )
 
 // GetShippingOrderRequest 查询订单发货状态参数
 type GetShippingOrderRequest struct {
 	TransactionID   string `json:"transaction_id"`    // 原支付交易对应的微信订单号
-	MerchantId      string `json:"merchant_id"`       // 支付下单商户的商户号，由微信支付生成并下发
-	SubMerchantId   string `json:"sub_merchant_id"`   //二级商户号
+	MerchantID      string `json:"merchant_id"`       // 支付下单商户的商户号，由微信支付生成并下发
+	SubMerchantID   string `json:"sub_merchant_id"`   //二级商户号
 	MerchantTradeNo string `json:"merchant_trade_no"` //商户系统内部订单号，只能是数字、大小写字母`_-*`且在同一个商户号下唯一。
 }
 
-// OrderShippingItem 物流信息
-type OrderShippingItem struct {
+// ShippingItem 物流信息
+type ShippingItem struct {
 	TrackingNo     string `json:"tracking_no"`     // 物流单号，示例值: "323244567777
 	ExpressCompany string `json:"express_company"` // 物流公司编码，快递公司ID，物流快递发货时必填；参见「查询物流公司编码列表」
 	UploadTime     int64  `json:"upload_time"`     // 上传物流信息时间，时间戳形式
@@ -182,12 +182,12 @@ type OrderShippingItem struct {
 
 // OrderShipping 发货信息
 type OrderShipping struct {
-	DeliveryMode        DeliveryMode         `json:"delivery_mode"`         // 发货模式
-	LogisticsType       LogisticsType        `json:"logistics_type"`        // 物流模式
-	FinishShipping      bool                 `json:"finish_shipping"`       // 是否已全部发货
-	FinishShippingCount int                  `json:"finish_shipping_count"` // 已完成全部发货的次数
-	GoodsDesc           string               `json:"goods_desc"`            // 在小程序后台发货信息录入页录入的商品描述
-	ShippingList        []*OrderShippingItem `json:"shipping_list"`         // 物流信息列表
+	DeliveryMode        DeliveryMode    `json:"delivery_mode"`         // 发货模式
+	LogisticsType       LogisticsType   `json:"logistics_type"`        // 物流模式
+	FinishShipping      bool            `json:"finish_shipping"`       // 是否已全部发货
+	FinishShippingCount int             `json:"finish_shipping_count"` // 已完成全部发货的次数
+	GoodsDesc           string          `json:"goods_desc"`            // 在小程序后台发货信息录入页录入的商品描述
+	ShippingList        []*ShippingItem `json:"shipping_list"`         // 物流信息列表
 }
 
 // ShippingOrder 订单发货状态
@@ -202,7 +202,7 @@ type ShippingOrder struct {
 	TradeCreateTime int64          `json:"trade_create_time"` // 交易创建时间，时间戳形式
 	PayTime         int64          `json:"pay_time"`          // 支付时间，时间戳形式
 	InComplaint     bool           `json:"in_complaint"`      // 是否处在交易纠纷中
-	OrderState      OrderState     `json:"order_state"`       // 订单状态枚举：(1) 待发货；(2) 已发货；(3) 确认收货；(4) 交易完成；(5) 已退款
+	OrderState      State          `json:"order_state"`       // 订单状态枚举：(1) 待发货；(2) 已发货；(3) 确认收货；(4) 交易完成；(5) 已退款
 	Shipping        *OrderShipping `json:"shipping"`          // 订单发货信息
 }
 
@@ -212,21 +212,21 @@ type ShippingOrderResponse struct {
 	Order ShippingOrder `json:"order"` // 订单发货信息
 }
 
-// OrderState 订单状态
-type OrderState uint8
+// State 订单状态
+type State uint8
 
 const (
-	ORDER_STATE_WAIT_SHIPMENT OrderState = 1 // 待发货
-	ORDER_STATE_SHIPPED       OrderState = 2 // 已发货
-	ORDER_STATE_CONFIRM       OrderState = 3 // 确认收货
-	ORDER_STATE_COMPLETE      OrderState = 4 // 交易完成
-	ORDER_STATE_REFUND        OrderState = 5 // 已退款
+	StateWaitShipment State = 1 // 待发货
+	StateShipped      State = 2 // 已发货
+	StateConfirm      State = 3 // 确认收货
+	StateComplete     State = 4 // 交易完成
+	StateRefund       State = 5 // 已退款
 )
 
 // GetShippingOrderListRequest 查询订单列表请求参数
 type GetShippingOrderListRequest struct {
 	PayTimeRange *TimeRange `json:"pay_time_range"` // 支付时间范围
-	OrderState   OrderState `json:"order_state"`    // 订单状态
+	OrderState   State      `json:"order_state"`    // 订单状态
 	Openid       string     `json:"openid"`         // 支付者openid
 	LastIndex    string     `json:"last_index"`     // 	翻页时使用，获取第一页时不用传入，如果查询结果中 has_more 字段为 true，则传入该次查询结果中返回的 last_index 字段可获取下一页
 	PageSize     int64      `json:"page_size"`      // 每页数量，最多50条
