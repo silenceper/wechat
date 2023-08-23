@@ -95,7 +95,7 @@ type (
 					Value string `json:"value"`
 				} `json:"text,omitempty"`
 				Web struct {
-					Url   string `json:"url"`
+					URL   string `json:"url"`
 					Title string `json:"title"`
 				} `json:"web,omitempty"`
 			} `json:"attrs"`
@@ -114,7 +114,7 @@ type (
 					Value string `json:"value"`
 				} `json:"text,omitempty"`
 				Web struct {
-					Url   string `json:"url"`
+					URL   string `json:"url"`
 					Title string `json:"title"`
 				} `json:"web,omitempty"`
 				Miniprogram struct {
