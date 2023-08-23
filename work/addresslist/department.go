@@ -22,7 +22,7 @@ type (
 		NameEn   string `json:"name_en,omitempty"`
 		ParentID int    `json:"parentid"`
 		Order    int    `json:"order,omitempty"`
-		Id       int    `json:"id,omitempty"`
+		ID       int    `json:"id,omitempty"`
 	}
 	// DepartmentCreateResponse 创建部门数据响应
 	DepartmentCreateResponse struct {

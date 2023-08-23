@@ -70,7 +70,7 @@ func (r *Client) UserSimpleList(departmentID int) ([]*UserList, error) {
 type (
 	// UserCreateRequest 创建成员数据请求
 	UserCreateRequest struct {
-		Userid         string   `json:"userid"`
+		UserID         string   `json:"userid"`
 		Name           string   `json:"name"`
 		Alias          string   `json:"alias"`
 		Mobile         string   `json:"mobile"`
