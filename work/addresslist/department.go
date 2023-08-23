@@ -7,6 +7,8 @@ import (
 )
 
 const (
+	// departmentCreateURL 创建部门
+	departmentCreateURL = "https://qyapi.weixin.qq.com/cgi-bin/department/create?access_token=%s"
 	// departmentSimpleListURL 获取子部门ID列表
 	departmentSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/department/simplelist?access_token=%s&id=%d"
 	// departmentListURL 获取部门列表
@@ -14,6 +16,20 @@ const (
 )
 
 type (
+	// DepartmentCreateRequest 创建部门数据请求
+	DepartmentCreateRequest struct {
+		Name     string `json:"name"`
+		NameEn   string `json:"name_en,omitempty"`
+		ParentID int    `json:"parentid"`
+		Order    int    `json:"order,omitempty"`
+		Id       int    `json:"id,omitempty"`
+	}
+	// DepartmentCreateResponse 创建部门数据响应
+	DepartmentCreateResponse struct {
+		util.CommonError
+		ID int `json:"id"`
+	}
+
 	// DepartmentSimpleListResponse 获取子部门ID列表响应
 	DepartmentSimpleListResponse struct {
 		util.CommonError
@@ -41,6 +57,27 @@ type (
 		Order            int      `json:"order"`             // 在父部门中的次序值。order值大的排序靠前
 	}
 )
+
+// DepartmentCreate 创建部门
+// see https://developer.work.weixin.qq.com/document/path/90205
+func (r *Client) DepartmentCreate(req *DepartmentCreateRequest) (*DepartmentCreateResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(departmentCreateURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &DepartmentCreateResponse{}
+	if err = util.DecodeWithError(response, result, "DepartmentCreate"); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
 
 // DepartmentSimpleList 获取子部门ID列表
 // see https://developer.work.weixin.qq.com/document/path/95350

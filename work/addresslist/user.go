@@ -1,6 +1,7 @@
 package addresslist
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/silenceper/wechat/v2/util"
@@ -9,8 +10,12 @@ import (
 const (
 	// userSimpleListURL 获取部门成员
 	userSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/user/simplelist"
+	// userCreateURL 创建成员
+	userCreateURL = "https://qyapi.weixin.qq.com/cgi-bin/user/create?access_token=%s"
 	// userGetURL 读取成员
 	userGetURL = "https://qyapi.weixin.qq.com/cgi-bin/user/get"
+	// userDeleteURL 删除成员
+	userDeleteURL = "https://qyapi.weixin.qq.com/cgi-bin/user/delete"
 	// userListIDURL 获取成员ID列表
 	userListIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/list_id"
 	// convertToOpenIDURL userID转openID
@@ -60,6 +65,91 @@ func (r *Client) UserSimpleList(departmentID int) ([]*UserList, error) {
 		return nil, err
 	}
 	return result.UserList, nil
+}
+
+type (
+	// UserCreateRequest 创建成员数据请求
+	UserCreateRequest struct {
+		Userid         string   `json:"userid"`
+		Name           string   `json:"name"`
+		Alias          string   `json:"alias"`
+		Mobile         string   `json:"mobile"`
+		Department     []int    `json:"department"`
+		Order          []int    `json:"order"`
+		Position       string   `json:"position"`
+		Gender         int      `json:"gender"`
+		Email          string   `json:"email"`
+		BizMail        string   `json:"biz_mail"`
+		IsLeaderInDept []int    `json:"is_leader_in_dept"`
+		DirectLeader   []string `json:"direct_leader"`
+		Enable         int      `json:"enable"`
+		AvatarMediaid  string   `json:"avatar_mediaid"`
+		Telephone      string   `json:"telephone"`
+		Address        string   `json:"address"`
+		MainDepartment int      `json:"main_department"`
+		Extattr        struct {
+			Attrs []struct {
+				Type int    `json:"type"`
+				Name string `json:"name"`
+				Text struct {
+					Value string `json:"value"`
+				} `json:"text,omitempty"`
+				Web struct {
+					Url   string `json:"url"`
+					Title string `json:"title"`
+				} `json:"web,omitempty"`
+			} `json:"attrs"`
+		} `json:"extattr"`
+		ToInvite         bool   `json:"to_invite"`
+		ExternalPosition string `json:"external_position"`
+		ExternalProfile  struct {
+			ExternalCorpName string `json:"external_corp_name"`
+			WechatChannels   struct {
+				Nickname string `json:"nickname"`
+			} `json:"wechat_channels"`
+			ExternalAttr []struct {
+				Type int    `json:"type"`
+				Name string `json:"name"`
+				Text struct {
+					Value string `json:"value"`
+				} `json:"text,omitempty"`
+				Web struct {
+					Url   string `json:"url"`
+					Title string `json:"title"`
+				} `json:"web,omitempty"`
+				Miniprogram struct {
+					Appid    string `json:"appid"`
+					Pagepath string `json:"pagepath"`
+					Title    string `json:"title"`
+				} `json:"miniprogram,omitempty"`
+			} `json:"external_attr"`
+		} `json:"external_profile"`
+	}
+	// UserCreateResponse 创建成员数据响应
+	UserCreateResponse struct {
+		util.CommonError
+	}
+)
+
+// UserCreate 创建成员
+// @see https://developer.work.weixin.qq.com/document/path/90195
+func (r *Client) UserCreate(req *UserCreateRequest) (*UserCreateResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(userCreateURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &UserCreateResponse{}
+	if err = util.DecodeWithError(response, result, "UserCreate"); err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 // UserGetResponse 获取部门成员响应
@@ -149,6 +239,40 @@ func (r *Client) UserGet(UserID string) (*UserGetResponse, error) {
 	result := &UserGetResponse{}
 	err = util.DecodeWithError(response, result, "UserGet")
 	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+type (
+	// UserDeleteResponse 删除成员数据响应
+	UserDeleteResponse struct {
+		util.CommonError
+	}
+)
+
+// UserDelete 删除成员
+// @see https://developer.work.weixin.qq.com/document/path/90334
+func (r *Client) UserDelete(userID string) (*UserDeleteResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.HTTPGet(strings.Join([]string{
+		userDeleteURL,
+		util.Query(map[string]interface{}{
+			"access_token": accessToken,
+			"userid":       userID,
+		}),
+	}, "?")); err != nil {
+		return nil, err
+	}
+	result := &UserDeleteResponse{}
+	if err = util.DecodeWithError(response, result, "UserDelete"); err != nil {
 		return nil, err
 	}
 	return result, nil
