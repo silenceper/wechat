@@ -27,7 +27,6 @@ const (
 	EventTypeTradeManageOrderSettlement EventType = "trade_manage_order_settlement"
 	// EventTypeWxaMediaCheck 媒体内容安全异步审查结果通知
 	EventTypeWxaMediaCheck EventType = "wxa_media_check"
-
 	// ConfirmReceiveMethodAuto 自动确认收货
 	ConfirmReceiveMethodAuto ConfirmReceiveMethod = 1
 	// ConfirmReceiveMethodManual 手动确认收货
@@ -84,11 +83,7 @@ func (receiver *PushReceiver) GetMsg(r *http.Request) ([]byte, error) {
 		}
 	} else {
 		// 不加密
-		msgBytes, err := io.ReadAll(r.Body)
-		if err != nil {
-			return nil, err
-		}
-		return msgBytes, nil
+		return io.ReadAll(r.Body)
 	}
 }
 
