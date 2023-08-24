@@ -16,16 +16,16 @@ import (
 type ConfirmReceiveMethod int8
 
 const (
-	// EventTypeTradeManageRemindAccessApi 提醒接入发货信息管理服务API
+	// EventTypeTradeManageRemindAccessAPI 提醒接入发货信息管理服务API
 	// 小程序完成账期授权时/小程序产生第一笔交易时/已产生交易但从未发货的小程序，每天一次
-	EventTypeTradeManageRemindAccessApi EventType = "trade_manage_remind_access_api"
+	EventTypeTradeManageRemindAccessAPI EventType = "trade_manage_remind_access_api"
 	// EventTypeTradeManageRemindShipping 提醒需要上传发货信息
 	//	曾经发过货的小程序，订单超过48小时未发货时
 	EventTypeTradeManageRemindShipping EventType = "trade_manage_remind_shipping"
 	// EventTypeTradeManageOrderSettlement 订单将要结算或已经结算
 	// 订单完成发货时/订单结算时
 	EventTypeTradeManageOrderSettlement EventType = "trade_manage_order_settlement"
-	// 媒体内容安全异步审查结果通知
+	// EventTypeWxaMediaCheck 媒体内容安全异步审查结果通知
 	EventTypeWxaMediaCheck EventType = "wxa_media_check"
 
 	// ConfirmReceiveMethodAuto 自动确认收货
@@ -51,21 +51,13 @@ func NewPushReceiver(ctx *context.Context, token, aesKey string) *PushReceiver {
 	}
 }
 
-// GetEchostr 获取echostr用于配置(请使用GET方法)
-func (*PushReceiver) GetEchostr(r *http.Request) (string, error) {
-	echostr := r.URL.Query().Get("echostr")
-	return echostr, nil
-}
-
 // GetMsg 获取接收到的消息(如果是加密的返回解密数据)
 func (receiver *PushReceiver) GetMsg(r *http.Request) ([]byte, error) {
-
 	// 读取参数
 	signature := r.FormValue("signature")
 	timestamp := r.FormValue("timestamp")
 	nonce := r.FormValue("nonce")
 	encryptType := r.FormValue("encrypt_type")
-
 	// 验证签名
 	tmpArr := []string{
 		receiver.Token,
@@ -118,9 +110,9 @@ func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, P
 
 	if msgType == MsgTypeEvent {
 		switch eventType {
-		case EventTypeTradeManageRemindAccessApi:
+		case EventTypeTradeManageRemindAccessAPI:
 			// 提醒接入发货信息管理服务API
-			var pushData PushDataRemindAccessApiData
+			var pushData PushDataRemindAccessAPIData
 			if err := json.Unmarshal(decryptMsg, &pushData); err != nil {
 				return msgType, eventType, nil, err
 			}
@@ -147,11 +139,11 @@ func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, P
 			}
 			return msgType, eventType, &pushData, nil
 		default:
-			return msgType, eventType, nil, errors.New("Event type is not supported")
+			return msgType, eventType, nil, errors.New("event type is not supported")
 		}
 	} else {
 		// 暂不支持其他消息类型
-		return msgType, eventType, nil, errors.New("Message type is not supported")
+		return msgType, eventType, nil, errors.New("message type is not supported")
 	}
 }
 
@@ -173,7 +165,7 @@ type CommonPushData struct {
 	CreateTime   int64     `json:"CreateTime"`   // 消息创建时间 （整型），时间戳
 }
 
-// 媒体内容安全异步审查结果通知
+// MediaCheckAsyncData 媒体内容安全异步审查结果通知
 type MediaCheckAsyncData struct {
 	CommonPushData
 	Appid   string                `json:"appid"`
@@ -226,8 +218,8 @@ type PushDataRemindShippingData struct {
 	Msg             string `json:"msg"`               // 消息文本内容
 }
 
-// PushDataRemindAccessApiData 提醒接入发货信息管理服务API
-type PushDataRemindAccessApiData struct {
+// PushDataRemindAccessAPIData 提醒接入发货信息管理服务API
+type PushDataRemindAccessAPIData struct {
 	CommonPushData
 	Msg string `json:"msg"` // 消息文本内容
 }
