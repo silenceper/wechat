@@ -76,9 +76,7 @@ func (s *MiniDrama) SingleFileUpload(ctx context.Context, in *SingleFileUploadRe
 		return
 	}
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "SingleFileUpload"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "SingleFileUpload")
 	return
 }
 
@@ -94,9 +92,7 @@ func (s *MiniDrama) PullUpload(ctx context.Context, in *PullUploadRequest) (out 
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "PullUpload"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "PullUpload")
 	return
 }
 
@@ -113,9 +109,7 @@ func (s *MiniDrama) GetTask(ctx context.Context, in *GetTaskRequest) (out *GetTa
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "GetTask"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "GetTask")
 	return
 }
 
@@ -132,9 +126,7 @@ func (s *MiniDrama) ApplyUpload(ctx context.Context, in *ApplyUploadRequest) (ou
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "ApplyUpload"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "ApplyUpload")
 	return
 }
 
@@ -173,9 +165,7 @@ func (s *MiniDrama) UploadPart(ctx context.Context, in *UploadPartRequest) (out 
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "UploadPart"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "UploadPart")
 	return
 }
 
@@ -192,9 +182,7 @@ func (s *MiniDrama) CommitUpload(ctx context.Context, in *CommitUploadRequest) (
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "CommitUpload"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "CommitUpload")
 	return
 }
 
@@ -211,9 +199,7 @@ func (s *MiniDrama) ListMedia(ctx context.Context, in *ListMediaRequest) (out *L
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "ListMedia"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "ListMedia")
 	return
 }
 
@@ -230,9 +216,7 @@ func (s *MiniDrama) GetMedia(ctx context.Context, in *GetMediaRequest) (out *Get
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "GetMedia"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "GetMedia")
 	return
 }
 
@@ -249,9 +233,7 @@ func (s *MiniDrama) GetMediaLink(ctx context.Context, in *GetMediaLinkRequest) (
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "GetMediaLink"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "GetMediaLink")
 	return
 }
 
@@ -268,9 +250,7 @@ func (s *MiniDrama) DeleteMedia(ctx context.Context, in *DeleteMediaRequest) (ou
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "DeleteMedia"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "DeleteMedia")
 	return
 }
 
@@ -287,9 +267,7 @@ func (s *MiniDrama) AuditDrama(ctx context.Context, in *AuditDramaRequest) (out 
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "AuditDrama"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "AuditDrama")
 	return
 }
 
@@ -306,9 +284,7 @@ func (s *MiniDrama) ListDramas(ctx context.Context, in *ListDramasRequest) (out 
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "ListDramas"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "ListDramas")
 	return
 }
 
@@ -324,9 +300,7 @@ func (s *MiniDrama) GetDrama(ctx context.Context, in *GetDramaRequest) (out *Get
 		return
 	}
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "GetDrama"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "GetDrama")
 	return
 }
 
@@ -342,9 +316,7 @@ func (s *MiniDrama) GetCdnUsageData(ctx context.Context, in *GetCdnUsageDataRequ
 		return
 	}
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "GetCdnUsageData"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "GetCdnUsageData")
 	return
 }
 
@@ -360,9 +332,7 @@ func (s *MiniDrama) GetCdnLogs(ctx context.Context, in *GetCdnLogsRequest) (out 
 		return
 	}
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "GetCdnLogs"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, out, "GetCdnLogs")
 	return
 }
 
