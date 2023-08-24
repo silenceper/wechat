@@ -89,7 +89,6 @@ func (receiver *PushReceiver) GetMsg(r *http.Request) ([]byte, error) {
 
 // GetMsgData 获取接收到的消息(解密数据)
 func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, PushData, error) {
-
 	decryptMsg, err := receiver.GetMsg(r)
 	if err != nil {
 		return "", "", nil, err
@@ -102,7 +101,6 @@ func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, P
 
 	msgType := MsgType(dataMap["MsgType"].(string))
 	eventType := EventType(dataMap["Event"].(string))
-
 	if msgType == MsgTypeEvent {
 		switch eventType {
 		case EventTypeTradeManageRemindAccessAPI:
@@ -134,12 +132,12 @@ func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, P
 			}
 			return msgType, eventType, &pushData, nil
 		default:
-			return msgType, eventType, nil, errors.New("event type is not supported")
+			// 暂不支持其他事件类型
+			return msgType, eventType, string(decryptMsg), nil
 		}
-	} else {
-		// 暂不支持其他消息类型
-		return msgType, eventType, nil, errors.New("message type is not supported")
 	}
+	// 暂不支持其他消息类型
+	return msgType, eventType, string(decryptMsg), nil
 }
 
 // DataReceived 接收到的数据
