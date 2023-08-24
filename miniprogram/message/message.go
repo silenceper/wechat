@@ -81,10 +81,9 @@ func (receiver *PushReceiver) GetMsg(r *http.Request) ([]byte, error) {
 		} else {
 			return rawMsgBytes, nil
 		}
-	} else {
-		// 不加密
-		return io.ReadAll(r.Body)
 	}
+	// 不加密
+	return io.ReadAll(r.Body)
 }
 
 // GetMsgData 获取接收到的消息(解密数据)
