@@ -105,38 +105,29 @@ func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, P
 		case EventTypeTradeManageRemindAccessAPI:
 			// 提醒接入发货信息管理服务API
 			var pushData PushDataRemindAccessAPIData
-			if err := json.Unmarshal(decryptMsg, &pushData); err != nil {
-				return msgType, eventType, nil, err
-			}
-			return msgType, eventType, &pushData, nil
+			err := json.Unmarshal(decryptMsg, &pushData)
+			return msgType, eventType, &pushData, err
 		case EventTypeTradeManageRemindShipping:
 			// 提醒需要上传发货信息
 			var pushData PushDataRemindShippingData
-			if err := json.Unmarshal(decryptMsg, &pushData); err != nil {
-				return msgType, eventType, nil, err
-			}
-			return msgType, eventType, &pushData, nil
+			err := json.Unmarshal(decryptMsg, &pushData)
+			return msgType, eventType, &pushData, err
 		case EventTypeTradeManageOrderSettlement:
 			// 订单将要结算或已经结算
 			var pushData PushDataOrderSettlementData
-			if err := json.Unmarshal(decryptMsg, &pushData); err != nil {
-				return msgType, eventType, nil, err
-			}
-			return msgType, eventType, &pushData, nil
+			err := json.Unmarshal(decryptMsg, &pushData)
+			return msgType, eventType, &pushData, err
 		case EventTypeWxaMediaCheck:
 			// 媒体内容安全异步审查结果通知
 			var pushData MediaCheckAsyncData
-			if err := json.Unmarshal(decryptMsg, &pushData); err != nil {
-				return msgType, eventType, &pushData, err
-			}
-			return msgType, eventType, &pushData, nil
-		default:
-			// 暂不支持其他事件类型
-			return msgType, eventType, string(decryptMsg), nil
+			err := json.Unmarshal(decryptMsg, &pushData)
+			return msgType, eventType, &pushData, err
 		}
+		// 暂不支持其他事件类型
+		return msgType, eventType, decryptMsg, nil
 	}
 	// 暂不支持其他消息类型
-	return msgType, eventType, string(decryptMsg), nil
+	return msgType, eventType, decryptMsg, nil
 }
 
 // DataReceived 接收到的数据
@@ -145,7 +136,7 @@ type DataReceived struct {
 }
 
 // PushData 推送的数据(已转对应的结构体)
-// after 1.18: interface{ MediaCheckAsyncData | PushDataRemindAccessApiData | PushDataRemindShippingData | PushDataOrderSettlementData}
+// after 1.18: interface{MediaCheckAsyncData | PushDataRemindAccessApiData | PushDataRemindShippingData | PushDataOrderSettlementData | []byte}
 type PushData interface{}
 
 // CommonPushData 推送数据通用部分
