@@ -88,42 +88,49 @@ type (
 		Address        string   `json:"address"`
 		MainDepartment int      `json:"main_department"`
 		Extattr        struct {
-			Attrs []struct {
-				Type int    `json:"type"`
-				Name string `json:"name"`
-				Text struct {
-					Value string `json:"value"`
-				} `json:"text,omitempty"`
-				Web struct {
-					URL   string `json:"url"`
-					Title string `json:"title"`
-				} `json:"web,omitempty"`
-			} `json:"attrs"`
+			Attrs []ExtraAttr `json:"attrs"`
 		} `json:"extattr"`
-		ToInvite         bool   `json:"to_invite"`
-		ExternalPosition string `json:"external_position"`
-		ExternalProfile  struct {
-			ExternalCorpName string `json:"external_corp_name"`
-			WechatChannels   struct {
-				Nickname string `json:"nickname"`
-			} `json:"wechat_channels"`
-			ExternalAttr []struct {
-				Type int    `json:"type"`
-				Name string `json:"name"`
-				Text struct {
-					Value string `json:"value"`
-				} `json:"text,omitempty"`
-				Web struct {
-					URL   string `json:"url"`
-					Title string `json:"title"`
-				} `json:"web,omitempty"`
-				Miniprogram struct {
-					Appid    string `json:"appid"`
-					Pagepath string `json:"pagepath"`
-					Title    string `json:"title"`
-				} `json:"miniprogram,omitempty"`
-			} `json:"external_attr"`
-		} `json:"external_profile"`
+		ToInvite         bool            `json:"to_invite"`
+		ExternalPosition string          `json:"external_position"`
+		ExternalProfile  ExternalProfile `json:"external_profile"`
+	}
+	// ExtraAttr 扩展属性
+	ExtraAttr struct {
+		Type int    `json:"type"`
+		Name string `json:"name"`
+		Text struct {
+			Value string `json:"value"`
+		} `json:"text,omitempty"`
+		Web struct {
+			URL   string `json:"url"`
+			Title string `json:"title"`
+		} `json:"web,omitempty"`
+	}
+	// ExternalProfile 成员对外信息
+	ExternalProfile struct {
+		ExternalCorpName string `json:"external_corp_name"`
+		WechatChannels   struct {
+			Nickname string `json:"nickname"`
+			Status   int    `json:"status"`
+		} `json:"wechat_channels"`
+		ExternalAttr []ExternalProfileAttr `json:"external_attr"`
+	}
+	// ExternalProfileAttr 成员对外信息属性
+	ExternalProfileAttr struct {
+		Type int    `json:"type"`
+		Name string `json:"name"`
+		Text struct {
+			Value string `json:"value"`
+		} `json:"text,omitempty"`
+		Web struct {
+			URL   string `json:"url"`
+			Title string `json:"title"`
+		} `json:"web,omitempty"`
+		Miniprogram struct {
+			Appid    string `json:"appid"`
+			Pagepath string `json:"pagepath"`
+			Title    string `json:"title"`
+		} `json:"miniprogram,omitempty"`
 	}
 	// UserCreateResponse 创建成员数据响应
 	UserCreateResponse struct {
