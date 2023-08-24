@@ -138,3 +138,8 @@ func (miniProgram *MiniProgram) GetOpenAPI() *openapi.OpenAPI {
 func (miniProgram *MiniProgram) GetVirtualPayment() *virtualpayment.VirtualPayment {
 	return virtualpayment.NewVirtualPayment(miniProgram.ctx)
 }
+
+// GetMessageReceiver 获取消息推送接收器
+func (miniProgram *MiniProgram) GetMessageReceiver(token, aesKey string) *message.PushReceiver {
+	return message.NewPushReceiver(miniProgram.ctx, token, aesKey)
+}
