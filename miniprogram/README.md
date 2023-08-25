@@ -21,7 +21,7 @@ miniprogram.GetAnalysis().GetAnalysisDailyRetain()
 ```
 
 ### 小程序虚拟支付 
-#### `注意：需要传入 Appkey 的值`
+#### `注意：需要传入 Appkey、OfferID 的值`
 相关文档：[小程序虚拟支付](https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/virtual-payment.html)
 ```go
 wc := wechat.NewWechat()
@@ -29,6 +29,7 @@ miniprogram := wc.GetMiniProgram(&miniConfig.Config{
     AppID:     "xxx",
     AppSecret: "xxx",
     AppKey:    "xxx",
+    OfferID:   "xxx",
     Cache: cache.NewRedis(&redis.Options{
         Addr: "",
     }),
