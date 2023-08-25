@@ -10,5 +10,6 @@ type Config struct {
 	AppID     string `json:"app_id"`     // appid
 	AppSecret string `json:"app_secret"` // appSecret
 	AppKey    string `json:"app_key"`    // appKey
+	OfferID   string `json:"offer_id"`   // offerId
 	Cache     cache.Cache
 }
