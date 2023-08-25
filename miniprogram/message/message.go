@@ -133,7 +133,7 @@ type DataReceived struct {
 }
 
 // PushData 推送的数据(已转对应的结构体)
-// after 1.18: interface{MediaCheckAsyncData | PushDataRemindAccessApiData | PushDataRemindShippingData | PushDataOrderSettlementData | []byte}
+// MediaCheckAsyncData | PushDataRemindAccessAPI | PushDataRemindShipping | PushDataOrderSettlement | []byte
 type PushData interface{}
 
 // CommonPushData 推送数据通用部分
@@ -172,7 +172,7 @@ type MediaCheckAsyncResult struct {
 	Label   security.CheckLabel   `json:"label"`
 }
 
-// PushDataOrderSettlementData 订单将要结算或已经结算通知
+// PushDataOrderSettlement 订单将要结算或已经结算通知
 type PushDataOrderSettlement struct {
 	CommonPushData
 	TransactionID           string               `json:"transaction_id"`            // 支付订单号
@@ -187,7 +187,7 @@ type PushDataOrderSettlement struct {
 	SettlementTime          int64                `json:"settlement_time"`           // 订单结算时间，秒级时间戳。结算时推送才有该字段
 }
 
-// PushDataRemindShippingData 提醒需要上传发货信息
+// PushDataRemindShipping 提醒需要上传发货信息
 type PushDataRemindShipping struct {
 	CommonPushData
 	TransactionID   string `json:"transaction_id"`    // 微信支付订单号
@@ -198,7 +198,7 @@ type PushDataRemindShipping struct {
 	Msg             string `json:"msg"`               // 消息文本内容
 }
 
-// PushDataRemindAccessAPIData 提醒接入发货信息管理服务API
+// PushDataRemindAccessAPI 提醒接入发货信息管理服务API
 type PushDataRemindAccessAPI struct {
 	CommonPushData
 	Msg string `json:"msg"` // 消息文本内容
