@@ -8,6 +8,8 @@ import (
 )
 
 // Redis .redis cache
+// Deprecated: user defined implementation cache、ContextCache interface
+// The implementation was officially removed in v2.1.6
 type Redis struct {
 	ctx  context.Context
 	conn redis.UniversalClient
@@ -35,12 +37,12 @@ func NewRedis(ctx context.Context, opts *RedisOpts) *Redis {
 	return &Redis{ctx: ctx, conn: conn}
 }
 
-// SetConn 设置conn
+// SetConn 设置 conn
 func (r *Redis) SetConn(conn redis.UniversalClient) {
 	r.conn = conn
 }
 
-// SetRedisCtx 设置redis ctx 参数
+// SetRedisCtx 设置 redis ctx 参数
 func (r *Redis) SetRedisCtx(ctx context.Context) {
 	r.ctx = ctx
 }
@@ -69,12 +71,12 @@ func (r *Redis) SetContext(ctx context.Context, key string, val interface{}, tim
 	return r.conn.SetEX(ctx, key, val, timeout).Err()
 }
 
-// IsExist 判断key是否存在
+// IsExist 判断 key 是否存在
 func (r *Redis) IsExist(key string) bool {
 	return r.IsExistContext(r.ctx, key)
 }
 
-// IsExistContext 判断key是否存在
+// IsExistContext 判断 key 是否存在
 func (r *Redis) IsExistContext(ctx context.Context, key string) bool {
 	result, _ := r.conn.Exists(ctx, key).Result()
 
