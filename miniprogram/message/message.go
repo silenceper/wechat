@@ -76,11 +76,8 @@ func (receiver *PushReceiver) GetMsg(r *http.Request) ([]byte, error) {
 		if err := json.NewDecoder(r.Body).Decode(&reqData); err != nil {
 			return nil, err
 		}
-		if _, rawMsgBytes, err := util.DecryptMsg(receiver.AppID, reqData.Encrypt, receiver.AesKey); err != nil {
-			return nil, err
-		} else {
-			return rawMsgBytes, nil
-		}
+		_, rawMsgBytes, err := util.DecryptMsg(receiver.AppID, reqData.Encrypt, receiver.AesKey)
+		return rawMsgBytes, err
 	}
 	// 不加密
 	return io.ReadAll(r.Body)
@@ -104,17 +101,17 @@ func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, P
 		switch eventType {
 		case EventTypeTradeManageRemindAccessAPI:
 			// 提醒接入发货信息管理服务API
-			var pushData PushDataRemindAccessAPIData
+			var pushData PushDataRemindAccessAPI
 			err := json.Unmarshal(decryptMsg, &pushData)
 			return msgType, eventType, &pushData, err
 		case EventTypeTradeManageRemindShipping:
 			// 提醒需要上传发货信息
-			var pushData PushDataRemindShippingData
+			var pushData PushDataRemindShipping
 			err := json.Unmarshal(decryptMsg, &pushData)
 			return msgType, eventType, &pushData, err
 		case EventTypeTradeManageOrderSettlement:
 			// 订单将要结算或已经结算
-			var pushData PushDataOrderSettlementData
+			var pushData PushDataOrderSettlement
 			err := json.Unmarshal(decryptMsg, &pushData)
 			return msgType, eventType, &pushData, err
 		case EventTypeWxaMediaCheck:
@@ -176,7 +173,7 @@ type MediaCheckAsyncResult struct {
 }
 
 // PushDataOrderSettlementData 订单将要结算或已经结算通知
-type PushDataOrderSettlementData struct {
+type PushDataOrderSettlement struct {
 	CommonPushData
 	TransactionID           string               `json:"transaction_id"`            // 支付订单号
 	MerchantID              string               `json:"merchant_id"`               // 商户号
@@ -191,7 +188,7 @@ type PushDataOrderSettlementData struct {
 }
 
 // PushDataRemindShippingData 提醒需要上传发货信息
-type PushDataRemindShippingData struct {
+type PushDataRemindShipping struct {
 	CommonPushData
 	TransactionID   string `json:"transaction_id"`    // 微信支付订单号
 	MerchantID      string `json:"merchant_id"`       // 商户号
@@ -202,7 +199,7 @@ type PushDataRemindShippingData struct {
 }
 
 // PushDataRemindAccessAPIData 提醒接入发货信息管理服务API
-type PushDataRemindAccessAPIData struct {
+type PushDataRemindAccessAPI struct {
 	CommonPushData
 	Msg string `json:"msg"` // 消息文本内容
 }
