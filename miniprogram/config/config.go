@@ -10,6 +10,7 @@ type Config struct {
 	AppID          string `json:"app_id"`           // appid
 	AppSecret      string `json:"app_secret"`       // appSecret
 	AppKey         string `json:"app_key"`          // appKey
+	OfferID        string `json:"offer_id"`         // offerId
 	Token          string `json:"token"`            // token
 	EncodingAESKey string `json:"encoding_aes_key"` // EncodingAESKey
 	Cache          cache.Cache
