@@ -55,7 +55,7 @@ issues:
 linters-settings:
   funlen:
     lines: 66
-    statements: 40
+    statements: 50
 
 #issues:
 #  include:

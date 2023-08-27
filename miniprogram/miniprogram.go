@@ -141,6 +141,11 @@ func (miniProgram *MiniProgram) GetVirtualPayment() *virtualpayment.VirtualPayme
 	return virtualpayment.NewVirtualPayment(miniProgram.ctx)
 }
 
+// GetMessageReceiver 获取消息推送接收器
+func (miniProgram *MiniProgram) GetMessageReceiver() *message.PushReceiver {
+	return message.NewPushReceiver(miniProgram.ctx)
+}
+
 // GetShipping 小程序发货信息管理服务
 func (miniProgram *MiniProgram) GetShipping() *order.Shipping {
 	return order.NewShipping(miniProgram.ctx)
