@@ -7,8 +7,10 @@ import (
 
 // Config .config for 小程序
 type Config struct {
-	AppID     string `json:"app_id"`     // appid
-	AppSecret string `json:"app_secret"` // appSecret
-	AppKey    string `json:"app_key"`    // appKey
-	Cache     cache.Cache
+	AppID          string `json:"app_id"`           // appid
+	AppSecret      string `json:"app_secret"`       // appSecret
+	AppKey         string `json:"app_key"`          // appKey
+	Token          string `json:"token"`            // token
+	EncodingAESKey string `json:"encoding_aes_key"` // EncodingAESKey
+	Cache          cache.Cache
 }

@@ -140,6 +140,6 @@ func (miniProgram *MiniProgram) GetVirtualPayment() *virtualpayment.VirtualPayme
 }
 
 // GetMessageReceiver 获取消息推送接收器
-func (miniProgram *MiniProgram) GetMessageReceiver(token, aesKey string) *message.PushReceiver {
-	return message.NewPushReceiver(miniProgram.ctx, token, aesKey)
+func (miniProgram *MiniProgram) GetMessageReceiver() *message.PushReceiver {
+	return message.NewPushReceiver(miniProgram.ctx)
 }
