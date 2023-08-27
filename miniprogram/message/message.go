@@ -60,7 +60,6 @@ func NewPushReceiver(ctx *context.Context) *PushReceiver {
 
 // GetMsg 获取接收到的消息(如果是加密的返回解密数据)
 func (receiver *PushReceiver) GetMsg(r *http.Request) (string, []byte, error) {
-
 	// 判断请求格式
 	var dataType string
 	contentType := r.Header.Get("Content-Type")
@@ -72,7 +71,7 @@ func (receiver *PushReceiver) GetMsg(r *http.Request) (string, []byte, error) {
 		dataType = DataTypeJSON
 	}
 
-	// 读取参数
+	// 读取参数，验证签名
 	signature := r.FormValue("signature")
 	timestamp := r.FormValue("timestamp")
 	nonce := r.FormValue("nonce")
@@ -83,7 +82,6 @@ func (receiver *PushReceiver) GetMsg(r *http.Request) (string, []byte, error) {
 		timestamp,
 		nonce,
 	}
-
 	sort.Strings(tmpArr)
 	tmpSignature := util.Signature(tmpArr...)
 	if tmpSignature != signature {
@@ -112,7 +110,6 @@ func (receiver *PushReceiver) GetMsg(r *http.Request) (string, []byte, error) {
 
 // GetMsgData 获取接收到的消息(解密数据)
 func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, PushData, error) {
-
 	dataType, decryptMsg, err := receiver.GetMsg(r)
 	if err != nil {
 		return "", "", nil, err
@@ -192,7 +189,6 @@ func (receiver *PushReceiver) getEvent(dataType string, eventType EventType, dec
 		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
 		return &pushData, err
 	}
-
 	// 暂不支持其他事件类型，直接返回解密后的数据，由调用方处理
 	return decryptMsg, nil
 }
@@ -215,7 +211,7 @@ type PushData interface{}
 
 // CommonPushData 推送数据通用部分
 type CommonPushData struct {
-	XMLName      xml.Name  `json:"-" xml:DataTypeXML`
+	XMLName      xml.Name  `json:"-" xml:"xml"`
 	MsgType      MsgType   `json:"MsgType" xml:"MsgType"`           // 消息类型，为固定值 "event"
 	Event        EventType `json:"Event" xml:"Event"`               // 事件类型
 	ToUserName   string    `json:"ToUserName" xml:"ToUserName"`     // 小程序的原始 ID
