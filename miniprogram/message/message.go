@@ -294,9 +294,7 @@ type PushDataXpayGoodsDeliverNotify struct {
 	OutTradeNo    string        `json:"OutTradeNo"`    // 业务订单号
 	Env           int           `json:"Env"`           //，环境配置 0：现网环境（也叫正式环境）1：沙箱环境
 	WeChatPayInfo WeChatPayInfo `json:"WeChatPayInfo"` // 微信支付信息 非微信支付渠道可能没有
-	GoodsInfo     struct {
-		GoodsId string `json:"goods_id"` // 道具id
-	} `json:"GoodsInfo"` // 道具参数信息
+	GoodsInfo     GoodsInfo     `json:"GoodsInfo"`     // 道具参数信息
 }
 
 // WeChatPayInfo 微信支付信息
