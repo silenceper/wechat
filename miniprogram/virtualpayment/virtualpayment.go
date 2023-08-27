@@ -60,10 +60,7 @@ func (s *VirtualPayment) QueryUserBalance(ctx context.Context, in *QueryUserBala
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "QueryUserBalance"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "QueryUserBalance")
 	return
 }
 
@@ -91,10 +88,7 @@ func (s *VirtualPayment) CurrencyPay(ctx context.Context, in *CurrencyPayRequest
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "CurrencyPay"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "CurrencyPay")
 	return
 }
 
@@ -122,10 +116,7 @@ func (s *VirtualPayment) QueryOrder(ctx context.Context, in *QueryOrderRequest) 
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "QueryOrder"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "QueryOrder")
 	return
 }
 
@@ -153,10 +144,7 @@ func (s *VirtualPayment) CancelCurrencyPay(ctx context.Context, in *CancelCurren
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "CancelCurrencyPay"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "CancelCurrencyPay")
 	return
 }
 
@@ -186,10 +174,7 @@ func (s *VirtualPayment) NotifyProvideGoods(ctx context.Context, in *NotifyProvi
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "NotifyProvideGoods"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "NotifyProvideGoods")
 	return
 }
 
@@ -218,10 +203,7 @@ func (s *VirtualPayment) PresentCurrency(ctx context.Context, in *PresentCurrenc
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "PresentCurrency"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "PresentCurrency")
 	return
 }
 
@@ -250,10 +232,7 @@ func (s *VirtualPayment) DownloadBill(ctx context.Context, in *DownloadBillReque
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "DownloadBill"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "DownloadBill")
 	return
 }
 
@@ -282,10 +261,7 @@ func (s *VirtualPayment) RefundOrder(ctx context.Context, in *RefundOrderRequest
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "RefundOrder"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "RefundOrder")
 	return
 }
 
@@ -314,10 +290,7 @@ func (s *VirtualPayment) CreateWithdrawOrder(ctx context.Context, in *CreateWith
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "CreateWithdrawOrder"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "CreateWithdrawOrder")
 	return
 }
 
@@ -346,10 +319,7 @@ func (s *VirtualPayment) QueryWithdrawOrder(ctx context.Context, in *QueryWithdr
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "QueryWithdrawOrder"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "QueryWithdrawOrder")
 	return
 }
 
@@ -378,10 +348,7 @@ func (s *VirtualPayment) StartUploadGoods(ctx context.Context, in *StartUploadGo
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "StartUploadGoods"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "StartUploadGoods")
 	return
 }
 
@@ -410,10 +377,7 @@ func (s *VirtualPayment) QueryUploadGoods(ctx context.Context, in *QueryUploadGo
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "QueryUploadGoods"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "QueryUploadGoods")
 	return
 }
 
@@ -442,10 +406,7 @@ func (s *VirtualPayment) StartPublishGoods(ctx context.Context, in *StartPublish
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "StartPublishGoods"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "StartPublishGoods")
 	return
 }
 
@@ -474,10 +435,7 @@ func (s *VirtualPayment) QueryPublishGoods(ctx context.Context, in *QueryPublish
 	}
 
 	// 使用通用方法返回错误
-	if err = util.DecodeWithError(response, out, "QueryPublishGoods"); err != nil {
-		return
-	}
-
+	err = util.DecodeWithError(response, out, "QueryPublishGoods")
 	return
 }
 
