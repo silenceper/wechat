@@ -25,6 +25,10 @@ const (
 	getGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/get?access_token=%s"
 	// delGroupWelcomeTemplateURL 删除入群欢迎语素材
 	delGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/del?access_token=%s"
+	// remindGroupMsgSendURL 提醒成员群发
+	remindGroupMsgSendURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/remind_groupmsg_send?access_token=%s"
+	// cancelGroupMsgSendURL 停止企业群发
+	cancelGroupMsgSendURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/cancel_groupmsg_send?access_token=%s"
 )
 
 // AddMsgTemplateRequest 创建企业群发请求
@@ -421,4 +425,48 @@ func (r *Client) DelGroupWelcomeTemplate(req *DelGroupWelcomeTemplateRequest) er
 		return err
 	}
 	return nil
+}
+
+// RemindGroupMsgSendRequest 提醒成员群发请求
+type RemindGroupMsgSendRequest struct {
+	MsgID string `json:"msgid"`
+}
+
+// RemindGroupMsgSend 提醒成员群发
+// see https://developer.work.weixin.qq.com/document/path/97610
+func (r *Client) RemindGroupMsgSend(req *RemindGroupMsgSendRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(remindGroupMsgSendURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "RemindGroupMsgSend")
+}
+
+// CancelGroupMsgSendRequest 停止企业群发请求
+type CancelGroupMsgSendRequest struct {
+	MsgID string `json:"msgid"`
+}
+
+// CancelGroupMsgSend 提醒成员群发
+// see https://developer.work.weixin.qq.com/document/path/97611
+func (r *Client) CancelGroupMsgSend(req *CancelGroupMsgSendRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(cancelGroupMsgSendURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "CancelGroupMsgSend")
 }
