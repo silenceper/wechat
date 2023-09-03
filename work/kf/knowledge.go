@@ -117,6 +117,7 @@ type ListKnowledgeGroupResponse struct {
 	GroupList  []KnowledgeGroup `json:"group_list"`
 }
 
+// KnowledgeGroup 知识库分组
 type KnowledgeGroup struct {
 	GroupID   string `json:"group_id"`
 	Name      string `json:"name"`
