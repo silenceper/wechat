@@ -51,10 +51,8 @@ func (r *Client) AddKnowledgeGroup(req *AddKnowledgeGroupRequest) (*AddKnowledge
 		return nil, err
 	}
 	result := &AddKnowledgeGroupResponse{}
-	if err = util.DecodeWithError(response, result, "AddKnowledgeGroup"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "AddKnowledgeGroup")
+	return result, err
 }
 
 // DelKnowledgeGroupRequest 知识库分组删除请求
@@ -139,10 +137,8 @@ func (r *Client) ListKnowledgeGroup(req *ListKnowledgeGroupRequest) (*ListKnowle
 		return nil, err
 	}
 	result := &ListKnowledgeGroupResponse{}
-	if err = util.DecodeWithError(response, result, "ListKnowledgeGroup"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "ListKnowledgeGroup")
+	return result, err
 }
 
 // AddKnowledgeIntentRequest 知识库问答添加请求
@@ -235,10 +231,8 @@ func (r *Client) AddKnowledgeIntent(req *AddKnowledgeIntentRequest) (*AddKnowled
 		return nil, err
 	}
 	result := &AddKnowledgeIntentResponse{}
-	if err = util.DecodeWithError(response, result, "AddKnowledgeIntent"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "AddKnowledgeIntent")
+	return result, err
 }
 
 // DelKnowledgeIntentRequest 知识库问答删除请求
@@ -360,8 +354,6 @@ func (r *Client) ListKnowledgeIntent(req *ListKnowledgeIntentRequest) (*ListKnow
 		return nil, err
 	}
 	result := &ListKnowledgeIntentResponse{}
-	if err = util.DecodeWithError(response, result, "ListKnowledgeIntent"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "ListKnowledgeIntent")
+	return result, err
 }
