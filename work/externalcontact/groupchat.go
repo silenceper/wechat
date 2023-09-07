@@ -70,6 +70,7 @@ type (
 		GroupNickname string  `json:"group_nickname"`    //在群里的昵称
 		Name          string  `json:"name"`              //名字。仅当 need_name = 1 时返回 如果是微信用户，则返回其在微信中设置的名字 如果是企业微信联系人，则返回其设置对外展示的别名或实名
 		UnionID       string  `json:"unionid,omitempty"` //外部联系人在微信开放平台的唯一身份标识（微信unionid），通过此字段企业可将外部联系人与公众号/小程序用户关联起来。仅当群成员类型是微信用户（包括企业成员未添加好友），且企业绑定了微信开发者ID有此字段（查看绑定方法）。第三方不可获取，上游企业不可获取下游企业客户的unionid字段
+		State         string  `json:"state,omitempty"`   //如果在配置入群方式时，配置了state参数，那么在获取客户群详情时，通过该方式入群的成员，会额外获取到相应的state参数
 	}
 	//GroupChatAdmin 群管理员
 	GroupChatAdmin struct {
