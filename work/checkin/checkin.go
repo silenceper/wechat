@@ -14,10 +14,10 @@ const (
 type (
 	// GetCheckinDataRequest 获取打卡记录数据请求
 	GetCheckinDataRequest struct {
-		Opencheckindatatype int64    `json:"opencheckindatatype"`
-		Starttime           int64    `json:"starttime"`
-		Endtime             int64    `json:"endtime"`
-		Useridlist          []string `json:"useridlist"`
+		OpenCheckinDataType int64    `json:"opencheckindatatype"`
+		StartTime           int64    `json:"starttime"`
+		EndTime             int64    `json:"endtime"`
+		UserIDList          []string `json:"useridlist"`
 	}
 	// GetCheckinDataResponse 获取打卡记录数据响应
 	GetCheckinDataResponse struct {
@@ -26,24 +26,24 @@ type (
 	}
 	// CheckinData 打卡记录数据
 	CheckinData struct {
-		Userid         string   `json:"userid"`
-		Groupname      string   `json:"groupname"`
+		UserID         string   `json:"userid"`
+		GroupName      string   `json:"groupname"`
 		CheckinType    string   `json:"checkin_type"`
 		ExceptionType  string   `json:"exception_type"`
 		CheckinTime    int64    `json:"checkin_time"`
 		LocationTitle  string   `json:"location_title"`
 		LocationDetail string   `json:"location_detail"`
-		Wifiname       string   `json:"wifiname"`
+		WifiName       string   `json:"wifiname"`
 		Notes          string   `json:"notes"`
-		Wifimac        string   `json:"wifimac"`
-		Mediaids       []string `json:"mediaids"`
+		WifiMac        string   `json:"wifimac"`
+		MediaIDs       []string `json:"mediaids"`
 		SchCheckinTime int64    `json:"sch_checkin_time"`
-		Groupid        int64    `json:"groupid"`
-		ScheduleId     int64    `json:"schedule_id"`
-		TimelineId     int64    `json:"timeline_id"`
+		GroupID        int64    `json:"groupid"`
+		ScheduleID     int64    `json:"schedule_id"`
+		TimelineID     int64    `json:"timeline_id"`
 		Lat            int64    `json:"lat,omitempty"`
 		Lng            int64    `json:"lng,omitempty"`
-		Deviceid       string   `json:"deviceid,omitempty"`
+		DeviceID       string   `json:"deviceid,omitempty"`
 	}
 )
 
