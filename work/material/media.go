@@ -33,7 +33,7 @@ type UploadTempFileResponse struct {
 type UploadAttachmentResponse struct {
 	util.CommonError
 	MediaID  string `json:"media_id"`
-	CreateAt string `json:"created_at"`
+	CreateAt int64  `json:"created_at"`
 	Type     string `json:"type"`
 }
 
