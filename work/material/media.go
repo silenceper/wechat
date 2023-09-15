@@ -82,7 +82,7 @@ func (r *Client) UploadTempFile(filename string, mediaType string) (*UploadTempF
 
 // UploadAttachment 上传附件资源
 // @see https://developer.work.weixin.qq.com/document/path/95098
-// @mediaType 媒体文件类型，分别有图片（image）、语音（voice）、视频（video），普通文件（file）
+// @mediaType 媒体文件类型，分别有图片（image）、视频（video）、普通文件（file）
 // @attachment_type 附件类型，不同的附件类型用于不同的场景。1：朋友圈；2:商品图册
 func (r *Client) UploadAttachment(filename string, mediaType string, attachmentType int) (*UploadAttachmentResponse, error) {
 	var (
