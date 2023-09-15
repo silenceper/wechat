@@ -22,10 +22,10 @@ type (
 	// GetCheckinDataResponse 获取打卡记录数据响应
 	GetCheckinDataResponse struct {
 		util.CommonError
-		CheckinData []*CheckinData `json:"checkindata"`
+		CheckinData []*GetCheckinDataItem `json:"checkindata"`
 	}
-	// CheckinData 打卡记录数据
-	CheckinData struct {
+	// GetCheckinDataItem 打卡记录数据
+	GetCheckinDataItem struct {
 		UserID         string   `json:"userid"`
 		GroupName      string   `json:"groupname"`
 		CheckinType    string   `json:"checkin_type"`
