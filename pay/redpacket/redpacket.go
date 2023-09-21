@@ -42,7 +42,8 @@ type Params struct {
 type request struct {
 	NonceStr    string `xml:"nonce_str"`
 	Sign        string `xml:"sign"`
-	MchID       string `xml:"mchid"`
+	MchID       string `xml:"mch_id"`
+	MchBillno   string `xml:"mch_billno"`
 	Wxappid     string `xml:"wxappid"`
 	SendName    string `xml:"send_name"`
 	ReOpenID    string `xml:"re_openid"`
@@ -75,9 +76,9 @@ func (redpacket *Redpacket) SendRedpacket(p *Params) (rsp *Response, err error) 
 	param := make(map[string]string)
 
 	param["nonce_str"] = nonceStr
-	param["mch_billno"] = p.MchBillno
-	param["mchid"] = redpacket.MchID
+	param["mch_id"] = redpacket.MchID
 	param["wxappid"] = redpacket.AppID
+	param["mch_billno"] = p.MchBillno
 	param["send_name"] = p.SendName
 	param["re_openid"] = p.ReOpenID
 	param["total_amount"] = strconv.Itoa(p.TotalAmount)
@@ -98,6 +99,7 @@ func (redpacket *Redpacket) SendRedpacket(p *Params) (rsp *Response, err error) 
 		Sign:        sign,
 		MchID:       redpacket.MchID,
 		Wxappid:     redpacket.AppID,
+		MchBillno:   p.MchBillno,
 		SendName:    p.SendName,
 		ReOpenID:    p.ReOpenID,
 		TotalAmount: p.TotalAmount,
