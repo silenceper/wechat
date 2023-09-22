@@ -31,7 +31,7 @@ type Params struct {
 	TotalAmount int
 	TotalNum    int
 	Wishing     string
-	ClientIp    string
+	ClientIP    string
 	ActName     string
 	Remark      string
 
@@ -50,7 +50,7 @@ type request struct {
 	TotalAmount int    `xml:"total_amount"`
 	TotalNum    int    `xml:"total_num"`
 	Wishing     string `xml:"wishing"`
-	ClientIp    string `xml:"client_ip"`
+	ClientIP    string `xml:"client_ip"`
 	ActName     string `xml:"act_name"`
 	Remark      string `xml:"remark"`
 }
@@ -63,7 +63,7 @@ type Response struct {
 	ErrCode     string `xml:"err_code,omitempty"`
 	ErrCodeDes  string `xml:"err_code_des,omitempty"`
 	MchBillno   string `xml:"mch_billno,omitempty"`
-	MchId       string `xml:"mch_id,omitempty"`
+	MchID       string `xml:"mch_id,omitempty"`
 	Wxappid     string `xml:"wxappid"`
 	ReOpenID    string `xml:"re_openid"`
 	TotalAmount int    `xml:"total_amount"`
@@ -84,7 +84,7 @@ func (redpacket *Redpacket) SendRedpacket(p *Params) (rsp *Response, err error) 
 	param["total_amount"] = strconv.Itoa(p.TotalAmount)
 	param["total_num"] = strconv.Itoa(p.TotalNum)
 	param["wishing"] = p.Wishing
-	param["client_ip"] = p.ClientIp
+	param["client_ip"] = p.ClientIP
 	param["act_name"] = p.ActName
 	param["remark"] = p.Remark
 	//param["scene_id"] = "PRODUCT_2"
@@ -105,7 +105,7 @@ func (redpacket *Redpacket) SendRedpacket(p *Params) (rsp *Response, err error) 
 		TotalAmount: p.TotalAmount,
 		TotalNum:    p.TotalNum,
 		Wishing:     p.Wishing,
-		ClientIp:    p.ClientIp,
+		ClientIP:    p.ClientIP,
 		ActName:     p.ActName,
 		Remark:      p.Remark,
 	}

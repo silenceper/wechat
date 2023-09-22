@@ -39,7 +39,7 @@ func (pay *Pay) GetTransfer() *transfer.Transfer {
 	return transfer.NewTransfer(pay.cfg)
 }
 
-// NewRedpacket 红包
+// GetRedpacket 红包
 func (pay *Pay) GetRedpacket() *redpacket.Redpacket {
 	return redpacket.NewRedpacket(pay.cfg)
 }
