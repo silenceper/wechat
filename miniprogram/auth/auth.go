@@ -15,6 +15,8 @@ const (
 	checkEncryptedDataURL = "https://api.weixin.qq.com/wxa/business/checkencryptedmsg?access_token=%s"
 
 	getPhoneNumber = "https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=%s"
+
+	checkSessionURL = "https://api.weixin.qq.com/wxa/checksession?access_token=%s&openid=%s&signature=%s&sig_method=hmac_sha256"
 )
 
 // Auth 登录/用户信息
@@ -33,7 +35,7 @@ type ResCode2Session struct {
 
 	OpenID     string `json:"openid"`      // 用户唯一标识
 	SessionKey string `json:"session_key"` // 会话密钥
-	UnionID    string `json:"unionid"`     // 用户在开放平台的唯一标识符，在满足UnionID下发条件的情况下会返回
+	UnionID    string `json:"unionid"`     // 用户在开放平台的唯一标识符，在满足 UnionID 下发条件的情况下会返回
 }
 
 // RspCheckEncryptedData .
@@ -70,12 +72,12 @@ func (auth *Auth) GetPaidUnionID() {
 	// TODO
 }
 
-// CheckEncryptedData .检查加密信息是否由微信生成（当前只支持手机号加密数据），只能检测最近3天生成的加密数据
+// CheckEncryptedData .检查加密信息是否由微信生成（当前只支持手机号加密数据），只能检测最近 3 天生成的加密数据
 func (auth *Auth) CheckEncryptedData(encryptedMsgHash string) (result RspCheckEncryptedData, err error) {
 	return auth.CheckEncryptedDataContext(context2.Background(), encryptedMsgHash)
 }
 
-// CheckEncryptedDataContext .检查加密信息是否由微信生成（当前只支持手机号加密数据），只能检测最近3天生成的加密数据
+// CheckEncryptedDataContext .检查加密信息是否由微信生成（当前只支持手机号加密数据），只能检测最近 3 天生成的加密数据
 func (auth *Auth) CheckEncryptedDataContext(ctx context2.Context, encryptedMsgHash string) (result RspCheckEncryptedData, err error) {
 	var response []byte
 	var (
@@ -85,7 +87,7 @@ func (auth *Auth) CheckEncryptedDataContext(ctx context2.Context, encryptedMsgHa
 		return
 	}
 
-	// 由于GetPhoneNumberContext需要传入JSON，所以HTTPPostContext入参改为[]byte
+	// 由于 GetPhoneNumberContext 需要传入 JSON，所以 HTTPPostContext 入参改为 []byte
 	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(checkEncryptedDataURL, at), []byte("encrypted_msg_hash="+encryptedMsgHash), nil); err != nil {
 		return
 	}
@@ -113,38 +115,62 @@ type PhoneInfo struct {
 	} `json:"watermark"` // 数据水印
 }
 
-// GetPhoneNumberContext 小程序通过code获取用户手机号
-func (auth *Auth) GetPhoneNumberContext(ctx context2.Context, code string) (*GetPhoneNumberResponse, error) {
-	var response []byte
-	var (
-		at  string
-		err error
-	)
-	if at, err = auth.GetAccessToken(); err != nil {
+// GetPhoneNumberContext 小程序通过 code 获取用户手机号
+func (auth *Auth) GetPhoneNumberContext(ctx context2.Context, code string) (result *GetPhoneNumberResponse, err error) {
+	var accessToken string
+	if accessToken, err = auth.GetAccessToken(); err != nil {
 		return nil, err
 	}
-	body := map[string]interface{}{
-		"code": code,
-	}
 
-	bodyBytes, err := json.Marshal(body)
+	bodyBytes, err := json.Marshal(map[string]interface{}{
+		"code": code,
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	header := map[string]string{"Content-Type": "application/json;charset=utf-8"}
-	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(getPhoneNumber, at), bodyBytes, header); err != nil {
+	var (
+		header   = map[string]string{"Content-Type": "application/json;charset=utf-8"}
+		response []byte
+	)
+
+	if response, err = util.HTTPPostContext(ctx, fmt.Sprintf(getPhoneNumber, accessToken), bodyBytes, header); err != nil {
 		return nil, err
 	}
 
-	var result GetPhoneNumberResponse
-	if err = util.DecodeWithError(response, &result, "phonenumber.getPhoneNumber"); err != nil {
-		return nil, err
-	}
-	return &result, nil
+	err = util.DecodeWithError(response, &result, "phonenumber.getPhoneNumber")
+	return
 }
 
-// GetPhoneNumber 小程序通过code获取用户手机号
+// GetPhoneNumber 小程序通过 code 获取用户手机号
 func (auth *Auth) GetPhoneNumber(code string) (*GetPhoneNumberResponse, error) {
 	return auth.GetPhoneNumberContext(context2.Background(), code)
 }
+
+// // CheckSession 检验登录态是否过期。
+// func (auth *Auth) CheckSession(sessionKey, openID string) (result *CheckSessionResponse, err error) {
+// 	return auth.CheckSessionContext(context2.Background(), sessionKey, openID)
+// }
+//
+// // CheckSessionContext 检验登录态是否过期。
+// func (auth *Auth) CheckSessionContext(ctx context2.Context, sessionKey, openID string) (result *CheckSessionResponse, err error) {
+// 	var accessToken string
+// 	if accessToken, err = auth.GetAccessToken(); err != nil {
+// 		return nil, err
+// 	}
+// 	var (
+// 		response  []byte
+// 		signature string = sessionKey
+// 	)
+// 	if response, err = util.HTTPGetContext(ctx, fmt.Sprintf(checkSessionURL, accessToken, openID, signature)); err != nil {
+// 		return nil, err
+// 	}
+//
+// 	err = util.DecodeWithError(response, &result, "CheckSessionContext")
+// 	return
+// }
+//
+// // CheckSessionResponse 检验登录态是否过期。
+// type CheckSessionResponse struct {
+// 	util.CommonError
+// }

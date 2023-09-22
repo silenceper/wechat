@@ -479,6 +479,7 @@ func (s *VirtualPayment) requestAddress(params URLParams) (url string, err error
 	case queryUserBalance:
 	case currencyPay:
 	case cancelCurrencyPay:
+	case defaultUnifiedOrderURL:
 		if params.PaySign, params.Signature, err = s.PaySignature(params.Path, params.Content); err != nil {
 			return
 		}

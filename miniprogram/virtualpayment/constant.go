@@ -117,6 +117,9 @@ const (
 
 	// queryPublishGoods 查询批量发布道具任务状态
 	queryPublishGoods = "/xpay/query_publish_goods"
+
+	// defaultUnifiedOrderURL default unified order url
+	defaultUnifiedOrderURL = "requestVirtualPayment"
 )
 
 const (
