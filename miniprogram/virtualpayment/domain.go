@@ -145,6 +145,8 @@ type OrderItem struct {
 	WxOrderID      string      `json:"wx_order_id"`      // 微信内部单号
 	ChannelOrderID string      `json:"channel_order_id"` // 渠道订单号，为用户微信支付详情页面上的商户单号
 	WxPayOrderID   string      `json:"wxpay_order_id"`   // 微信支付交易单号，为用户微信支付详情页面上的交易单号
+	SettTime       int64       `json:"sett_time"`        // 结算时间，unix 秒级时间戳，结算时间的秒级时间戳，大于 0 表示结算成功
+	SettState      uint        `json:"sett_state"`       // 结算状态 0-未开始结算 1-结算中 2-结算成功
 }
 
 // QueryOrderResponse 查询创建的订单（现金单，非代币单）响应参数

@@ -118,6 +118,21 @@ const (
 	// queryPublishGoods 查询批量发布道具任务状态
 	queryPublishGoods = "/xpay/query_publish_goods"
 
+	// queryBizBalance 查询商家账户里的可提现余额
+	queryBizBalance = "/xpay/query_biz_balance"
+
+	//  queryTransferAccount 查询广告金充值账户
+	queryTransferAccount = "/xpay/query_transfer_account"
+
+	// queryAdverFunds 查询广告金发放记录
+	queryAdverFunds = "/xpay/query_adver_funds"
+
+	// createFundsBill 充值广告金
+	createFundsBill = "/xpay/create_funds_bill"
+
+	// bindTransferAccount 绑定广告金充值账户
+	bindTransferAccount = "/xpay/bind_transfer_accout"
+
 	// defaultUnifiedOrderURL default unified order url
 	defaultUnifiedOrderURL = "requestVirtualPayment"
 )
