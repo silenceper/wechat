@@ -13,6 +13,8 @@ const (
 	departmentSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/department/simplelist?access_token=%s&id=%d"
 	// departmentListURL 获取部门列表
 	departmentListURL = "https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=%s"
+	// departmentGetURL 获取单个部门详情 https://qyapi.weixin.qq.com/cgi-bin/department/get?access_token=ACCESS_TOKEN&id=ID
+	departmentGetURL = "https://qyapi.weixin.qq.com/cgi-bin/department/get?access_token=%s&id=%d"
 )
 
 type (
@@ -120,4 +122,25 @@ func (r *Client) DepartmentList() ([]*Department, error) {
 	}
 	// 返回数据
 	return result.Department, err
+}
+
+// DepartmentGet 获取单个部门详情
+// see https://developer.work.weixin.qq.com/document/path/95351
+func (r *Client) DepartmentGet(departmentID int) (*Department, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.HTTPGet(fmt.Sprintf(departmentGetURL, accessToken, departmentID)); err != nil {
+		return nil, err
+	}
+	result := &Department{}
+	if err = util.DecodeWithError(response, result, "DepartmentGet"); err != nil {
+		return nil, err
+	}
+	return result, nil
 }
