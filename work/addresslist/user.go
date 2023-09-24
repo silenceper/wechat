@@ -221,7 +221,7 @@ type UserGetResponse struct {
 	} `json:"external_profile"` // 成员对外属性，字段详情见对外属性；代开发自建应用需要管理员授权才返回；第三方仅通讯录应用可获取；对于非第三方创建的成员，第三方通讯录应用也不可获取；上游企业不可获取下游企业成员该字段
 }
 
-// UserGet 获取部门成员
+// UserGet 读取成员
 // @see https://developer.work.weixin.qq.com/document/path/90196
 func (r *Client) UserGet(UserID string) (*UserGetResponse, error) {
 	var (
@@ -237,8 +237,8 @@ func (r *Client) UserGet(UserID string) (*UserGetResponse, error) {
 		strings.Join([]string{
 			userGetURL,
 			util.Query(map[string]interface{}{
-				"access_token":  accessToken,
-				"department_id": UserID,
+				"access_token": accessToken,
+				"userid":       UserID,
 			}),
 		}, "?")); err != nil {
 		return nil, err
