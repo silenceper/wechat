@@ -58,6 +58,11 @@ type (
 		ParentID         int      `json:"parentid"`          // 父部门id。根部门为1
 		Order            int      `json:"order"`             // 在父部门中的次序值。order值大的排序靠前
 	}
+	// DepartmentGetResponse 获取单个部门详情
+	DepartmentGetResponse struct {
+		util.CommonError
+		Department Department `json:"department"`
+	}
 )
 
 // DepartmentCreate 创建部门
@@ -138,9 +143,9 @@ func (r *Client) DepartmentGet(departmentID int) (*Department, error) {
 	if response, err = util.HTTPGet(fmt.Sprintf(departmentGetURL, accessToken, departmentID)); err != nil {
 		return nil, err
 	}
-	result := &Department{}
+	result := &DepartmentGetResponse{}
 	if err = util.DecodeWithError(response, result, "DepartmentGet"); err != nil {
 		return nil, err
 	}
-	return result, nil
+	return &result.Department, nil
 }
