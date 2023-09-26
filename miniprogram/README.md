@@ -30,9 +30,7 @@ miniprogram := wc.GetMiniProgram(&miniConfig.Config{
     AppSecret: "xxx",
     AppKey:    "xxx",
     OfferID:   "xxx",
-    Cache: cache.NewRedis(&redis.Options{
-        Addr: "",
-    }),
+    Cache: cache.NewMemory(),
 })
 virtualPayment := miniprogram.GetVirtualPayment()
 virtualPayment.SetSessionKey("xxx")
