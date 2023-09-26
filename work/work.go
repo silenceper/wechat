@@ -4,6 +4,7 @@ import (
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/work/addresslist"
 	"github.com/silenceper/wechat/v2/work/appchat"
+	"github.com/silenceper/wechat/v2/work/checkin"
 	"github.com/silenceper/wechat/v2/work/config"
 	"github.com/silenceper/wechat/v2/work/context"
 	"github.com/silenceper/wechat/v2/work/externalcontact"
@@ -84,4 +85,9 @@ func (wk *Work) GetAppChat() *appchat.Client {
 // GetInvoice get invoice
 func (wk *Work) GetInvoice() *invoice.Client {
 	return invoice.NewClient(wk.ctx)
+}
+
+// GetCheckin 获取打卡接口实例
+func (wk *Work) GetCheckin() *checkin.Client {
+	return checkin.NewClient(wk.ctx)
 }

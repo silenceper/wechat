@@ -12,6 +12,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
 	"github.com/silenceper/wechat/v2/miniprogram/minidrama"
+	"github.com/silenceper/wechat/v2/miniprogram/order"
 	"github.com/silenceper/wechat/v2/miniprogram/privacy"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
 	"github.com/silenceper/wechat/v2/miniprogram/riskcontrol"
@@ -138,6 +139,16 @@ func (miniProgram *MiniProgram) GetOpenAPI() *openapi.OpenAPI {
 // GetVirtualPayment 小程序虚拟支付
 func (miniProgram *MiniProgram) GetVirtualPayment() *virtualpayment.VirtualPayment {
 	return virtualpayment.NewVirtualPayment(miniProgram.ctx)
+}
+
+// GetMessageReceiver 获取消息推送接收器
+func (miniProgram *MiniProgram) GetMessageReceiver() *message.PushReceiver {
+	return message.NewPushReceiver(miniProgram.ctx)
+}
+
+// GetShipping 小程序发货信息管理服务
+func (miniProgram *MiniProgram) GetShipping() *order.Shipping {
+	return order.NewShipping(miniProgram.ctx)
 }
 
 // GetMiniDrama 小程序娱乐微短剧

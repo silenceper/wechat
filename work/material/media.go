@@ -11,6 +11,8 @@ const (
 	uploadImgURL = "https://qyapi.weixin.qq.com/cgi-bin/media/uploadimg?access_token=%s"
 	// uploadTempFile 上传临时素材
 	uploadTempFile = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s"
+	// uploadAttachment 上传附件资源
+	uploadAttachment = "https://qyapi.weixin.qq.com/cgi-bin/media/upload_attachment?access_token=%s&media_type=%s&attachment_type=%d"
 )
 
 // UploadImgResponse 上传图片响应
@@ -24,6 +26,14 @@ type UploadTempFileResponse struct {
 	util.CommonError
 	MediaID  string `json:"media_id"`
 	CreateAt string `json:"created_at"`
+	Type     string `json:"type"`
+}
+
+// UploadAttachmentResponse 上传资源附件响应
+type UploadAttachmentResponse struct {
+	util.CommonError
+	MediaID  string `json:"media_id"`
+	CreateAt int64  `json:"created_at"`
 	Type     string `json:"type"`
 }
 
@@ -65,6 +75,29 @@ func (r *Client) UploadTempFile(filename string, mediaType string) (*UploadTempF
 	}
 	result := &UploadTempFileResponse{}
 	if err = util.DecodeWithError(response, result, "UploadTempFile"); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// UploadAttachment 上传附件资源
+// @see https://developer.work.weixin.qq.com/document/path/95098
+// @mediaType 媒体文件类型，分别有图片（image）、视频（video）、普通文件（file）
+// @attachment_type 附件类型，不同的附件类型用于不同的场景。1：朋友圈；2:商品图册
+func (r *Client) UploadAttachment(filename string, mediaType string, attachmentType int) (*UploadAttachmentResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostFile("media", filename, fmt.Sprintf(uploadAttachment, accessToken, mediaType, attachmentType)); err != nil {
+		return nil, err
+	}
+	result := &UploadAttachmentResponse{}
+	if err = util.DecodeWithError(response, result, "UploadAttachment"); err != nil {
 		return nil, err
 	}
 	return result, nil
