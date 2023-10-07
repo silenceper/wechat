@@ -39,7 +39,7 @@ type AddMsgTemplateRequest struct {
 	Text           MsgText       `json:"text"`
 	Attachments    []*Attachment `json:"attachments"`
 	AllowSelect    bool          `json:"allow_select,omitempty"`
-	ChatIdList     []string      `json:"chat_id_list,omitempty"`
+	ChatIDList     []string      `json:"chat_id_list,omitempty"`
 	TagFilter      TagFilter     `json:"tag_filter,omitempty"`
 }
 
