@@ -180,7 +180,7 @@ type MediaInfo struct {
 	CreateTime  int64             `json:"create_time"`  // 	上传时间，时间戳。
 	ExpireTime  int64             `json:"expire_time"`  // 过期时间，时间戳。
 	DramaID     int64             `json:"drama_id"`     // 所属剧目 id。
-	FileSize    string            `json:"file_size"`    // 媒资文件大小，单位：字节。
+	FileSize    int64             `json:"file_size"`    // 媒资文件大小，单位：字节。
 	Duration    int64             `json:"duration"`     // 播放时长，单位：秒。
 	Name        string            `json:"name"`         // 媒资文件名。
 	Description string            `json:"description"`  // 描述。
