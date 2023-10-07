@@ -38,7 +38,22 @@ type AddMsgTemplateRequest struct {
 	Sender         string        `json:"sender,omitempty"`
 	Text           MsgText       `json:"text"`
 	Attachments    []*Attachment `json:"attachments"`
+	AllowSelect    bool          `json:"allow_select,omitempty"`
+	ChatIdList     []string      `json:"chat_id_list,omitempty"`
+	TagFilter      TagFilter     `json:"tag_filter,omitempty"`
 }
+
+type (
+	// TagFilter 标签过滤
+	TagFilter struct {
+		GroupList []TagGroupList `json:"group_list"`
+	}
+
+	// TagGroupList 标签组
+	TagGroupList struct {
+		TagList []string `json:"tag_list"`
+	}
+)
 
 // MsgText 文本消息
 type MsgText struct {
