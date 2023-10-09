@@ -79,6 +79,7 @@ type (
 		Datas []DayDataItem `json:"datas"`
 	}
 
+	// DayDataItem 日报
 	DayDataItem struct {
 		BaseInfo       DayBaseInfo     `json:"base_info"`
 		SummaryInfo    DaySummaryInfo  `json:"summary_info"`
@@ -95,24 +96,24 @@ type (
 		Name        string      `json:"name"`
 		NameEx      string      `json:"name_ex"`
 		DepartsName string      `json:"departs_name"`
-		AcctId      string      `json:"acctid"`
+		AcctID      string      `json:"acctid"`
 		DayType     int64       `json:"day_type"`
 		RuleInfo    DayRuleInfo `json:"rule_info"`
 	}
 
-	// CheckInTime 当日打卡时间
-	CheckInTime struct {
+	// DayCheckInTime 当日打卡时间
+	DayCheckInTime struct {
 		WorkSec    int64 `json:"work_sec"`
 		OffWorkSec int64 `json:"off_work_sec"`
 	}
 
 	// DayRuleInfo 打卡人员所属规则信息
 	DayRuleInfo struct {
-		GroupId      int64         `json:"groupid"`
-		GroupName    string        `json:"groupname"`
-		ScheduleId   int64         `json:"scheduleid"`
-		ScheduleName string        `json:"schedulename"`
-		CheckInTimes []CheckInTime `json:"checkintime"`
+		GroupID      int64            `json:"groupid"`
+		GroupName    string           `json:"groupname"`
+		ScheduleID   int64            `json:"scheduleid"`
+		ScheduleName string           `json:"schedulename"`
+		CheckInTimes []DayCheckInTime `json:"checkintime"`
 	}
 
 	// DaySummaryInfo 汇总信息
@@ -153,7 +154,7 @@ type (
 		Duration   int64  `json:"duration"`
 		TimeType   int64  `json:"time_type"`
 		Type       int64  `json:"type"`
-		VacationId int64  `json:"vacation_id"`
+		VacationID int64  `json:"vacation_id"`
 		Name       string `json:"name"`
 	}
 
@@ -200,6 +201,7 @@ type (
 		Datas []MonthDataItem `json:"datas"`
 	}
 
+	// MonthDataItem 月报数据
 	MonthDataItem struct {
 		BaseInfo       MonthBaseInfo    `json:"base_info"`
 		SummaryInfo    MonthSummaryInfo `json:"summary_info"`
@@ -214,13 +216,13 @@ type (
 		Name        string        `json:"name"`
 		NameEx      string        `json:"name_ex"`
 		DepartsName string        `json:"departs_name"`
-		AcctId      string        `json:"acctid"`
+		AcctID      string        `json:"acctid"`
 		RuleInfo    MonthRuleInfo `json:"rule_info"`
 	}
 
 	// MonthRuleInfo 打卡人员所属规则信息
 	MonthRuleInfo struct {
-		GroupId   int64  `json:"groupid"`
+		GroupID   int64  `json:"groupid"`
 		GroupName string `json:"groupname"`
 	}
 
