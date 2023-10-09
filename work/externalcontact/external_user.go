@@ -104,7 +104,7 @@ type Tag struct {
 // WechatChannel 视频号添加的场景
 type WechatChannel struct {
 	NickName string `json:"nickname"`
-	Source   string `json:"source"`
+	Source   int    `json:"source"`
 }
 
 // GetExternalUserDetail 获取外部联系人详情
