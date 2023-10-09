@@ -11,6 +11,8 @@ const (
 	getCheckinDataURL = "https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckindata?access_token=%s"
 	// getDayDataURL 获取打卡日报数据
 	getDayDataURL = "https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckin_daydata?access_token=%s"
+	// getMonthDataURL 获取打卡月报数据
+	getMonthDataURL = "https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckin_monthdata?access_token=%s"
 )
 
 type (
@@ -186,6 +188,75 @@ func (r *Client) GetDayData(req *GetCheckinDataRequest) (result *GetDayDataRespo
 
 	result = new(GetDayDataResponse)
 	if err = util.DecodeWithError(response, result, "GetDayData"); err != nil {
+		return
+	}
+	return
+}
+
+type (
+	// GetMonthDataResponse 获取打卡月报数据
+	GetMonthDataResponse struct {
+		util.CommonError
+		Datas []MonthDataItem `json:"datas"`
+	}
+
+	MonthDataItem struct {
+		BaseInfo       MonthBaseInfo    `json:"base_info"`
+		SummaryInfo    MonthSummaryInfo `json:"summary_info"`
+		ExceptionInfos []ExceptionInfo  `json:"exception_infos"`
+		SpItems        []SpItem         `json:"sp_items"`
+		OverWorkInfo   OverWorkInfo     `json:"overwork_info"`
+	}
+
+	// MonthBaseInfo 基础信息
+	MonthBaseInfo struct {
+		RecordType  int64         `json:"record_type"`
+		Name        string        `json:"name"`
+		NameEx      string        `json:"name_ex"`
+		DepartsName string        `json:"departs_name"`
+		AcctId      string        `json:"acctid"`
+		RuleInfo    MonthRuleInfo `json:"rule_info"`
+	}
+
+	// MonthRuleInfo 打卡人员所属规则信息
+	MonthRuleInfo struct {
+		GroupId   int64  `json:"groupid"`
+		GroupName string `json:"groupname"`
+	}
+
+	// MonthSummaryInfo 汇总信息
+	MonthSummaryInfo struct {
+		WorkDays        int64 `json:"work_days"`
+		ExceptDays      int64 `json:"except_days"`
+		RegularDays     int64 `json:"regular_days"`
+		RegularWorkSec  int64 `json:"regular_work_sec"`
+		StandardWorkSec int64 `json:"standard_work_sec"`
+	}
+
+	// OverWorkInfo 加班情况
+	OverWorkInfo struct {
+		WorkdayOverSec int64 `json:"workday_over_sec"`
+		HolidayOverSec int64 `json:"holidays_over_sec"`
+		RestDayOverSec int64 `json:"restdays_over_sec"`
+	}
+)
+
+// GetMonthData 获取打卡月报数据
+// @see https://developer.work.weixin.qq.com/document/path/96499
+func (r *Client) GetMonthData(req *GetCheckinDataRequest) (result *GetMonthDataResponse, err error) {
+	var (
+		response    []byte
+		accessToken string
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return
+	}
+	if response, err = util.PostJSON(fmt.Sprintf(getMonthDataURL, accessToken), req); err != nil {
+		return
+	}
+
+	result = new(GetMonthDataResponse)
+	if err = util.DecodeWithError(response, result, "GetMonthData"); err != nil {
 		return
 	}
 	return

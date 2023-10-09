@@ -120,9 +120,10 @@ host: https://qyapi.weixin.qq.com/
 
 [官方文档](https://developer.work.weixin.qq.com/document/path/96497)
 
-| 名称             | 请求方式 | URL                   | 是否已实现 | 使用方法                   | 贡献者     |
-| ---------------- | -------- | --------------------- | ---------- | -------------------------- |---------|
-| 获取打卡日报数据  | POST     |  /cgi-bin/checkin/getcheckin_daydata | YES        | (r *Client) GetDayData | Thinker |
+| 名称       | 请求方式 | URL                   | 是否已实现 | 使用方法                   | 贡献者     |
+|----------| -------- | --------------------- | ---------- | -------------------------- |---------|
+| 获取打卡日报数据 | POST     |  /cgi-bin/checkin/getcheckin_daydata | YES        | (r *Client) GetDayData | Thinker |
+| 获取打卡月报数据 | POST     |  /cgi-bin/checkin/getcheckin_monthdata | YES        | (r *Client) GetMonthData | Thinker |
 
 ## 应用管理
 TODO
