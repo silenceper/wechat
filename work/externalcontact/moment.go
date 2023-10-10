@@ -112,10 +112,8 @@ func (r *Client) AddMomentTask(req *AddMomentTaskRequest) (*AddMomentTaskRespons
 		return nil, err
 	}
 	result := &AddMomentTaskResponse{}
-	if err = util.DecodeWithError(response, result, "AddMomentTask"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "AddMomentTask")
+	return result, err
 }
 
 // GetMomentTaskResultResponse 获取任务创建结果响应
@@ -161,10 +159,8 @@ func (r *Client) GetMomentTaskResult(jobID string) (*GetMomentTaskResultResponse
 		return nil, err
 	}
 	result := &GetMomentTaskResultResponse{}
-	if err = util.DecodeWithError(response, result, "GetMomentTaskResult"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetMomentTaskResult")
+	return result, err
 }
 
 // CancelMomentTaskRequest 停止发表企业朋友圈请求
@@ -264,10 +260,8 @@ func (r *Client) GetMomentList(req *GetMomentListRequest) (*GetMomentListRespons
 		return nil, err
 	}
 	result := &GetMomentListResponse{}
-	if err = util.DecodeWithError(response, result, "GetMomentList"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetMomentList")
+	return result, err
 }
 
 // GetMomentTaskRequest 获取客户朋友圈企业发表的列表请求
@@ -305,10 +299,8 @@ func (r *Client) GetMomentTask(req *GetMomentTaskRequest) (*GetMomentTaskRespons
 		return nil, err
 	}
 	result := &GetMomentTaskResponse{}
-	if err = util.DecodeWithError(response, result, "GetMomentTask"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetMomentTask")
+	return result, err
 }
 
 // GetMomentCustomerListRequest 获取客户朋友圈发表时选择的可见范围请求
@@ -347,10 +339,8 @@ func (r *Client) GetMomentCustomerList(req *GetMomentCustomerListRequest) (*GetM
 		return nil, err
 	}
 	result := &GetMomentCustomerListResponse{}
-	if err = util.DecodeWithError(response, result, "GetMomentCustomerList"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetMomentCustomerList")
+	return result, err
 }
 
 // GetMomentSendResultRequest 获取客户朋友圈发表后的可见客户列表请求
@@ -388,10 +378,8 @@ func (r *Client) GetMomentSendResult(req *GetMomentSendResultRequest) (*GetMomen
 		return nil, err
 	}
 	result := &GetMomentSendResultResponse{}
-	if err = util.DecodeWithError(response, result, "GetMomentSendResult"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetMomentSendResult")
+	return result, err
 }
 
 // GetMomentCommentsRequest 获取客户朋友圈的互动数据请求
@@ -436,10 +424,8 @@ func (r *Client) GetMomentComments(req *GetMomentCommentsRequest) (*GetMomentCom
 		return nil, err
 	}
 	result := &GetMomentCommentsResponse{}
-	if err = util.DecodeWithError(response, result, "GetMomentComments"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetMomentComments")
+	return result, err
 }
 
 // ListMomentStrategyRequest 获取规则组列表请求
@@ -475,10 +461,8 @@ func (r *Client) ListMomentStrategy(req *ListMomentStrategyRequest) (*ListMoment
 		return nil, err
 	}
 	result := &ListMomentStrategyResponse{}
-	if err = util.DecodeWithError(response, result, "ListMomentStrategy"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "ListMomentStrategy")
+	return result, err
 }
 
 // GetMomentStrategyRequest 获取规则组详情请求
@@ -524,10 +508,8 @@ func (r *Client) GetMomentStrategy(req *GetMomentStrategyRequest) (*GetMomentStr
 		return nil, err
 	}
 	result := &GetMomentStrategyResponse{}
-	if err = util.DecodeWithError(response, result, "GetMomentStrategy"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetMomentStrategy")
+	return result, err
 }
 
 // GetRangeMomentStrategyRequest 获取规则组管理范围请求
@@ -566,10 +548,8 @@ func (r *Client) GetRangeMomentStrategy(req *GetRangeMomentStrategyRequest) (*Ge
 		return nil, err
 	}
 	result := &GetRangeMomentStrategyResponse{}
-	if err = util.DecodeWithError(response, result, "GetRangeMomentStrategy"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetRangeMomentStrategy")
+	return result, err
 }
 
 // CreateMomentStrategyRequest 创建新的规则组请求
@@ -602,10 +582,8 @@ func (r *Client) CreateMomentStrategy(req *CreateMomentStrategyRequest) (*Create
 		return nil, err
 	}
 	result := &CreateMomentStrategyResponse{}
-	if err = util.DecodeWithError(response, result, "CreateMomentStrategy"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "CreateMomentStrategy")
+	return result, err
 }
 
 // EditMomentStrategyRequest 编辑规则组及其管理范围请求

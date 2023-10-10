@@ -58,10 +58,8 @@ func (r *Client) TransferCustomer(req *TransferCustomerRequest) (*TransferCustom
 		return nil, err
 	}
 	result := &TransferCustomerResponse{}
-	if err = util.DecodeWithError(response, result, "TransferCustomer"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "TransferCustomer")
+	return result, err
 }
 
 // TransferResultRequest 查询客户接替状态请求
@@ -100,10 +98,8 @@ func (r *Client) TransferResult(req *TransferResultRequest) (*TransferResultResp
 		return nil, err
 	}
 	result := &TransferResultResponse{}
-	if err = util.DecodeWithError(response, result, "TransferResult"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "TransferResult")
+	return result, err
 }
 
 // GroupChatOnJobTransferRequest 分配在职成员的客户群请求
@@ -140,10 +136,8 @@ func (r *Client) GroupChatOnJobTransfer(req *GroupChatOnJobTransferRequest) (*Gr
 		return nil, err
 	}
 	result := &GroupChatOnJobTransferResponse{}
-	if err = util.DecodeWithError(response, result, "GroupChatOnJobTransfer"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GroupChatOnJobTransfer")
+	return result, err
 }
 
 // GetUnassignedListRequest 获取待分配的离职成员列表请求
@@ -182,10 +176,8 @@ func (r *Client) GetUnassignedList(req *GetUnassignedListRequest) (*GetUnassigne
 		return nil, err
 	}
 	result := &GetUnassignedListResponse{}
-	if err = util.DecodeWithError(response, result, "GetUnassignedList"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetUnassignedList")
+	return result, err
 }
 
 // ResignedTransferCustomerRequest 分配离职成员的客户请求
@@ -216,10 +208,8 @@ func (r *Client) ResignedTransferCustomer(req *ResignedTransferCustomerRequest) 
 		return nil, err
 	}
 	result := &ResignedTransferCustomerResponse{}
-	if err = util.DecodeWithError(response, result, "ResignedTransferCustomer"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "ResignedTransferCustomer")
+	return result, err
 }
 
 // ResignedTransferResultRequest 查询离职客户接替状态请求
@@ -251,10 +241,8 @@ func (r *Client) ResignedTransferResult(req *ResignedTransferResultRequest) (*Re
 		return nil, err
 	}
 	result := &ResignedTransferResultResponse{}
-	if err = util.DecodeWithError(response, result, "ResignedTransferResult"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "ResignedTransferResult")
+	return result, err
 }
 
 // GroupChatTransferRequest 分配离职成员的客户群请求
@@ -284,8 +272,6 @@ func (r *Client) GroupChatTransfer(req *GroupChatTransferRequest) (*GroupChatTra
 		return nil, err
 	}
 	result := &GroupChatTransferResponse{}
-	if err = util.DecodeWithError(response, result, "GroupChatTransfer"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GroupChatTransfer")
+	return result, err
 }

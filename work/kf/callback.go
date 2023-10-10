@@ -92,8 +92,6 @@ func (r *Client) GetCallbackMessage(encryptedMsg []byte) (msg CallbackMessage, e
 	if err != nil {
 		return msg, NewSDKErr(40016)
 	}
-	if err = xml.Unmarshal(bData, &msg); err != nil {
-		return msg, err
-	}
+	err = xml.Unmarshal(bData, &msg)
 	return msg, err
 }

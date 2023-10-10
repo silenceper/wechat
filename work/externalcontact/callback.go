@@ -38,8 +38,6 @@ func (r *Client) GetCallbackMessage(encryptedMsg []byte) (msg EventCallbackMessa
 	if err != nil {
 		return
 	}
-	if err = xml.Unmarshal(bData, &msg); err != nil {
-		return
-	}
+	err = xml.Unmarshal(bData, &msg)
 	return
 }
