@@ -80,10 +80,8 @@ func (r *Client) DepartmentCreate(req *DepartmentCreateRequest) (*DepartmentCrea
 		return nil, err
 	}
 	result := &DepartmentCreateResponse{}
-	if err = util.DecodeWithError(response, result, "DepartmentCreate"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "DepartmentCreate")
+	return result, err
 }
 
 // DepartmentSimpleList 获取子部门ID列表
@@ -101,10 +99,8 @@ func (r *Client) DepartmentSimpleList(departmentID int) ([]*DepartmentID, error)
 		return nil, err
 	}
 	result := &DepartmentSimpleListResponse{}
-	if err = util.DecodeWithError(response, result, "DepartmentSimpleList"); err != nil {
-		return nil, err
-	}
-	return result.DepartmentID, nil
+	err = util.DecodeWithError(response, result, "DepartmentSimpleList")
+	return result.DepartmentID, err
 }
 
 // DepartmentList 获取部门列表
@@ -122,9 +118,7 @@ func (r *Client) DepartmentList() ([]*Department, error) {
 	}
 	// 按照结构体解析返回值
 	result := &DepartmentListResponse{}
-	if err = util.DecodeWithError(response, result, "DepartmentList"); err != nil {
-		return nil, err
-	}
+	err = util.DecodeWithError(response, result, "DepartmentList")
 	// 返回数据
 	return result.Department, err
 }
@@ -144,8 +138,6 @@ func (r *Client) DepartmentGet(departmentID int) (*Department, error) {
 		return nil, err
 	}
 	result := &DepartmentGetResponse{}
-	if err = util.DecodeWithError(response, result, "DepartmentGet"); err != nil {
-		return nil, err
-	}
-	return &result.Department, nil
+	err = util.DecodeWithError(response, result, "DepartmentGet")
+	return &result.Department, err
 }

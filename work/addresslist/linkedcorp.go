@@ -41,10 +41,8 @@ func (r *Client) GetPermList() (*GetPermListResponse, error) {
 		return nil, err
 	}
 	result := &GetPermListResponse{}
-	if err = util.DecodeWithError(response, result, "GetPermList"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetPermList")
+	return result, err
 }
 
 // GetLinkedCorpUserRequest 获取互联企业成员详细信息请求
@@ -111,10 +109,8 @@ func (r *Client) GetLinkedCorpUser(req *GetLinkedCorpUserRequest) (*GetLinkedCor
 		return nil, err
 	}
 	result := &GetLinkedCorpUserResponse{}
-	if err = util.DecodeWithError(response, result, "GetLinkedCorpUser"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetLinkedCorpUser")
+	return result, err
 }
 
 // LinkedCorpSimpleListRequest 获取互联企业部门成员请求
@@ -151,10 +147,8 @@ func (r *Client) LinkedCorpSimpleList(req *LinkedCorpSimpleListRequest) (*Linked
 		return nil, err
 	}
 	result := &LinkedCorpSimpleListResponse{}
-	if err = util.DecodeWithError(response, result, "LinkedCorpSimpleList"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "LinkedCorpSimpleList")
+	return result, err
 }
 
 // LinkedCorpUserListRequest 获取互联企业部门成员详情请求
@@ -183,10 +177,8 @@ func (r *Client) LinkedCorpUserList(req *LinkedCorpUserListRequest) (*LinkedCorp
 		return nil, err
 	}
 	result := &LinkedCorpUserListResponse{}
-	if err = util.DecodeWithError(response, result, "LinkedCorpUserList"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "LinkedCorpUserList")
+	return result, err
 }
 
 // LinkedCorpDepartmentListRequest 获取互联企业部门列表请求
@@ -223,8 +215,6 @@ func (r *Client) LinkedCorpDepartmentList(req *LinkedCorpDepartmentListRequest) 
 		return nil, err
 	}
 	result := &LinkedCorpDepartmentListResponse{}
-	if err = util.DecodeWithError(response, result, "LinkedCorpDepartmentList"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "LinkedCorpDepartmentList")
+	return result, err
 }
