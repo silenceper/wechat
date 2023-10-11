@@ -18,11 +18,11 @@ import (
 type ConfirmReceiveMethod int8
 
 const (
-	// EventTypeTradeManageRemindAccessAPI 提醒接入发货信息管理服务API
+	// EventTypeTradeManageRemindAccessAPI 提醒接入发货信息管理服务 API
 	// 小程序完成账期授权时/小程序产生第一笔交易时/已产生交易但从未发货的小程序，每天一次
 	EventTypeTradeManageRemindAccessAPI EventType = "trade_manage_remind_access_api"
 	// EventTypeTradeManageRemindShipping 提醒需要上传发货信息
-	// 曾经发过货的小程序，订单超过48小时未发货时
+	// 曾经发过货的小程序，订单超过 48 小时未发货时
 	EventTypeTradeManageRemindShipping EventType = "trade_manage_remind_shipping"
 	// EventTypeTradeManageOrderSettlement 订单将要结算或已经结算
 	// 订单完成发货时/订单结算时
@@ -39,14 +39,27 @@ const (
 	EventTypeXpayGoodsDeliverNotify EventType = "xpay_goods_deliver_notify"
 	// EventTypeXpayCoinPayNotify 代币支付推送事件
 	EventTypeXpayCoinPayNotify EventType = "xpay_coin_pay_notify"
+	// EventSubscribePopup 用户操作订阅通知弹窗事件推送，用户在图文等场景内订阅通知的操作
+	EventSubscribePopup EventType = "subscribe_msg_popup_event"
+	// EventSubscribeMsgChange 用户管理订阅通知，用户在服务通知管理页面做通知管理时的操作
+	EventSubscribeMsgChange EventType = "subscribe_msg_change_event"
+	// EventSubscribeMsgSent 发送订阅通知，调用 bizsend 接口发送通知
+	EventSubscribeMsgSent EventType = "subscribe_msg_sent_event"
 	// ConfirmReceiveMethodAuto 自动确认收货
 	ConfirmReceiveMethodAuto ConfirmReceiveMethod = 1
 	// ConfirmReceiveMethodManual 手动确认收货
 	ConfirmReceiveMethodManual ConfirmReceiveMethod = 2
 )
 
+const (
+	// InfoTypeAcceptSubscribeMessage 接受订阅通知
+	InfoTypeAcceptSubscribeMessage InfoType = "accept"
+	// InfoTypeRejectSubscribeMessage 拒绝订阅通知
+	InfoTypeRejectSubscribeMessage InfoType = "reject"
+)
+
 // PushReceiver 接收消息推送
-// 暂仅支付Aes加密方式
+// 暂仅支付 Aes 加密方式
 type PushReceiver struct {
 	*context.Context
 }
@@ -58,16 +71,16 @@ func NewPushReceiver(ctx *context.Context) *PushReceiver {
 	}
 }
 
-// GetMsg 获取接收到的消息(如果是加密的返回解密数据)
+// GetMsg 获取接收到的消息 (如果是加密的返回解密数据)
 func (receiver *PushReceiver) GetMsg(r *http.Request) (string, []byte, error) {
 	// 判断请求格式
 	var dataType string
 	contentType := r.Header.Get("Content-Type")
 	if strings.HasPrefix(contentType, "text/xml") {
-		// xml格式
+		// xml 格式
 		dataType = DataTypeXML
 	} else {
-		// json格式
+		// json 格式
 		dataType = DataTypeJSON
 	}
 
@@ -108,7 +121,7 @@ func (receiver *PushReceiver) GetMsg(r *http.Request) (string, []byte, error) {
 	return dataType, byteData, err
 }
 
-// GetMsgData 获取接收到的消息(解密数据)
+// GetMsgData 获取接收到的消息 (解密数据)
 func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, PushData, error) {
 	dataType, decryptMsg, err := receiver.GetMsg(r)
 	if err != nil {
@@ -144,7 +157,7 @@ func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, P
 func (receiver *PushReceiver) getEvent(dataType string, eventType EventType, decryptMsg []byte) (PushData, error) {
 	switch eventType {
 	case EventTypeTradeManageRemindAccessAPI:
-		// 提醒接入发货信息管理服务API
+		// 提醒接入发货信息管理服务 API
 		var pushData PushDataRemindAccessAPI
 		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
 		return &pushData, err
@@ -188,6 +201,21 @@ func (receiver *PushReceiver) getEvent(dataType string, eventType EventType, dec
 		var pushData PushDataXpayCoinPayNotify
 		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
 		return &pushData, err
+	case EventSubscribePopup:
+		// 用户操作订阅通知弹窗事件推送
+		var pushData PushDataSubscribePopup
+		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
+		return &pushData, err
+	case EventSubscribeMsgChange:
+		// 用户管理订阅通知事件推送
+		var pushData PushDataSubscribeMsgChange
+		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
+		return &pushData, err
+	case EventSubscribeMsgSent:
+		// 用户发送订阅通知事件推送
+		var pushData PushDataSubscribeMsgSent
+		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
+		return &pushData, err
 	}
 	// 暂不支持其他事件类型，直接返回解密后的数据，由调用方处理
 	return decryptMsg, nil
@@ -206,7 +234,7 @@ type DataReceived struct {
 	Encrypt string `json:"Encrypt" xml:"Encrypt"` // 加密的消息体
 }
 
-// PushData 推送的数据(已转对应的结构体)
+// PushData 推送的数据 (已转对应的结构体)
 type PushData interface{}
 
 // CommonPushData 推送数据通用部分
@@ -216,7 +244,7 @@ type CommonPushData struct {
 	Event        EventType `json:"Event" xml:"Event"`               // 事件类型
 	ToUserName   string    `json:"ToUserName" xml:"ToUserName"`     // 小程序的原始 ID
 	FromUserName string    `json:"FromUserName" xml:"FromUserName"` // 发送方账号（一个 OpenID，此时发送方是系统账号）
-	CreateTime   int64     `json:"CreateTime" xml:"CreateTime"`     // 消息创建时间 （整型），时间戳
+	CreateTime   int64     `json:"CreateTime" xml:"CreateTime"`     // 消息创建时间（整型），时间戳
 }
 
 // MediaCheckAsyncData 媒体内容安全异步审查结果通知
@@ -272,7 +300,7 @@ type PushDataRemindShipping struct {
 	Msg             string `json:"msg" xml:"msg"`                             // 消息文本内容
 }
 
-// PushDataRemindAccessAPI 提醒接入发货信息管理服务API信息
+// PushDataRemindAccessAPI 提醒接入发货信息管理服务 API 信息
 type PushDataRemindAccessAPI struct {
 	CommonPushData
 	Msg string `json:"msg" xml:"msg"` // 消息文本内容
@@ -281,9 +309,9 @@ type PushDataRemindAccessAPI struct {
 // PushDataAddExpressPath 运单轨迹更新信息
 type PushDataAddExpressPath struct {
 	CommonPushData
-	DeliveryID string                          `json:"DeliveryID" xml:"DeliveryID"` // 快递公司ID
-	WayBillID  string                          `json:"WaybillId" xml:"WaybillId"`   // 运单ID
-	OrderID    string                          `json:"OrderId" xml:"OrderId"`       // 订单ID
+	DeliveryID string                          `json:"DeliveryID" xml:"DeliveryID"` // 快递公司 ID
+	WayBillID  string                          `json:"WaybillId" xml:"WaybillId"`   // 运单 ID
+	OrderID    string                          `json:"OrderId" xml:"OrderId"`       // 订单 ID
 	Version    int                             `json:"Version" xml:"Version"`       // 轨迹版本号（整型）
 	Count      int                             `json:"Count" xml:"Count"`           // 轨迹节点数（整型）
 	Actions    []*PushDataAddExpressPathAction `json:"Actions" xml:"Actions"`       // 轨迹节点列表
@@ -304,10 +332,10 @@ type PushDataSecVodUpload struct {
 
 // SecVodUploadEvent 短剧媒资上传完成事件
 type SecVodUploadEvent struct {
-	MediaID       string `json:"media_id" xml:"media_id"`             // 媒资id
+	MediaID       string `json:"media_id" xml:"media_id"`             // 媒资 id
 	SourceContext string `json:"source_context" xml:"source_context"` // 透传上传接口中开发者设置的值。
-	Errcode       int    `json:"errcode" xml:"errcode"`               // 错误码，上传失败时该值非
-	Errmsg        string `json:"errmsg" xml:"errmsg"`                 // 错误提示
+	ErrCode       int    `json:"errcode" xml:"errcode"`               // 错误码，上传失败时该值非
+	ErrMsg        string `json:"errmsg" xml:"errmsg"`                 // 错误提示
 }
 
 // PushDataSecVodAudit 短剧媒资审核状态
@@ -318,14 +346,14 @@ type PushDataSecVodAudit struct {
 
 // SecVodAuditEvent 短剧媒资审核状态事件
 type SecVodAuditEvent struct {
-	DramaID       string           `json:"drama_id" xml:"drama_id"`             // 剧目id
+	DramaID       string           `json:"drama_id" xml:"drama_id"`             // 剧目 id
 	SourceContext string           `json:"source_context" xml:"source_context"` // 透传上传接口中开发者设置的值
-	AuditDetail   DramaAuditDetail `json:"audit_detail" xml:"audit_detail"`     // 剧目审核结果，单独每一集的审核结果可以根据drama_id查询剧集详情得到
+	AuditDetail   DramaAuditDetail `json:"audit_detail" xml:"audit_detail"`     // 剧目审核结果，单独每一集的审核结果可以根据 drama_id 查询剧集详情得到
 }
 
 // DramaAuditDetail 剧目审核结果
 type DramaAuditDetail struct {
-	Status     int   `json:"status" xml:"status"`           // 审核状态，0为无效值；1为审核中；2为最终失败；3为审核通过；4为驳回重填
+	Status     int   `json:"status" xml:"status"`           // 审核状态，0 为无效值；1 为审核中；2 为最终失败；3 为审核通过；4 为驳回重填
 	CreateTime int64 `json:"create_time" xml:"create_time"` // 提审时间戳
 	AuditTime  int64 `json:"audit_time" xml:"audit_time"`   // 审核时间戳
 }
@@ -333,9 +361,9 @@ type DramaAuditDetail struct {
 // PushDataXpayGoodsDeliverNotify 道具发货推送
 type PushDataXpayGoodsDeliverNotify struct {
 	CommonPushData
-	OpenID        string        `json:"OpenId" xml:"OpenId"`               // 用户openid
+	OpenID        string        `json:"OpenId" xml:"OpenId"`               // 用户 openid
 	OutTradeNo    string        `json:"OutTradeNo" xml:"OutTradeNo"`       // 业务订单号
-	Env           int           `json:"Env" xml:"Env"`                     //，环境配置 0：现网环境（也叫正式环境）1：沙箱环境
+	Env           int           `json:"Env" xml:"Env"`                     // ，环境配置 0：现网环境（也叫正式环境）1：沙箱环境
 	WeChatPayInfo WeChatPayInfo `json:"WeChatPayInfo" xml:"WeChatPayInfo"` // 微信支付信息 非微信支付渠道可能没有
 	GoodsInfo     GoodsInfo     `json:"GoodsInfo" xml:"GoodsInfo"`         // 道具参数信息
 }
@@ -344,14 +372,14 @@ type PushDataXpayGoodsDeliverNotify struct {
 type WeChatPayInfo struct {
 	MchOrderNo    string `json:"MchOrderNo" xml:"MchOrderNo"`       // 微信支付商户单号
 	TransactionID string `json:"TransactionId" xml:"TransactionId"` // 交易单号（微信支付订单号）
-	PaidTime      int64  `json:"PaidTime" xml:"PaidTime"`           // 用户支付时间，Linux秒级时间戳
+	PaidTime      int64  `json:"PaidTime" xml:"PaidTime"`           // 用户支付时间，Linux 秒级时间戳
 }
 
 // GoodsInfo 道具参数信息
 type GoodsInfo struct {
-	ProductID   string `json:"ProductId" xml:"ProductId"`     // 道具ID
+	ProductID   string `json:"ProductId" xml:"ProductId"`     // 道具 ID
 	Quantity    int    `json:"Quantity" xml:"Quantity"`       // 数量
-	OrigPrice   int64  `json:"OrigPrice" xml:"OrigPrice"`     // 物品原始价格 （单位：分）
+	OrigPrice   int64  `json:"OrigPrice" xml:"OrigPrice"`     // 物品原始价格（单位：分）
 	ActualPrice int64  `json:"ActualPrice" xml:"ActualPrice"` // 物品实际支付价格（单位：分）
 	Attach      string `json:"Attach" xml:"Attach"`           // 透传信息
 }
@@ -359,9 +387,9 @@ type GoodsInfo struct {
 // PushDataXpayCoinPayNotify 代币支付推送
 type PushDataXpayCoinPayNotify struct {
 	CommonPushData
-	OpenID        string        `json:"OpenId" xml:"OpenId"`               // 用户openid
+	OpenID        string        `json:"OpenId" xml:"OpenId"`               // 用户 openid
 	OutTradeNo    string        `json:"OutTradeNo" xml:"OutTradeNo"`       // 业务订单号
-	Env           int           `json:"Env" xml:"Env"`                     //，环境配置 0：现网环境（也叫正式环境）1：沙箱环境
+	Env           int           `json:"Env" xml:"Env"`                     // ，环境配置 0：现网环境（也叫正式环境）1：沙箱环境
 	WeChatPayInfo WeChatPayInfo `json:"WeChatPayInfo" xml:"WeChatPayInfo"` // 微信支付信息 非微信支付渠道可能没有
 	CoinInfo      CoinInfo      `json:"CoinInfo" xml:"CoinInfo"`           // 代币参数信息
 }
@@ -369,7 +397,47 @@ type PushDataXpayCoinPayNotify struct {
 // CoinInfo 代币参数信息
 type CoinInfo struct {
 	Quantity    int    `json:"Quantity" xml:"Quantity"`       // 数量
-	OrigPrice   int64  `json:"OrigPrice" xml:"OrigPrice"`     // 物品原始价格 （单位：分）
+	OrigPrice   int64  `json:"OrigPrice" xml:"OrigPrice"`     // 物品原始价格（单位：分）
 	ActualPrice int64  `json:"ActualPrice" xml:"ActualPrice"` // 物品实际支付价格（单位：分）
 	Attach      string `json:"Attach" xml:"Attach"`           // 透传信息
+}
+
+// PushDataSubscribePopup 用户操作订阅通知弹窗事件推送
+type PushDataSubscribePopup struct {
+	CommonPushData
+	SubscribeMsgPopupEvent SubscribeMsgPopupEvent `json:"SubscribeMsgPopup" xml:"SubscribeMsgPopup"` // 用户操作订阅通知弹窗消息回调
+}
+
+// SubscribeMsgPopupEvent 用户操作订阅通知弹窗消息回调
+type SubscribeMsgPopupEvent struct {
+	List []SubscribeMessageList `xml:"List" json:"List"`
+}
+
+// PushDataSubscribeMsgChange 用户管理订阅通知事件推送
+type PushDataSubscribeMsgChange struct {
+	CommonPushData
+	SubscribeMsgChangeEvent SubscribeMsgChangeEvent `json:"SubscribeMsgChangeEvent" xml:"SubscribeMsgChangeEvent"` // 用户管理订阅通知回调
+}
+
+// SubscribeMsgChangeEvent 用户管理订阅通知回调
+type SubscribeMsgChangeEvent struct {
+	List []SubscribeMessageList `xml:"List" json:"List"`
+}
+
+// PushDataSubscribeMsgSent 用户发送订阅通知事件推送
+type PushDataSubscribeMsgSent struct {
+	CommonPushData
+	SubscribeMsgSentEvent SubscribeMsgSentEvent `json:"SubscribeMsgSentEvent" xml:"SubscribeMsgSentEvent"` // 用户发送订阅通知回调
+}
+
+// SubscribeMsgSentEvent 用户发送订阅通知回调
+type SubscribeMsgSentEvent struct {
+	List []SubscribeMessageList `xml:"List"`
+}
+
+// SubscribeMessageList 订阅消息事件列表
+type SubscribeMessageList struct {
+	TemplateID            string `xml:"TemplateId" json:"TemplateId"`
+	SubscribeStatusString string `xml:"SubscribeStatusString" json:"SubscribeStatusString"`
+	PopupScene            string `xml:"PopupScene" json:"PopupScene"`
 }

@@ -28,7 +28,7 @@ type MediaText struct {
 	Content string `json:"content"`
 }
 
-// MediaResource  消息使用的临时素材id
+// MediaResource  消息使用的临时素材 id
 type MediaResource struct {
 	MediaID string `json:"media_id"`
 }
@@ -51,7 +51,7 @@ type MediaLink struct {
 
 // CustomerMessage  客服消息
 type CustomerMessage struct {
-	ToUser          string                `json:"touser"`                    // 接受者OpenID
+	ToUser          string                `json:"touser"`                    // 接受者 OpenID
 	Msgtype         MsgType               `json:"msgtype"`                   // 客服消息类型
 	Text            *MediaText            `json:"text,omitempty"`            // 可选
 	Image           *MediaResource        `json:"image,omitempty"`           // 可选

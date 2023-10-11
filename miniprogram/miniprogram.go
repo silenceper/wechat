@@ -15,7 +15,6 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/order"
 	"github.com/silenceper/wechat/v2/miniprogram/privacy"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
-	"github.com/silenceper/wechat/v2/miniprogram/server"
 	"github.com/silenceper/wechat/v2/miniprogram/riskcontrol"
 	"github.com/silenceper/wechat/v2/miniprogram/security"
 	"github.com/silenceper/wechat/v2/miniprogram/shortlink"
@@ -25,7 +24,6 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/urlscheme"
 	"github.com/silenceper/wechat/v2/miniprogram/virtualpayment"
 	"github.com/silenceper/wechat/v2/miniprogram/werun"
-	"net/http"
 )
 
 // MiniProgram 微信小程序相关 API
@@ -101,14 +99,6 @@ func (miniProgram *MiniProgram) GetCustomerMessage() *message.Manager {
 // GetWeRun 微信运动接口
 func (miniProgram *MiniProgram) GetWeRun() *werun.WeRun {
 	return werun.NewWeRun(miniProgram.ctx)
-}
-
-// GetServer 小程序微信回调处理，接收事件，回复消息管理
-func (miniProgram *MiniProgram) GetServer(req *http.Request, write http.ResponseWriter) *server.Server {
-	srv := server.NewServer(miniProgram.ctx)
-	srv.Request = req
-	srv.Write = write
-	return srv
 }
 
 // GetContentSecurity 内容安全接口
