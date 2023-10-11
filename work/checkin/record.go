@@ -67,7 +67,7 @@ func (r *Client) GetCheckinData(req *GetCheckinDataRequest) (*GetCheckinDataResp
 	}
 	result := &GetCheckinDataResponse{}
 	err = util.DecodeWithError(response, result, "GetCheckinData")
-	return result, nil
+	return result, err
 }
 
 type (
