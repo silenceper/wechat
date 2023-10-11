@@ -123,10 +123,8 @@ func (ctr *Oauth) GetUserInfo(code string) (*GetUserInfoResponse, error) {
 		return nil, err
 	}
 	result := &GetUserInfoResponse{}
-	if err = util.DecodeWithError(response, result, "GetUserInfo"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetUserInfo")
+	return result, err
 }
 
 // GetUserDetailRequest 获取访问用户敏感信息请求
@@ -162,8 +160,6 @@ func (ctr *Oauth) GetUserDetail(req *GetUserDetailRequest) (*GetUserDetailRespon
 		return nil, err
 	}
 	result := &GetUserDetailResponse{}
-	if err = util.DecodeWithError(response, result, "GetUserDetail"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetUserDetail")
+	return result, err
 }

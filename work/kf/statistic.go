@@ -59,10 +59,8 @@ func (r *Client) GetCorpStatistic(req *GetCorpStatisticRequest) (*GetCorpStatist
 		return nil, err
 	}
 	result := &GetCorpStatisticResponse{}
-	if err = util.DecodeWithError(response, result, "GetCorpStatistic"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetCorpStatistic")
+	return result, err
 }
 
 // GetServicerStatisticRequest 获取「客户数据统计」接待人员明细数据请求
@@ -120,8 +118,6 @@ func (r *Client) GetServicerStatistic(req *GetServicerStatisticRequest) (*GetSer
 		return nil, err
 	}
 	result := &GetServicerStatisticResponse{}
-	if err = util.DecodeWithError(response, result, "GetServicerStatistic"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetServicerStatistic")
+	return result, err
 }

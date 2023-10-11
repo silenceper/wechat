@@ -60,10 +60,7 @@ func (r *Client) GetUserBehaviorData(req *GetUserBehaviorRequest) ([]BehaviorDat
 	}
 	var result GetUserBehaviorResponse
 	err = util.DecodeWithError(response, &result, "GetUserBehaviorData")
-	if err != nil {
-		return nil, err
-	}
-	return result.BehaviorData, nil
+	return result.BehaviorData, err
 }
 
 type (
@@ -126,10 +123,7 @@ func (r *Client) GetGroupChatStat(req *GetGroupChatStatRequest) (*GetGroupChatSt
 	}
 	result := &GetGroupChatStatResponse{}
 	err = util.DecodeWithError(response, result, "GetGroupChatStat")
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return result, err
 }
 
 type (
@@ -169,8 +163,5 @@ func (r *Client) GetGroupChatStatByDay(req *GetGroupChatStatByDayRequest) ([]Get
 	}
 	var result GetGroupChatStatByDayResponse
 	err = util.DecodeWithError(response, &result, "GetGroupChatStatByDay")
-	if err != nil {
-		return nil, err
-	}
-	return result.Items, nil
+	return result.Items, err
 }

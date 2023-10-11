@@ -54,10 +54,8 @@ func (r *Client) ListLink(req *ListLinkRequest) (*ListLinkResponse, error) {
 		return nil, err
 	}
 	result := &ListLinkResponse{}
-	if err = util.DecodeWithError(response, result, "ListLink"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "ListLink")
+	return result, err
 }
 
 type (
@@ -102,10 +100,8 @@ func (r *Client) GetCustomerAcquisition(req *GetCustomerAcquisitionRequest) (*Ge
 		return nil, err
 	}
 	result := &GetCustomerAcquisitionResponse{}
-	if err = util.DecodeWithError(response, result, "GetCustomerAcquisition"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetCustomerAcquisition")
+	return result, err
 }
 
 type (
@@ -137,10 +133,8 @@ func (r *Client) CreateCustomerAcquisitionLink(req *CreateCustomerAcquisitionLin
 		return nil, err
 	}
 	result := &CreateCustomerAcquisitionLinkResponse{}
-	if err = util.DecodeWithError(response, result, "CreateCustomerAcquisitionLink"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "CreateCustomerAcquisitionLink")
+	return result, err
 }
 
 type (
@@ -172,10 +166,8 @@ func (r *Client) UpdateCustomerAcquisitionLink(req *UpdateCustomerAcquisitionLin
 		return nil, err
 	}
 	result := &UpdateCustomerAcquisitionLinkResponse{}
-	if err = util.DecodeWithError(response, result, "UpdateCustomerAcquisitionLink"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "UpdateCustomerAcquisitionLink")
+	return result, err
 }
 
 type (
@@ -204,10 +196,8 @@ func (r *Client) DeleteCustomerAcquisitionLink(req *DeleteCustomerAcquisitionLin
 		return nil, err
 	}
 	result := &DeleteCustomerAcquisitionLinkResponse{}
-	if err = util.DecodeWithError(response, result, "DeleteCustomerAcquisitionLink"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "DeleteCustomerAcquisitionLink")
+	return result, err
 }
 
 type (
@@ -247,10 +237,8 @@ func (r *Client) GetCustomerInfoWithCustomerAcquisitionLink(req *GetCustomerInfo
 		return nil, err
 	}
 	result := &GetCustomerInfoWithCustomerAcquisitionLinkResponse{}
-	if err = util.DecodeWithError(response, result, "GetCustomerInfoWithCustomerAcquisitionLink"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetCustomerInfoWithCustomerAcquisitionLink")
+	return result, err
 }
 
 type (
@@ -279,14 +267,12 @@ func (r *Client) CustomerAcquisitionQuota() (*CustomerAcquisitionQuotaResponse, 
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.HTTPGet((fmt.Sprintf(customerAcquisitionQuotaURL, accessToken))); err != nil {
+	if response, err = util.HTTPGet(fmt.Sprintf(customerAcquisitionQuotaURL, accessToken)); err != nil {
 		return nil, err
 	}
 	result := &CustomerAcquisitionQuotaResponse{}
-	if err = util.DecodeWithError(response, result, "CustomerAcquisitionQuota"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "CustomerAcquisitionQuota")
+	return result, err
 }
 
 type (
@@ -319,8 +305,6 @@ func (r *Client) CustomerAcquisitionStatistic(req *CustomerAcquisitionStatisticR
 		return nil, err
 	}
 	result := &CustomerAcquisitionStatisticResponse{}
-	if err = util.DecodeWithError(response, result, "CustomerAcquisitionStatistic"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "CustomerAcquisitionStatistic")
+	return result, err
 }

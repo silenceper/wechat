@@ -77,10 +77,7 @@ func (r *Client) GetCropTagList(req GetCropTagRequest) ([]TagGroup, error) {
 	}
 	var result GetCropTagListResponse
 	err = util.DecodeWithError(response, &result, "GetCropTagList")
-	if err != nil {
-		return nil, err
-	}
-	return result.TagGroup, nil
+	return result.TagGroup, err
 }
 
 // AddCropTagRequest 添加企业标签请求
@@ -123,10 +120,7 @@ func (r *Client) AddCropTag(req AddCropTagRequest) (*TagGroup, error) {
 	}
 	var result AddCropTagResponse
 	err = util.DecodeWithError(response, &result, "AddCropTag")
-	if err != nil {
-		return nil, err
-	}
-	return &result.TagGroup, nil
+	return &result.TagGroup, err
 }
 
 // EditCropTagRequest 编辑客户企业标签请求
@@ -256,10 +250,8 @@ func (r *Client) GetStrategyTagList(req *GetStrategyTagListRequest) (*GetStrateg
 		return nil, err
 	}
 	result := &GetStrategyTagListResponse{}
-	if err = util.DecodeWithError(response, result, "GetStrategyTagList"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetStrategyTagList")
+	return result, err
 }
 
 // AddStrategyTagRequest 为指定规则组创建企业客户标签请求
@@ -315,10 +307,8 @@ func (r *Client) AddStrategyTag(req *AddStrategyTagRequest) (*AddStrategyTagResp
 		return nil, err
 	}
 	result := &AddStrategyTagResponse{}
-	if err = util.DecodeWithError(response, result, "AddStrategyTag"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "AddStrategyTag")
+	return result, err
 }
 
 // EditStrategyTagRequest 编辑指定规则组下的企业客户标签请求

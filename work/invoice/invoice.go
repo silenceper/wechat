@@ -86,10 +86,8 @@ func (r *Client) GetInvoiceInfo(req *GetInvoiceInfoRequest) (*GetInvoiceInfoResp
 		return nil, err
 	}
 	result := &GetInvoiceInfoResponse{}
-	if err = util.DecodeWithError(response, result, "GetInvoiceInfo"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetInvoiceInfo")
+	return result, err
 }
 
 // UpdateInvoiceStatusRequest 更新发票状态请求
@@ -184,8 +182,6 @@ func (r *Client) GetInvoiceInfoBatch(req *GetInvoiceInfoBatchRequest) (*GetInvoi
 		return nil, err
 	}
 	result := &GetInvoiceInfoBatchResponse{}
-	if err = util.DecodeWithError(response, result, "GetInvoiceInfoBatch"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetInvoiceInfoBatch")
+	return result, err
 }
