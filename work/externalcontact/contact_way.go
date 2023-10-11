@@ -102,10 +102,8 @@ func (r *Client) AddContactWay(req *AddContactWayRequest) (*AddContactWayRespons
 		return nil, err
 	}
 	result := &AddContactWayResponse{}
-	if err = util.DecodeWithError(response, result, "AddContactWay"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "AddContactWay")
+	return result, err
 }
 
 type (
@@ -153,10 +151,8 @@ func (r *Client) GetContactWay(req *GetContactWayRequest) (*GetContactWayRespons
 		return nil, err
 	}
 	result := &GetContactWayResponse{}
-	if err = util.DecodeWithError(response, result, "GetContactWay"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetContactWay")
+	return result, err
 }
 
 type (
@@ -195,10 +191,8 @@ func (r *Client) UpdateContactWay(req *UpdateContactWayRequest) (*UpdateContactW
 		return nil, err
 	}
 	result := &UpdateContactWayResponse{}
-	if err = util.DecodeWithError(response, result, "UpdateContactWay"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "UpdateContactWay")
+	return result, err
 }
 
 type (
@@ -236,10 +230,8 @@ func (r *Client) ListContactWay(req *ListContactWayRequest) (*ListContactWayResp
 		return nil, err
 	}
 	result := &ListContactWayResponse{}
-	if err = util.DecodeWithError(response, result, "ListContactWay"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "ListContactWay")
+	return result, err
 }
 
 type (
@@ -268,8 +260,6 @@ func (r *Client) DelContactWay(req *DelContactWayRequest) (*DelContactWayRespons
 		return nil, err
 	}
 	result := &DelContactWayResponse{}
-	if err = util.DecodeWithError(response, result, "DelContactWay"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "DelContactWay")
+	return result, err
 }

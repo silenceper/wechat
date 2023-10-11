@@ -61,10 +61,7 @@ func (r *Client) UserSimpleList(departmentID int) ([]*UserList, error) {
 	}
 	result := &UserSimpleListResponse{}
 	err = util.DecodeWithError(response, result, "UserSimpleList")
-	if err != nil {
-		return nil, err
-	}
-	return result.UserList, nil
+	return result.UserList, err
 }
 
 type (
@@ -153,10 +150,8 @@ func (r *Client) UserCreate(req *UserCreateRequest) (*UserCreateResponse, error)
 		return nil, err
 	}
 	result := &UserCreateResponse{}
-	if err = util.DecodeWithError(response, result, "UserCreate"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "UserCreate")
+	return result, err
 }
 
 // UserGetResponse 获取部门成员响应
@@ -245,10 +240,7 @@ func (r *Client) UserGet(UserID string) (*UserGetResponse, error) {
 	}
 	result := &UserGetResponse{}
 	err = util.DecodeWithError(response, result, "UserGet")
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return result, err
 }
 
 type (
@@ -279,10 +271,8 @@ func (r *Client) UserDelete(userID string) (*UserDeleteResponse, error) {
 		return nil, err
 	}
 	result := &UserDeleteResponse{}
-	if err = util.DecodeWithError(response, result, "UserDelete"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "UserDelete")
+	return result, err
 }
 
 // UserListIDRequest 获取成员ID列表请求
@@ -324,10 +314,8 @@ func (r *Client) UserListID(req *UserListIDRequest) (*UserListIDResponse, error)
 		return nil, err
 	}
 	result := &UserListIDResponse{}
-	if err = util.DecodeWithError(response, result, "UserListID"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "UserListID")
+	return result, err
 }
 
 type (
@@ -366,10 +354,8 @@ func (r *Client) ConvertToOpenID(userID string) (string, error) {
 		return "", err
 	}
 	result := &convertToOpenIDResponse{}
-	if err = util.DecodeWithError(response, result, "ConvertToOpenID"); err != nil {
-		return "", err
-	}
-	return result.OpenID, nil
+	err = util.DecodeWithError(response, result, "ConvertToOpenID")
+	return result.OpenID, err
 }
 
 type (
@@ -408,8 +394,6 @@ func (r *Client) ConvertToUserID(openID string) (string, error) {
 		return "", err
 	}
 	result := &convertToUserIDResponse{}
-	if err = util.DecodeWithError(response, result, "ConvertToUserID"); err != nil {
-		return "", err
-	}
-	return result.UserID, nil
+	err = util.DecodeWithError(response, result, "ConvertToUserID")
+	return result.UserID, err
 }

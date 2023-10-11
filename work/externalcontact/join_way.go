@@ -44,10 +44,8 @@ func (r *Client) AddJoinWay(req *AddJoinWayRequest) (*AddJoinWayResponse, error)
 		return nil, err
 	}
 	result := &AddJoinWayResponse{}
-	if err = util.DecodeWithError(response, result, "AddJoinWay"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "AddJoinWay")
+	return result, err
 }
 
 type (
@@ -91,10 +89,8 @@ func (r *Client) GetJoinWay(req *JoinWayConfigRequest) (*GetJoinWayResponse, err
 		return nil, err
 	}
 	result := &GetJoinWayResponse{}
-	if err = util.DecodeWithError(response, result, "GetJoinWay"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetJoinWay")
+	return result, err
 }
 
 // UpdateJoinWayRequest 更新群配置的请求参数

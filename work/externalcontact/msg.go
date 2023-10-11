@@ -38,7 +38,22 @@ type AddMsgTemplateRequest struct {
 	Sender         string        `json:"sender,omitempty"`
 	Text           MsgText       `json:"text"`
 	Attachments    []*Attachment `json:"attachments"`
+	AllowSelect    bool          `json:"allow_select,omitempty"`
+	ChatIDList     []string      `json:"chat_id_list,omitempty"`
+	TagFilter      TagFilter     `json:"tag_filter,omitempty"`
 }
+
+type (
+	// TagFilter 标签过滤
+	TagFilter struct {
+		GroupList []TagGroupList `json:"group_list"`
+	}
+
+	// TagGroupList 标签组
+	TagGroupList struct {
+		TagList []string `json:"tag_list"`
+	}
+)
 
 // MsgText 文本消息
 type MsgText struct {
@@ -106,10 +121,8 @@ func (r *Client) AddMsgTemplate(req *AddMsgTemplateRequest) (*AddMsgTemplateResp
 		return nil, err
 	}
 	result := &AddMsgTemplateResponse{}
-	if err = util.DecodeWithError(response, result, "AddMsgTemplate"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "AddMsgTemplate")
+	return result, err
 }
 
 // GetGroupMsgListV2Request 获取群发记录列表请求
@@ -155,10 +168,8 @@ func (r *Client) GetGroupMsgListV2(req *GetGroupMsgListV2Request) (*GetGroupMsgL
 		return nil, err
 	}
 	result := &GetGroupMsgListV2Response{}
-	if err = util.DecodeWithError(response, result, "GetGroupMsgListV2"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetGroupMsgListV2")
+	return result, err
 }
 
 // GetGroupMsgTaskRequest 获取群发成员发送任务列表请求
@@ -197,10 +208,8 @@ func (r *Client) GetGroupMsgTask(req *GetGroupMsgTaskRequest) (*GetGroupMsgTaskR
 		return nil, err
 	}
 	result := &GetGroupMsgTaskResponse{}
-	if err = util.DecodeWithError(response, result, "GetGroupMsgTask"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetGroupMsgTask")
+	return result, err
 }
 
 // GetGroupMsgSendResultRequest 获取企业群发成员执行结果请求
@@ -242,10 +251,8 @@ func (r *Client) GetGroupMsgSendResult(req *GetGroupMsgSendResultRequest) (*GetG
 		return nil, err
 	}
 	result := &GetGroupMsgSendResultResponse{}
-	if err = util.DecodeWithError(response, result, "GetGroupMsgSendResult"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetGroupMsgSendResult")
+	return result, err
 }
 
 // SendWelcomeMsgRequest 发送新客户欢迎语请求
@@ -275,10 +282,7 @@ func (r *Client) SendWelcomeMsg(req *SendWelcomeMsgRequest) error {
 		return err
 	}
 	result := &SendWelcomeMsgResponse{}
-	if err = util.DecodeWithError(response, result, "SendWelcomeMsg"); err != nil {
-		return err
-	}
-	return nil
+	return util.DecodeWithError(response, result, "SendWelcomeMsg")
 }
 
 // AddGroupWelcomeTemplateRequest 添加入群欢迎语素材请求
@@ -314,10 +318,8 @@ func (r *Client) AddGroupWelcomeTemplate(req *AddGroupWelcomeTemplateRequest) (*
 		return nil, err
 	}
 	result := &AddGroupWelcomeTemplateResponse{}
-	if err = util.DecodeWithError(response, result, "AddGroupWelcomeTemplate"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "AddGroupWelcomeTemplate")
+	return result, err
 }
 
 // EditGroupWelcomeTemplateRequest 编辑入群欢迎语素材请求
@@ -352,10 +354,7 @@ func (r *Client) EditGroupWelcomeTemplate(req *EditGroupWelcomeTemplateRequest) 
 		return err
 	}
 	result := &EditGroupWelcomeTemplateResponse{}
-	if err = util.DecodeWithError(response, result, "EditGroupWelcomeTemplate"); err != nil {
-		return err
-	}
-	return nil
+	return util.DecodeWithError(response, result, "EditGroupWelcomeTemplate")
 }
 
 // GetGroupWelcomeTemplateRequest 获取入群欢迎语素材请求
@@ -389,10 +388,8 @@ func (r *Client) GetGroupWelcomeTemplate(req *GetGroupWelcomeTemplateRequest) (*
 		return nil, err
 	}
 	result := &GetGroupWelcomeTemplateResponse{}
-	if err = util.DecodeWithError(response, result, "GetGroupWelcomeTemplate"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetGroupWelcomeTemplate")
+	return result, err
 }
 
 // DelGroupWelcomeTemplateRequest 删除入群欢迎语素材请求
@@ -421,10 +418,7 @@ func (r *Client) DelGroupWelcomeTemplate(req *DelGroupWelcomeTemplateRequest) er
 		return err
 	}
 	result := &DelGroupWelcomeTemplateResponse{}
-	if err = util.DecodeWithError(response, result, "DelGroupWelcomeTemplate"); err != nil {
-		return err
-	}
-	return nil
+	return util.DecodeWithError(response, result, "DelGroupWelcomeTemplate")
 }
 
 // RemindGroupMsgSendRequest 提醒成员群发请求

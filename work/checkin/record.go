@@ -66,9 +66,7 @@ func (r *Client) GetCheckinData(req *GetCheckinDataRequest) (*GetCheckinDataResp
 		return nil, err
 	}
 	result := &GetCheckinDataResponse{}
-	if err = util.DecodeWithError(response, result, "GetCheckinData"); err != nil {
-		return nil, err
-	}
+	err = util.DecodeWithError(response, result, "GetCheckinData")
 	return result, nil
 }
 
@@ -188,9 +186,7 @@ func (r *Client) GetDayData(req *GetCheckinDataRequest) (result *GetDayDataRespo
 	}
 
 	result = new(GetDayDataResponse)
-	if err = util.DecodeWithError(response, result, "GetDayData"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, result, "GetDayData")
 	return
 }
 
@@ -258,8 +254,6 @@ func (r *Client) GetMonthData(req *GetCheckinDataRequest) (result *GetMonthDataR
 	}
 
 	result = new(GetMonthDataResponse)
-	if err = util.DecodeWithError(response, result, "GetMonthData"); err != nil {
-		return
-	}
+	err = util.DecodeWithError(response, result, "GetMonthData")
 	return
 }
