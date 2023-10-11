@@ -17,13 +17,13 @@ import (
 	"golang.org/x/crypto/pkcs12"
 )
 
-// UriModifier URI修改器
-type UriModifier func(uri string) string
+// URIModifier URI修改器
+type URIModifier func(uri string) string
 
-var uriModifier UriModifier
+var uriModifier URIModifier
 
-// SetUriModifier 设置URI修改器
-func SetUriModifier(fn UriModifier) {
+// SetURIModifier 设置URI修改器
+func SetURIModifier(fn URIModifier) {
 	uriModifier = fn
 }
 
