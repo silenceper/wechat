@@ -11,29 +11,29 @@ const (
 	customerSendMessage = "https://api.weixin.qq.com/cgi-bin/message/custom/send"
 )
 
-//Manager 消息管理者，可以发送消息
+// Manager 消息管理者，可以发送消息
 type Manager struct {
 	*context.Context
 }
 
-//NewCustomerMessageManager 实例化消息管理者
+// NewCustomerMessageManager 实例化消息管理者
 func NewCustomerMessageManager(context *context.Context) *Manager {
 	return &Manager{
 		context,
 	}
 }
 
-//MediaText 文本消息的文字
+// MediaText 文本消息的文字
 type MediaText struct {
 	Content string `json:"content"`
 }
 
-//MediaResource  消息使用的临时素材id
+// MediaResource  消息使用的临时素材id
 type MediaResource struct {
 	MediaID string `json:"media_id"`
 }
 
-//MediaMiniprogrampage 小程序卡片
+// MediaMiniprogrampage 小程序卡片
 type MediaMiniprogrampage struct {
 	Title        string `json:"title"`
 	Appid        string `json:"appid"`
@@ -49,17 +49,17 @@ type MediaLink struct {
 	ThumbURL    string `json:"thumb_url"`
 }
 
-//CustomerMessage  客服消息
+// CustomerMessage  客服消息
 type CustomerMessage struct {
-	ToUser          string                `json:"touser"`                    //接受者OpenID
-	Msgtype         MsgType               `json:"msgtype"`                   //客服消息类型
-	Text            *MediaText            `json:"text,omitempty"`            //可选
-	Image           *MediaResource        `json:"image,omitempty"`           //可选
-	Link            *MediaLink            `json:"link,omitempty"`            //可选
-	Miniprogrampage *MediaMiniprogrampage `json:"miniprogrampage,omitempty"` //可选
+	ToUser          string                `json:"touser"`                    // 接受者OpenID
+	Msgtype         MsgType               `json:"msgtype"`                   // 客服消息类型
+	Text            *MediaText            `json:"text,omitempty"`            // 可选
+	Image           *MediaResource        `json:"image,omitempty"`           // 可选
+	Link            *MediaLink            `json:"link,omitempty"`            // 可选
+	Miniprogrampage *MediaMiniprogrampage `json:"miniprogrampage,omitempty"` // 可选
 }
 
-//NewCustomerTextMessage 文本消息结构体构造方法
+// NewCustomerTextMessage 文本消息结构体构造方法
 func NewCustomerTextMessage(toUser, text string) *CustomerMessage {
 	return &CustomerMessage{
 		ToUser:  toUser,
@@ -70,7 +70,7 @@ func NewCustomerTextMessage(toUser, text string) *CustomerMessage {
 	}
 }
 
-//NewCustomerImgMessage 图片消息的构造方法
+// NewCustomerImgMessage 图片消息的构造方法
 func NewCustomerImgMessage(toUser, mediaID string) *CustomerMessage {
 	return &CustomerMessage{
 		ToUser:  toUser,
@@ -81,7 +81,7 @@ func NewCustomerImgMessage(toUser, mediaID string) *CustomerMessage {
 	}
 }
 
-//NewCustomerLinkMessage 图文链接消息的构造方法
+// NewCustomerLinkMessage 图文链接消息的构造方法
 func NewCustomerLinkMessage(toUser, title, description, url, thumbURL string) *CustomerMessage {
 	return &CustomerMessage{
 		ToUser:  toUser,
@@ -95,7 +95,7 @@ func NewCustomerLinkMessage(toUser, title, description, url, thumbURL string) *C
 	}
 }
 
-//NewCustomerMiniprogrampageMessage 小程序卡片消息的构造方法
+// NewCustomerMiniprogrampageMessage 小程序卡片消息的构造方法
 func NewCustomerMiniprogrampageMessage(toUser, title, pagepath, thumbMediaID string) *CustomerMessage {
 	return &CustomerMessage{
 		ToUser:  toUser,
@@ -108,7 +108,7 @@ func NewCustomerMiniprogrampageMessage(toUser, title, pagepath, thumbMediaID str
 	}
 }
 
-//Send 发送客服消息
+// Send 发送客服消息
 func (manager *Manager) Send(msg *CustomerMessage) error {
 	accessToken, err := manager.Context.GetAccessToken()
 	if err != nil {

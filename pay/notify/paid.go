@@ -7,8 +7,9 @@ import (
 	"strings"
 
 	"github.com/fatih/structs"
-	"github.com/silenceper/wechat/v2/util"
 	"github.com/spf13/cast"
+
+	"github.com/silenceper/wechat/v2/util"
 )
 
 // doc: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7&index=8
@@ -30,6 +31,7 @@ type PaidResult struct {
 	OpenID             *string `xml:"openid"`
 	IsSubscribe        *string `xml:"is_subscribe"`
 	TradeType          *string `xml:"trade_type"`
+	TradeState         *string `xml:"trade_state"`
 	BankType           *string `xml:"bank_type"`
 	TotalFee           *int    `xml:"total_fee"`
 	SettlementTotalFee *int    `xml:"settlement_total_fee"`
@@ -46,9 +48,9 @@ type PaidResult struct {
 	CouponID0   *string `xml:"coupon_id_0"`
 	CouponID1   *string `xml:"coupon_id_1"`
 	CouponID2   *string `xml:"coupon_id_2"`
-	CouponFeed0 *string `xml:"coupon_fee_0"`
-	CouponFeed1 *string `xml:"coupon_fee_1"`
-	CouponFeed2 *string `xml:"coupon_fee_2"`
+	CouponFee0  *string `xml:"coupon_fee_0"`
+	CouponFee1  *string `xml:"coupon_fee_1"`
+	CouponFee2  *string `xml:"coupon_fee_2"`
 
 	TransactionID *string `xml:"transaction_id"`
 	OutTradeNo    *string `xml:"out_trade_no"`

@@ -1,33 +1,46 @@
 package cache
 
 import (
+	"context"
 	"testing"
 	"time"
+
+	"github.com/alicebob/miniredis/v2"
 )
 
 func TestRedis(t *testing.T) {
-	opts := &RedisOpts{
-		Host: "127.0.0.1:6379",
+	server, err := miniredis.Run()
+	if err != nil {
+		t.Error("miniredis.Run Error", err)
 	}
-	redis := NewRedis(opts)
+	t.Cleanup(server.Close)
+	var (
+		timeoutDuration = time.Second
+		ctx             = context.Background()
+		opts            = &RedisOpts{
+			Host: server.Addr(),
+		}
+		redis = NewRedis(ctx, opts)
+		val   = "silenceper"
+		key   = "username"
+	)
 	redis.SetConn(redis.conn)
-	var err error
-	timeoutDuration := 1 * time.Second
+	redis.SetRedisCtx(ctx)
 
-	if err = redis.Set("username", "silenceper", timeoutDuration); err != nil {
+	if err = redis.Set(key, val, timeoutDuration); err != nil {
 		t.Error("set Error", err)
 	}
 
-	if !redis.IsExist("username") {
+	if !redis.IsExist(key) {
 		t.Error("IsExist Error")
 	}
 
-	name := redis.Get("username").(string)
-	if name != "silenceper" {
+	name := redis.Get(key).(string)
+	if name != val {
 		t.Error("get Error")
 	}
 
-	if err = redis.Delete("username"); err != nil {
+	if err = redis.Delete(key); err != nil {
 		t.Errorf("delete Error , err=%v", err)
 	}
 }

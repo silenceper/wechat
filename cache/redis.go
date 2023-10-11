@@ -1,111 +1,92 @@
 package cache
 
 import (
-	"encoding/json"
+	"context"
 	"time"
 
-	"github.com/gomodule/redigo/redis"
+	"github.com/go-redis/redis/v8"
 )
 
-//Redis redis cache
+// Redis .redis cache
 type Redis struct {
-	conn *redis.Pool
+	ctx  context.Context
+	conn redis.UniversalClient
 }
 
-//RedisOpts redis 连接属性
+// RedisOpts redis 连接属性
 type RedisOpts struct {
 	Host        string `yml:"host" json:"host"`
 	Password    string `yml:"password" json:"password"`
 	Database    int    `yml:"database" json:"database"`
 	MaxIdle     int    `yml:"max_idle" json:"max_idle"`
 	MaxActive   int    `yml:"max_active" json:"max_active"`
-	IdleTimeout int    `yml:"idle_timeout" json:"idle_timeout"` //second
+	IdleTimeout int    `yml:"idle_timeout" json:"idle_timeout"` // second
 }
 
-//NewRedis 实例化
-func NewRedis(opts *RedisOpts) *Redis {
-	pool := &redis.Pool{
-		MaxActive:   opts.MaxActive,
-		MaxIdle:     opts.MaxIdle,
-		IdleTimeout: time.Second * time.Duration(opts.IdleTimeout),
-		Dial: func() (redis.Conn, error) {
-			return redis.Dial("tcp", opts.Host,
-				redis.DialDatabase(opts.Database),
-				redis.DialPassword(opts.Password),
-			)
-		},
-		TestOnBorrow: func(conn redis.Conn, t time.Time) error {
-			if time.Since(t) < time.Minute {
-				return nil
-			}
-			_, err := conn.Do("PING")
-			return err
-		},
-	}
-	return &Redis{pool}
+// NewRedis 实例化
+func NewRedis(ctx context.Context, opts *RedisOpts) *Redis {
+	conn := redis.NewUniversalClient(&redis.UniversalOptions{
+		Addrs:        []string{opts.Host},
+		DB:           opts.Database,
+		Password:     opts.Password,
+		IdleTimeout:  time.Second * time.Duration(opts.IdleTimeout),
+		MinIdleConns: opts.MaxIdle,
+	})
+	return &Redis{ctx: ctx, conn: conn}
 }
 
-//SetRedisPool 设置redis连接池
-func (r *Redis) SetRedisPool(pool *redis.Pool) {
-	r.conn = pool
-}
-
-//SetConn 设置conn
-func (r *Redis) SetConn(conn *redis.Pool) {
+// SetConn 设置conn
+func (r *Redis) SetConn(conn redis.UniversalClient) {
 	r.conn = conn
 }
 
-//Get 获取一个值
+// SetRedisCtx 设置redis ctx 参数
+func (r *Redis) SetRedisCtx(ctx context.Context) {
+	r.ctx = ctx
+}
+
+// Get 获取一个值
 func (r *Redis) Get(key string) interface{} {
-	conn := r.conn.Get()
-	defer conn.Close()
-
-	var data []byte
-	var err error
-	if data, err = redis.Bytes(conn.Do("GET", key)); err != nil {
-		return nil
-	}
-	var reply interface{}
-	if err = json.Unmarshal(data, &reply); err != nil {
-		return nil
-	}
-
-	return reply
+	return r.GetContext(r.ctx, key)
 }
 
-//Set 设置一个值
-func (r *Redis) Set(key string, val interface{}, timeout time.Duration) (err error) {
-	conn := r.conn.Get()
-	defer conn.Close()
-
-	var data []byte
-	if data, err = json.Marshal(val); err != nil {
-		return
+// GetContext 获取一个值
+func (r *Redis) GetContext(ctx context.Context, key string) interface{} {
+	result, err := r.conn.Do(ctx, "GET", key).Result()
+	if err != nil {
+		return nil
 	}
-
-	_, err = conn.Do("SETEX", key, int64(timeout/time.Second), data)
-
-	return
+	return result
 }
 
-//IsExist 判断key是否存在
+// Set 设置一个值
+func (r *Redis) Set(key string, val interface{}, timeout time.Duration) error {
+	return r.SetContext(r.ctx, key, val, timeout)
+}
+
+// SetContext 设置一个值
+func (r *Redis) SetContext(ctx context.Context, key string, val interface{}, timeout time.Duration) error {
+	return r.conn.SetEX(ctx, key, val, timeout).Err()
+}
+
+// IsExist 判断key是否存在
 func (r *Redis) IsExist(key string) bool {
-	conn := r.conn.Get()
-	defer conn.Close()
-
-	a, _ := conn.Do("EXISTS", key)
-	i := a.(int64)
-	return i > 0
+	return r.IsExistContext(r.ctx, key)
 }
 
-//Delete 删除
+// IsExistContext 判断key是否存在
+func (r *Redis) IsExistContext(ctx context.Context, key string) bool {
+	result, _ := r.conn.Exists(ctx, key).Result()
+
+	return result > 0
+}
+
+// Delete 删除
 func (r *Redis) Delete(key string) error {
-	conn := r.conn.Get()
-	defer conn.Close()
+	return r.DeleteContext(r.ctx, key)
+}
 
-	if _, err := conn.Do("DEL", key); err != nil {
-		return err
-	}
-
-	return nil
+// DeleteContext 删除
+func (r *Redis) DeleteContext(ctx context.Context, key string) error {
+	return r.conn.Del(ctx, key).Err()
 }

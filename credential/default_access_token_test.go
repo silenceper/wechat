@@ -7,6 +7,7 @@ import (
 	"gopkg.in/h2non/gock.v1"
 )
 
+// TestGetTicketFromServer .
 func TestGetTicketFromServer(t *testing.T) {
 	defer gock.Off()
 	gock.New(getTicketURL).Reply(200).JSON(&ResTicket{Ticket: "mock-ticket", ExpiresIn: 10})

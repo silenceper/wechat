@@ -19,33 +19,33 @@ const (
 	batchGetMaterialURL = "https://api.weixin.qq.com/cgi-bin/material/batchget_material"
 )
 
-//PermanentMaterialType 永久素材类型
+// PermanentMaterialType 永久素材类型
 type PermanentMaterialType string
 
 const (
-	//PermanentMaterialTypeImage 永久素材图片类型（image）
+	// PermanentMaterialTypeImage 永久素材图片类型（image）
 	PermanentMaterialTypeImage PermanentMaterialType = "image"
-	//PermanentMaterialTypeVideo 永久素材视频类型（video）
+	// PermanentMaterialTypeVideo 永久素材视频类型（video）
 	PermanentMaterialTypeVideo PermanentMaterialType = "video"
-	//PermanentMaterialTypeVoice 永久素材语音类型 （voice）
+	// PermanentMaterialTypeVoice 永久素材语音类型（voice）
 	PermanentMaterialTypeVoice PermanentMaterialType = "voice"
-	//PermanentMaterialTypeNews 永久素材图文类型（news）
+	// PermanentMaterialTypeNews 永久素材图文类型（news）
 	PermanentMaterialTypeNews PermanentMaterialType = "news"
 )
 
-//Material 素材管理
+// Material 素材管理
 type Material struct {
 	*context.Context
 }
 
-//NewMaterial init
+// NewMaterial init
 func NewMaterial(context *context.Context) *Material {
 	material := new(Material)
 	material.Context = context
 	return material
 }
 
-//Article 永久图文素材
+// Article 永久图文素材
 type Article struct {
 	Title            string `json:"title"`
 	ThumbMediaID     string `json:"thumb_media_id"`
@@ -87,19 +87,19 @@ func (material *Material) GetNews(id string) ([]*Article, error) {
 	return res.NewsItem, nil
 }
 
-//reqArticles 永久性图文素材请求信息
+// reqArticles 永久性图文素材请求信息
 type reqArticles struct {
 	Articles []*Article `json:"articles"`
 }
 
-//resArticles 永久性图文素材返回结果
+// resArticles 永久性图文素材返回结果
 type resArticles struct {
 	util.CommonError
 
 	MediaID string `json:"media_id"`
 }
 
-//AddNews 新增永久图文素材
+// AddNews 新增永久图文素材
 func (material *Material) AddNews(articles []*Article) (mediaID string, err error) {
 	req := &reqArticles{articles}
 
@@ -126,7 +126,7 @@ func (material *Material) AddNews(articles []*Article) (mediaID string, err erro
 	return
 }
 
-//reqUpdateArticle 更新永久性图文素材请求信息
+// reqUpdateArticle 更新永久性图文素材请求信息
 type reqUpdateArticle struct {
 	MediaID  string   `json:"media_id"`
 	Index    int64    `json:"index"`
@@ -152,7 +152,7 @@ func (material *Material) UpdateNews(article *Article, mediaID string, index int
 	return util.DecodeWithCommonError(response, "UpdateNews")
 }
 
-//resAddMaterial 永久性素材上传返回的结果
+// resAddMaterial 永久性素材上传返回的结果
 type resAddMaterial struct {
 	util.CommonError
 
@@ -160,7 +160,7 @@ type resAddMaterial struct {
 	URL     string `json:"url"`
 }
 
-//AddMaterial 上传永久性素材（处理视频需要单独上传）
+// AddMaterial 上传永久性素材（处理视频需要单独上传）
 func (material *Material) AddMaterial(mediaType MediaType, filename string) (mediaID string, url string, err error) {
 	if mediaType == MediaTypeVideo {
 		err = errors.New("永久视频素材上传使用 AddVideo 方法")
@@ -197,7 +197,7 @@ type reqVideo struct {
 	Introduction string `json:"introduction"`
 }
 
-//AddVideo 永久视频素材文件上传
+// AddVideo 永久视频素材文件上传
 func (material *Material) AddVideo(filename, title, introduction string) (mediaID string, url string, err error) {
 	var accessToken string
 	accessToken, err = material.GetAccessToken()
@@ -254,7 +254,7 @@ type reqDeleteMaterial struct {
 	MediaID string `json:"media_id"`
 }
 
-//DeleteMaterial 删除永久素材
+// DeleteMaterial 删除永久素材
 func (material *Material) DeleteMaterial(mediaID string) error {
 	accessToken, err := material.GetAccessToken()
 	if err != nil {
@@ -270,7 +270,7 @@ func (material *Material) DeleteMaterial(mediaID string) error {
 	return util.DecodeWithCommonError(response, "DeleteMaterial")
 }
 
-//ArticleList 永久素材列表
+// ArticleList 永久素材列表
 type ArticleList struct {
 	util.CommonError
 	TotalCount int64             `json:"total_count"`
@@ -278,7 +278,7 @@ type ArticleList struct {
 	Item       []ArticleListItem `json:"item"`
 }
 
-//ArticleListItem 用于ArticleList的item节点
+// ArticleListItem 用于 ArticleList 的 item 节点
 type ArticleListItem struct {
 	MediaID    string             `json:"media_id"`
 	Content    ArticleListContent `json:"content"`
@@ -287,14 +287,14 @@ type ArticleListItem struct {
 	UpdateTime int64              `json:"update_time"`
 }
 
-//ArticleListContent 用于ArticleListItem的content节点
+// ArticleListContent 用于 ArticleListItem 的 content 节点
 type ArticleListContent struct {
 	NewsItem   []Article `json:"news_item"`
 	UpdateTime int64     `json:"update_time"`
 	CreateTime int64     `json:"create_time"`
 }
 
-//reqBatchGetMaterial BatchGetMaterial请求参数
+// reqBatchGetMaterial BatchGetMaterial 请求参数
 type reqBatchGetMaterial struct {
 	Type   PermanentMaterialType `json:"type"`
 	Count  int64                 `json:"count"`
@@ -302,6 +302,7 @@ type reqBatchGetMaterial struct {
 }
 
 // BatchGetMaterial 批量获取永久素材
+//
 //reference:https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/Get_materials_list.html
 func (material *Material) BatchGetMaterial(permanentMaterialType PermanentMaterialType, offset, count int64) (list ArticleList, err error) {
 	var accessToken string
@@ -336,7 +337,7 @@ type ResMaterialCount struct {
 	NewsCount  int64 `json:"news_count"`  // 图文总数量
 }
 
-// GetMaterialCount 获取素材总数.
+// GetMaterialCount 获取素材总数。
 func (material *Material) GetMaterialCount() (res ResMaterialCount, err error) {
 	var accessToken string
 	accessToken, err = material.GetAccessToken()

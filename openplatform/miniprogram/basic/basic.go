@@ -11,23 +11,24 @@ const (
 	getAccountBasicInfoURL = "https://api.weixin.qq.com/cgi-bin/account/getaccountbasicinfo"
 )
 
-//Basic 基础信息设置
+// Basic 基础信息设置
 type Basic struct {
 	*openContext.Context
 	appID string
 }
 
-//NewBasic new
+// NewBasic new
 func NewBasic(opContext *openContext.Context, appID string) *Basic {
 	return &Basic{Context: opContext, appID: appID}
 }
 
-//AccountBasicInfo 基础信息
+// AccountBasicInfo 基础信息
 type AccountBasicInfo struct {
 	util.CommonError
 }
 
-//GetAccountBasicInfo 获取小程序基础信息
+// GetAccountBasicInfo 获取小程序基础信息
+//
 //reference:https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Mini_Program_Information_Settings.html
 func (basic *Basic) GetAccountBasicInfo() (*AccountBasicInfo, error) {
 	ak, err := basic.GetAuthrAccessToken(basic.AppID)
@@ -46,7 +47,7 @@ func (basic *Basic) GetAccountBasicInfo() (*AccountBasicInfo, error) {
 	return result, nil
 }
 
-//modify_domain设置服务器域名
-//TODO
-//func (encryptor *Basic) modifyDomain() {
-//}
+// modify_domain设置服务器域名
+// TODO
+// func (encryptor *Basic) modifyDomain() {
+// }

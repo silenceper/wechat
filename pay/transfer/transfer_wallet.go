@@ -9,7 +9,7 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
-// 付款到零钱
+// walletTransferGateway 付款到零钱
 // https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
 var walletTransferGateway = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers"
 
@@ -20,11 +20,10 @@ type Transfer struct {
 
 // NewTransfer return an instance of Transfer package
 func NewTransfer(cfg *config.Config) *Transfer {
-	transfer := Transfer{cfg}
-	return &transfer
+	return &Transfer{cfg}
 }
 
-//Params 调用参数
+// Params 调用参数
 type Params struct {
 	DeviceInfo     string
 	PartnerTradeNo string
@@ -34,10 +33,10 @@ type Params struct {
 	Amount         int
 	Desc           string
 	SpbillCreateIP string
-	RootCa         string //ca证书
+	RootCa         string // ca证书
 }
 
-//request 接口请求参数
+// request 接口请求参数
 type request struct {
 	AppID          string `xml:"mch_appid"`
 	MchID          string `xml:"mchid"`
@@ -53,7 +52,7 @@ type request struct {
 	SpbillCreateIP string `xml:"spbill_create_ip,omitempty"`
 }
 
-//Response 接口返回
+// Response 接口返回
 type Response struct {
 	ReturnCode     string `xml:"return_code"`
 	ReturnMsg      string `xml:"return_msg"`
@@ -69,8 +68,8 @@ type Response struct {
 	PaymentTime    string `xml:"payment_time"`
 }
 
-//WalletTransfer 付款到零钱
-func (transfer *Transfer) WalletTransfer(p *Params) (rsp Response, err error) {
+// WalletTransfer 付款到零钱
+func (transfer *Transfer) WalletTransfer(p *Params) (rsp *Response, err error) {
 	nonceStr := util.RandomStr(32)
 	param := make(map[string]string)
 	param["mch_appid"] = transfer.AppID
@@ -83,11 +82,10 @@ func (transfer *Transfer) WalletTransfer(p *Params) (rsp Response, err error) {
 	if p.DeviceInfo != "" {
 		param["device_info"] = p.DeviceInfo
 	}
+	param["check_name"] = "NO_CHECK"
 	if p.CheckName {
 		param["check_name"] = "FORCE_CHECK"
 		param["re_user_name"] = p.ReUserName
-	} else {
-		param["check_name"] = "NO_CHECK"
 	}
 	if p.SpbillCreateIP != "" {
 		param["spbill_create_ip"] = p.SpbillCreateIP
@@ -110,13 +108,11 @@ func (transfer *Transfer) WalletTransfer(p *Params) (rsp Response, err error) {
 		Desc:           p.Desc,
 		SpbillCreateIP: p.SpbillCreateIP,
 	}
+	req.CheckName = "NO_CHECK"
 	if p.CheckName {
 		req.CheckName = "FORCE_CHECK"
 		req.ReUserName = p.ReUserName
-	} else {
-		req.CheckName = "NO_CHECK"
 	}
-
 	rawRet, err := util.PostXMLWithTLS(walletTransferGateway, req, p.RootCa, transfer.MchID)
 	if err != nil {
 		return

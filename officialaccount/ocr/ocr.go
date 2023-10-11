@@ -18,18 +18,18 @@ const (
 	ocrPlateNumberURL    = "https://api.weixin.qq.com/cv/ocr/platenum"
 )
 
-//OCR struct
+// OCR struct
 type OCR struct {
 	*context.Context
 }
 
-//coordinate 坐标
+// coordinate 坐标
 type coordinate struct {
 	X int64 `json:"x,omitempty"`
 	Y int64 `json:"y,omitempty"`
 }
 
-//position 位置
+// position 位置
 type position struct {
 	LeftTop     coordinate `json:"left_top"`
 	RightTop    coordinate `json:"right_top"`
@@ -37,13 +37,13 @@ type position struct {
 	LeftBottom  coordinate `json:"left_bottom"`
 }
 
-//imageSize 图片尺寸
+// imageSize 图片尺寸
 type imageSize struct {
 	Width  int64 `json:"w,omitempty"`
 	Height int64 `json:"h,omitempty"`
 }
 
-//ResDriving 行驶证返回结果
+// ResDriving 行驶证返回结果
 type ResDriving struct {
 	util.CommonError
 
@@ -68,7 +68,7 @@ type ResDriving struct {
 	ImageSize         imageSize           `json:"img_size,omitempty"`
 }
 
-//ResIDCard 身份证返回结果
+// ResIDCard 身份证返回结果
 type ResIDCard struct {
 	util.CommonError
 
@@ -81,14 +81,14 @@ type ResIDCard struct {
 	ValidDate   string `json:"valid_date,omitempty"`
 }
 
-//ResBankCard 银行卡返回结果
+// ResBankCard 银行卡返回结果
 type ResBankCard struct {
 	util.CommonError
 
 	Number string `json:"number,omitempty"`
 }
 
-//ResDrivingLicense 驾驶证返回结果
+// ResDrivingLicense 驾驶证返回结果
 type ResDrivingLicense struct {
 	util.CommonError
 
@@ -105,7 +105,7 @@ type ResDrivingLicense struct {
 	OfficialSeal string `json:"official_seal,omitempty"`
 }
 
-//ResBizLicense 营业执照返回结果
+// ResBizLicense 营业执照返回结果
 type ResBizLicense struct {
 	util.CommonError
 
@@ -125,7 +125,7 @@ type ResBizLicense struct {
 	ImageSize           imageSize           `json:"img_size,omitempty"`
 }
 
-//ResCommon 公共印刷品返回结果
+// ResCommon 公共印刷品返回结果
 type ResCommon struct {
 	util.CommonError
 
@@ -133,155 +133,141 @@ type ResCommon struct {
 	ImageSize imageSize    `json:"img_size,omitempty"`
 }
 
-//commonItem 公共元素
+// commonItem 公共元素
 type commonItem struct {
 	Position position `json:"pos"`
 	Text     string   `json:"text"`
 }
 
-//ResPlateNumber 车牌号返回结果
+// ResPlateNumber 车牌号返回结果
 type ResPlateNumber struct {
 	util.CommonError
 
 	Number string `json:"number"`
 }
 
-//NewOCR 实例
+// NewOCR 实例
 func NewOCR(c *context.Context) *OCR {
 	ocr := new(OCR)
 	ocr.Context = c
 	return ocr
 }
 
-//IDCard 身份证OCR识别接口
-func (ocr *OCR) IDCard(path string) (ResIDCard ResIDCard, err error) {
+// IDCard 身份证OCR识别接口
+func (ocr *OCR) IDCard(path string) (resIDCard ResIDCard, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrIDCardURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrIDCardURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResIDCard, "OCRIDCard")
+	err = util.DecodeWithError(response, &resIDCard, "OCRIDCard")
 
 	return
 }
 
-//BankCard 银行卡OCR识别接口
-func (ocr *OCR) BankCard(path string) (ResBankCard ResBankCard, err error) {
+// BankCard 银行卡OCR识别接口
+func (ocr *OCR) BankCard(path string) (resBankCard ResBankCard, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrBankCardURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrBankCardURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResBankCard, "OCRBankCard")
+	err = util.DecodeWithError(response, &resBankCard, "OCRBankCard")
 
 	return
 }
 
-//Driving 行驶证OCR识别接口
-func (ocr *OCR) Driving(path string) (ResDriving ResDriving, err error) {
+// Driving 行驶证OCR识别接口
+func (ocr *OCR) Driving(path string) (resDriving ResDriving, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrDrivingURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrDrivingURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResDriving, "OCRDriving")
+	err = util.DecodeWithError(response, &resDriving, "OCRDriving")
 
 	return
 }
 
-//DrivingLicense 驾驶证OCR识别接口
-func (ocr *OCR) DrivingLicense(path string) (ResDrivingLicense ResDrivingLicense, err error) {
+// DrivingLicense 驾驶证OCR识别接口
+func (ocr *OCR) DrivingLicense(path string) (resDrivingLicense ResDrivingLicense, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrDrivingLicenseURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrDrivingLicenseURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResDrivingLicense, "OCRDrivingLicense")
+	err = util.DecodeWithError(response, &resDrivingLicense, "OCRDrivingLicense")
 
 	return
 }
 
-//BizLicense 营业执照OCR识别接口
-func (ocr *OCR) BizLicense(path string) (ResBizLicense ResBizLicense, err error) {
+// BizLicense 营业执照OCR识别接口
+func (ocr *OCR) BizLicense(path string) (resBizLicense ResBizLicense, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrBizLicenseURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrBizLicenseURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResBizLicense, "OCRBizLicense")
+	err = util.DecodeWithError(response, &resBizLicense, "OCRBizLicense")
 
 	return
 }
 
-//Common 通用印刷体OCR识别接口
-func (ocr *OCR) Common(path string) (ResCommon ResCommon, err error) {
+// Common 通用印刷体OCR识别接口
+func (ocr *OCR) Common(path string) (resCommon ResCommon, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrCommonURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrCommonURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResCommon, "OCRCommon")
+	err = util.DecodeWithError(response, &resCommon, "OCRCommon")
 
 	return
 }
 
-//PlateNumber 车牌OCR识别接口
-func (ocr *OCR) PlateNumber(path string) (ResPlateNumber ResPlateNumber, err error) {
+// PlateNumber 车牌OCR识别接口
+func (ocr *OCR) PlateNumber(path string) (resPlateNumber ResPlateNumber, err error) {
 	accessToken, err := ocr.GetAccessToken()
 	if err != nil {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrPlateNumberURL, url.QueryEscape(path), accessToken)
-
-	response, err := util.HTTPPost(uri, "")
+	response, err := util.HTTPPost(fmt.Sprintf("%s?img_url=%s&access_token=%s", ocrPlateNumberURL, url.QueryEscape(path), accessToken), "")
 	if err != nil {
 		return
 	}
 
-	err = util.DecodeWithError(response, &ResPlateNumber, "OCRPlateNumber")
+	err = util.DecodeWithError(response, &resPlateNumber, "OCRPlateNumber")
 
 	return
 }

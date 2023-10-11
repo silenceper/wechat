@@ -12,16 +12,20 @@ type EventType string
 type InfoType string
 
 const (
-	//MsgTypeText 文本消息
+	// MsgTypeText 文本消息
 	MsgTypeText MsgType = "text"
-	//MsgTypeImage 图片消息
+	// MsgTypeImage 图片消息
 	MsgTypeImage = "image"
-	//MsgTypeLink 图文链接
+	// MsgTypeLink 图文链接
 	MsgTypeLink = "link"
-	//MsgTypeMiniProgramPage 小程序卡片
+	// MsgTypeMiniProgramPage 小程序卡片
 	MsgTypeMiniProgramPage = "miniprogrampage"
-	//MsgTypeEvent 表示事件推送消息
-	MsgTypeEvent = "event"
+	// MsgTypeEvent 事件
+	MsgTypeEvent MsgType = "event"
+	// DataTypeXML XML格式数据
+	DataTypeXML = "xml"
+	// DataTypeJSON JSON格式数据
+	DataTypeJSON = "json"
 )
 
 const (
@@ -87,6 +91,7 @@ type MiniProgramMixMessage struct {
 	} `xml:"SubscribeMsgSentEvent"`
 }
 
+// SubscribeMessageList 订阅消息事件列表
 type SubscribeMessageList struct {
 	TemplateId            string `xml:"TemplateId"`
 	SubscribeStatusString string `xml:"SubscribeStatusString"`

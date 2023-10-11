@@ -1,8 +1,12 @@
 package officialaccount
 
 import (
+	stdcontext "context"
 	"net/http"
 
+	"github.com/silenceper/wechat/v2/internal/openapi"
+	"github.com/silenceper/wechat/v2/officialaccount/draft"
+	"github.com/silenceper/wechat/v2/officialaccount/freepublish"
 	"github.com/silenceper/wechat/v2/officialaccount/ocr"
 
 	"github.com/silenceper/wechat/v2/officialaccount/datacube"
@@ -12,6 +16,7 @@ import (
 	"github.com/silenceper/wechat/v2/officialaccount/broadcast"
 	"github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/officialaccount/context"
+	"github.com/silenceper/wechat/v2/officialaccount/customerservice"
 	"github.com/silenceper/wechat/v2/officialaccount/device"
 	"github.com/silenceper/wechat/v2/officialaccount/js"
 	"github.com/silenceper/wechat/v2/officialaccount/material"
@@ -22,12 +27,27 @@ import (
 	"github.com/silenceper/wechat/v2/officialaccount/user"
 )
 
-//OfficialAccount 微信公众号相关API
+// OfficialAccount 微信公众号相关API
 type OfficialAccount struct {
-	ctx *context.Context
+	ctx          *context.Context
+	basic        *basic.Basic
+	menu         *menu.Menu
+	oauth        *oauth.Oauth
+	material     *material.Material
+	draft        *draft.Draft
+	freepublish  *freepublish.FreePublish
+	js           *js.Js
+	user         *user.User
+	templateMsg  *message.Template
+	managerMsg   *message.Manager
+	device       *device.Device
+	broadcast    *broadcast.Broadcast
+	datacube     *datacube.DataCube
+	ocr          *ocr.OCR
+	subscribeMsg *message.Subscribe
 }
 
-//NewOfficialAccount 实例化公众号API
+// NewOfficialAccount 实例化公众号API
 func NewOfficialAccount(cfg *config.Config) *OfficialAccount {
 	defaultAkHandle := credential.NewDefaultAccessToken(cfg.AppID, cfg.AppSecret, credential.CacheKeyOfficialAccountPrefix, cfg.Cache)
 	ctx := &context.Context{
@@ -37,7 +57,7 @@ func NewOfficialAccount(cfg *config.Config) *OfficialAccount {
 	return &OfficialAccount{ctx: ctx}
 }
 
-//SetAccessTokenHandle 自定义access_token获取方式
+// SetAccessTokenHandle 自定义access_token获取方式
 func (officialAccount *OfficialAccount) SetAccessTokenHandle(accessTokenHandle credential.AccessTokenHandle) {
 	officialAccount.ctx.AccessTokenHandle = accessTokenHandle
 }
@@ -49,12 +69,18 @@ func (officialAccount *OfficialAccount) GetContext() *context.Context {
 
 // GetBasic qr/url 相关配置
 func (officialAccount *OfficialAccount) GetBasic() *basic.Basic {
-	return basic.NewBasic(officialAccount.ctx)
+	if officialAccount.basic == nil {
+		officialAccount.basic = basic.NewBasic(officialAccount.ctx)
+	}
+	return officialAccount.basic
 }
 
 // GetMenu 菜单管理接口
 func (officialAccount *OfficialAccount) GetMenu() *menu.Menu {
-	return menu.NewMenu(officialAccount.ctx)
+	if officialAccount.menu == nil {
+		officialAccount.menu = menu.NewMenu(officialAccount.ctx)
+	}
+	return officialAccount.menu
 }
 
 // GetServer 消息管理：接收事件，被动回复消息管理
@@ -65,58 +91,130 @@ func (officialAccount *OfficialAccount) GetServer(req *http.Request, writer http
 	return srv
 }
 
-//GetAccessToken 获取access_token
+// GetAccessToken 获取access_token
 func (officialAccount *OfficialAccount) GetAccessToken() (string, error) {
+	return officialAccount.ctx.GetAccessToken()
+}
+
+// GetAccessTokenContext 获取access_token
+func (officialAccount *OfficialAccount) GetAccessTokenContext(ctx stdcontext.Context) (string, error) {
+	if c, ok := officialAccount.ctx.AccessTokenHandle.(credential.AccessTokenContextHandle); ok {
+		return c.GetAccessTokenContext(ctx)
+	}
 	return officialAccount.ctx.GetAccessToken()
 }
 
 // GetOauth oauth2网页授权
 func (officialAccount *OfficialAccount) GetOauth() *oauth.Oauth {
-	return oauth.NewOauth(officialAccount.ctx)
+	if officialAccount.oauth == nil {
+		officialAccount.oauth = oauth.NewOauth(officialAccount.ctx)
+	}
+	return officialAccount.oauth
 }
 
 // GetMaterial 素材管理
 func (officialAccount *OfficialAccount) GetMaterial() *material.Material {
-	return material.NewMaterial(officialAccount.ctx)
+	if officialAccount.material == nil {
+		officialAccount.material = material.NewMaterial(officialAccount.ctx)
+	}
+	return officialAccount.material
+}
+
+// GetDraft 草稿箱
+func (officialAccount *OfficialAccount) GetDraft() *draft.Draft {
+	if officialAccount.draft == nil {
+		officialAccount.draft = draft.NewDraft(officialAccount.ctx)
+	}
+	return officialAccount.draft
+}
+
+// GetFreePublish 发布能力
+func (officialAccount *OfficialAccount) GetFreePublish() *freepublish.FreePublish {
+	if officialAccount.freepublish == nil {
+		officialAccount.freepublish = freepublish.NewFreePublish(officialAccount.ctx)
+	}
+	return officialAccount.freepublish
 }
 
 // GetJs js-sdk配置
 func (officialAccount *OfficialAccount) GetJs() *js.Js {
-	return js.NewJs(officialAccount.ctx)
+	if officialAccount.js == nil {
+		officialAccount.js = js.NewJs(officialAccount.ctx)
+	}
+	return officialAccount.js
 }
 
 // GetUser 用户管理接口
 func (officialAccount *OfficialAccount) GetUser() *user.User {
-	return user.NewUser(officialAccount.ctx)
+	if officialAccount.user == nil {
+		officialAccount.user = user.NewUser(officialAccount.ctx)
+	}
+	return officialAccount.user
 }
 
 // GetTemplate 模板消息接口
 func (officialAccount *OfficialAccount) GetTemplate() *message.Template {
-	return message.NewTemplate(officialAccount.ctx)
+	if officialAccount.templateMsg == nil {
+		officialAccount.templateMsg = message.NewTemplate(officialAccount.ctx)
+	}
+	return officialAccount.templateMsg
 }
 
 // GetCustomerMessageManager 客服消息接口
 func (officialAccount *OfficialAccount) GetCustomerMessageManager() *message.Manager {
-	return message.NewMessageManager(officialAccount.ctx)
+	if officialAccount.managerMsg == nil {
+		officialAccount.managerMsg = message.NewMessageManager(officialAccount.ctx)
+	}
+	return officialAccount.managerMsg
 }
 
 // GetDevice 获取智能设备的实例
 func (officialAccount *OfficialAccount) GetDevice() *device.Device {
-	return device.NewDevice(officialAccount.ctx)
+	if officialAccount.device == nil {
+		officialAccount.device = device.NewDevice(officialAccount.ctx)
+	}
+	return officialAccount.device
 }
 
-//GetBroadcast 群发消息
-//TODO 待完善
+// GetBroadcast 群发消息
+// TODO 待完善
 func (officialAccount *OfficialAccount) GetBroadcast() *broadcast.Broadcast {
-	return broadcast.NewBroadcast(officialAccount.ctx)
+	if officialAccount.broadcast == nil {
+		officialAccount.broadcast = broadcast.NewBroadcast(officialAccount.ctx)
+	}
+	return officialAccount.broadcast
 }
 
-//GetDataCube 数据统计
+// GetDataCube 数据统计
 func (officialAccount *OfficialAccount) GetDataCube() *datacube.DataCube {
-	return datacube.NewCube(officialAccount.ctx)
+	if officialAccount.datacube == nil {
+		officialAccount.datacube = datacube.NewCube(officialAccount.ctx)
+	}
+	return officialAccount.datacube
 }
 
-//GetOCR OCR接口
+// GetOCR OCR接口
 func (officialAccount *OfficialAccount) GetOCR() *ocr.OCR {
-	return ocr.NewOCR(officialAccount.ctx)
+	if officialAccount.ocr == nil {
+		officialAccount.ocr = ocr.NewOCR(officialAccount.ctx)
+	}
+	return officialAccount.ocr
+}
+
+// GetSubscribe 公众号订阅消息
+func (officialAccount *OfficialAccount) GetSubscribe() *message.Subscribe {
+	if officialAccount.subscribeMsg == nil {
+		officialAccount.subscribeMsg = message.NewSubscribe(officialAccount.ctx)
+	}
+	return officialAccount.subscribeMsg
+}
+
+// GetCustomerServiceManager 客服管理
+func (officialAccount *OfficialAccount) GetCustomerServiceManager() *customerservice.Manager {
+	return customerservice.NewCustomerServiceManager(officialAccount.ctx)
+}
+
+// GetOpenAPI openApi管理接口
+func (officialAccount *OfficialAccount) GetOpenAPI() *openapi.OpenAPI {
+	return openapi.NewOpenAPI(officialAccount.ctx)
 }

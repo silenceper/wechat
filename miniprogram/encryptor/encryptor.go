@@ -6,16 +6,17 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 )
 
-//Encryptor struct
+// Encryptor struct
 type Encryptor struct {
 	*context.Context
 }
 
-//NewEncryptor 实例
+// NewEncryptor 实例
 func NewEncryptor(context *context.Context) *Encryptor {
 	basic := new(Encryptor)
 	basic.Context = context
@@ -89,6 +90,9 @@ func GetCipherText(sessionKey, encryptedData, iv string) ([]byte, error) {
 	ivBytes, err := base64.StdEncoding.DecodeString(iv)
 	if err != nil {
 		return nil, err
+	}
+	if len(ivBytes) != aes.BlockSize {
+		return nil, fmt.Errorf("bad iv length %d", len(ivBytes))
 	}
 	block, err := aes.NewCipher(aesKey)
 	if err != nil {

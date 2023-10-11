@@ -3,6 +3,8 @@ package wechat
 import (
 	"os"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/silenceper/wechat/v2/cache"
 	"github.com/silenceper/wechat/v2/miniprogram"
 	miniConfig "github.com/silenceper/wechat/v2/miniprogram/config"
@@ -12,7 +14,8 @@ import (
 	openConfig "github.com/silenceper/wechat/v2/openplatform/config"
 	"github.com/silenceper/wechat/v2/pay"
 	payConfig "github.com/silenceper/wechat/v2/pay/config"
-	log "github.com/sirupsen/logrus"
+	"github.com/silenceper/wechat/v2/work"
+	workConfig "github.com/silenceper/wechat/v2/work/config"
 )
 
 func init() {
@@ -37,12 +40,12 @@ func NewWechat() *Wechat {
 	return &Wechat{}
 }
 
-//SetCache 设置cache
-func (wc *Wechat) SetCache(cahce cache.Cache) {
-	wc.cache = cahce
+// SetCache 设置 cache
+func (wc *Wechat) SetCache(cache cache.Cache) {
+	wc.cache = cache
 }
 
-//GetOfficialAccount 获取微信公众号实例
+// GetOfficialAccount 获取微信公众号实例
 func (wc *Wechat) GetOfficialAccount(cfg *offConfig.Config) *officialaccount.OfficialAccount {
 	if cfg.Cache == nil {
 		cfg.Cache = wc.cache
@@ -65,5 +68,16 @@ func (wc *Wechat) GetPay(cfg *payConfig.Config) *pay.Pay {
 
 // GetOpenPlatform 获取微信开放平台的实例
 func (wc *Wechat) GetOpenPlatform(cfg *openConfig.Config) *openplatform.OpenPlatform {
+	if cfg.Cache == nil {
+		cfg.Cache = wc.cache
+	}
 	return openplatform.NewOpenPlatform(cfg)
+}
+
+// GetWork 获取企业微信的实例
+func (wc *Wechat) GetWork(cfg *workConfig.Config) *work.Work {
+	if cfg.Cache == nil {
+		cfg.Cache = wc.cache
+	}
+	return work.NewWork(cfg)
 }

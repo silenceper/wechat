@@ -7,17 +7,18 @@ import (
 )
 
 const (
-	//触发云函数
+	// 触发云函数
 	invokeCloudFunctionURL = "https://api.weixin.qq.com/tcb/invokecloudfunction"
 )
 
-//InvokeCloudFunctionRes 云函数调用返回结果
+// InvokeCloudFunctionRes 云函数调用返回结果
 type InvokeCloudFunctionRes struct {
 	util.CommonError
-	RespData string `json:"resp_data"` //云函数返回的buffer
+	RespData string `json:"resp_data"` // 云函数返回的buffer
 }
 
-//InvokeCloudFunction 云函数调用
+// InvokeCloudFunction 云函数调用
+//
 //reference:https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-http-api/functions/invokeCloudFunction.html
 func (tcb *Tcb) InvokeCloudFunction(env, name, args string) (*InvokeCloudFunctionRes, error) {
 	accessToken, err := tcb.GetAccessToken()

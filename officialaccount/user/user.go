@@ -2,6 +2,7 @@ package user
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/url"
 
@@ -10,27 +11,32 @@ import (
 )
 
 const (
-	userInfoURL     = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN"
-	updateRemarkURL = "https://api.weixin.qq.com/cgi-bin/user/info/updateremark?access_token=%s"
-	userListURL     = "https://api.weixin.qq.com/cgi-bin/user/get"
+	userInfoURL      = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN"
+	userInfoBatchURL = "https://api.weixin.qq.com/cgi-bin/user/info/batchget"
+	updateRemarkURL  = "https://api.weixin.qq.com/cgi-bin/user/info/updateremark?access_token=%s"
+	userListURL      = "https://api.weixin.qq.com/cgi-bin/user/get"
 )
 
-//User 用户管理
+// User 用户管理
 type User struct {
 	*context.Context
 }
 
-//NewUser 实例化
+// NewUser 实例化
 func NewUser(context *context.Context) *User {
 	user := new(User)
 	user.Context = context
 	return user
 }
 
-//Info 用户基本信息
+// Info 用户基本信息
 type Info struct {
 	util.CommonError
+	userInfo
+}
 
+// 用户基本信息
+type userInfo struct {
 	Subscribe      int32   `json:"subscribe"`
 	OpenID         string  `json:"openid"`
 	Nickname       string  `json:"nickname"`
@@ -62,7 +68,7 @@ type OpenidList struct {
 	NextOpenID string `json:"next_openid"`
 }
 
-//GetUserInfo 获取用户基本信息
+// GetUserInfo 获取用户基本信息
 func (user *User) GetUserInfo(openID string) (userInfo *Info, err error) {
 	var accessToken string
 	accessToken, err = user.GetAccessToken()
@@ -86,6 +92,48 @@ func (user *User) GetUserInfo(openID string) (userInfo *Info, err error) {
 		return
 	}
 	return
+}
+
+// BatchGetUserInfoParams 批量获取用户基本信息参数
+type BatchGetUserInfoParams struct {
+	UserList []BatchGetUserListItem `json:"user_list"` // 需要批量获取基本信息的用户列表
+}
+
+// BatchGetUserListItem 需要获取基本信息的用户
+type BatchGetUserListItem struct {
+	OpenID string `json:"openid"` // 用户的标识，对当前公众号唯一
+	Lang   string `json:"lang"`   // 国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语，默认为zh-CN
+}
+
+// InfoList 用户基本信息列表
+type InfoList struct {
+	util.CommonError
+	UserInfoList []userInfo `json:"user_info_list"`
+}
+
+// BatchGetUserInfo 批量获取用户基本信息
+func (user *User) BatchGetUserInfo(params BatchGetUserInfoParams) (*InfoList, error) {
+	if len(params.UserList) > 100 {
+		return nil, errors.New("params length must be less than or equal to 100")
+	}
+
+	ak, err := user.GetAccessToken()
+	if err != nil {
+		return nil, err
+	}
+
+	uri := fmt.Sprintf("%s?access_token=%s", userInfoBatchURL, ak)
+	res, err := util.PostJSON(uri, params)
+	if err != nil {
+		return nil, err
+	}
+
+	var data InfoList
+	err = util.DecodeWithError(res, &data, "BatchGetUserInfo")
+	if err != nil {
+		return nil, err
+	}
+	return &data, nil
 }
 
 // UpdateRemark 设置用户备注名
