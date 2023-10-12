@@ -405,7 +405,8 @@ type CoinInfo struct {
 // PushDataSubscribePopup 用户操作订阅通知弹窗事件推送
 type PushDataSubscribePopup struct {
 	CommonPushData
-	SubscribeMsgPopupEvent SubscribeMsgPopupEvent `json:"SubscribeMsgPopup" xml:"SubscribeMsgPopup"` // 用户操作订阅通知弹窗消息回调
+	SubscribeMsgPopupEvent SubscribeMsgPopupEvent `json:"-" xml:"SubscribeMsgPopup"` // 用户操作订阅通知弹窗消息回调
+	List                   []SubscribeMessageList `xml:"SubscribeMsgPopup>List" json:"List"`
 }
 
 // SubscribeMsgPopupEvent 用户操作订阅通知弹窗消息回调
@@ -416,7 +417,8 @@ type SubscribeMsgPopupEvent struct {
 // PushDataSubscribeMsgChange 用户管理订阅通知事件推送
 type PushDataSubscribeMsgChange struct {
 	CommonPushData
-	SubscribeMsgChangeEvent SubscribeMsgChangeEvent `json:"SubscribeMsgChangeEvent" xml:"SubscribeMsgChangeEvent"` // 用户管理订阅通知回调
+	SubscribeMsgChangeEvent SubscribeMsgChangeEvent `json:"-" xml:"SubscribeMsgChangeEvent"` // 用户管理订阅通知回调
+	List                    []SubscribeMessageList  `xml:"SubscribeMsgChangeEvent>List" json:"List"`
 }
 
 // SubscribeMsgChangeEvent 用户管理订阅通知回调
@@ -427,12 +429,13 @@ type SubscribeMsgChangeEvent struct {
 // PushDataSubscribeMsgSent 用户发送订阅通知事件推送
 type PushDataSubscribeMsgSent struct {
 	CommonPushData
-	SubscribeMsgSentEvent SubscribeMsgSentEvent `json:"SubscribeMsgSentEvent" xml:"SubscribeMsgSentEvent"` // 用户发送订阅通知回调
+	SubscribeMsgSentEvent SubscribeMsgSentEvent  `json:"-" xml:"SubscribeMsgSentEvent"` // 用户发送订阅通知回调
+	List                  []SubscribeMessageList `xml:"SubscribeMsgSentEvent>List" json:"List"`
 }
 
 // SubscribeMsgSentEvent 用户发送订阅通知回调
 type SubscribeMsgSentEvent struct {
-	List []SubscribeMessageList `xml:"List"`
+	List []SubscribeMessageList `xml:"List" json:"List"`
 }
 
 // SubscribeMessageList 订阅消息事件列表
