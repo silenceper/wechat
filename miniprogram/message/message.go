@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"sort"
@@ -127,6 +128,7 @@ func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, P
 	if err != nil {
 		return "", "", nil, err
 	}
+	fmt.Println("decryptMsg string", string(decryptMsg))
 	var (
 		msgType   MsgType
 		eventType EventType
