@@ -9,8 +9,6 @@ import (
 	"sort"
 	"strings"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/security"
 	"github.com/silenceper/wechat/v2/util"
@@ -129,7 +127,6 @@ func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, P
 	if err != nil {
 		return "", "", nil, err
 	}
-	log.Debug("decryptMsg string", string(decryptMsg))
 	var (
 		msgType   MsgType
 		eventType EventType
