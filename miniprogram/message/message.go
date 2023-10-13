@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"sort"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/security"
@@ -128,7 +129,7 @@ func (receiver *PushReceiver) GetMsgData(r *http.Request) (MsgType, EventType, P
 	if err != nil {
 		return "", "", nil, err
 	}
-	fmt.Println("decryptMsg string", string(decryptMsg))
+	log.Debug("decryptMsg string", string(decryptMsg))
 	var (
 		msgType   MsgType
 		eventType EventType
@@ -407,7 +408,7 @@ type CoinInfo struct {
 // PushDataSubscribePopup 用户操作订阅通知弹窗事件推送
 type PushDataSubscribePopup struct {
 	CommonPushData
-	List string `xml:"SubscribeMsgPopupEvent>List" json:"List"`
+	List []SubscribeMsgPopupEventList `xml:"SubscribeMsgPopupEvent>List" json:"List"`
 }
 
 // SubscribeMsgPopupEvent 用户操作订阅通知弹窗消息回调
