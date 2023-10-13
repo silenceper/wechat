@@ -405,42 +405,53 @@ type CoinInfo struct {
 // PushDataSubscribePopup 用户操作订阅通知弹窗事件推送
 type PushDataSubscribePopup struct {
 	CommonPushData
-	SubscribeMsgPopupEvent SubscribeMsgPopupEvent `json:"-" xml:"SubscribeMsgPopup"` // 用户操作订阅通知弹窗消息回调
-	List                   []SubscribeMessageList `xml:"SubscribeMsgPopup>List" json:"List"`
+	List string `xml:"SubscribeMsgPopupEvent>List" json:"List"`
 }
 
 // SubscribeMsgPopupEvent 用户操作订阅通知弹窗消息回调
 type SubscribeMsgPopupEvent struct {
-	List []SubscribeMessageList `xml:"List" json:"List"`
+	List []SubscribeMsgPopupEventList `xml:"List" json:"List"`
+}
+
+// SubscribeMsgPopupEventList 订阅消息事件列表
+type SubscribeMsgPopupEventList struct {
+	TemplateID            string `xml:"TemplateId" json:"TemplateId"`
+	SubscribeStatusString string `xml:"SubscribeStatusString" json:"SubscribeStatusString"`
+	PopupScene            string `xml:"PopupScene" json:"PopupScene"`
 }
 
 // PushDataSubscribeMsgChange 用户管理订阅通知事件推送
 type PushDataSubscribeMsgChange struct {
 	CommonPushData
-	SubscribeMsgChangeEvent SubscribeMsgChangeEvent `json:"-" xml:"SubscribeMsgChangeEvent"` // 用户管理订阅通知回调
-	List                    []SubscribeMessageList  `xml:"SubscribeMsgChangeEvent>List" json:"List"`
+	List []SubscribeMsgChangeList `xml:"SubscribeMsgChangeEvent>List" json:"List"`
 }
 
 // SubscribeMsgChangeEvent 用户管理订阅通知回调
 type SubscribeMsgChangeEvent struct {
-	List []SubscribeMessageList `xml:"List" json:"List"`
+	List []SubscribeMsgChangeList `xml:"List" json:"List"`
+}
+
+// SubscribeMsgChangeList 订阅消息事件列表
+type SubscribeMsgChangeList struct {
+	TemplateID            string `xml:"TemplateId" json:"TemplateId"`
+	SubscribeStatusString string `xml:"SubscribeStatusString" json:"SubscribeStatusString"`
 }
 
 // PushDataSubscribeMsgSent 用户发送订阅通知事件推送
 type PushDataSubscribeMsgSent struct {
 	CommonPushData
-	SubscribeMsgSentEvent SubscribeMsgSentEvent  `json:"-" xml:"SubscribeMsgSentEvent"` // 用户发送订阅通知回调
-	List                  []SubscribeMessageList `xml:"SubscribeMsgSentEvent>List" json:"List"`
+	List []SubscribeMsgSentEventList `xml:"SubscribeMsgSentEvent>List" json:"List"`
 }
 
 // SubscribeMsgSentEvent 用户发送订阅通知回调
 type SubscribeMsgSentEvent struct {
-	List []SubscribeMessageList `xml:"List" json:"List"`
+	List []SubscribeMsgSentEventList `xml:"List" json:"List"`
 }
 
-// SubscribeMessageList 订阅消息事件列表
-type SubscribeMessageList struct {
-	TemplateID            string `xml:"TemplateId" json:"TemplateId"`
-	SubscribeStatusString string `xml:"SubscribeStatusString" json:"SubscribeStatusString"`
-	PopupScene            string `xml:"PopupScene" json:"PopupScene"`
+// SubscribeMsgSentEventList 订阅消息事件列表
+type SubscribeMsgSentEventList struct {
+	TemplateID  string `xml:"TemplateId" json:"TemplateId"`
+	MsgID       string `xml:"MsgID" json:"MsgID"`
+	ErrorCode   int    `xml:"ErrorCode" json:"ErrorCode"`
+	ErrorStatus string `xml:"ErrorStatus" json:"ErrorStatus"`
 }
