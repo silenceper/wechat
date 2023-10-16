@@ -205,79 +205,94 @@ func (receiver *PushReceiver) getEvent(dataType string, eventType EventType, dec
 		return &pushData, err
 	case EventSubscribePopup:
 		// 用户操作订阅通知弹窗事件推送
-		var pushData PushDataSubscribePopup
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		if err == nil {
-			listData := gjson.Get(string(decryptMsg), "List")
-			if listData.IsObject() {
-				listItem := SubscribeMsgPopupEventList{}
-				if parseErr := json.Unmarshal([]byte(listData.Raw), &listItem); parseErr != nil {
-					return &pushData, parseErr
-				}
-				pushData.SetSubscribeMsgPopupEvents([]SubscribeMsgPopupEventList{listItem})
-			} else if listData.IsArray() {
-				listItems := make([]SubscribeMsgPopupEventList, 0)
-				if parseErr := json.Unmarshal([]byte(listData.Raw), &listItems); parseErr != nil {
-					return &pushData, parseErr
-				}
-				pushData.SetSubscribeMsgPopupEvents(listItems)
-			}
-		}
-
-		return &pushData, err
+		return receiver.unmarshalSubscribePopup(dataType, decryptMsg)
 	case EventSubscribeMsgChange:
 		// 用户管理订阅通知事件推送
-		var pushData PushDataSubscribeMsgChange
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		if err == nil {
-			listData := gjson.Get(string(decryptMsg), "List")
-			if listData.IsObject() {
-				listItem := SubscribeMsgChangeList{}
-				if parseErr := json.Unmarshal([]byte(listData.Raw), &listItem); parseErr != nil {
-					return &pushData, parseErr
-				}
-				pushData.SetSubscribeMsgChangeEvents([]SubscribeMsgChangeList{listItem})
-			} else if listData.IsArray() {
-				listItems := make([]SubscribeMsgChangeList, 0)
-				if parseErr := json.Unmarshal([]byte(listData.Raw), &listItems); parseErr != nil {
-					return &pushData, parseErr
-				}
-				pushData.SetSubscribeMsgChangeEvents(listItems)
-			}
-		}
-		return &pushData, err
+		return receiver.unmarshalSubscribeMsgChange(dataType, decryptMsg)
 	case EventSubscribeMsgSent:
 		// 用户发送订阅通知事件推送
-		var pushData PushDataSubscribeMsgSent
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		if err == nil {
-			listData := gjson.Get(string(decryptMsg), "List")
-			if listData.IsObject() {
-				listItem := SubscribeMsgSentList{}
-				if parseErr := json.Unmarshal([]byte(listData.Raw), &listItem); parseErr != nil {
-					return &pushData, parseErr
-				}
-				pushData.SetSubscribeMsgSentEvents([]SubscribeMsgSentList{listItem})
-			} else if listData.IsArray() {
-				listItems := make([]SubscribeMsgSentList, 0)
-				if parseErr := json.Unmarshal([]byte(listData.Raw), &listItems); parseErr != nil {
-					return &pushData, parseErr
-				}
-				pushData.SetSubscribeMsgSentEvents(listItems)
-			}
-		}
-		return &pushData, err
+		return receiver.unmarshalSubscribeMsgSent(dataType, decryptMsg)
 	}
 	// 暂不支持其他事件类型，直接返回解密后的数据，由调用方处理
 	return decryptMsg, nil
 }
 
 // unmarshal 解析推送的数据
-func (receiver *PushReceiver) unmarshal(dateType string, decryptMsg []byte, pushData interface{}) error {
-	if dateType == DataTypeXML {
+func (receiver *PushReceiver) unmarshal(dataType string, decryptMsg []byte, pushData interface{}) error {
+	if dataType == DataTypeXML {
 		return xml.Unmarshal(decryptMsg, pushData)
 	}
 	return json.Unmarshal(decryptMsg, pushData)
+}
+
+// unmarshalSubscribePopup
+func (receiver *PushReceiver) unmarshalSubscribePopup(dataType string, decryptMsg []byte) (PushData, error) {
+	var pushData PushDataSubscribePopup
+	err := receiver.unmarshal(dataType, decryptMsg, &pushData)
+	if err == nil {
+		listData := gjson.Get(string(decryptMsg), "List")
+		if listData.IsObject() {
+			listItem := SubscribeMsgPopupEventList{}
+			if parseErr := json.Unmarshal([]byte(listData.Raw), &listItem); parseErr != nil {
+				return &pushData, parseErr
+			}
+			pushData.SetSubscribeMsgPopupEvents([]SubscribeMsgPopupEventList{listItem})
+		} else if listData.IsArray() {
+			listItems := make([]SubscribeMsgPopupEventList, 0)
+			if parseErr := json.Unmarshal([]byte(listData.Raw), &listItems); parseErr != nil {
+				return &pushData, parseErr
+			}
+			pushData.SetSubscribeMsgPopupEvents(listItems)
+		}
+	}
+
+	return &pushData, err
+}
+
+// unmarshalSubscribeMsgChange 解析用户管理订阅通知事件推送
+func (receiver *PushReceiver) unmarshalSubscribeMsgChange(dataType string, decryptMsg []byte) (PushData, error) {
+	var pushData PushDataSubscribeMsgChange
+	err := receiver.unmarshal(dataType, decryptMsg, &pushData)
+	if err == nil {
+		listData := gjson.Get(string(decryptMsg), "List")
+		if listData.IsObject() {
+			listItem := SubscribeMsgChangeList{}
+			if parseErr := json.Unmarshal([]byte(listData.Raw), &listItem); parseErr != nil {
+				return &pushData, parseErr
+			}
+			pushData.SetSubscribeMsgChangeEvents([]SubscribeMsgChangeList{listItem})
+		} else if listData.IsArray() {
+			listItems := make([]SubscribeMsgChangeList, 0)
+			if parseErr := json.Unmarshal([]byte(listData.Raw), &listItems); parseErr != nil {
+				return &pushData, parseErr
+			}
+			pushData.SetSubscribeMsgChangeEvents(listItems)
+		}
+	}
+	return &pushData, err
+}
+
+// unmarshalSubscribeMsgSent 解析用户发送订阅通知事件推送
+func (receiver *PushReceiver) unmarshalSubscribeMsgSent(dataType string, decryptMsg []byte) (PushData, error) {
+	var pushData PushDataSubscribeMsgSent
+	err := receiver.unmarshal(dataType, decryptMsg, &pushData)
+	if err == nil {
+		listData := gjson.Get(string(decryptMsg), "List")
+		if listData.IsObject() {
+			listItem := SubscribeMsgSentList{}
+			if parseErr := json.Unmarshal([]byte(listData.Raw), &listItem); parseErr != nil {
+				return &pushData, parseErr
+			}
+			pushData.SetSubscribeMsgSentEvents([]SubscribeMsgSentList{listItem})
+		} else if listData.IsArray() {
+			listItems := make([]SubscribeMsgSentList, 0)
+			if parseErr := json.Unmarshal([]byte(listData.Raw), &listItems); parseErr != nil {
+				return &pushData, parseErr
+			}
+			pushData.SetSubscribeMsgSentEvents(listItems)
+		}
+	}
+	return &pushData, err
 }
 
 // DataReceived 接收到的数据
