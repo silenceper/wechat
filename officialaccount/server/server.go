@@ -73,7 +73,7 @@ func (srv *Server) Serve() error {
 	if err != nil {
 		return err
 	}
-	// 非安全模式下，请求处理方法返回为nil则直接回复success给微信服务器
+	// 非安全模式下，请求处理方法返回为 nil 则直接回复 success 给微信服务器
 	if response == nil && !srv.isSafeMode {
 		srv.String("success")
 		return nil
@@ -198,7 +198,7 @@ func (srv *Server) parseRequestMessage(rawXMLMsgBytes []byte) (msg *message.MixM
 	if err != nil {
 		return
 	}
-	// nonstandard json, 目前小程序订阅消息返回数据格式不标准，订阅消息模板单个List返回是对象，多个List返回是数组。
+	// nonstandard json, 目前小程序订阅消息返回数据格式不标准，订阅消息模板单个 List 返回是对象，多个 List 返回是数组。
 	if msg.MsgType == message.MsgTypeEvent {
 		listData := gjson.Get(string(rawXMLMsgBytes), "List")
 		if listData.IsObject() {
@@ -284,7 +284,7 @@ func (srv *Server) Send() (err error) {
 		if err != nil {
 			return
 		}
-		// TODO 如果获取不到timestamp nonce 则自己生成
+		// TODO 如果获取不到 timestamp nonce 则自己生成
 		timestamp := srv.timestamp
 		timestampStr := strconv.FormatInt(timestamp, 10)
 		msgSignature := util.Signature(srv.Token, timestampStr, srv.nonce, string(encryptedMsg))
