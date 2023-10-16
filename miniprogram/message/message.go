@@ -498,14 +498,10 @@ func (s *PushDataSubscribePopup) GetSubscribeMsgPopupEvents() []SubscribeMsgPopu
 		return s.subscribeMsgPopupEventList
 	}
 
-	if s.SubscribeMsgPopupEvent.List == nil {
+	if s.SubscribeMsgPopupEvent.List == nil || len(s.SubscribeMsgPopupEvent.List) < 1 {
 		return nil
 	}
-	list := make([]SubscribeMsgPopupEventList, len(s.SubscribeMsgPopupEvent.List))
-	for i, item := range s.SubscribeMsgPopupEvent.List {
-		list[i] = item
-	}
-	return list
+	return s.SubscribeMsgPopupEvent.List
 }
 
 // PushDataSubscribeMsgChange 用户管理订阅通知事件推送
@@ -537,14 +533,11 @@ func (s *PushDataSubscribeMsgChange) GetSubscribeMsgChangeEvents() []SubscribeMs
 		return s.subscribeMsgChangeList
 	}
 
-	if s.SubscribeMsgChangeEvent.List == nil {
+	if s.SubscribeMsgChangeEvent.List == nil || len(s.SubscribeMsgChangeEvent.List) < 1 {
 		return nil
 	}
-	list := make([]SubscribeMsgChangeList, len(s.SubscribeMsgChangeEvent.List))
-	for i, item := range s.SubscribeMsgChangeEvent.List {
-		list[i] = item
-	}
-	return list
+
+	return s.SubscribeMsgChangeEvent.List
 }
 
 // PushDataSubscribeMsgSent 用户发送订阅通知事件推送
@@ -578,12 +571,9 @@ func (s *PushDataSubscribeMsgSent) GetSubscribeMsgSentEvents() []SubscribeMsgSen
 		return s.subscribeMsgSentEventList
 	}
 
-	if s.SubscribeMsgSentEvent.List == nil {
+	if s.SubscribeMsgSentEvent.List == nil || len(s.SubscribeMsgSentEvent.List) < 1 {
 		return nil
 	}
-	list := make([]SubscribeMsgSentList, len(s.SubscribeMsgSentEvent.List))
-	for i, item := range s.SubscribeMsgSentEvent.List {
-		list[i] = item
-	}
-	return list
+
+	return s.SubscribeMsgSentEvent.List
 }
