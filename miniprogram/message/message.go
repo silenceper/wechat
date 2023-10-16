@@ -9,6 +9,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/tidwall/gjson"
+
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/security"
 	"github.com/silenceper/wechat/v2/util"
@@ -205,16 +207,65 @@ func (receiver *PushReceiver) getEvent(dataType string, eventType EventType, dec
 		// 用户操作订阅通知弹窗事件推送
 		var pushData PushDataSubscribePopup
 		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
+		if err == nil {
+			listData := gjson.Get(string(decryptMsg), "List")
+			if listData.IsObject() {
+				listItem := SubscribeMsgPopupEventList{}
+				if parseErr := json.Unmarshal([]byte(listData.Raw), &listItem); parseErr != nil {
+					return &pushData, parseErr
+				}
+				pushData.SetSubscribeMsgPopupEvents([]SubscribeMsgPopupEventList{listItem})
+			} else if listData.IsArray() {
+				listItems := make([]SubscribeMsgPopupEventList, 0)
+				if parseErr := json.Unmarshal([]byte(listData.Raw), &listItems); parseErr != nil {
+					return &pushData, parseErr
+				}
+				pushData.SetSubscribeMsgPopupEvents(listItems)
+			}
+		}
+
 		return &pushData, err
 	case EventSubscribeMsgChange:
 		// 用户管理订阅通知事件推送
 		var pushData PushDataSubscribeMsgChange
 		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
+		if err == nil {
+			listData := gjson.Get(string(decryptMsg), "List")
+			if listData.IsObject() {
+				listItem := SubscribeMsgChangeList{}
+				if parseErr := json.Unmarshal([]byte(listData.Raw), &listItem); parseErr != nil {
+					return &pushData, parseErr
+				}
+				pushData.SetSubscribeMsgChangeEvents([]SubscribeMsgChangeList{listItem})
+			} else if listData.IsArray() {
+				listItems := make([]SubscribeMsgChangeList, 0)
+				if parseErr := json.Unmarshal([]byte(listData.Raw), &listItems); parseErr != nil {
+					return &pushData, parseErr
+				}
+				pushData.SetSubscribeMsgChangeEvents(listItems)
+			}
+		}
 		return &pushData, err
 	case EventSubscribeMsgSent:
 		// 用户发送订阅通知事件推送
 		var pushData PushDataSubscribeMsgSent
 		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
+		if err == nil {
+			listData := gjson.Get(string(decryptMsg), "List")
+			if listData.IsObject() {
+				listItem := SubscribeMsgSentList{}
+				if parseErr := json.Unmarshal([]byte(listData.Raw), &listItem); parseErr != nil {
+					return &pushData, parseErr
+				}
+				pushData.SetSubscribeMsgSentEvents([]SubscribeMsgSentList{listItem})
+			} else if listData.IsArray() {
+				listItems := make([]SubscribeMsgSentList, 0)
+				if parseErr := json.Unmarshal([]byte(listData.Raw), &listItems); parseErr != nil {
+					return &pushData, parseErr
+				}
+				pushData.SetSubscribeMsgSentEvents(listItems)
+			}
+		}
 		return &pushData, err
 	}
 	// 暂不支持其他事件类型，直接返回解密后的数据，由调用方处理
@@ -405,12 +456,13 @@ type CoinInfo struct {
 // PushDataSubscribePopup 用户操作订阅通知弹窗事件推送
 type PushDataSubscribePopup struct {
 	CommonPushData
-	List []SubscribeMsgPopupEventList `xml:"SubscribeMsgPopupEvent>List" json:"List"`
+	subscribeMsgPopupEventList []SubscribeMsgPopupEventList `json:"-"`
+	SubscribeMsgPopupEvent     SubscribeMsgPopupEvent       `xml:"SubscribeMsgPopupEvent"`
 }
 
 // SubscribeMsgPopupEvent 用户操作订阅通知弹窗消息回调
 type SubscribeMsgPopupEvent struct {
-	List []SubscribeMsgPopupEventList `xml:"List" json:"List"`
+	List []SubscribeMsgPopupEventList `xml:"List"`
 }
 
 // SubscribeMsgPopupEventList 订阅消息事件列表
@@ -420,10 +472,32 @@ type SubscribeMsgPopupEventList struct {
 	PopupScene            string `xml:"PopupScene" json:"PopupScene"`
 }
 
+// SetSubscribeMsgPopupEvents 设置订阅消息事件
+func (s *PushDataSubscribePopup) SetSubscribeMsgPopupEvents(list []SubscribeMsgPopupEventList) {
+	s.subscribeMsgPopupEventList = list
+}
+
+// GetSubscribeMsgPopupEvents 获取订阅消息事件数据
+func (s *PushDataSubscribePopup) GetSubscribeMsgPopupEvents() []SubscribeMsgPopupEventList {
+	if s.subscribeMsgPopupEventList != nil {
+		return s.subscribeMsgPopupEventList
+	}
+
+	if s.SubscribeMsgPopupEvent.List == nil {
+		return nil
+	}
+	list := make([]SubscribeMsgPopupEventList, len(s.SubscribeMsgPopupEvent.List))
+	for i, item := range s.SubscribeMsgPopupEvent.List {
+		list[i] = item
+	}
+	return list
+}
+
 // PushDataSubscribeMsgChange 用户管理订阅通知事件推送
 type PushDataSubscribeMsgChange struct {
 	CommonPushData
-	List []SubscribeMsgChangeList `xml:"SubscribeMsgChangeEvent>List" json:"List"`
+	SubscribeMsgChangeEvent SubscribeMsgChangeEvent  `xml:"SubscribeMsgChangeEvent"`
+	subscribeMsgChangeList  []SubscribeMsgChangeList `json:"-"`
 }
 
 // SubscribeMsgChangeEvent 用户管理订阅通知回调
@@ -437,21 +511,64 @@ type SubscribeMsgChangeList struct {
 	SubscribeStatusString string `xml:"SubscribeStatusString" json:"SubscribeStatusString"`
 }
 
+// SetSubscribeMsgChangeEvents 设置订阅消息事件
+func (s *PushDataSubscribeMsgChange) SetSubscribeMsgChangeEvents(list []SubscribeMsgChangeList) {
+	s.subscribeMsgChangeList = list
+}
+
+// GetSubscribeMsgChangeEvents 获取订阅消息事件数据
+func (s *PushDataSubscribeMsgChange) GetSubscribeMsgChangeEvents() []SubscribeMsgChangeList {
+	if s.subscribeMsgChangeList != nil {
+		return s.subscribeMsgChangeList
+	}
+
+	if s.SubscribeMsgChangeEvent.List == nil {
+		return nil
+	}
+	list := make([]SubscribeMsgChangeList, len(s.SubscribeMsgChangeEvent.List))
+	for i, item := range s.SubscribeMsgChangeEvent.List {
+		list[i] = item
+	}
+	return list
+}
+
 // PushDataSubscribeMsgSent 用户发送订阅通知事件推送
 type PushDataSubscribeMsgSent struct {
 	CommonPushData
-	List []SubscribeMsgSentEventList `xml:"SubscribeMsgSentEvent>List" json:"List"`
+	SubscribeMsgSentEvent     SubscribeMsgSentEvent  `xml:"SubscribeMsgSentEvent"`
+	subscribeMsgSentEventList []SubscribeMsgSentList `json:"-"`
 }
 
 // SubscribeMsgSentEvent 用户发送订阅通知回调
 type SubscribeMsgSentEvent struct {
-	List []SubscribeMsgSentEventList `xml:"List" json:"List"`
+	List []SubscribeMsgSentList `xml:"List" json:"List"`
 }
 
-// SubscribeMsgSentEventList 订阅消息事件列表
-type SubscribeMsgSentEventList struct {
+// SubscribeMsgSentList 订阅消息事件列表
+type SubscribeMsgSentList struct {
 	TemplateID  string `xml:"TemplateId" json:"TemplateId"`
 	MsgID       string `xml:"MsgID" json:"MsgID"`
 	ErrorCode   int    `xml:"ErrorCode" json:"ErrorCode"`
 	ErrorStatus string `xml:"ErrorStatus" json:"ErrorStatus"`
+}
+
+// SetSubscribeMsgSentEvents 设置订阅消息事件
+func (s *PushDataSubscribeMsgSent) SetSubscribeMsgSentEvents(list []SubscribeMsgSentList) {
+	s.subscribeMsgSentEventList = list
+}
+
+// GetSubscribeMsgSentEvents 获取订阅消息事件数据
+func (s *PushDataSubscribeMsgSent) GetSubscribeMsgSentEvents() []SubscribeMsgSentList {
+	if s.subscribeMsgSentEventList != nil {
+		return s.subscribeMsgSentEventList
+	}
+
+	if s.SubscribeMsgSentEvent.List == nil {
+		return nil
+	}
+	list := make([]SubscribeMsgSentList, len(s.SubscribeMsgSentEvent.List))
+	for i, item := range s.SubscribeMsgSentEvent.List {
+		list[i] = item
+	}
+	return list
 }
