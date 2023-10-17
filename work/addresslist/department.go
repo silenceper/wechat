@@ -116,7 +116,7 @@ func (r *Client) DepartmentList() ([]*Department, error) {
 //
 // @desc https://developer.work.weixin.qq.com/document/path/90208
 func (r *Client) DepartmentListByID(departmentID int) ([]*Department, error) {
-	var formatUrl string
+	var formatURL string
 
 	// 获取accessToken
 	accessToken, err := r.GetAccessToken()
@@ -125,15 +125,15 @@ func (r *Client) DepartmentListByID(departmentID int) ([]*Department, error) {
 	}
 
 	if departmentID > 0 {
-		formatUrl =
+		formatURL =
 			fmt.Sprintf(departmentListByIDURL, accessToken, departmentID)
 	} else {
-		formatUrl =
+		formatURL =
 			fmt.Sprintf(departmentListURL, accessToken)
 	}
 
 	// 发起http请求
-	response, err := util.HTTPGet(formatUrl)
+	response, err := util.HTTPGet(formatURL)
 	if err != nil {
 		return nil, err
 	}
