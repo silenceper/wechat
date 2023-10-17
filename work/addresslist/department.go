@@ -139,7 +139,7 @@ func (r *Client) DepartmentListByID(departmentID int) ([]*Department, error) {
 	}
 	// 按照结构体解析返回值
 	result := &DepartmentListResponse{}
-	err = util.DecodeWithError(response, result, "DepartmentListByID")
+	err = util.DecodeWithError(response, result, "DepartmentList")
 	// 返回数据
 	return result.Department, err
 }
