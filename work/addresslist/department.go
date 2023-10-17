@@ -12,7 +12,8 @@ const (
 	// departmentSimpleListURL 获取子部门ID列表
 	departmentSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/department/simplelist?access_token=%s&id=%d"
 	// departmentListURL 获取部门列表
-	departmentListURL = "https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=%s"
+	departmentListURL     = "https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=%s"
+	departmentListByIDURL = "https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=%s&id=%d"
 	// departmentGetURL 获取单个部门详情 https://qyapi.weixin.qq.com/cgi-bin/department/get?access_token=ACCESS_TOKEN&id=ID
 	departmentGetURL = "https://qyapi.weixin.qq.com/cgi-bin/department/get?access_token=%s&id=%d"
 )
@@ -106,19 +107,39 @@ func (r *Client) DepartmentSimpleList(departmentID int) ([]*DepartmentID, error)
 // DepartmentList 获取部门列表
 // @desc https://developer.work.weixin.qq.com/document/path/90208
 func (r *Client) DepartmentList() ([]*Department, error) {
+	return r.DepartmentListByID(0)
+}
+
+// DepartmentListByID 获取部门列表
+//
+// departmentID 部门id。获取指定部门及其下的子部门（以及子部门的子部门等等，递归）
+//
+// @desc https://developer.work.weixin.qq.com/document/path/90208
+func (r *Client) DepartmentListByID(departmentID int) ([]*Department, error) {
+	var formatUrl string
+
 	// 获取accessToken
 	accessToken, err := r.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
+
+	if departmentID > 0 {
+		formatUrl =
+			fmt.Sprintf(departmentListByIDURL, accessToken, departmentID)
+	} else {
+		formatUrl =
+			fmt.Sprintf(departmentListURL, accessToken)
+	}
+
 	// 发起http请求
-	response, err := util.HTTPGet(fmt.Sprintf(departmentListURL, accessToken))
+	response, err := util.HTTPGet(formatUrl)
 	if err != nil {
 		return nil, err
 	}
 	// 按照结构体解析返回值
 	result := &DepartmentListResponse{}
-	err = util.DecodeWithError(response, result, "DepartmentList")
+	err = util.DecodeWithError(response, result, "DepartmentListByID")
 	// 返回数据
 	return result.Department, err
 }
