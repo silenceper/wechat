@@ -125,11 +125,9 @@ func (r *Client) DepartmentListByID(departmentID int) ([]*Department, error) {
 	}
 
 	if departmentID > 0 {
-		formatURL =
-			fmt.Sprintf(departmentListByIDURL, accessToken, departmentID)
+		formatURL = fmt.Sprintf(departmentListByIDURL, accessToken, departmentID)
 	} else {
-		formatURL =
-			fmt.Sprintf(departmentListURL, accessToken)
+		formatURL = fmt.Sprintf(departmentListURL, accessToken)
 	}
 
 	// 发起http请求
