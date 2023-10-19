@@ -104,19 +104,6 @@ type StableAccessToken struct {
 	cache          cache.Cache
 }
 
-// NewStableAccessToken new StableAccessToken
-func NewStableAccessToken(appID, appSecret, cacheKeyPrefix string, cache cache.Cache) AccessTokenContextHandle {
-	if cache == nil {
-		panic("cache is need")
-	}
-	return &StableAccessToken{
-		appID:          appID,
-		appSecret:      appSecret,
-		cache:          cache,
-		cacheKeyPrefix: cacheKeyPrefix,
-	}
-}
-
 // GetAccessToken 获取access_token,先从cache中获取，没有则从服务端获取
 func (ak *StableAccessToken) GetAccessToken() (accessToken string, err error) {
 	return ak.GetAccessTokenContext(context.Background())
@@ -127,7 +114,9 @@ func (ak *StableAccessToken) GetAccessTokenContext(ctx context.Context) (accessT
 	// 先从cache中取
 	accessTokenCacheKey := fmt.Sprintf("%s_stable_access_token_%s", ak.cacheKeyPrefix, ak.appID)
 	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
-		return val.(string), nil
+		if accessToken = val.(string); accessToken != "" {
+			return
+		}
 	}
 
 	// cache失效，从微信服务器获取
@@ -201,10 +190,10 @@ func (ak *WorkAccessToken) GetAccessTokenContext(ctx context.Context) (accessTok
 	ak.accessTokenLock.Lock()
 	defer ak.accessTokenLock.Unlock()
 	accessTokenCacheKey := fmt.Sprintf("%s_access_token_%s", ak.cacheKeyPrefix, ak.CorpID)
-	val := ak.cache.Get(accessTokenCacheKey)
-	if val != nil {
-		accessToken = val.(string)
-		return
+	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
+		if accessToken = val.(string); accessToken != "" {
+			return
+		}
 	}
 
 	// cache失效，从微信服务器获取
@@ -221,11 +210,6 @@ func (ak *WorkAccessToken) GetAccessTokenContext(ctx context.Context) (accessTok
 	}
 	accessToken = resAccessToken.AccessToken
 	return
-}
-
-// GetTokenFromServer 强制从微信服务器获取token
-func GetTokenFromServer(url string) (resAccessToken ResAccessToken, err error) {
-	return GetTokenFromServerContext(context.Background(), url)
 }
 
 // GetTokenFromServerContext 强制从微信服务器获取token
