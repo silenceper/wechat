@@ -288,13 +288,13 @@ func (r *Client) SendWelcomeMsg(req *SendWelcomeMsgRequest) error {
 // AddGroupWelcomeTemplateRequest 添加入群欢迎语素材请求
 type AddGroupWelcomeTemplateRequest struct {
 	Text        MsgText               `json:"text"`
-	Image       AttachmentImg         `json:"image"`
-	Link        AttachmentLink        `json:"link"`
-	MiniProgram AttachmentMiniProgram `json:"miniprogram"`
-	File        AttachmentFile        `json:"file"`
-	Video       AttachmentVideo       `json:"video"`
-	AgentID     int                   `json:"agentid"`
-	Notify      int                   `json:"notify"`
+	Image       AttachmentImg         `json:"image,omitempty"`
+	Link        AttachmentLink        `json:"link,omitempty"`
+	MiniProgram AttachmentMiniProgram `json:"miniprogram,omitempty"`
+	File        AttachmentFile        `json:"file,omitempty"`
+	Video       AttachmentVideo       `json:"video,omitempty"`
+	AgentID     int                   `json:"agentid,omitempty"`
+	Notify      int                   `json:"notify,omitempty"`
 }
 
 // AddGroupWelcomeTemplateResponse 添加入群欢迎语素材响应
