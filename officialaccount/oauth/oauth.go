@@ -74,26 +74,27 @@ type ResAccessToken struct {
 	UnionID string `json:"unionid"`
 }
 
-// GetUserInfoByCodeCtx 通过网页授权的code 换取用户的信息
-func (oauth *Oauth) GetUserInfoByCodeCtx(ctx ctx2.Context, code string) (result UserInfo, err error) {
+// GetUserInfoByCodeContext 通过网页授权的code 换取用户的信息
+func (oauth *Oauth) GetUserInfoByCodeContext(ctx ctx2.Context, code string) (result UserInfo, err error) {
 
 	var (
 		token ResAccessToken
 	)
-	if token, err = oauth.GetUserAccessTokenCtx(ctx, code); err != nil {
+	if token, err = oauth.GetUserAccessTokenContext(ctx, code); err != nil {
 		return
 	}
 
-	return oauth.GetUserInfoCtx(ctx, token.AccessToken, token.OpenID, "")
+	return oauth.GetUserInfoContext(ctx, token.AccessToken, token.OpenID, "")
 }
 
 // GetUserAccessToken 通过网页授权的code 换取access_token(区别于context中的access_token)
 func (oauth *Oauth) GetUserAccessToken(code string) (result ResAccessToken, err error) {
 
-	return oauth.GetUserAccessTokenCtx(ctx2.Background(), code)
+	return oauth.GetUserAccessTokenContext(ctx2.Background(), code)
 }
 
-func (oauth *Oauth) GetUserAccessTokenCtx(ctx ctx2.Context, code string) (result ResAccessToken, err error) {
+// GetUserAccessTokenContext 通过网页授权的code 换取access_token(区别于context中的access_token) with context
+func (oauth *Oauth) GetUserAccessTokenContext(ctx ctx2.Context, code string) (result ResAccessToken, err error) {
 	urlStr := fmt.Sprintf(accessTokenURL, oauth.AppID, oauth.AppSecret, code)
 	var response []byte
 	response, err = util.HTTPGetContext(ctx, urlStr)
@@ -114,10 +115,11 @@ func (oauth *Oauth) GetUserAccessTokenCtx(ctx ctx2.Context, code string) (result
 // RefreshAccessToken 刷新access_token
 func (oauth *Oauth) RefreshAccessToken(refreshToken string) (result ResAccessToken, err error) {
 
-	return oauth.RefreshAccessTokenCtx(ctx2.Background(), refreshToken)
+	return oauth.RefreshAccessTokenContext(ctx2.Background(), refreshToken)
 }
 
-func (oauth *Oauth) RefreshAccessTokenCtx(ctx ctx2.Context, refreshToken string) (result ResAccessToken, err error) {
+// RefreshAccessTokenContext 刷新access_token with context
+func (oauth *Oauth) RefreshAccessTokenContext(ctx ctx2.Context, refreshToken string) (result ResAccessToken, err error) {
 	urlStr := fmt.Sprintf(refreshAccessTokenURL, oauth.AppID, refreshToken)
 	var response []byte
 	response, err = util.HTTPGetContext(ctx, urlStr)
@@ -138,10 +140,11 @@ func (oauth *Oauth) RefreshAccessTokenCtx(ctx ctx2.Context, refreshToken string)
 // CheckAccessToken 检验access_token是否有效
 func (oauth *Oauth) CheckAccessToken(accessToken, openID string) (b bool, err error) {
 
-	return oauth.CheckAccessTokenCtx(ctx2.Background(), accessToken, openID)
+	return oauth.CheckAccessTokenContext(ctx2.Background(), accessToken, openID)
 }
 
-func (oauth *Oauth) CheckAccessTokenCtx(ctx ctx2.Context, accessToken, openID string) (b bool, err error) {
+// CheckAccessTokenContext 检验access_token是否有效 with context
+func (oauth *Oauth) CheckAccessTokenContext(ctx ctx2.Context, accessToken, openID string) (b bool, err error) {
 	urlStr := fmt.Sprintf(checkAccessTokenURL, accessToken, openID)
 	var response []byte
 	response, err = util.HTTPGetContext(ctx, urlStr)
@@ -179,10 +182,11 @@ type UserInfo struct {
 // GetUserInfo 如果scope为 snsapi_userinfo 则可以通过此方法获取到用户基本信息
 func (oauth *Oauth) GetUserInfo(accessToken, openID, lang string) (result UserInfo, err error) {
 
-	return oauth.GetUserInfoCtx(ctx2.Background(), accessToken, openID, lang)
+	return oauth.GetUserInfoContext(ctx2.Background(), accessToken, openID, lang)
 }
 
-func (oauth *Oauth) GetUserInfoCtx(ctx ctx2.Context, accessToken, openID, lang string) (result UserInfo, err error) {
+// GetUserInfoContext 如果scope为 snsapi_userinfo 则可以通过此方法获取到用户基本信息 with context
+func (oauth *Oauth) GetUserInfoContext(ctx ctx2.Context, accessToken, openID, lang string) (result UserInfo, err error) {
 
 	if lang == "" {
 		lang = "zh_CN"
