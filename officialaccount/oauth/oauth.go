@@ -76,7 +76,6 @@ type ResAccessToken struct {
 
 // GetUserInfoByCodeContext 通过网页授权的code 换取用户的信息
 func (oauth *Oauth) GetUserInfoByCodeContext(ctx ctx2.Context, code string) (result UserInfo, err error) {
-
 	var (
 		token ResAccessToken
 	)
@@ -89,7 +88,6 @@ func (oauth *Oauth) GetUserInfoByCodeContext(ctx ctx2.Context, code string) (res
 
 // GetUserAccessToken 通过网页授权的code 换取access_token(区别于context中的access_token)
 func (oauth *Oauth) GetUserAccessToken(code string) (result ResAccessToken, err error) {
-
 	return oauth.GetUserAccessTokenContext(ctx2.Background(), code)
 }
 
@@ -114,7 +112,6 @@ func (oauth *Oauth) GetUserAccessTokenContext(ctx ctx2.Context, code string) (re
 
 // RefreshAccessToken 刷新access_token
 func (oauth *Oauth) RefreshAccessToken(refreshToken string) (result ResAccessToken, err error) {
-
 	return oauth.RefreshAccessTokenContext(ctx2.Background(), refreshToken)
 }
 
@@ -139,7 +136,6 @@ func (oauth *Oauth) RefreshAccessTokenContext(ctx ctx2.Context, refreshToken str
 
 // CheckAccessToken 检验access_token是否有效
 func (oauth *Oauth) CheckAccessToken(accessToken, openID string) (b bool, err error) {
-
 	return oauth.CheckAccessTokenContext(ctx2.Background(), accessToken, openID)
 }
 
@@ -181,13 +177,11 @@ type UserInfo struct {
 
 // GetUserInfo 如果scope为 snsapi_userinfo 则可以通过此方法获取到用户基本信息
 func (oauth *Oauth) GetUserInfo(accessToken, openID, lang string) (result UserInfo, err error) {
-
 	return oauth.GetUserInfoContext(ctx2.Background(), accessToken, openID, lang)
 }
 
 // GetUserInfoContext 如果scope为 snsapi_userinfo 则可以通过此方法获取到用户基本信息 with context
 func (oauth *Oauth) GetUserInfoContext(ctx ctx2.Context, accessToken, openID, lang string) (result UserInfo, err error) {
-
 	if lang == "" {
 		lang = "zh_CN"
 	}
