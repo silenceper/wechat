@@ -90,8 +90,10 @@ host: https://qyapi.weixin.qq.com/
 |    名称     | 请求方式 | URL                                     | 是否已实现   | 使用方法                            | 贡献者      |
 |:---------:|------|:----------------------------------------| ---------- | -------------------------------   |----------|
 | 获取子部门ID列表 | GET  | /cgi-bin/department/simplelist          | YES        | (r *Client) DepartmentSimpleList| MARKWANG |
+| 获取部门列表 | GET  | /cgi-bin/department/list                 | YES        | (r *Client) DepartmentList| just5325, ourines |
 |  获取部门成员   | GET | /cgi-bin/user/simplelist                | YES        | (r *Client) UserSimpleList  | MARKWANG  |
 |  获取成员ID列表   | Post | /cgi-bin/user/list_id                | YES        | (r *Client) UserListId  | MARKWANG  |
+
 
 
 ## 素材管理
