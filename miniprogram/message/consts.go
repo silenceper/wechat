@@ -22,9 +22,9 @@ const (
 	MsgTypeMiniProgramPage = "miniprogrampage"
 	// MsgTypeEvent 事件
 	MsgTypeEvent MsgType = "event"
-	// DataTypeXML XML格式数据
+	// DataTypeXML XML 格式数据
 	DataTypeXML = "xml"
-	// DataTypeJSON JSON格式数据
+	// DataTypeJSON JSON 格式数据
 	DataTypeJSON = "json"
 )
 
