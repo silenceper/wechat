@@ -287,14 +287,14 @@ func (r *Client) SendWelcomeMsg(req *SendWelcomeMsgRequest) error {
 
 // AddGroupWelcomeTemplateRequest 添加入群欢迎语素材请求
 type AddGroupWelcomeTemplateRequest struct {
-	Text        MsgText               `json:"text"`
-	Image       AttachmentImg         `json:"image"`
-	Link        AttachmentLink        `json:"link"`
-	MiniProgram AttachmentMiniProgram `json:"miniprogram"`
-	File        AttachmentFile        `json:"file"`
-	Video       AttachmentVideo       `json:"video"`
-	AgentID     int                   `json:"agentid"`
-	Notify      int                   `json:"notify"`
+	Text        MsgText                `json:"text"`
+	Image       *AttachmentImg         `json:"image,omitempty"`
+	Link        *AttachmentLink        `json:"link,omitempty"`
+	MiniProgram *AttachmentMiniProgram `json:"miniprogram,omitempty"`
+	File        *AttachmentFile        `json:"file,omitempty"`
+	Video       *AttachmentVideo       `json:"video,omitempty"`
+	AgentID     int                    `json:"agentid,omitempty"`
+	Notify      int                    `json:"notify,omitempty"`
 }
 
 // AddGroupWelcomeTemplateResponse 添加入群欢迎语素材响应
@@ -324,14 +324,14 @@ func (r *Client) AddGroupWelcomeTemplate(req *AddGroupWelcomeTemplateRequest) (*
 
 // EditGroupWelcomeTemplateRequest 编辑入群欢迎语素材请求
 type EditGroupWelcomeTemplateRequest struct {
-	TemplateID  string                `json:"template_id"`
-	Text        MsgText               `json:"text"`
-	Image       AttachmentImg         `json:"image"`
-	Link        AttachmentLink        `json:"link"`
-	MiniProgram AttachmentMiniProgram `json:"miniprogram"`
-	File        AttachmentFile        `json:"file"`
-	Video       AttachmentVideo       `json:"video"`
-	AgentID     int                   `json:"agentid"`
+	TemplateID  string                 `json:"template_id"`
+	Text        MsgText                `json:"text"`
+	Image       *AttachmentImg         `json:"image"`
+	Link        *AttachmentLink        `json:"link"`
+	MiniProgram *AttachmentMiniProgram `json:"miniprogram"`
+	File        *AttachmentFile        `json:"file"`
+	Video       *AttachmentVideo       `json:"video"`
+	AgentID     int                    `json:"agentid"`
 }
 
 // EditGroupWelcomeTemplateResponse 编辑入群欢迎语素材响应
@@ -366,11 +366,11 @@ type GetGroupWelcomeTemplateRequest struct {
 type GetGroupWelcomeTemplateResponse struct {
 	util.CommonError
 	Text        MsgText               `json:"text"`
-	Image       AttachmentImg         `json:"image"`
-	Link        AttachmentLink        `json:"link"`
-	MiniProgram AttachmentMiniProgram `json:"miniprogram"`
-	File        AttachmentFile        `json:"file"`
-	Video       AttachmentVideo       `json:"video"`
+	Image       AttachmentImg         `json:"image,omitempty"`
+	Link        AttachmentLink        `json:"link,omitempty"`
+	MiniProgram AttachmentMiniProgram `json:"miniprogram,omitempty"`
+	File        AttachmentFile        `json:"file,omitempty"`
+	Video       AttachmentVideo       `json:"video,omitempty"`
 }
 
 // GetGroupWelcomeTemplate 获取入群欢迎语素材
