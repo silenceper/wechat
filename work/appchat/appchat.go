@@ -82,11 +82,9 @@ func (r *Client) Send(apiName string, request interface{}) (*SendResponse, error
 	}
 	// 按照结构体解析返回值
 	result := &SendResponse{}
-	if err = util.DecodeWithError(response, result, apiName); err != nil {
-		return nil, err
-	}
+	err = util.DecodeWithError(response, result, apiName)
 	// 返回数据
-	return result, nil
+	return result, err
 }
 
 // SendText 发送文本消息

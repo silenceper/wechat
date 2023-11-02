@@ -149,10 +149,7 @@ func (s *Client) GetRawChatData(seq uint64, limit uint64, proxy string, passwd s
 
 	var data ChatDataResponse
 	err := json.Unmarshal(buf, &data)
-	if err != nil {
-		return ChatDataResponse{}, err
-	}
-	return data, nil
+	return data, err
 }
 
 // DecryptData 解析密文.企业微信自有解密内容

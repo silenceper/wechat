@@ -51,10 +51,8 @@ func (r *Client) CreateTag(req *CreateTagRequest) (*CreateTagResponse, error) {
 		return nil, err
 	}
 	result := &CreateTagResponse{}
-	if err = util.DecodeWithError(response, result, "CreateTag"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "CreateTag")
+	return result, err
 }
 
 type (
@@ -129,10 +127,8 @@ func (r *Client) GetTag(tagID int) (*GetTagResponse, error) {
 		return nil, err
 	}
 	result := &GetTagResponse{}
-	if err = util.DecodeWithError(response, result, "GetTag"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetTag")
+	return result, err
 }
 
 type (
@@ -165,10 +161,8 @@ func (r *Client) AddTagUsers(req *AddTagUsersRequest) (*AddTagUsersResponse, err
 		return nil, err
 	}
 	result := &AddTagUsersResponse{}
-	if err = util.DecodeWithError(response, result, "AddTagUsers"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "AddTagUsers")
+	return result, err
 }
 
 type (
@@ -201,10 +195,8 @@ func (r *Client) DelTagUsers(req *DelTagUsersRequest) (*DelTagUsersResponse, err
 		return nil, err
 	}
 	result := &DelTagUsersResponse{}
-	if err = util.DecodeWithError(response, result, "DelTagUsers"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "DelTagUsers")
+	return result, err
 }
 
 type (
@@ -235,8 +227,6 @@ func (r *Client) ListTag() (*ListTagResponse, error) {
 		return nil, err
 	}
 	result := &ListTagResponse{}
-	if err = util.DecodeWithError(response, result, "ListTag"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "ListTag")
+	return result, err
 }

@@ -37,7 +37,7 @@ func (s *VirtualPayment) SetSessionKey(sessionKey string) {
 }
 
 // QueryUserBalance 查询虚拟支付余额
-func (s *VirtualPayment) QueryUserBalance(ctx context.Context, in *QueryUserBalanceRequest) (out *QueryUserBalanceResponse, err error) {
+func (s *VirtualPayment) QueryUserBalance(ctx context.Context, in *QueryUserBalanceRequest) (out QueryUserBalanceResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -60,12 +60,12 @@ func (s *VirtualPayment) QueryUserBalance(ctx context.Context, in *QueryUserBala
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "QueryUserBalance")
+	err = util.DecodeWithError(response, &out, "QueryUserBalance")
 	return
 }
 
 // CurrencyPay currency pay 扣减代币（一般用于代币支付）
-func (s *VirtualPayment) CurrencyPay(ctx context.Context, in *CurrencyPayRequest) (out *CurrencyPayResponse, err error) {
+func (s *VirtualPayment) CurrencyPay(ctx context.Context, in *CurrencyPayRequest) (out CurrencyPayResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -88,12 +88,12 @@ func (s *VirtualPayment) CurrencyPay(ctx context.Context, in *CurrencyPayRequest
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "CurrencyPay")
+	err = util.DecodeWithError(response, &out, "CurrencyPay")
 	return
 }
 
 // QueryOrder 查询创建的订单（现金单，非代币单）
-func (s *VirtualPayment) QueryOrder(ctx context.Context, in *QueryOrderRequest) (out *QueryOrderResponse, err error) {
+func (s *VirtualPayment) QueryOrder(ctx context.Context, in *QueryOrderRequest) (out QueryOrderResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -116,12 +116,12 @@ func (s *VirtualPayment) QueryOrder(ctx context.Context, in *QueryOrderRequest) 
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "QueryOrder")
+	err = util.DecodeWithError(response, &out, "QueryOrder")
 	return
 }
 
 // CancelCurrencyPay 取消订单 代币支付退款 (currency_pay 接口的逆操作)
-func (s *VirtualPayment) CancelCurrencyPay(ctx context.Context, in *CancelCurrencyPayRequest) (out *CancelCurrencyPayResponse, err error) {
+func (s *VirtualPayment) CancelCurrencyPay(ctx context.Context, in *CancelCurrencyPayRequest) (out CancelCurrencyPayResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -144,13 +144,13 @@ func (s *VirtualPayment) CancelCurrencyPay(ctx context.Context, in *CancelCurren
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "CancelCurrencyPay")
+	err = util.DecodeWithError(response, &out, "CancelCurrencyPay")
 	return
 }
 
 // NotifyProvideGoods 通知发货
 // 通知已经发货完成（只能通知现金单）,正常通过 xpay_goods_deliver_notify 消息推送返回成功就不需要调用这个 api 接口。这个接口用于异常情况推送不成功时手动将单改成已发货状态
-func (s *VirtualPayment) NotifyProvideGoods(ctx context.Context, in *NotifyProvideGoodsRequest) (out *NotifyProvideGoodsResponse, err error) {
+func (s *VirtualPayment) NotifyProvideGoods(ctx context.Context, in *NotifyProvideGoodsRequest) (out NotifyProvideGoodsResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -174,12 +174,12 @@ func (s *VirtualPayment) NotifyProvideGoods(ctx context.Context, in *NotifyProvi
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "NotifyProvideGoods")
+	err = util.DecodeWithError(response, &out, "NotifyProvideGoods")
 	return
 }
 
 // PresentCurrency 代币赠送接口，由于目前不支付按单号查赠送单的功能，所以当需要赠送的时候可以一直重试到返回 0 或者返回 268490004（重复操作）为止
-func (s *VirtualPayment) PresentCurrency(ctx context.Context, in *PresentCurrencyRequest) (out *PresentCurrencyResponse, err error) {
+func (s *VirtualPayment) PresentCurrency(ctx context.Context, in *PresentCurrencyRequest) (out PresentCurrencyResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -203,12 +203,12 @@ func (s *VirtualPayment) PresentCurrency(ctx context.Context, in *PresentCurrenc
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "PresentCurrency")
+	err = util.DecodeWithError(response, &out, "PresentCurrency")
 	return
 }
 
 // DownloadBill 下载订单交易账单
-func (s *VirtualPayment) DownloadBill(ctx context.Context, in *DownloadBillRequest) (out *DownloadBillResponse, err error) {
+func (s *VirtualPayment) DownloadBill(ctx context.Context, in *DownloadBillRequest) (out DownloadBillResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -232,12 +232,12 @@ func (s *VirtualPayment) DownloadBill(ctx context.Context, in *DownloadBillReque
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "DownloadBill")
+	err = util.DecodeWithError(response, &out, "DownloadBill")
 	return
 }
 
 // RefundOrder 退款 对使用 jsapi 接口下的单进行退款
-func (s *VirtualPayment) RefundOrder(ctx context.Context, in *RefundOrderRequest) (out *RefundOrderResponse, err error) {
+func (s *VirtualPayment) RefundOrder(ctx context.Context, in *RefundOrderRequest) (out RefundOrderResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -261,12 +261,12 @@ func (s *VirtualPayment) RefundOrder(ctx context.Context, in *RefundOrderRequest
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "RefundOrder")
+	err = util.DecodeWithError(response, &out, "RefundOrder")
 	return
 }
 
 // CreateWithdrawOrder 创建提现单
-func (s *VirtualPayment) CreateWithdrawOrder(ctx context.Context, in *CreateWithdrawOrderRequest) (out *CreateWithdrawOrderResponse, err error) {
+func (s *VirtualPayment) CreateWithdrawOrder(ctx context.Context, in *CreateWithdrawOrderRequest) (out CreateWithdrawOrderResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -290,12 +290,12 @@ func (s *VirtualPayment) CreateWithdrawOrder(ctx context.Context, in *CreateWith
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "CreateWithdrawOrder")
+	err = util.DecodeWithError(response, &out, "CreateWithdrawOrder")
 	return
 }
 
 // QueryWithdrawOrder 查询提现单
-func (s *VirtualPayment) QueryWithdrawOrder(ctx context.Context, in *QueryWithdrawOrderRequest) (out *QueryWithdrawOrderResponse, err error) {
+func (s *VirtualPayment) QueryWithdrawOrder(ctx context.Context, in *QueryWithdrawOrderRequest) (out QueryWithdrawOrderResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -319,12 +319,12 @@ func (s *VirtualPayment) QueryWithdrawOrder(ctx context.Context, in *QueryWithdr
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "QueryWithdrawOrder")
+	err = util.DecodeWithError(response, &out, "QueryWithdrawOrder")
 	return
 }
 
 // StartUploadGoods 开始上传商品
-func (s *VirtualPayment) StartUploadGoods(ctx context.Context, in *StartUploadGoodsRequest) (out *StartUploadGoodsResponse, err error) {
+func (s *VirtualPayment) StartUploadGoods(ctx context.Context, in *StartUploadGoodsRequest) (out StartUploadGoodsResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -348,12 +348,12 @@ func (s *VirtualPayment) StartUploadGoods(ctx context.Context, in *StartUploadGo
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "StartUploadGoods")
+	err = util.DecodeWithError(response, &out, "StartUploadGoods")
 	return
 }
 
 // QueryUploadGoods 查询上传商品
-func (s *VirtualPayment) QueryUploadGoods(ctx context.Context, in *QueryUploadGoodsRequest) (out *QueryUploadGoodsResponse, err error) {
+func (s *VirtualPayment) QueryUploadGoods(ctx context.Context, in *QueryUploadGoodsRequest) (out QueryUploadGoodsResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -377,12 +377,12 @@ func (s *VirtualPayment) QueryUploadGoods(ctx context.Context, in *QueryUploadGo
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "QueryUploadGoods")
+	err = util.DecodeWithError(response, &out, "QueryUploadGoods")
 	return
 }
 
 // StartPublishGoods 开始发布商品
-func (s *VirtualPayment) StartPublishGoods(ctx context.Context, in *StartPublishGoodsRequest) (out *StartPublishGoodsResponse, err error) {
+func (s *VirtualPayment) StartPublishGoods(ctx context.Context, in *StartPublishGoodsRequest) (out StartPublishGoodsResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -406,12 +406,12 @@ func (s *VirtualPayment) StartPublishGoods(ctx context.Context, in *StartPublish
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "StartPublishGoods")
+	err = util.DecodeWithError(response, &out, "StartPublishGoods")
 	return
 }
 
 // QueryPublishGoods 查询发布商品
-func (s *VirtualPayment) QueryPublishGoods(ctx context.Context, in *QueryPublishGoodsRequest) (out *QueryPublishGoodsResponse, err error) {
+func (s *VirtualPayment) QueryPublishGoods(ctx context.Context, in *QueryPublishGoodsRequest) (out QueryPublishGoodsResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -435,7 +435,7 @@ func (s *VirtualPayment) QueryPublishGoods(ctx context.Context, in *QueryPublish
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "QueryPublishGoods")
+	err = util.DecodeWithError(response, &out, "QueryPublishGoods")
 	return
 }
 

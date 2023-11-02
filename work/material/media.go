@@ -52,10 +52,8 @@ func (r *Client) UploadImg(filename string) (*UploadImgResponse, error) {
 		return nil, err
 	}
 	result := &UploadImgResponse{}
-	if err = util.DecodeWithError(response, result, "UploadImg"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "UploadImg")
+	return result, err
 }
 
 // UploadTempFile 上传临时素材
@@ -74,10 +72,8 @@ func (r *Client) UploadTempFile(filename string, mediaType string) (*UploadTempF
 		return nil, err
 	}
 	result := &UploadTempFileResponse{}
-	if err = util.DecodeWithError(response, result, "UploadTempFile"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "UploadTempFile")
+	return result, err
 }
 
 // UploadAttachment 上传附件资源
@@ -97,8 +93,6 @@ func (r *Client) UploadAttachment(filename string, mediaType string, attachmentT
 		return nil, err
 	}
 	result := &UploadAttachmentResponse{}
-	if err = util.DecodeWithError(response, result, "UploadAttachment"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "UploadAttachment")
+	return result, err
 }

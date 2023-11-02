@@ -27,7 +27,7 @@ import (
 )
 
 // SingleFileUpload 单文件上传
-func (s *MiniDrama) SingleFileUpload(ctx context.Context, in *SingleFileUploadRequest) (out *SingleFileUploadResponse, err error) {
+func (s *MiniDrama) SingleFileUpload(ctx context.Context, in *SingleFileUploadRequest) (out SingleFileUploadResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, singleFileUpload); err != nil {
 		return
@@ -76,12 +76,12 @@ func (s *MiniDrama) SingleFileUpload(ctx context.Context, in *SingleFileUploadRe
 		return
 	}
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "SingleFileUpload")
+	err = util.DecodeWithError(response, &out, "SingleFileUpload")
 	return
 }
 
 // PullUpload 拉取上传
-func (s *MiniDrama) PullUpload(ctx context.Context, in *PullUploadRequest) (out *PullUploadResponse, err error) {
+func (s *MiniDrama) PullUpload(ctx context.Context, in *PullUploadRequest) (out PullUploadResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, pullUpload); err != nil {
 		return
@@ -92,12 +92,12 @@ func (s *MiniDrama) PullUpload(ctx context.Context, in *PullUploadRequest) (out 
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "PullUpload")
+	err = util.DecodeWithError(response, &out, "PullUpload")
 	return
 }
 
 // GetTask 查询任务状态
-func (s *MiniDrama) GetTask(ctx context.Context, in *GetTaskRequest) (out *GetTaskResponse, err error) {
+func (s *MiniDrama) GetTask(ctx context.Context, in *GetTaskRequest) (out GetTaskResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, getTask); err != nil {
 		return
@@ -109,12 +109,12 @@ func (s *MiniDrama) GetTask(ctx context.Context, in *GetTaskRequest) (out *GetTa
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "GetTask")
+	err = util.DecodeWithError(response, &out, "GetTask")
 	return
 }
 
 // ApplyUpload 申请分片上传
-func (s *MiniDrama) ApplyUpload(ctx context.Context, in *ApplyUploadRequest) (out *ApplyUploadResponse, err error) {
+func (s *MiniDrama) ApplyUpload(ctx context.Context, in *ApplyUploadRequest) (out ApplyUploadResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, applyUpload); err != nil {
 		return
@@ -126,13 +126,13 @@ func (s *MiniDrama) ApplyUpload(ctx context.Context, in *ApplyUploadRequest) (ou
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "ApplyUpload")
+	err = util.DecodeWithError(response, &out, "ApplyUpload")
 	return
 }
 
 // UploadPart 上传分片
 // Content-Type 需要指定为 multipart/form-data; boundary=<delimiter>，<箭头括号>表示必须替换为有效值的变量。
-func (s *MiniDrama) UploadPart(ctx context.Context, in *UploadPartRequest) (out *UploadPartResponse, err error) {
+func (s *MiniDrama) UploadPart(ctx context.Context, in *UploadPartRequest) (out UploadPartResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, uploadPart); err != nil {
 		return
@@ -165,12 +165,12 @@ func (s *MiniDrama) UploadPart(ctx context.Context, in *UploadPartRequest) (out 
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "UploadPart")
+	err = util.DecodeWithError(response, &out, "UploadPart")
 	return
 }
 
 // CommitUpload 确认上传
-func (s *MiniDrama) CommitUpload(ctx context.Context, in *CommitUploadRequest) (out *CommitUploadResponse, err error) {
+func (s *MiniDrama) CommitUpload(ctx context.Context, in *CommitUploadRequest) (out CommitUploadResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, commitUpload); err != nil {
 		return
@@ -182,12 +182,12 @@ func (s *MiniDrama) CommitUpload(ctx context.Context, in *CommitUploadRequest) (
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "CommitUpload")
+	err = util.DecodeWithError(response, &out, "CommitUpload")
 	return
 }
 
 // ListMedia 获取媒体列表
-func (s *MiniDrama) ListMedia(ctx context.Context, in *ListMediaRequest) (out *ListMediaResponse, err error) {
+func (s *MiniDrama) ListMedia(ctx context.Context, in *ListMediaRequest) (out ListMediaResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, listMedia); err != nil {
 		return
@@ -199,12 +199,12 @@ func (s *MiniDrama) ListMedia(ctx context.Context, in *ListMediaRequest) (out *L
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "ListMedia")
+	err = util.DecodeWithError(response, &out, "ListMedia")
 	return
 }
 
 // GetMedia 获取媒资详细信息
-func (s *MiniDrama) GetMedia(ctx context.Context, in *GetMediaRequest) (out *GetMediaResponse, err error) {
+func (s *MiniDrama) GetMedia(ctx context.Context, in *GetMediaRequest) (out GetMediaResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, getMedia); err != nil {
 		return
@@ -216,12 +216,12 @@ func (s *MiniDrama) GetMedia(ctx context.Context, in *GetMediaRequest) (out *Get
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "GetMedia")
+	err = util.DecodeWithError(response, &out, "GetMedia")
 	return
 }
 
 // GetMediaLink 获取媒资播放链接
-func (s *MiniDrama) GetMediaLink(ctx context.Context, in *GetMediaLinkRequest) (out *GetMediaLinkResponse, err error) {
+func (s *MiniDrama) GetMediaLink(ctx context.Context, in *GetMediaLinkRequest) (out GetMediaLinkResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, getMediaLink); err != nil {
 		return
@@ -233,12 +233,12 @@ func (s *MiniDrama) GetMediaLink(ctx context.Context, in *GetMediaLinkRequest) (
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "GetMediaLink")
+	err = util.DecodeWithError(response, &out, "GetMediaLink")
 	return
 }
 
 // DeleteMedia 删除媒体
-func (s *MiniDrama) DeleteMedia(ctx context.Context, in *DeleteMediaRequest) (out *DeleteMediaResponse, err error) {
+func (s *MiniDrama) DeleteMedia(ctx context.Context, in *DeleteMediaRequest) (out DeleteMediaResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, deleteMedia); err != nil {
 		return
@@ -250,12 +250,12 @@ func (s *MiniDrama) DeleteMedia(ctx context.Context, in *DeleteMediaRequest) (ou
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "DeleteMedia")
+	err = util.DecodeWithError(response, &out, "DeleteMedia")
 	return
 }
 
 // AuditDrama 审核剧本
-func (s *MiniDrama) AuditDrama(ctx context.Context, in *AuditDramaRequest) (out *AuditDramaResponse, err error) {
+func (s *MiniDrama) AuditDrama(ctx context.Context, in *AuditDramaRequest) (out AuditDramaResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, auditDrama); err != nil {
 		return
@@ -267,12 +267,12 @@ func (s *MiniDrama) AuditDrama(ctx context.Context, in *AuditDramaRequest) (out 
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "AuditDrama")
+	err = util.DecodeWithError(response, &out, "AuditDrama")
 	return
 }
 
 // ListDramas 获取剧目列表
-func (s *MiniDrama) ListDramas(ctx context.Context, in *ListDramasRequest) (out *ListDramasResponse, err error) {
+func (s *MiniDrama) ListDramas(ctx context.Context, in *ListDramasRequest) (out ListDramasResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, listDramas); err != nil {
 		return
@@ -284,12 +284,12 @@ func (s *MiniDrama) ListDramas(ctx context.Context, in *ListDramasRequest) (out 
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "ListDramas")
+	err = util.DecodeWithError(response, &out, "ListDramas")
 	return
 }
 
 // GetDrama 获取剧目信息
-func (s *MiniDrama) GetDrama(ctx context.Context, in *GetDramaRequest) (out *GetDramaResponse, err error) {
+func (s *MiniDrama) GetDrama(ctx context.Context, in *GetDramaRequest) (out GetDramaResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, getDrama); err != nil {
 		return
@@ -300,12 +300,12 @@ func (s *MiniDrama) GetDrama(ctx context.Context, in *GetDramaRequest) (out *Get
 		return
 	}
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "GetDrama")
+	err = util.DecodeWithError(response, &out, "GetDrama")
 	return
 }
 
 // GetCdnUsageData 查询 CDN 用量数据
-func (s *MiniDrama) GetCdnUsageData(ctx context.Context, in *GetCdnUsageDataRequest) (out *GetCdnUsageDataResponse, err error) {
+func (s *MiniDrama) GetCdnUsageData(ctx context.Context, in *GetCdnUsageDataRequest) (out GetCdnUsageDataResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, getCdnUsageData); err != nil {
 		return
@@ -316,12 +316,12 @@ func (s *MiniDrama) GetCdnUsageData(ctx context.Context, in *GetCdnUsageDataRequ
 		return
 	}
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "GetCdnUsageData")
+	err = util.DecodeWithError(response, &out, "GetCdnUsageData")
 	return
 }
 
 // GetCdnLogs 查询 CDN 日志
-func (s *MiniDrama) GetCdnLogs(ctx context.Context, in *GetCdnLogsRequest) (out *GetCdnLogsResponse, err error) {
+func (s *MiniDrama) GetCdnLogs(ctx context.Context, in *GetCdnLogsRequest) (out GetCdnLogsResponse, err error) {
 	var address string
 	if address, err = s.requestAddress(ctx, getCdnLogs); err != nil {
 		return
@@ -332,7 +332,7 @@ func (s *MiniDrama) GetCdnLogs(ctx context.Context, in *GetCdnLogsRequest) (out 
 		return
 	}
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, out, "GetCdnLogs")
+	err = util.DecodeWithError(response, &out, "GetCdnLogs")
 	return
 }
 

@@ -44,10 +44,8 @@ func (r *Client) GetGroupChatList(req *GroupChatListRequest) (*GroupChatListResp
 		return nil, err
 	}
 	result := &GroupChatListResponse{}
-	if err = util.DecodeWithError(response, result, "GetGroupChatList"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetGroupChatList")
+	return result, err
 }
 
 type (
@@ -106,10 +104,8 @@ func (r *Client) GetGroupChatDetail(req *GroupChatDetailRequest) (*GroupChatDeta
 		return nil, err
 	}
 	result := &GroupChatDetailResponse{}
-	if err = util.DecodeWithError(response, result, "GetGroupChatDetail"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetGroupChatDetail")
+	return result, err
 }
 
 type (
@@ -137,8 +133,6 @@ func (r *Client) OpengIDToChatID(req *OpengIDToChatIDRequest) (*OpengIDToChatIDR
 		return nil, err
 	}
 	result := &OpengIDToChatIDResponse{}
-	if err = util.DecodeWithError(response, result, "GetGroupChatDetail"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetGroupChatDetail")
+	return result, err
 }

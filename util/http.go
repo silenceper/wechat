@@ -17,6 +17,16 @@ import (
 	"golang.org/x/crypto/pkcs12"
 )
 
+// URIModifier URI修改器
+type URIModifier func(uri string) string
+
+var uriModifier URIModifier
+
+// SetURIModifier 设置URI修改器
+func SetURIModifier(fn URIModifier) {
+	uriModifier = fn
+}
+
 // HTTPGet get 请求
 func HTTPGet(uri string) ([]byte, error) {
 	return HTTPGetContext(context.Background(), uri)
@@ -24,6 +34,9 @@ func HTTPGet(uri string) ([]byte, error) {
 
 // HTTPGetContext get 请求
 func HTTPGetContext(ctx context.Context, uri string) ([]byte, error) {
+	if uriModifier != nil {
+		uri = uriModifier(uri)
+	}
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -47,6 +60,9 @@ func HTTPPost(uri string, data string) ([]byte, error) {
 
 // HTTPPostContext post 请求
 func HTTPPostContext(ctx context.Context, uri string, data []byte, header map[string]string) ([]byte, error) {
+	if uriModifier != nil {
+		uri = uriModifier(uri)
+	}
 	body := bytes.NewBuffer(data)
 	request, err := http.NewRequestWithContext(ctx, http.MethodPost, uri, body)
 	if err != nil {
@@ -71,6 +87,9 @@ func HTTPPostContext(ctx context.Context, uri string, data []byte, header map[st
 
 // PostJSONContext post json 数据请求
 func PostJSONContext(ctx context.Context, uri string, obj interface{}) ([]byte, error) {
+	if uriModifier != nil {
+		uri = uriModifier(uri)
+	}
 	jsonBuf := new(bytes.Buffer)
 	enc := json.NewEncoder(jsonBuf)
 	enc.SetEscapeHTML(false)
@@ -146,6 +165,9 @@ type MultipartFormField struct {
 
 // PostMultipartForm 上传文件或其他多个字段
 func PostMultipartForm(fields []MultipartFormField, uri string) (respBody []byte, err error) {
+	if uriModifier != nil {
+		uri = uriModifier(uri)
+	}
 	bodyBuf := &bytes.Buffer{}
 	bodyWriter := multipart.NewWriter(bodyBuf)
 
@@ -198,6 +220,9 @@ func PostMultipartForm(fields []MultipartFormField, uri string) (respBody []byte
 
 // PostXML perform a HTTP/POST request with XML body
 func PostXML(uri string, obj interface{}) ([]byte, error) {
+	if uriModifier != nil {
+		uri = uriModifier(uri)
+	}
 	xmlData, err := xml.Marshal(obj)
 	if err != nil {
 		return nil, err
@@ -259,6 +284,9 @@ func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
 
 // PostXMLWithTLS perform a HTTP/POST request with XML body and TLS
 func PostXMLWithTLS(uri string, obj interface{}, ca, key string) ([]byte, error) {
+	if uriModifier != nil {
+		uri = uriModifier(uri)
+	}
 	xmlData, err := xml.Marshal(obj)
 	if err != nil {
 		return nil, err

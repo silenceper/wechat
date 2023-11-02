@@ -27,15 +27,15 @@ const (
 	MsgTypeVideo MsgType = "video"
 	// MsgTypeMiniprogrampage 表示小程序卡片消息
 	MsgTypeMiniprogrampage MsgType = "miniprogrampage"
-	// MsgTypeShortVideo 表示短视频消息[限接收]
+	// MsgTypeShortVideo 表示短视频消息 [限接收]
 	MsgTypeShortVideo MsgType = "shortvideo"
-	// MsgTypeLocation 表示坐标消息[限接收]
+	// MsgTypeLocation 表示坐标消息 [限接收]
 	MsgTypeLocation MsgType = "location"
-	// MsgTypeLink 表示链接消息[限接收]
+	// MsgTypeLink 表示链接消息 [限接收]
 	MsgTypeLink MsgType = "link"
-	// MsgTypeMusic 表示音乐消息[限回复]
+	// MsgTypeMusic 表示音乐消息 [限回复]
 	MsgTypeMusic MsgType = "music"
-	// MsgTypeNews 表示图文消息[限回复]
+	// MsgTypeNews 表示图文消息 [限回复]
 	MsgTypeNews MsgType = "news"
 	// MsgTypeTransfer 表示消息消息转发到客服
 	MsgTypeTransfer MsgType = "transfer_customer_service"
@@ -91,7 +91,7 @@ const (
 const (
 	// 微信开放平台需要用到
 
-	// InfoTypeVerifyTicket 返回ticket
+	// InfoTypeVerifyTicket 返回 ticket
 	InfoTypeVerifyTicket InfoType = "component_verify_ticket"
 	// InfoTypeAuthorized 授权
 	InfoTypeAuthorized InfoType = "authorized"
@@ -108,8 +108,8 @@ type MixMessage struct {
 	CommonToken
 
 	// 基本消息
-	MsgID         int64   `xml:"MsgId"` // 其他消息推送过来是MsgId
-	TemplateMsgID int64   `xml:"MsgID"` // 模板消息推送成功的消息是MsgID
+	MsgID         int64   `xml:"MsgId"` // 其他消息推送过来是 MsgId
+	TemplateMsgID int64   `xml:"MsgID"` // 模板消息推送成功的消息是 MsgID
 	Content       string  `xml:"Content"`
 	Recognition   string  `xml:"Recognition"`
 	PicURL        string  `xml:"PicUrl"`
@@ -166,17 +166,17 @@ type MixMessage struct {
 
 	// 事件相关：发布能力
 	PublishEventInfo struct {
-		PublishID     int64                     `xml:"publish_id"`     // 发布任务id
+		PublishID     int64                     `xml:"publish_id"`     // 发布任务 id
 		PublishStatus freepublish.PublishStatus `xml:"publish_status"` // 发布状态
-		ArticleID     string                    `xml:"article_id"`     // 当发布状态为0时（即成功）时，返回图文的 article_id，可用于“客服消息”场景
+		ArticleID     string                    `xml:"article_id"`     // 当发布状态为 0 时（即成功）时，返回图文的 article_id，可用于“客服消息”场景
 		ArticleDetail struct {
 			Count uint `xml:"count"` // 文章数量
 			Item  []struct {
 				Index      uint   `xml:"idx"`         // 文章对应的编号
 				ArticleURL string `xml:"article_url"` // 图文的永久链接
 			} `xml:"item"`
-		} `xml:"article_detail"` // 当发布状态为0时（即成功）时，返回内容
-		FailIndex []uint `xml:"fail_idx"` // 当发布状态为2或4时，返回不通过的文章编号，第一篇为 1；其他发布状态则为空
+		} `xml:"article_detail"` // 当发布状态为 0 时（即成功）时，返回内容
+		FailIndex []uint `xml:"fail_idx"` // 当发布状态为 2 或 4 时，返回不通过的文章编号，第一篇为 1；其他发布状态则为空
 	} `xml:"PublishEventInfo"`
 
 	// 第三方平台相关
@@ -222,19 +222,19 @@ type MixMessage struct {
 	TraceID       string `xml:"trace_id"`
 	StatusCode    int    `xml:"status_code"`
 
-	//小程序名称审核结果事件推送
-	Ret      int32  `xml:"ret"`      //审核结果 2：失败，3：成功
-	NickName string `xml:"nickname"` //小程序昵称
+	// 小程序名称审核结果事件推送
+	Ret      int32  `xml:"ret"`      // 审核结果 2：失败，3：成功
+	NickName string `xml:"nickname"` // 小程序昵称
 
 	// 设备相关
 	device.MsgDevice
 
-	//小程序审核通知
-	SuccTime   int    `xml:"SuccTime"`   //审核成功时的时间戳
-	FailTime   int    `xml:"FailTime"`   //审核不通过的时间戳
-	DelayTime  int    `xml:"DelayTime"`  //审核延后时的时间戳
-	Reason     string `xml:"Reason"`     //审核不通过的原因
-	ScreenShot string `xml:"ScreenShot"` //审核不通过的截图示例。用 | 分隔的 media_id 的列表，可通过获取永久素材接口拉取截图内容
+	// 小程序审核通知
+	SuccTime   int    `xml:"SuccTime"`   // 审核成功时的时间戳
+	FailTime   int    `xml:"FailTime"`   // 审核不通过的时间戳
+	DelayTime  int    `xml:"DelayTime"`  // 审核延后时的时间戳
+	Reason     string `xml:"Reason"`     // 审核不通过的原因
+	ScreenShot string `xml:"ScreenShot"` // 审核不通过的截图示例。用 | 分隔的 media_id 的列表，可通过获取永久素材接口拉取截图内容
 }
 
 // SubscribeMsgPopupEvent 订阅通知事件推送的消息体
@@ -282,7 +282,7 @@ type ResponseEncryptedXMLMsg struct {
 	Nonce        string   `xml:"Nonce"        json:"Nonce"`
 }
 
-// CDATA  使用该类型,在序列化为 xml 文本时文本会被解析器忽略
+// CDATA  使用该类型，在序列化为 xml 文本时文本会被解析器忽略
 type CDATA string
 
 // MarshalXML 实现自己的序列化方法

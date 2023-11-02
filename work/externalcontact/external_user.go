@@ -50,10 +50,7 @@ func (r *Client) GetExternalUserList(userID string) ([]string, error) {
 	}
 	var result ExternalUserListResponse
 	err = util.DecodeWithError(response, &result, "GetExternalUserList")
-	if err != nil {
-		return nil, err
-	}
-	return result.ExternalUserID, nil
+	return result.ExternalUserID, err
 }
 
 // ExternalUserDetailResponse 外部联系人详情响应
@@ -104,7 +101,7 @@ type Tag struct {
 // WechatChannel 视频号添加的场景
 type WechatChannel struct {
 	NickName string `json:"nickname"`
-	Source   string `json:"source"`
+	Source   int    `json:"source"`
 }
 
 // GetExternalUserDetail 获取外部联系人详情
@@ -125,10 +122,7 @@ func (r *Client) GetExternalUserDetail(externalUserID string, nextCursor ...stri
 	}
 	result := &ExternalUserDetailResponse{}
 	err = util.DecodeWithError(response, result, "get_external_user_detail")
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return result, err
 }
 
 // BatchGetExternalUserDetailsRequest 批量获取外部联系人详情请求
@@ -196,10 +190,7 @@ func (r *Client) BatchGetExternalUserDetails(request BatchGetExternalUserDetails
 	}
 	var result ExternalUserDetailListResponse
 	err = util.DecodeWithError(response, &result, "BatchGetExternalUserDetails")
-	if err != nil {
-		return nil, err
-	}
-	return result.ExternalContactList, nil
+	return result.ExternalContactList, err
 }
 
 // UpdateUserRemarkRequest 修改客户备注信息请求体
@@ -265,10 +256,8 @@ func (r *Client) ListCustomerStrategy(req *ListCustomerStrategyRequest) (*ListCu
 		return nil, err
 	}
 	result := &ListCustomerStrategyResponse{}
-	if err = util.DecodeWithError(response, result, "ListCustomerStrategy"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "ListCustomerStrategy")
+	return result, err
 }
 
 // GetCustomerStrategyRequest 获取规则组详情请求
@@ -332,10 +321,8 @@ func (r *Client) GetCustomerStrategy(req *GetCustomerStrategyRequest) (*GetCusto
 		return nil, err
 	}
 	result := &GetCustomerStrategyResponse{}
-	if err = util.DecodeWithError(response, result, "GetCustomerStrategy"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetCustomerStrategy")
+	return result, err
 }
 
 // GetRangeCustomerStrategyRequest 获取规则组管理范围请求
@@ -374,10 +361,8 @@ func (r *Client) GetRangeCustomerStrategy(req *GetRangeCustomerStrategyRequest) 
 		return nil, err
 	}
 	result := &GetRangeCustomerStrategyResponse{}
-	if err = util.DecodeWithError(response, result, "GetRangeCustomerStrategy"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetRangeCustomerStrategy")
+	return result, err
 }
 
 // CreateCustomerStrategyRequest 创建新的规则组请求
@@ -410,10 +395,8 @@ func (r *Client) CreateCustomerStrategy(req *CreateCustomerStrategyRequest) (*Cr
 		return nil, err
 	}
 	result := &CreateCustomerStrategyResponse{}
-	if err = util.DecodeWithError(response, result, "CreateCustomerStrategy"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "CreateCustomerStrategy")
+	return result, err
 }
 
 // EditCustomerStrategyRequest 编辑规则组及其管理范围请求
