@@ -67,7 +67,7 @@ func (ak *DefaultAccessToken) GetAccessTokenContext(ctx context.Context) (access
 	// 先从cache中取
 	accessTokenCacheKey := fmt.Sprintf("%s_access_token_%s", ak.cacheKeyPrefix, ak.appID)
 
-	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
+	if val := cache.GetContext(ctx, ak.cache, accessTokenCacheKey); val != nil {
 		if accessToken = val.(string); accessToken != "" {
 			return
 		}
@@ -78,7 +78,7 @@ func (ak *DefaultAccessToken) GetAccessTokenContext(ctx context.Context) (access
 	defer ak.accessTokenLock.Unlock()
 
 	// 双检，防止重复从微信服务器获取
-	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
+	if val := cache.GetContext(ctx, ak.cache, accessTokenCacheKey); val != nil {
 		if accessToken = val.(string); accessToken != "" {
 			return
 		}
@@ -90,7 +90,7 @@ func (ak *DefaultAccessToken) GetAccessTokenContext(ctx context.Context) (access
 		return
 	}
 
-	if err = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(resAccessToken.ExpiresIn-1500)*time.Second); err != nil {
+	if err = cache.SetContext(ctx, ak.cache, accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(resAccessToken.ExpiresIn-1500)*time.Second); err != nil {
 		return
 	}
 	accessToken = resAccessToken.AccessToken
@@ -129,7 +129,7 @@ func (ak *StableAccessToken) GetAccessToken() (accessToken string, err error) {
 func (ak *StableAccessToken) GetAccessTokenContext(ctx context.Context) (accessToken string, err error) {
 	// 先从cache中取
 	accessTokenCacheKey := fmt.Sprintf("%s_stable_access_token_%s", ak.cacheKeyPrefix, ak.appID)
-	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
+	if val := cache.GetContext(ctx, ak.cache, accessTokenCacheKey); val != nil {
 		return val.(string), nil
 	}
 
@@ -141,7 +141,7 @@ func (ak *StableAccessToken) GetAccessTokenContext(ctx context.Context) (accessT
 	}
 
 	expires := resAccessToken.ExpiresIn - 300
-	_ = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
+	_ = cache.SetContext(ctx, ak.cache, accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
 
 	accessToken = resAccessToken.AccessToken
 	return
@@ -204,7 +204,7 @@ func (ak *WorkAccessToken) GetAccessTokenContext(ctx context.Context) (accessTok
 	ak.accessTokenLock.Lock()
 	defer ak.accessTokenLock.Unlock()
 	accessTokenCacheKey := fmt.Sprintf("%s_access_token_%s", ak.cacheKeyPrefix, ak.CorpID)
-	val := ak.cache.Get(accessTokenCacheKey)
+	val := cache.GetContext(ctx, ak.cache, accessTokenCacheKey)
 	if val != nil {
 		accessToken = val.(string)
 		return
@@ -218,7 +218,7 @@ func (ak *WorkAccessToken) GetAccessTokenContext(ctx context.Context) (accessTok
 	}
 
 	expires := resAccessToken.ExpiresIn - 1500
-	err = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
+	err = cache.SetContext(ctx, ak.cache, accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
 	if err != nil {
 		return
 	}
