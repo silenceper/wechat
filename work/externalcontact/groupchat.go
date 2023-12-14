@@ -76,13 +76,14 @@ type (
 	}
 	//GroupChat 客户群详情
 	GroupChat struct {
-		ChatID     string            `json:"chat_id"`     //客户群ID
-		Name       string            `json:"name"`        //群名
-		Owner      string            `json:"owner"`       //群主ID
-		CreateTime int64             `json:"create_time"` //群的创建时间
-		Notice     string            `json:"notice"`      //群公告
-		MemberList []GroupChatMember `json:"member_list"` //群成员列表
-		AdminList  []GroupChatAdmin  `json:"admin_list"`  //群管理员列表
+		ChatID        string            `json:"chat_id"`        //客户群ID
+		Name          string            `json:"name"`           //群名
+		Owner         string            `json:"owner"`          //群主ID
+		CreateTime    int64             `json:"create_time"`    //群的创建时间
+		Notice        string            `json:"notice"`         //群公告
+		MemberList    []GroupChatMember `json:"member_list"`    //群成员列表
+		AdminList     []GroupChatAdmin  `json:"admin_list"`     //群管理员列表
+		MemberVersion string            `json:"member_version"` //当前群成员版本号。可以配合客户群变更事件减少主动调用本接口的次数
 	}
 	//GroupChatDetailResponse 客户群详情 返回值
 	GroupChatDetailResponse struct {
