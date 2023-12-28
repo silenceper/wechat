@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	getRedPacketCoverUrl = "https://api.weixin.qq.com/redpacketcover/wxapp/cover_url/get_by_token?access_token=%s"
+	getRedPacketCoverURL = "https://api.weixin.qq.com/redpacketcover/wxapp/cover_url/get_by_token?access_token=%s"
 )
 
 // RedPacketCover struct
@@ -62,8 +62,8 @@ func (qrCode *RedPacketCover) fetchCode(urlStr string, body interface{}) (respon
 	return nil, err
 }
 
-// GetRedPacketCoverUrl 获得指定用户可以领取的红包封面链接。获取参数ctoken参考微信红包封面开放平台
+// GetRedPacketCoverURL 获得指定用户可以领取的红包封面链接。获取参数ctoken参考微信红包封面开放平台
 // 文档地址： https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/red-packet-cover/getRedPacketCoverUrl.html
-func (qrCode *RedPacketCover) GetRedPacketCoverUrl(coderParams CoverParma) (response []byte, err error) {
-	return qrCode.fetchCode(getRedPacketCoverUrl, coderParams)
+func (qrCode *RedPacketCover) GetRedPacketCoverURL(coderParams CoverParma) (response []byte, err error) {
+	return qrCode.fetchCode(getRedPacketCoverURL, coderParams)
 }
