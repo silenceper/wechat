@@ -1,6 +1,8 @@
 package wechat
 
 import (
+	"github.com/silenceper/wechat/v2/util"
+	"net/http"
 	"os"
 
 	log "github.com/sirupsen/logrus"
@@ -80,4 +82,8 @@ func (wc *Wechat) GetWork(cfg *workConfig.Config) *work.Work {
 		cfg.Cache = wc.cache
 	}
 	return work.NewWork(cfg)
+}
+
+func (wc *Wechat) SetHttpClient(client *http.Client) {
+	util.DefaultHTTPClient = client
 }

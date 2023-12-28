@@ -22,6 +22,8 @@ type URIModifier func(uri string) string
 
 var uriModifier URIModifier
 
+var DefaultHTTPClient = http.DefaultClient
+
 // SetURIModifier 设置URI修改器
 func SetURIModifier(fn URIModifier) {
 	uriModifier = fn
@@ -41,7 +43,7 @@ func HTTPGetContext(ctx context.Context, uri string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	response, err := http.DefaultClient.Do(request)
+	response, err := DefaultHTTPClient.Do(request)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +75,7 @@ func HTTPPostContext(ctx context.Context, uri string, data []byte, header map[st
 		request.Header.Set(key, value)
 	}
 
-	response, err := http.DefaultClient.Do(request)
+	response, err := DefaultHTTPClient.Do(request)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +104,7 @@ func PostJSONContext(ctx context.Context, uri string, obj interface{}) ([]byte, 
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json;charset=utf-8")
-	response, err := http.DefaultClient.Do(req)
+	response, err := DefaultHTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +131,7 @@ func PostJSONWithRespContentType(uri string, obj interface{}) ([]byte, string, e
 		return nil, "", err
 	}
 
-	response, err := http.Post(uri, "application/json;charset=utf-8", jsonBuf)
+	response, err := DefaultHTTPClient.Post(uri, "application/json;charset=utf-8", jsonBuf)
 	if err != nil {
 		return nil, "", err
 	}
@@ -205,7 +207,7 @@ func PostMultipartForm(fields []MultipartFormField, uri string) (respBody []byte
 	contentType := bodyWriter.FormDataContentType()
 	bodyWriter.Close()
 
-	resp, e := http.Post(uri, contentType, bodyBuf)
+	resp, e := DefaultHTTPClient.Post(uri, contentType, bodyBuf)
 	if e != nil {
 		err = e
 		return
@@ -229,7 +231,7 @@ func PostXML(uri string, obj interface{}) ([]byte, error) {
 	}
 
 	body := bytes.NewBuffer(xmlData)
-	response, err := http.Post(uri, "application/xml;charset=utf-8", body)
+	response, err := DefaultHTTPClient.Post(uri, "application/xml;charset=utf-8", body)
 	if err != nil {
 		return nil, err
 	}
@@ -252,11 +254,10 @@ func httpWithTLS(rootCa, key string) (*http.Client, error) {
 	config := &tls.Config{
 		Certificates: []tls.Certificate{cert},
 	}
-	tr := &http.Transport{
-		TLSClientConfig:    config,
-		DisableCompression: true,
-	}
-	client = &http.Client{Transport: tr}
+	trans := (DefaultHTTPClient.Transport.(*http.Transport)).Clone()
+	trans.TLSClientConfig = config
+	trans.DisableCompression = true
+	client = &http.Client{Transport: trans}
 	return client, nil
 }
 
