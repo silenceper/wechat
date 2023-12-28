@@ -7,12 +7,13 @@ import (
 	"encoding/json"
 	"encoding/pem"
 	"encoding/xml"
-	"fmt"
 	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
+
+	"fmt"
 
 	"golang.org/x/crypto/pkcs12"
 )

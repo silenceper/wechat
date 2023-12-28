@@ -1,9 +1,10 @@
 package wechat
 
 import (
-	"github.com/silenceper/wechat/v2/util"
 	"net/http"
 	"os"
+
+	"github.com/silenceper/wechat/v2/util"
 
 	log "github.com/sirupsen/logrus"
 
