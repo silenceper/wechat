@@ -22,6 +22,7 @@ type URIModifier func(uri string) string
 
 var uriModifier URIModifier
 
+// DefaultHTTPClient 默认httpClient
 var DefaultHTTPClient = http.DefaultClient
 
 // SetURIModifier 设置URI修改器
