@@ -4,8 +4,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/silenceper/wechat/v2/util"
-
 	log "github.com/sirupsen/logrus"
 
 	"github.com/silenceper/wechat/v2/cache"
@@ -17,6 +15,7 @@ import (
 	openConfig "github.com/silenceper/wechat/v2/openplatform/config"
 	"github.com/silenceper/wechat/v2/pay"
 	payConfig "github.com/silenceper/wechat/v2/pay/config"
+	"github.com/silenceper/wechat/v2/util"
 	"github.com/silenceper/wechat/v2/work"
 	workConfig "github.com/silenceper/wechat/v2/work/config"
 )
