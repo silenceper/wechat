@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"net/http"
 	"os"
 
 	log "github.com/sirupsen/logrus"
@@ -14,6 +15,7 @@ import (
 	openConfig "github.com/silenceper/wechat/v2/openplatform/config"
 	"github.com/silenceper/wechat/v2/pay"
 	payConfig "github.com/silenceper/wechat/v2/pay/config"
+	"github.com/silenceper/wechat/v2/util"
 	"github.com/silenceper/wechat/v2/work"
 	workConfig "github.com/silenceper/wechat/v2/work/config"
 )
@@ -80,4 +82,9 @@ func (wc *Wechat) GetWork(cfg *workConfig.Config) *work.Work {
 		cfg.Cache = wc.cache
 	}
 	return work.NewWork(cfg)
+}
+
+// SetHTTPClient  设置HTTPClient
+func (wc *Wechat) SetHTTPClient(client *http.Client) {
+	util.DefaultHTTPClient = client
 }
