@@ -63,16 +63,16 @@ type ExternalUserDetailResponse struct {
 
 // ExternalUser 外部联系人
 type ExternalUser struct {
-	ExternalUserID  string `json:"external_userid"`
-	Name            string `json:"name"`
-	Avatar          string `json:"avatar"`
-	Type            int64  `json:"type"`
-	Gender          int64  `json:"gender"`
-	UnionID         string `json:"unionid"`
-	Position        string `json:"position"`
-	CorpName        string `json:"corp_name"`
-	CorpFullName    string `json:"corp_full_name"`
-	ExternalProfile string `json:"external_profile"`
+	ExternalUserID  string           `json:"external_userid"`
+	Name            string           `json:"name"`
+	Avatar          string           `json:"avatar"`
+	Type            int64            `json:"type"`
+	Gender          int64            `json:"gender"`
+	UnionID         string           `json:"unionid"`
+	Position        string           `json:"position"`
+	CorpName        string           `json:"corp_name"`
+	CorpFullName    string           `json:"corp_full_name"`
+	ExternalProfile *ExternalProfile `json:"external_profile,omitempty"`
 }
 
 // FollowUser 跟进用户（指企业内部用户）
@@ -102,6 +102,46 @@ type Tag struct {
 type WechatChannel struct {
 	NickName string `json:"nickname"`
 	Source   int    `json:"source"`
+}
+
+// ExternalProfile 外部联系人的自定义展示信息,可以有多个字段和多种类型，包括文本，网页和小程序
+type ExternalProfile struct {
+	ExternalCorpName string         `json:"external_corp_name"`
+	WechatChannels   WechatChannels `json:"wechat_channels"`
+	ExternalAttr     []ExternalAttr `json:"external_attr"`
+}
+
+// WechatChannels 视频号属性。须从企业绑定到企业微信的视频号中选择，可在“我的企业”页中查看绑定的视频号
+type WechatChannels struct {
+	Nickname string `json:"nickname"`
+	Status   int    `json:"status"`
+}
+
+// ExternalAttr 属性列表，目前支持文本、网页、小程序三种类型
+type ExternalAttr struct {
+	Type        int          `json:"type"`
+	Name        string       `json:"name"`
+	Text        *Text        `json:"text,omitempty"`
+	Web         *Web         `json:"web,omitempty"`
+	MiniProgram *MiniProgram `json:"miniprogram,omitempty"`
+}
+
+// Text 文本
+type Text struct {
+	Value string `json:"value"`
+}
+
+// Web 网页
+type Web struct {
+	URL   string `json:"url"`
+	Title string `json:"title"`
+}
+
+// MiniProgram 小程序
+type MiniProgram struct {
+	AppID    string `json:"appid"`
+	Pagepath string `json:"pagepath"`
+	Title    string `json:"title"`
 }
 
 // GetExternalUserDetail 获取外部联系人详情
