@@ -15,6 +15,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/order"
 	"github.com/silenceper/wechat/v2/miniprogram/privacy"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
+	"github.com/silenceper/wechat/v2/miniprogram/redpacketcover"
 	"github.com/silenceper/wechat/v2/miniprogram/riskcontrol"
 	"github.com/silenceper/wechat/v2/miniprogram/security"
 	"github.com/silenceper/wechat/v2/miniprogram/shortlink"
@@ -154,4 +155,9 @@ func (miniProgram *MiniProgram) GetShipping() *order.Shipping {
 // GetMiniDrama 小程序娱乐微短剧
 func (miniProgram *MiniProgram) GetMiniDrama() *minidrama.MiniDrama {
 	return minidrama.NewMiniDrama(miniProgram.ctx)
+}
+
+// GetRedPacketCover 小程序微信红包封面 API
+func (miniProgram *MiniProgram) GetRedPacketCover() *redpacketcover.RedPacketCover {
+	return redpacketcover.NewRedPacketCover(miniProgram.ctx)
 }
