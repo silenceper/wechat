@@ -91,7 +91,7 @@ func (ak *DefaultAccessToken) GetAccessTokenContext(ctx context.Context) (access
 	}
 
 	expires := resAccessToken.ExpiresIn - 1500
-	_ = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
+	err = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
 
 	accessToken = resAccessToken.AccessToken
 	return
@@ -141,7 +141,7 @@ func (ak *StableAccessToken) GetAccessTokenContext(ctx context.Context) (accessT
 	}
 
 	expires := resAccessToken.ExpiresIn - 300
-	_ = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
+	err = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
 
 	accessToken = resAccessToken.AccessToken
 	return
@@ -218,7 +218,7 @@ func (ak *WorkAccessToken) GetAccessTokenContext(ctx context.Context) (accessTok
 	}
 
 	expires := resAccessToken.ExpiresIn - 1500
-	_ = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
+	err = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
 
 	accessToken = resAccessToken.AccessToken
 	return
