@@ -79,11 +79,9 @@ func (basic *Basic) CheckNickName(nickname string) (*CheckNickNameResp, error) {
 	if err != nil {
 		return nil, err
 	}
-	result := &CheckNickNameResp{}
-	if err := util.DecodeWithError(data, result, "wxverify/checkwxverifynickname"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	res := &CheckNickNameResp{}
+	err = util.DecodeWithError(data, res, "CheckNickName")
+	return res, err
 }
 
 // SetNickNameResp 设置小程序名称结果
@@ -124,11 +122,9 @@ func (basic *Basic) SetNickNameFull(param *SetNickNameParam) (*SetNickNameResp, 
 	if err != nil {
 		return nil, err
 	}
-	result := &SetNickNameResp{}
-	if err := util.DecodeWithError(data, result, "setnickname"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	res := &SetNickNameResp{}
+	err = util.DecodeWithError(data, res, "SetNickName")
+	return res, err
 }
 
 // SetSignatureResp 小程序功能介绍修改结果
@@ -150,7 +146,7 @@ func (basic *Basic) SetSignature(signature string) error {
 	if err != nil {
 		return err
 	}
-	return util.DecodeWithError(data, &SetSignatureResp{}, "account/modifysignature")
+	return util.DecodeWithError(data, &SetSignatureResp{}, "SetSignature")
 }
 
 // GetSearchStatusResp 查询小程序当前是否可被搜索
@@ -171,11 +167,9 @@ func (basic *Basic) GetSearchStatus(signature string) (*GetSearchStatusResp, err
 	if err != nil {
 		return nil, err
 	}
-	result := &GetSearchStatusResp{}
-	if err := util.DecodeWithError(data, result, "getwxasearchstatus"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	res := &GetSearchStatusResp{}
+	err = util.DecodeWithError(data, res, "GetSearchStatus")
+	return res, err
 }
 
 // SetSearchStatusResp 小程序是否可被搜索修改结果
@@ -198,7 +192,7 @@ func (basic *Basic) SetSearchStatus(status int) error {
 	if err != nil {
 		return err
 	}
-	return util.DecodeWithError(data, &SetSearchStatusResp{}, "changewxasearchstatus")
+	return util.DecodeWithError(data, &SetSearchStatusResp{}, "SetSearchStatus")
 }
 
 // SetHeadImageResp 小程序头像修改结果
@@ -239,5 +233,5 @@ func (basic *Basic) SetHeadImageFull(param *SetHeadImageParam) error {
 	if err != nil {
 		return err
 	}
-	return util.DecodeWithError(data, &SetHeadImageResp{}, "account/modifyheadimage")
+	return util.DecodeWithError(data, &SetHeadImageResp{}, "account/setheadimage")
 }
