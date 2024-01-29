@@ -38,6 +38,7 @@ type CustomerMessage struct {
 	Wxcard          *MediaWxcard          `json:"wxcard,omitempty"`          // 可选
 	Msgmenu         *MediaMsgmenu         `json:"msgmenu,omitempty"`         // 可选
 	Miniprogrampage *MediaMiniprogrampage `json:"miniprogrampage,omitempty"` // 可选
+	Mpnewsarticle   *MediaArticle         `json:"mpnewsarticle,omitempty"`   // 可选
 }
 
 // NewCustomerTextMessage 文本消息结构体构造方法
@@ -95,6 +96,11 @@ type MediaText struct {
 // MediaResource  消息使用的永久素材id
 type MediaResource struct {
 	MediaID string `json:"media_id"`
+}
+
+// MediaArticle  消息使用的已发布文章id
+type MediaArticle struct {
+	ArticleID string `json:"article_id"`
 }
 
 // MediaVideo 视频消息包含的内容

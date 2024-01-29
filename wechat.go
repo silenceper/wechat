@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"net/http"
 	"os"
 
 	log "github.com/sirupsen/logrus"
@@ -14,6 +15,7 @@ import (
 	openConfig "github.com/silenceper/wechat/v2/openplatform/config"
 	"github.com/silenceper/wechat/v2/pay"
 	payConfig "github.com/silenceper/wechat/v2/pay/config"
+	"github.com/silenceper/wechat/v2/util"
 	"github.com/silenceper/wechat/v2/work"
 	workConfig "github.com/silenceper/wechat/v2/work/config"
 )
@@ -40,7 +42,7 @@ func NewWechat() *Wechat {
 	return &Wechat{}
 }
 
-// SetCache 设置cache
+// SetCache 设置 cache
 func (wc *Wechat) SetCache(cache cache.Cache) {
 	wc.cache = cache
 }
@@ -68,10 +70,21 @@ func (wc *Wechat) GetPay(cfg *payConfig.Config) *pay.Pay {
 
 // GetOpenPlatform 获取微信开放平台的实例
 func (wc *Wechat) GetOpenPlatform(cfg *openConfig.Config) *openplatform.OpenPlatform {
+	if cfg.Cache == nil {
+		cfg.Cache = wc.cache
+	}
 	return openplatform.NewOpenPlatform(cfg)
 }
 
 // GetWork 获取企业微信的实例
 func (wc *Wechat) GetWork(cfg *workConfig.Config) *work.Work {
+	if cfg.Cache == nil {
+		cfg.Cache = wc.cache
+	}
 	return work.NewWork(cfg)
+}
+
+// SetHTTPClient  设置HTTPClient
+func (wc *Wechat) SetHTTPClient(client *http.Client) {
+	util.DefaultHTTPClient = client
 }

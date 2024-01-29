@@ -8,15 +8,15 @@ import (
 )
 
 const (
-	// WebhookSendURL 机器人发送群组消息
-	WebhookSendURL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s"
+	// webhookSendURL 机器人发送群组消息
+	webhookSendURL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s"
 )
 
 // RobotBroadcast 群机器人消息发送
 // @see https://developer.work.weixin.qq.com/document/path/91770
 func (r *Client) RobotBroadcast(webhookKey string, options interface{}) (info util.CommonError, err error) {
 	var data []byte
-	if data, err = util.PostJSON(fmt.Sprintf(WebhookSendURL, webhookKey), options); err != nil {
+	if data, err = util.PostJSON(fmt.Sprintf(webhookSendURL, webhookKey), options); err != nil {
 		return
 	}
 	if err = json.Unmarshal(data, &info); err != nil {

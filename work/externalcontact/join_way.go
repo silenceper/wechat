@@ -6,8 +6,8 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
-// GroupChatURL 客户群
-const GroupChatURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/groupchat"
+// groupChatURL 客户群
+const groupChatURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/groupchat"
 
 type (
 	// AddJoinWayRequest 添加群配置请求参数
@@ -39,15 +39,13 @@ func (r *Client) AddJoinWay(req *AddJoinWayRequest) (*AddJoinWayResponse, error)
 	if accessToken, err = r.GetAccessToken(); err != nil {
 		return nil, err
 	}
-	response, err = util.PostJSON(fmt.Sprintf("%s/add_join_way?access_token=%s", GroupChatURL, accessToken), req)
+	response, err = util.PostJSON(fmt.Sprintf("%s/add_join_way?access_token=%s", groupChatURL, accessToken), req)
 	if err != nil {
 		return nil, err
 	}
 	result := &AddJoinWayResponse{}
-	if err = util.DecodeWithError(response, result, "AddJoinWay"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "AddJoinWay")
+	return result, err
 }
 
 type (
@@ -86,15 +84,13 @@ func (r *Client) GetJoinWay(req *JoinWayConfigRequest) (*GetJoinWayResponse, err
 	if accessToken, err = r.GetAccessToken(); err != nil {
 		return nil, err
 	}
-	response, err = util.PostJSON(fmt.Sprintf("%s/get_join_way?access_token=%s", GroupChatURL, accessToken), req)
+	response, err = util.PostJSON(fmt.Sprintf("%s/get_join_way?access_token=%s", groupChatURL, accessToken), req)
 	if err != nil {
 		return nil, err
 	}
 	result := &GetJoinWayResponse{}
-	if err = util.DecodeWithError(response, result, "GetJoinWay"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetJoinWay")
+	return result, err
 }
 
 // UpdateJoinWayRequest 更新群配置的请求参数
@@ -120,7 +116,7 @@ func (r *Client) UpdateJoinWay(req *UpdateJoinWayRequest) error {
 	if accessToken, err = r.GetAccessToken(); err != nil {
 		return err
 	}
-	response, err = util.PostJSON(fmt.Sprintf("%s/update_join_way?access_token=%s", GroupChatURL, accessToken), req)
+	response, err = util.PostJSON(fmt.Sprintf("%s/update_join_way?access_token=%s", groupChatURL, accessToken), req)
 	if err != nil {
 		return err
 	}
@@ -138,7 +134,7 @@ func (r *Client) DelJoinWay(req *JoinWayConfigRequest) error {
 	if accessToken, err = r.GetAccessToken(); err != nil {
 		return err
 	}
-	response, err = util.PostJSON(fmt.Sprintf("%s/del_join_way?access_token=%s", GroupChatURL, accessToken), req)
+	response, err = util.PostJSON(fmt.Sprintf("%s/del_join_way?access_token=%s", groupChatURL, accessToken), req)
 	if err != nil {
 		return err
 	}

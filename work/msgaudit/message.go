@@ -150,7 +150,7 @@ type TodoMessage struct {
 	BaseMessage
 	Todo struct {
 		Title   string `json:"title,omitempty"`   // 代办的来源文本
-		Content string `json:"content,omitempty"` // 	代办的具体内容
+		Content string `json:"content,omitempty"` // 代办的具体内容
 	} `json:"todo,omitempty"`
 }
 
@@ -169,7 +169,7 @@ type CollectMessage struct {
 	Collect struct {
 		RoomName   string           `json:"room_name,omitempty"`   // 填表消息所在的群名称。
 		Creator    string           `json:"creator,omitempty"`     // 创建者在群中的名字
-		CreateTime string           `json:"create_time,omitempty"` // 创建的时间
+		CreateTime int64            `json:"create_time,omitempty"` // 创建的时间
 		Details    []CollectDetails `json:"details,omitempty"`     // 表内容
 	} `json:"collect,omitempty"`
 }
@@ -266,10 +266,10 @@ type VoipDocShareMessage struct {
 type ExternalRedPacketMessage struct {
 	BaseMessage
 	RedPacket struct {
-		Type        int32 `json:"type,omitempty"`        // 红包消息类型。1 普通红包、2 拼手气群红包。Uint32类型
-		Wish        int32 `json:"wish,omitempty"`        // 红包祝福语。String类型
-		TotalCnt    int32 `json:"totalcnt,omitempty"`    // 红包总个数。Uint32类型
-		TotalAmount int32 `json:"totalamount,omitempty"` // 红包消息类型。1 普通红包、2 拼手气群红包。Uint32类型
+		Type        uint32 `json:"type,omitempty"`        // 红包消息类型。1 普通红包、2 拼手气群红包。Uint32类型
+		Wish        string `json:"wish,omitempty"`        // 红包祝福语。String类型
+		TotalCnt    uint32 `json:"totalcnt,omitempty"`    // 红包总个数。Uint32类型
+		TotalAmount uint32 `json:"totalamount,omitempty"` // 红包总金额。Uint32类型，单位为分。
 	} `json:"redpacket,omitempty"`
 }
 
@@ -277,9 +277,9 @@ type ExternalRedPacketMessage struct {
 type SphFeedMessage struct {
 	BaseMessage
 	SphFeed struct {
-		FeedType string `json:"feed_type,omitempty"` // 视频号消息类型
-		SphName  string `json:"sph_name,omitempty"`  // 视频号账号名称
-		FeedDesc uint64 `json:"feed_desc,omitempty"` // 视频号账号名称
+		FeedType uint32 `json:"feed_type,omitempty"` // 视频号消息类型。2 图片、4 视频、9 直播。Uint32类型
+		SphName  string `json:"sph_name,omitempty"`  // 视频号账号名称。String类型
+		FeedDesc string `json:"feed_desc,omitempty"` // 视频号消息描述。String类型
 	}
 }
 

@@ -7,24 +7,28 @@ import (
 )
 
 const (
-	// AddMsgTemplateURL 创建企业群发
-	AddMsgTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_msg_template?access_token=%s"
-	// GetGroupMsgListV2URL 获取群发记录列表
-	GetGroupMsgListV2URL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_list_v2?access_token=%s"
-	// GetGroupMsgTaskURL 获取群发成员发送任务列表
-	GetGroupMsgTaskURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_task?access_token=%s"
-	// GetGroupMsgSendResultURL 获取企业群发成员执行结果
-	GetGroupMsgSendResultURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_send_result?access_token=%s"
-	// SendWelcomeMsgURL 发送新客户欢迎语
-	SendWelcomeMsgURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/send_welcome_msg?access_token=%s"
-	// AddGroupWelcomeTemplateURL 添加入群欢迎语素材
-	AddGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/add?access_token=%s"
-	// EditGroupWelcomeTemplateURL 编辑入群欢迎语素材
-	EditGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/edit?access_token=%s"
-	// GetGroupWelcomeTemplateURL 获取入群欢迎语素材
-	GetGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/get?access_token=%s"
-	// DelGroupWelcomeTemplateURL 删除入群欢迎语素材
-	DelGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/del?access_token=%s"
+	// addMsgTemplateURL 创建企业群发
+	addMsgTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_msg_template?access_token=%s"
+	// getGroupMsgListV2URL 获取群发记录列表
+	getGroupMsgListV2URL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_list_v2?access_token=%s"
+	// getGroupMsgTaskURL 获取群发成员发送任务列表
+	getGroupMsgTaskURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_task?access_token=%s"
+	// getGroupMsgSendResultURL 获取企业群发成员执行结果
+	getGroupMsgSendResultURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_groupmsg_send_result?access_token=%s"
+	// sendWelcomeMsgURL 发送新客户欢迎语
+	sendWelcomeMsgURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/send_welcome_msg?access_token=%s"
+	// addGroupWelcomeTemplateURL 添加入群欢迎语素材
+	addGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/add?access_token=%s"
+	// editGroupWelcomeTemplateURL 编辑入群欢迎语素材
+	editGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/edit?access_token=%s"
+	// getGroupWelcomeTemplateURL 获取入群欢迎语素材
+	getGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/get?access_token=%s"
+	// delGroupWelcomeTemplateURL 删除入群欢迎语素材
+	delGroupWelcomeTemplateURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/group_welcome_template/del?access_token=%s"
+	// remindGroupMsgSendURL 提醒成员群发
+	remindGroupMsgSendURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/remind_groupmsg_send?access_token=%s"
+	// cancelGroupMsgSendURL 停止企业群发
+	cancelGroupMsgSendURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/cancel_groupmsg_send?access_token=%s"
 )
 
 // AddMsgTemplateRequest 创建企业群发请求
@@ -34,7 +38,22 @@ type AddMsgTemplateRequest struct {
 	Sender         string        `json:"sender,omitempty"`
 	Text           MsgText       `json:"text"`
 	Attachments    []*Attachment `json:"attachments"`
+	AllowSelect    bool          `json:"allow_select,omitempty"`
+	ChatIDList     []string      `json:"chat_id_list,omitempty"`
+	TagFilter      TagFilter     `json:"tag_filter,omitempty"`
 }
+
+type (
+	// TagFilter 标签过滤
+	TagFilter struct {
+		GroupList []TagGroupList `json:"group_list"`
+	}
+
+	// TagGroupList 标签组
+	TagGroupList struct {
+		TagList []string `json:"tag_list"`
+	}
+)
 
 // MsgText 文本消息
 type MsgText struct {
@@ -98,21 +117,19 @@ func (r *Client) AddMsgTemplate(req *AddMsgTemplateRequest) (*AddMsgTemplateResp
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(AddMsgTemplateURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(addMsgTemplateURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &AddMsgTemplateResponse{}
-	if err = util.DecodeWithError(response, result, "AddMsgTemplate"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "AddMsgTemplate")
+	return result, err
 }
 
 // GetGroupMsgListV2Request 获取群发记录列表请求
 type GetGroupMsgListV2Request struct {
 	ChatType   string `json:"chat_type"`
-	StartTime  int    `json:"start_time"`
-	EndTime    int    `json:"end_time"`
+	StartTime  int64  `json:"start_time"`
+	EndTime    int64  `json:"end_time"`
 	Creator    string `json:"creator,omitempty"`
 	FilterType int    `json:"filter_type"`
 	Limit      int    `json:"limit"`
@@ -130,7 +147,7 @@ type GetGroupMsgListV2Response struct {
 type GroupMsg struct {
 	MsgID       string        `json:"msgid"`
 	Creator     string        `json:"creator"`
-	CreateTime  int           `json:"create_time"`
+	CreateTime  int64         `json:"create_time"`
 	CreateType  int           `json:"create_type"`
 	Text        MsgText       `json:"text"`
 	Attachments []*Attachment `json:"attachments"`
@@ -147,14 +164,12 @@ func (r *Client) GetGroupMsgListV2(req *GetGroupMsgListV2Request) (*GetGroupMsgL
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GetGroupMsgListV2URL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(getGroupMsgListV2URL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &GetGroupMsgListV2Response{}
-	if err = util.DecodeWithError(response, result, "GetGroupMsgListV2"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetGroupMsgListV2")
+	return result, err
 }
 
 // GetGroupMsgTaskRequest 获取群发成员发送任务列表请求
@@ -189,14 +204,12 @@ func (r *Client) GetGroupMsgTask(req *GetGroupMsgTaskRequest) (*GetGroupMsgTaskR
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GetGroupMsgTaskURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(getGroupMsgTaskURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &GetGroupMsgTaskResponse{}
-	if err = util.DecodeWithError(response, result, "GetGroupMsgTask"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetGroupMsgTask")
+	return result, err
 }
 
 // GetGroupMsgSendResultRequest 获取企业群发成员执行结果请求
@@ -234,14 +247,12 @@ func (r *Client) GetGroupMsgSendResult(req *GetGroupMsgSendResultRequest) (*GetG
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GetGroupMsgSendResultURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(getGroupMsgSendResultURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &GetGroupMsgSendResultResponse{}
-	if err = util.DecodeWithError(response, result, "GetGroupMsgSendResult"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetGroupMsgSendResult")
+	return result, err
 }
 
 // SendWelcomeMsgRequest 发送新客户欢迎语请求
@@ -267,26 +278,23 @@ func (r *Client) SendWelcomeMsg(req *SendWelcomeMsgRequest) error {
 		return err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(SendWelcomeMsgURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(sendWelcomeMsgURL, accessToken), req); err != nil {
 		return err
 	}
 	result := &SendWelcomeMsgResponse{}
-	if err = util.DecodeWithError(response, result, "SendWelcomeMsg"); err != nil {
-		return err
-	}
-	return nil
+	return util.DecodeWithError(response, result, "SendWelcomeMsg")
 }
 
 // AddGroupWelcomeTemplateRequest 添加入群欢迎语素材请求
 type AddGroupWelcomeTemplateRequest struct {
-	Text        MsgText               `json:"text"`
-	Image       AttachmentImg         `json:"image"`
-	Link        AttachmentLink        `json:"link"`
-	MiniProgram AttachmentMiniProgram `json:"miniprogram"`
-	File        AttachmentFile        `json:"file"`
-	Video       AttachmentVideo       `json:"video"`
-	AgentID     int                   `json:"agentid"`
-	Notify      int                   `json:"notify"`
+	Text        MsgText                `json:"text"`
+	Image       *AttachmentImg         `json:"image,omitempty"`
+	Link        *AttachmentLink        `json:"link,omitempty"`
+	MiniProgram *AttachmentMiniProgram `json:"miniprogram,omitempty"`
+	File        *AttachmentFile        `json:"file,omitempty"`
+	Video       *AttachmentVideo       `json:"video,omitempty"`
+	AgentID     int                    `json:"agentid,omitempty"`
+	Notify      int                    `json:"notify,omitempty"`
 }
 
 // AddGroupWelcomeTemplateResponse 添加入群欢迎语素材响应
@@ -306,26 +314,24 @@ func (r *Client) AddGroupWelcomeTemplate(req *AddGroupWelcomeTemplateRequest) (*
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(AddGroupWelcomeTemplateURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(addGroupWelcomeTemplateURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &AddGroupWelcomeTemplateResponse{}
-	if err = util.DecodeWithError(response, result, "AddGroupWelcomeTemplate"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "AddGroupWelcomeTemplate")
+	return result, err
 }
 
 // EditGroupWelcomeTemplateRequest 编辑入群欢迎语素材请求
 type EditGroupWelcomeTemplateRequest struct {
-	TemplateID  string                `json:"template_id"`
-	Text        MsgText               `json:"text"`
-	Image       AttachmentImg         `json:"image"`
-	Link        AttachmentLink        `json:"link"`
-	MiniProgram AttachmentMiniProgram `json:"miniprogram"`
-	File        AttachmentFile        `json:"file"`
-	Video       AttachmentVideo       `json:"video"`
-	AgentID     int                   `json:"agentid"`
+	TemplateID  string                 `json:"template_id"`
+	Text        MsgText                `json:"text"`
+	Image       *AttachmentImg         `json:"image"`
+	Link        *AttachmentLink        `json:"link"`
+	MiniProgram *AttachmentMiniProgram `json:"miniprogram"`
+	File        *AttachmentFile        `json:"file"`
+	Video       *AttachmentVideo       `json:"video"`
+	AgentID     int                    `json:"agentid"`
 }
 
 // EditGroupWelcomeTemplateResponse 编辑入群欢迎语素材响应
@@ -344,14 +350,11 @@ func (r *Client) EditGroupWelcomeTemplate(req *EditGroupWelcomeTemplateRequest) 
 		return err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(EditGroupWelcomeTemplateURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(editGroupWelcomeTemplateURL, accessToken), req); err != nil {
 		return err
 	}
 	result := &EditGroupWelcomeTemplateResponse{}
-	if err = util.DecodeWithError(response, result, "EditGroupWelcomeTemplate"); err != nil {
-		return err
-	}
-	return nil
+	return util.DecodeWithError(response, result, "EditGroupWelcomeTemplate")
 }
 
 // GetGroupWelcomeTemplateRequest 获取入群欢迎语素材请求
@@ -363,11 +366,11 @@ type GetGroupWelcomeTemplateRequest struct {
 type GetGroupWelcomeTemplateResponse struct {
 	util.CommonError
 	Text        MsgText               `json:"text"`
-	Image       AttachmentImg         `json:"image"`
-	Link        AttachmentLink        `json:"link"`
-	MiniProgram AttachmentMiniProgram `json:"miniprogram"`
-	File        AttachmentFile        `json:"file"`
-	Video       AttachmentVideo       `json:"video"`
+	Image       AttachmentImg         `json:"image,omitempty"`
+	Link        AttachmentLink        `json:"link,omitempty"`
+	MiniProgram AttachmentMiniProgram `json:"miniprogram,omitempty"`
+	File        AttachmentFile        `json:"file,omitempty"`
+	Video       AttachmentVideo       `json:"video,omitempty"`
 }
 
 // GetGroupWelcomeTemplate 获取入群欢迎语素材
@@ -381,14 +384,12 @@ func (r *Client) GetGroupWelcomeTemplate(req *GetGroupWelcomeTemplateRequest) (*
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(GetGroupWelcomeTemplateURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(getGroupWelcomeTemplateURL, accessToken), req); err != nil {
 		return nil, err
 	}
 	result := &GetGroupWelcomeTemplateResponse{}
-	if err = util.DecodeWithError(response, result, "GetGroupWelcomeTemplate"); err != nil {
-		return nil, err
-	}
-	return result, nil
+	err = util.DecodeWithError(response, result, "GetGroupWelcomeTemplate")
+	return result, err
 }
 
 // DelGroupWelcomeTemplateRequest 删除入群欢迎语素材请求
@@ -413,12 +414,53 @@ func (r *Client) DelGroupWelcomeTemplate(req *DelGroupWelcomeTemplateRequest) er
 		return err
 	}
 	var response []byte
-	if response, err = util.PostJSON(fmt.Sprintf(DelGroupWelcomeTemplateURL, accessToken), req); err != nil {
+	if response, err = util.PostJSON(fmt.Sprintf(delGroupWelcomeTemplateURL, accessToken), req); err != nil {
 		return err
 	}
 	result := &DelGroupWelcomeTemplateResponse{}
-	if err = util.DecodeWithError(response, result, "DelGroupWelcomeTemplate"); err != nil {
+	return util.DecodeWithError(response, result, "DelGroupWelcomeTemplate")
+}
+
+// RemindGroupMsgSendRequest 提醒成员群发请求
+type RemindGroupMsgSendRequest struct {
+	MsgID string `json:"msgid"`
+}
+
+// RemindGroupMsgSend 提醒成员群发
+// see https://developer.work.weixin.qq.com/document/path/97610
+func (r *Client) RemindGroupMsgSend(req *RemindGroupMsgSendRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
 		return err
 	}
-	return nil
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(remindGroupMsgSendURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "RemindGroupMsgSend")
+}
+
+// CancelGroupMsgSendRequest 停止企业群发请求
+type CancelGroupMsgSendRequest struct {
+	MsgID string `json:"msgid"`
+}
+
+// CancelGroupMsgSend 提醒成员群发
+// see https://developer.work.weixin.qq.com/document/path/97611
+func (r *Client) CancelGroupMsgSend(req *CancelGroupMsgSendRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(cancelGroupMsgSendURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "CancelGroupMsgSend")
 }

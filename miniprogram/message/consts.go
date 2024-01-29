@@ -20,6 +20,12 @@ const (
 	MsgTypeLink = "link"
 	// MsgTypeMiniProgramPage 小程序卡片
 	MsgTypeMiniProgramPage = "miniprogrampage"
+	// MsgTypeEvent 事件
+	MsgTypeEvent MsgType = "event"
+	// DataTypeXML XML 格式数据
+	DataTypeXML = "xml"
+	// DataTypeJSON JSON 格式数据
+	DataTypeJSON = "json"
 )
 
 // CommonToken 消息中通用的结构

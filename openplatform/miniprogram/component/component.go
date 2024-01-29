@@ -36,7 +36,7 @@ type RegisterMiniProgramParam struct {
 func (component *Component) RegisterMiniProgram(param *RegisterMiniProgramParam) error {
 	componentAK, err := component.GetComponentAccessToken()
 	if err != nil {
-		return nil
+		return err
 	}
 	url := fmt.Sprintf(fastregisterweappURL+"?action=create&component_access_token=%s", componentAK)
 	data, err := util.PostJSON(url, param)
@@ -58,7 +58,7 @@ type GetRegistrationStatusParam struct {
 func (component *Component) GetRegistrationStatus(param *GetRegistrationStatusParam) error {
 	componentAK, err := component.GetComponentAccessToken()
 	if err != nil {
-		return nil
+		return err
 	}
 	url := fmt.Sprintf(fastregisterweappURL+"?action=search&component_access_token=%s", componentAK)
 	data, err := util.PostJSON(url, param)

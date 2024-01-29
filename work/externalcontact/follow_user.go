@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	// FetchFollowUserListURL 获取配置了客户联系功能的成员列表
-	FetchFollowUserListURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_follow_user_list"
+	// fetchFollowUserListURL 获取配置了客户联系功能的成员列表
+	fetchFollowUserListURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_follow_user_list"
 )
 
 // followerUserResponse 客户联系功能的成员列表响应
@@ -25,14 +25,11 @@ func (r *Client) GetFollowUserList() ([]string, error) {
 		return nil, err
 	}
 	var response []byte
-	response, err = util.HTTPGet(fmt.Sprintf("%s?access_token=%s", FetchFollowUserListURL, accessToken))
+	response, err = util.HTTPGet(fmt.Sprintf("%s?access_token=%s", fetchFollowUserListURL, accessToken))
 	if err != nil {
 		return nil, err
 	}
 	var result followerUserResponse
 	err = util.DecodeWithError(response, &result, "GetFollowUserList")
-	if err != nil {
-		return nil, err
-	}
-	return result.FollowUser, nil
+	return result.FollowUser, err
 }

@@ -4,6 +4,7 @@ import (
 	stdcontext "context"
 	"net/http"
 
+	"github.com/silenceper/wechat/v2/internal/openapi"
 	"github.com/silenceper/wechat/v2/officialaccount/draft"
 	"github.com/silenceper/wechat/v2/officialaccount/freepublish"
 	"github.com/silenceper/wechat/v2/officialaccount/ocr"
@@ -211,4 +212,9 @@ func (officialAccount *OfficialAccount) GetSubscribe() *message.Subscribe {
 // GetCustomerServiceManager 客服管理
 func (officialAccount *OfficialAccount) GetCustomerServiceManager() *customerservice.Manager {
 	return customerservice.NewCustomerServiceManager(officialAccount.ctx)
+}
+
+// GetOpenAPI openApi管理接口
+func (officialAccount *OfficialAccount) GetOpenAPI() *openapi.OpenAPI {
+	return openapi.NewOpenAPI(officialAccount.ctx)
 }
