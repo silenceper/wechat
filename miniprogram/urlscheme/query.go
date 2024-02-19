@@ -37,7 +37,7 @@ type SchemeInfo struct {
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/url-scheme/urlscheme.query.html#参数
 type resQueryScheme struct {
 	// 通用错误
-	*util.CommonError
+	util.CommonError
 	// scheme 配置
 	SchemeInfo SchemeInfo `json:"scheme_info"`
 	// 访问该链接的openid，没有用户访问过则为空字符串
