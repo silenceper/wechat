@@ -9,6 +9,7 @@ import (
 	miniContext "github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/urllink"
 	openContext "github.com/silenceper/wechat/v2/openplatform/context"
+	"github.com/silenceper/wechat/v2/openplatform/miniprogram/auth"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/basic"
 	"github.com/silenceper/wechat/v2/openplatform/miniprogram/component"
 )
@@ -70,6 +71,11 @@ func (miniProgram *MiniProgram) GetURLLink() *urllink.URLLink {
 	return urllink.NewURLLink(&miniContext.Context{
 		AccessTokenHandle: miniProgram,
 	})
+}
+
+// GetAuth 登录/用户信息相关接口
+func (miniProgram *MiniProgram) GetAuth() *auth.Auth {
+	return auth.NewAuth(miniProgram.openContext, miniProgram.AppID)
 }
 
 // DefaultAuthrAccessToken 默认获取授权ak的方法
