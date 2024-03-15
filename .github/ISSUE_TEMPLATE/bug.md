@@ -1,6 +1,6 @@
 ---
-name: 报告Bug
-about: 反馈BUG信息
+name: 报告 Bug
+about: 反馈 BUG 信息
 title: "[BUG]"
 labels: bug
 assignees: ''
@@ -18,4 +18,4 @@ assignees: ''
 
 
 **使用的版本**
- - SDK版本: [比如 v0.0.0]
+ - SDK 版本：[比如 v0.0.0]

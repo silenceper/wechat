@@ -398,7 +398,7 @@ type PushDataSecVodUpload struct {
 
 // SecVodUploadEvent 短剧媒资上传完成事件
 type SecVodUploadEvent struct {
-	MediaID       string `json:"media_id" xml:"media_id"`             // 媒资 id
+	MediaID       int64  `json:"media_id" xml:"media_id"`             // 媒资 id
 	SourceContext string `json:"source_context" xml:"source_context"` // 透传上传接口中开发者设置的值。
 	ErrCode       int    `json:"errcode" xml:"errcode"`               // 错误码，上传失败时该值非
 	ErrMsg        string `json:"errmsg" xml:"errmsg"`                 // 错误提示
@@ -412,7 +412,7 @@ type PushDataSecVodAudit struct {
 
 // SecVodAuditEvent 短剧媒资审核状态事件
 type SecVodAuditEvent struct {
-	DramaID       string           `json:"drama_id" xml:"drama_id"`             // 剧目 id
+	DramaID       int64            `json:"drama_id" xml:"drama_id"`             // 剧目 id
 	SourceContext string           `json:"source_context" xml:"source_context"` // 透传上传接口中开发者设置的值
 	AuditDetail   DramaAuditDetail `json:"audit_detail" xml:"audit_detail"`     // 剧目审核结果，单独每一集的审核结果可以根据 drama_id 查询剧集详情得到
 }
