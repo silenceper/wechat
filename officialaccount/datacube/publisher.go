@@ -12,31 +12,6 @@ import (
 type AdSlot string
 
 const (
-	// SlotIDBizBottom 公众号底部广告
-	SlotIDBizBottom AdSlot = "SLOT_ID_BIZ_BOTTOM"
-	// SlotIDBizMidContext 公众号文中广告
-	SlotIDBizMidContext AdSlot = "SLOT_ID_BIZ_MID_CONTEXT"
-	// SlotIDBizVideoEnd 公众号视频后贴
-	SlotIDBizVideoEnd AdSlot = "SLOT_ID_BIZ_VIDEO_END"
-	// SlotIDBizSponsor 公众号互选广告
-	SlotIDBizSponsor AdSlot = "SLOT_ID_BIZ_SPONSOR"
-	// SlotIDBizCps 公众号返佣商品
-	SlotIDBizCps AdSlot = "SLOT_ID_BIZ_CPS"
-	// SlotIDWeappBanner 小程序banner
-	SlotIDWeappBanner AdSlot = "SLOT_ID_WEAPP_BANNER"
-	// SlotIDWeappRewardVideo 小程序激励视频
-	SlotIDWeappRewardVideo AdSlot = "SLOT_ID_WEAPP_REWARD_VIDEO"
-	// SlotIDWeappInterstitial 小程序插屏广告
-	SlotIDWeappInterstitial AdSlot = "SLOT_ID_WEAPP_INTERSTITIAL"
-	// SlotIDWeappVideoFeeds 小程序视频广告
-	SlotIDWeappVideoFeeds AdSlot = "SLOT_ID_WEAPP_VIDEO_FEEDS"
-	// SlotIDWeappVideoBegin 小程序视频前贴
-	SlotIDWeappVideoBegin AdSlot = "SLOT_ID_WEAPP_VIDEO_BEGIN"
-	// SlotIDWeappBox 小程序格子广告
-	SlotIDWeappBox AdSlot = "SLOT_ID_WEAPP_BOX"
-)
-
-const (
 	publisherURL = "https://api.weixin.qq.com/publisher/stat"
 )
 
@@ -183,9 +158,6 @@ func (cube *DataCube) fetchData(params ParamsPublisher) (response []byte, err er
 	uri := fmt.Sprintf("%s?%s", publisherURL, v.Encode())
 
 	response, err = util.HTTPGet(uri)
-	if err != nil {
-		return
-	}
 	return
 }
 

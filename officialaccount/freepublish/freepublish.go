@@ -18,23 +18,6 @@ const (
 // PublishStatus 发布状态
 type PublishStatus uint
 
-const (
-	// PublishStatusSuccess 0:成功
-	PublishStatusSuccess PublishStatus = iota
-	// PublishStatusPublishing 1:发布中
-	PublishStatusPublishing
-	// PublishStatusOriginalFail 2:原创失败
-	PublishStatusOriginalFail
-	// PublishStatusFail 3:常规失败
-	PublishStatusFail
-	// PublishStatusAuditRefused 4:平台审核不通过
-	PublishStatusAuditRefused
-	// PublishStatusUserDeleted 5:成功后用户删除所有文章
-	PublishStatusUserDeleted
-	// PublishStatusSystemBanned 6:成功后系统封禁所有文章
-	PublishStatusSystemBanned
-)
-
 // FreePublish 发布能力
 type FreePublish struct {
 	*context.Context
@@ -73,12 +56,7 @@ func (freePublish *FreePublish) Publish(mediaID string) (publishID int64, err er
 		PublishID int64 `json:"publish_id"`
 	}
 	err = util.DecodeWithError(response, &res, "SubmitFreePublish")
-	if err != nil {
-		return
-	}
-
-	publishID = res.PublishID
-	return
+	return res.PublishID, err
 }
 
 // PublishStatusList 发布任务状态列表
@@ -191,12 +169,7 @@ func (freePublish *FreePublish) First(articleID string) (list []Article, err err
 		NewsItem []Article `json:"news_item"`
 	}
 	err = util.DecodeWithError(response, &res, "FirstFreePublish")
-	if err != nil {
-		return
-	}
-
-	list = res.NewsItem
-	return
+	return res.NewsItem, err
 }
 
 // ArticleList 发布列表

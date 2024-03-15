@@ -25,20 +25,6 @@ type TExpireType int
 // EnvVersion 要打开的小程序版本
 type EnvVersion string
 
-const (
-	// ExpireTypeTime 指定时间戳后失效
-	ExpireTypeTime TExpireType = 0
-	// ExpireTypeInterval 间隔指定天数后失效
-	ExpireTypeInterval TExpireType = 1
-
-	// EnvVersionRelease 正式版为"release"
-	EnvVersionRelease EnvVersion = "release"
-	// EnvVersionTrial 体验版为"trial"
-	EnvVersionTrial EnvVersion = "trial"
-	// EnvVersionDevelop 开发版为"develop"
-	EnvVersionDevelop EnvVersion = "develop"
-)
-
 // JumpWxa 跳转到的目标小程序信息
 type JumpWxa struct {
 	Path  string `json:"path"`
@@ -78,8 +64,5 @@ func (u *URLScheme) Generate(params *USParams) (string, error) {
 	}
 	var resp USResult
 	err = util.DecodeWithError(response, &resp, "URLScheme.Generate")
-	if err != nil {
-		return "", err
-	}
-	return resp.OpenLink, nil
+	return resp.OpenLink, err
 }

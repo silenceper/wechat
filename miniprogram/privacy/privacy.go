@@ -55,8 +55,6 @@ const (
 
 	// PrivacyV1 用户隐私保护指引的版本，1表示现网版本。
 	PrivacyV1 = 1
-	// PrivacyV2 2表示开发版。默认是2开发版。
-	PrivacyV2 = 2
 )
 
 // GetPrivacySettingResponse 获取权限配置的响应结果
@@ -103,11 +101,8 @@ func (s *Privacy) GetPrivacySetting(privacyVer int) (GetPrivacySettingResponse, 
 	}
 	// 返回错误信息
 	var result GetPrivacySettingResponse
-	if err = util.DecodeWithError(response, &result, "getprivacysetting"); err != nil {
-		return GetPrivacySettingResponse{}, err
-	}
-
-	return result, nil
+	err = util.DecodeWithError(response, &result, "getprivacysetting")
+	return result, err
 }
 
 // SetPrivacySetting 更新小程序权限配置
@@ -130,11 +125,7 @@ func (s *Privacy) SetPrivacySetting(privacyVer int, ownerSetting OwnerSetting, s
 	}
 
 	// 返回错误信息
-	if err = util.DecodeWithCommonError(response, "setprivacysetting"); err != nil {
-		return err
-	}
-
-	return err
+	return util.DecodeWithCommonError(response, "setprivacysetting")
 }
 
 // UploadPrivacyExtFileResponse 上传权限定义模板响应参数
@@ -159,9 +150,6 @@ func (s *Privacy) UploadPrivacyExtFile(fileData []byte) (UploadPrivacyExtFileRes
 
 	// 返回错误信息
 	var result UploadPrivacyExtFileResponse
-	if err = util.DecodeWithError(response, &result, "setprivacysetting"); err != nil {
-		return UploadPrivacyExtFileResponse{}, err
-	}
-
+	err = util.DecodeWithError(response, &result, "setprivacysetting")
 	return result, err
 }

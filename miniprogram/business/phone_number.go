@@ -45,10 +45,5 @@ func (business *Business) GetPhoneNumber(in *GetPhoneNumberRequest) (info PhoneI
 		PhoneInfo PhoneInfo `json:"phone_info"`
 	}
 	err = util.DecodeWithError(response, &resp, "business.GetPhoneNumber")
-	if nil != err {
-		return
-	}
-
-	info = resp.PhoneInfo
-	return
+	return resp.PhoneInfo, err
 }

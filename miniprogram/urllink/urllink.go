@@ -22,14 +22,6 @@ const generateURL = "https://api.weixin.qq.com/wxa/generate_urllink"
 // TExpireType 失效类型 (指定时间戳/指定间隔)
 type TExpireType int
 
-const (
-	// ExpireTypeTime 指定时间戳后失效
-	ExpireTypeTime TExpireType = 0
-
-	// ExpireTypeInterval 间隔指定天数后失效
-	ExpireTypeInterval TExpireType = 1
-)
-
 // ULParams 请求参数
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/url-link/urllink.generate.html#请求参数
 type ULParams struct {
@@ -65,8 +57,5 @@ func (u *URLLink) Generate(params *ULParams) (string, error) {
 	}
 	var resp ULResult
 	err = util.DecodeWithError(response, &resp, "URLLink.Generate")
-	if err != nil {
-		return "", err
-	}
-	return resp.URLLink, nil
+	return resp.URLLink, err
 }

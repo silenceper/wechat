@@ -21,13 +21,6 @@ const (
 	customerServiceTypingURL     = "https://api.weixin.qq.com/cgi-bin/message/custom/typing"
 )
 
-const (
-	// Typing 表示正在输入状态
-	Typing TypingStatus = "Typing"
-	// CancelTyping 表示取消正在输入状态
-	CancelTyping TypingStatus = "CancelTyping"
-)
-
 // Manager 客服管理者，可以管理客服
 type Manager struct {
 	*context.Context
@@ -72,11 +65,7 @@ func (csm *Manager) List() (customerServiceList []*KeFuInfo, err error) {
 	}
 	var res resKeFuList
 	err = util.DecodeWithError(response, &res, "ListCustomerService")
-	if err != nil {
-		return
-	}
-	customerServiceList = res.KfList
-	return
+	return res.KfList, err
 }
 
 // KeFuOnlineInfo 客服在线信息
@@ -107,11 +96,7 @@ func (csm *Manager) OnlineList() (customerServiceOnlineList []*KeFuOnlineInfo, e
 	}
 	var res resKeFuOnlineList
 	err = util.DecodeWithError(response, &res, "ListOnlineCustomerService")
-	if err != nil {
-		return
-	}
-	customerServiceOnlineList = res.KfOnlineList
-	return
+	return res.KfOnlineList, err
 }
 
 // Add 添加客服账号

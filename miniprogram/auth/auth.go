@@ -138,10 +138,8 @@ func (auth *Auth) GetPhoneNumberContext(ctx context2.Context, code string) (*Get
 	}
 
 	var result GetPhoneNumberResponse
-	if err = util.DecodeWithError(response, &result, "phonenumber.getPhoneNumber"); err != nil {
-		return nil, err
-	}
-	return &result, nil
+	err = util.DecodeWithError(response, &result, "phonenumber.getPhoneNumber")
+	return &result, err
 }
 
 // GetPhoneNumber 小程序通过code获取用户手机号

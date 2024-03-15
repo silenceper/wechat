@@ -62,9 +62,5 @@ func (u *URLScheme) QueryScheme(querySchemeParams QueryScheme) (schemeInfo Schem
 	// 使用通用方法返回错误
 	var res resQueryScheme
 	err = util.DecodeWithError(response, &res, "QueryScheme")
-	if err != nil {
-		return
-	}
-
-	return res.SchemeInfo, res.VisitOpenid, nil
+	return res.SchemeInfo, res.VisitOpenid, err
 }

@@ -51,12 +51,7 @@ func (security *Security) MediaCheckAsyncV1(in *MediaCheckAsyncV1Request) (trace
 		TraceID string `json:"trace_id"`
 	}
 	err = util.DecodeWithError(response, &res, "MediaCheckAsyncV1")
-	if err != nil {
-		return
-	}
-
-	traceID = res.TraceID
-	return
+	return res.TraceID, err
 }
 
 // MediaCheckAsyncRequest 图片/音频异步校验请求参数
@@ -93,12 +88,7 @@ func (security *Security) MediaCheckAsync(in *MediaCheckAsyncRequest) (traceID s
 		TraceID string `json:"trace_id"`
 	}
 	err = util.DecodeWithError(response, &res, "MediaCheckAsync")
-	if err != nil {
-		return
-	}
-
-	traceID = res.TraceID
-	return
+	return res.TraceID, err
 }
 
 // ImageCheckV1 校验一张图片是否含有违法违规内容（同步）
@@ -124,28 +114,8 @@ func (security *Security) ImageCheckV1(filename string) (err error) {
 // CheckSuggest 检查建议
 type CheckSuggest string
 
-const (
-	// CheckSuggestRisky 违规风险建议
-	CheckSuggestRisky CheckSuggest = "risky"
-	// CheckSuggestPass 安全
-	CheckSuggestPass CheckSuggest = "pass"
-	// CheckSuggestReview 需要审查
-	CheckSuggestReview CheckSuggest = "review"
-)
-
 // MsgScene 文本场景
 type MsgScene uint8
-
-const (
-	// MsgSceneMaterial 资料文件检查场景
-	MsgSceneMaterial MsgScene = iota + 1
-	// MsgSceneComment 评论
-	MsgSceneComment
-	// MsgSceneForum 论坛
-	MsgSceneForum
-	// MsgSceneSocialLog 社交日志
-	MsgSceneSocialLog
-)
 
 // CheckLabel 检查命中标签
 type CheckLabel int
