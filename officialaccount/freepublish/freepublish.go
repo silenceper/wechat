@@ -18,6 +18,23 @@ const (
 // PublishStatus 发布状态
 type PublishStatus uint
 
+const (
+	// PublishStatusSuccess 0:成功
+	PublishStatusSuccess PublishStatus = iota
+	// PublishStatusPublishing 1:发布中
+	PublishStatusPublishing
+	// PublishStatusOriginalFail 2:原创失败
+	PublishStatusOriginalFail
+	// PublishStatusFail 3:常规失败
+	PublishStatusFail
+	// PublishStatusAuditRefused 4:平台审核不通过
+	PublishStatusAuditRefused
+	// PublishStatusUserDeleted 5:成功后用户删除所有文章
+	PublishStatusUserDeleted
+	// PublishStatusSystemBanned 6:成功后系统封禁所有文章
+	PublishStatusSystemBanned
+)
+
 // FreePublish 发布能力
 type FreePublish struct {
 	*context.Context

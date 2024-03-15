@@ -21,6 +21,13 @@ const (
 	customerServiceTypingURL     = "https://api.weixin.qq.com/cgi-bin/message/custom/typing"
 )
 
+const (
+	// Typing 表示正在输入状态
+	Typing TypingStatus = "Typing"
+	// CancelTyping 表示取消正在输入状态
+	CancelTyping TypingStatus = "CancelTyping"
+)
+
 // Manager 客服管理者，可以管理客服
 type Manager struct {
 	*context.Context

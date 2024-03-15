@@ -55,6 +55,8 @@ const (
 
 	// PrivacyV1 用户隐私保护指引的版本，1表示现网版本。
 	PrivacyV1 = 1
+	// PrivacyV2 2表示开发版。默认是2开发版。
+	PrivacyV2 = 2
 )
 
 // GetPrivacySettingResponse 获取权限配置的响应结果
