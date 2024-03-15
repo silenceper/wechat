@@ -51,12 +51,7 @@ func (security *Security) MediaCheckAsyncV1(in *MediaCheckAsyncV1Request) (trace
 		TraceID string `json:"trace_id"`
 	}
 	err = util.DecodeWithError(response, &res, "MediaCheckAsyncV1")
-	if err != nil {
-		return
-	}
-
-	traceID = res.TraceID
-	return
+	return res.TraceID, err
 }
 
 // MediaCheckAsyncRequest 图片/音频异步校验请求参数
@@ -93,12 +88,7 @@ func (security *Security) MediaCheckAsync(in *MediaCheckAsyncRequest) (traceID s
 		TraceID string `json:"trace_id"`
 	}
 	err = util.DecodeWithError(response, &res, "MediaCheckAsync")
-	if err != nil {
-		return
-	}
-
-	traceID = res.TraceID
-	return
+	return res.TraceID, err
 }
 
 // ImageCheckV1 校验一张图片是否含有违法违规内容（同步）

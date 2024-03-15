@@ -60,11 +60,7 @@ func (shortLink *ShortLink) generate(shortLinkParams ShortLinker) (string, error
 	// 使用通用方法返回错误
 	var res resShortLinker
 	err = util.DecodeWithError(response, &res, "GenerateShortLink")
-	if err != nil {
-		return "", err
-	}
-
-	return res.Link, nil
+	return res.Link, err
 }
 
 // GenerateShortLinkPermanent 生成永久 shortLink

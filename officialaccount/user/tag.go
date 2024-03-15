@@ -126,10 +126,7 @@ func (user *User) GetTag() (tags []*TagInfo, err error) {
 		Tags []*TagInfo `json:"tags"`
 	}
 	err = json.Unmarshal(response, &result)
-	if err != nil {
-		return
-	}
-	return result.Tags, nil
+	return result.Tags, err
 }
 
 // OpenIDListByTag 获取标签下粉丝列表
@@ -154,9 +151,6 @@ func (user *User) OpenIDListByTag(tagID int32, nextOpenID ...string) (userList *
 	}
 	userList = new(TagOpenIDList)
 	err = json.Unmarshal(response, &userList)
-	if err != nil {
-		return
-	}
 	return
 }
 

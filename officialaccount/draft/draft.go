@@ -64,11 +64,7 @@ func (draft *Draft) AddDraft(articles []*Article) (mediaID string, err error) {
 		MediaID string `json:"media_id"`
 	}
 	err = util.DecodeWithError(response, &res, "AddDraft")
-	if err != nil {
-		return
-	}
-	mediaID = res.MediaID
-	return
+	return res.MediaID, err
 }
 
 // GetDraft 获取草稿
@@ -94,12 +90,7 @@ func (draft *Draft) GetDraft(mediaID string) (articles []*Article, err error) {
 		NewsItem []*Article `json:"news_item"`
 	}
 	err = util.DecodeWithError(response, &res, "GetDraft")
-	if err != nil {
-		return
-	}
-
-	articles = res.NewsItem
-	return
+	return res.NewsItem, err
 }
 
 // DeleteDraft 删除草稿
@@ -172,12 +163,7 @@ func (draft *Draft) CountDraft() (total uint, err error) {
 		Total uint `json:"total_count"`
 	}
 	err = util.DecodeWithError(response, &res, "CountDraft")
-	if nil != err {
-		return
-	}
-
-	total = res.Total
-	return
+	return res.Total, err
 }
 
 // ArticleList 草稿列表

@@ -168,11 +168,7 @@ func (s *Subscribe) Add(ShortID string, kidList []int, sceneDesc string) (templa
 	}
 	var result resSubscribeAdd
 	err = util.DecodeWithError(response, &result, "AddSubscribe")
-	if err != nil {
-		return
-	}
-	templateID = result.TemplateID
-	return
+	return result.TemplateID, err
 }
 
 // Delete 删除私有模板

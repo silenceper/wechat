@@ -90,11 +90,7 @@ func (tpl *Subscribe) List() (templateList []*PrivateSubscribeItem, err error) {
 	}
 	var res resPrivateSubscribeList
 	err = util.DecodeWithError(response, &res, "ListSubscribe")
-	if err != nil {
-		return
-	}
-	templateList = res.SubscriptionList
-	return
+	return res.SubscriptionList, err
 }
 
 type resSubscribeAdd struct {
@@ -123,11 +119,7 @@ func (tpl *Subscribe) Add(ShortID string, kidList []int, sceneDesc string) (temp
 	}
 	var result resSubscribeAdd
 	err = util.DecodeWithError(response, &result, "AddSubscribe")
-	if err != nil {
-		return
-	}
-	templateID = result.TemplateID
-	return
+	return result.TemplateID, err
 }
 
 // Delete 删除私有模板
@@ -175,11 +167,7 @@ func (tpl *Subscribe) GetCategory() (categoryList []*PublicTemplateCategory, err
 	}
 	var result resSubscribeCategoryList
 	err = util.DecodeWithError(response, &result, "GetCategory")
-	if err != nil {
-		return
-	}
-	categoryList = result.CategoryList
-	return
+	return result.CategoryList, err
 }
 
 // PublicTemplateKeyWords 模板中的关键词
@@ -210,11 +198,7 @@ func (tpl *Subscribe) GetPubTplKeyWordsByID(titleID string) (keyWordsList []*Pub
 	}
 	var result resPublicTemplateKeyWordsList
 	err = util.DecodeWithError(response, &result, "GetPublicTemplateKeyWords")
-	if err != nil {
-		return
-	}
-	keyWordsList = result.KeyWordsList
-	return
+	return result.KeyWordsList, err
 }
 
 // PublicTemplateTitle 类目下的公共模板
@@ -246,10 +230,5 @@ func (tpl *Subscribe) GetPublicTemplateTitleList(ids string, start int, limit in
 	}
 	var result resPublicTemplateTitleList
 	err = util.DecodeWithError(response, &result, "GetPublicTemplateTitle")
-	if err != nil {
-		return
-	}
-	count = result.Count
-	templateTitleList = result.TemplateTitleList
-	return
+	return result.Count, result.TemplateTitleList, err
 }

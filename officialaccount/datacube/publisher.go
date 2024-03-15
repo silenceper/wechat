@@ -183,9 +183,6 @@ func (cube *DataCube) fetchData(params ParamsPublisher) (response []byte, err er
 	uri := fmt.Sprintf("%s?%s", publisherURL, v.Encode())
 
 	response, err = util.HTTPGet(uri)
-	if err != nil {
-		return
-	}
 	return
 }
 

@@ -72,11 +72,7 @@ func (csm *Manager) List() (customerServiceList []*KeFuInfo, err error) {
 	}
 	var res resKeFuList
 	err = util.DecodeWithError(response, &res, "ListCustomerService")
-	if err != nil {
-		return
-	}
-	customerServiceList = res.KfList
-	return
+	return res.KfList, err
 }
 
 // KeFuOnlineInfo 客服在线信息
@@ -107,11 +103,7 @@ func (csm *Manager) OnlineList() (customerServiceOnlineList []*KeFuOnlineInfo, e
 	}
 	var res resKeFuOnlineList
 	err = util.DecodeWithError(response, &res, "ListOnlineCustomerService")
-	if err != nil {
-		return
-	}
-	customerServiceOnlineList = res.KfOnlineList
-	return
+	return res.KfOnlineList, err
 }
 
 // Add 添加客服账号

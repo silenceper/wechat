@@ -62,10 +62,6 @@ func (user *User) ListChangeOpenIDs(fromAppID string, openIDs ...string) (list *
 	}
 
 	err = util.DecodeWithError(resp, list, "ListChangeOpenIDs")
-	if err != nil {
-		return
-	}
-
 	return
 }
 

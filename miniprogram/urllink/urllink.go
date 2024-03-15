@@ -65,8 +65,5 @@ func (u *URLLink) Generate(params *ULParams) (string, error) {
 	}
 	var resp ULResult
 	err = util.DecodeWithError(response, &resp, "URLLink.Generate")
-	if err != nil {
-		return "", err
-	}
-	return resp.URLLink, nil
+	return resp.URLLink, err
 }
