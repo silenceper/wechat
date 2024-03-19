@@ -9,7 +9,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -267,7 +266,7 @@ func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
 	blocks, err := pkcs12.ToPEM(p12, password)
 	defer func() {
 		if x := recover(); x != nil {
-			log.Print(x)
+			Logger.Error(x)
 		}
 	}()
 	if err != nil {

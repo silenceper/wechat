@@ -27,6 +27,8 @@ import "github.com/silenceper/wechat/v2"
 ```go
 // 使用memcache保存access_token，也可选择redis或自定义cache
 wc := wechat.NewWechat()
+// 调试模式
+wc.SetDebug(true)
 memory := cache.NewMemory()
 cfg := &offConfig.Config{
     AppID:     "xxx",
