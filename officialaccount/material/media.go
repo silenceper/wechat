@@ -3,6 +3,9 @@ package material
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
+	"strings"
 
 	"github.com/silenceper/wechat/v2/util"
 )
@@ -38,16 +41,32 @@ type Media struct {
 }
 
 // MediaUpload 临时素材上传
-func (material *Material) MediaUpload(mediaType MediaType, filename string) (media Media, err error) {
+func (material *Material) MediaUpload(mediaType MediaType, url string) (media Media, err error) {
 	var accessToken string
-	accessToken, err = material.GetAccessToken()
-	if err != nil {
+	if accessToken, err = material.GetAccessToken(); err != nil {
 		return
 	}
-
 	uri := fmt.Sprintf("%s?access_token=%s&type=%s", mediaUploadURL, accessToken, mediaType)
+	// 使用strings.LastIndex函数找到最后一个斜杠的位置
+	lastSlashIndex := strings.LastIndex(url, "/")
+	// 从最后一个斜杠的位置截取到最后，获取文件名
+	filename := url[lastSlashIndex+1:]
+	// 获取图片
+	resp, err := http.Get(url)
+	if err != nil {
+		err = fmt.Errorf("get image error: %v", err)
+		return
+	}
+	// 读取响应到内存
+	var imageData []byte
+	imageData, err = io.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	if err != nil {
+		err = fmt.Errorf("read image error: %v", err)
+		return
+	}
 	var response []byte
-	response, err = util.PostFile("media", filename, uri)
+	response, err = util.PostFile("media", imageData, filename, "", uri)
 	if err != nil {
 		return
 	}
@@ -56,7 +75,7 @@ func (material *Material) MediaUpload(mediaType MediaType, filename string) (med
 		return
 	}
 	if media.ErrCode != 0 {
-		err = fmt.Errorf("MediaUpload error : errcode=%v , errmsg=%v", media.ErrCode, media.ErrMsg)
+		err = fmt.Errorf("MediaUpload error : errcode=%v, errmsg=%v", media.ErrCode, media.ErrMsg)
 		return
 	}
 	return
@@ -91,7 +110,8 @@ func (material *Material) ImageUpload(filename string) (url string, err error) {
 
 	uri := fmt.Sprintf("%s?access_token=%s", mediaUploadImageURL, accessToken)
 	var response []byte
-	response, err = util.PostFile("media", filename, uri)
+	var directory = filename
+	response, err = util.PostFile("media", nil, "", directory, uri)
 	if err != nil {
 		return
 	}

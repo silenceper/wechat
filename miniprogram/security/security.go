@@ -102,7 +102,8 @@ func (security *Security) ImageCheckV1(filename string) (err error) {
 	}
 
 	uri := fmt.Sprintf(imageCheckURL, accessToken)
-	response, err := util.PostFile("media", filename, uri)
+	var directory = filename
+	response, err := util.PostFile("media", nil, "", directory, uri)
 	if err != nil {
 		return
 	}
