@@ -53,9 +53,12 @@ func (content *Content) CheckImage(media string) error {
 	if err != nil {
 		return err
 	}
+	var directory = media
 	response, err := util.PostFile(
 		"media",
-		media,
+		nil,
+		"",
+		directory,
 		fmt.Sprintf(checkImageURL, accessToken),
 	)
 	if err != nil {

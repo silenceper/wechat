@@ -174,7 +174,8 @@ func (material *Material) AddMaterial(mediaType MediaType, filename string) (med
 
 	uri := fmt.Sprintf("%s?access_token=%s&type=%s", addMaterialURL, accessToken, mediaType)
 	var response []byte
-	response, err = util.PostFile("media", filename, uri)
+	var directory = filename
+	response, err = util.PostFile("media", nil, "", directory, uri)
 	if err != nil {
 		return
 	}
