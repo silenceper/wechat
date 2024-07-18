@@ -48,7 +48,8 @@ func (r *Client) UploadImg(filename string) (*UploadImgResponse, error) {
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostFile("media", filename, fmt.Sprintf(uploadImgURL, accessToken)); err != nil {
+	var directory = filename
+	if response, err = util.PostFile("media", nil, "", directory, fmt.Sprintf(uploadImgURL, accessToken)); err != nil {
 		return nil, err
 	}
 	result := &UploadImgResponse{}
@@ -68,7 +69,8 @@ func (r *Client) UploadTempFile(filename string, mediaType string) (*UploadTempF
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostFile("media", filename, fmt.Sprintf(uploadTempFile, accessToken, mediaType)); err != nil {
+	var directory = filename
+	if response, err = util.PostFile("media", nil, "", directory, fmt.Sprintf(uploadTempFile, accessToken, mediaType)); err != nil {
 		return nil, err
 	}
 	result := &UploadTempFileResponse{}
@@ -89,7 +91,8 @@ func (r *Client) UploadAttachment(filename string, mediaType string, attachmentT
 		return nil, err
 	}
 	var response []byte
-	if response, err = util.PostFile("media", filename, fmt.Sprintf(uploadAttachment, accessToken, mediaType, attachmentType)); err != nil {
+	var directory = filename
+	if response, err = util.PostFile("media", nil, "", directory, fmt.Sprintf(uploadTempFile, accessToken, mediaType)); err != nil {
 		return nil, err
 	}
 	result := &UploadAttachmentResponse{}

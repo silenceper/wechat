@@ -163,7 +163,7 @@ type resAddMaterial struct {
 }
 
 // AddMaterialFromReader 上传永久性素材（处理视频需要单独上传），从 io.Reader 中读取
-func (material *Material) AddMaterialFromReader(mediaType MediaType, filename string, reader io.Reader) (mediaID string, url string, err error) {
+func (material *Material) AddMaterialFromReader(mediaType MediaType, filename string) (mediaID string, url string, err error) {
 	if mediaType == MediaTypeVideo {
 		err = errors.New("永久视频素材上传使用 AddVideo 方法")
 		return

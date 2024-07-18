@@ -212,7 +212,8 @@ func (csm *Manager) UploadHeadImg(kfAccount, fileName string) (err error) {
 	}
 	uri := fmt.Sprintf("%s?access_token=%s&kf_account=%s", customerServiceUploadHeadImg, accessToken, kfAccount)
 	var response []byte
-	response, err = util.PostFile("media", fileName, uri)
+	var directory = fileName
+	response, err = util.PostFile("media", nil, "", directory, uri)
 	if err != nil {
 		return
 	}
