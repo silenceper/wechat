@@ -159,7 +159,7 @@ func PostFile(fieldName string, data []byte, fileName string, directory string, 
 		fileContent = data
 		isFile = false
 	} else {
-		return nil, fmt.Errorf("Invalid argument: required  stream data and filename or only directory")
+		return nil, fmt.Errorf("error parameter required streamdata=%v and filename=%v or only directory=%v", data, fileName, directory)
 	}
 
 	fields := []MultipartFormField{

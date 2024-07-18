@@ -95,14 +95,13 @@ func (security *Security) MediaCheckAsync(in *MediaCheckAsyncRequest) (traceID s
 // https://developers.weixin.qq.com/miniprogram/dev/framework/security.imgSecCheck.html
 // Deprecated
 // 在2021年9月1日停止更新。建议使用 MediaCheckAsync
-func (security *Security) ImageCheckV1(filename string) (err error) {
+func (security *Security) ImageCheckV1(directory string) (err error) {
 	accessToken, err := security.GetAccessToken()
 	if err != nil {
 		return
 	}
 
 	uri := fmt.Sprintf(imageCheckURL, accessToken)
-	var directory = filename
 	response, err := util.PostFile("media", nil, "", directory, uri)
 	if err != nil {
 		return

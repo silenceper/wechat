@@ -92,7 +92,7 @@ func (r *Client) UploadAttachment(filename string, mediaType string, attachmentT
 	}
 	var response []byte
 	var directory = filename
-	if response, err = util.PostFile("media", nil, "", directory, fmt.Sprintf(uploadTempFile, accessToken, mediaType)); err != nil {
+	if response, err = util.PostFile("media", nil, "", directory, fmt.Sprintf(uploadAttachment, accessToken, mediaType, attachmentType)); err != nil {
 		return nil, err
 	}
 	result := &UploadAttachmentResponse{}
