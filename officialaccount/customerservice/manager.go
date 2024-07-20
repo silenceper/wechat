@@ -204,7 +204,7 @@ func (csm *Manager) InviteBind(kfAccount, inviteWX string) (err error) {
 }
 
 // UploadHeadImg 上传客服头像
-func (csm *Manager) UploadHeadImg(kfAccount, fileName string) (err error) {
+func (csm *Manager) UploadHeadImg(kfAccount, directory string) (err error) {
 	var accessToken string
 	accessToken, err = csm.GetAccessToken()
 	if err != nil {
@@ -212,7 +212,7 @@ func (csm *Manager) UploadHeadImg(kfAccount, fileName string) (err error) {
 	}
 	uri := fmt.Sprintf("%s?access_token=%s&kf_account=%s", customerServiceUploadHeadImg, accessToken, kfAccount)
 	var response []byte
-	response, err = util.PostFile("media", fileName, uri)
+	response, err = util.PostFile("media", nil, "", directory, uri)
 	if err != nil {
 		return
 	}

@@ -61,15 +61,15 @@ func (tpl *Template) Send(msg *TemplateMessage) (msgID int64, err error) {
 	if err != nil {
 		return
 	}
-	var (
-		uri      = fmt.Sprintf("%s?access_token=%s", templateSendURL, accessToken)
-		response []byte
-	)
-	if response, err = util.PostJSON(uri, msg); err != nil {
+	uri := fmt.Sprintf("%s?access_token=%s", templateSendURL, accessToken)
+	var response []byte
+	response, err = util.PostJSON(uri, msg)
+	if err != nil {
 		return
 	}
 	var result resTemplateSend
-	if err = json.Unmarshal(response, &result); err != nil {
+	err = json.Unmarshal(response, &result)
+	if err != nil {
 		return
 	}
 	if result.ErrCode != 0 {
@@ -103,11 +103,10 @@ func (tpl *Template) List() (templateList []*TemplateItem, err error) {
 	if err != nil {
 		return
 	}
-	var (
-		uri      = fmt.Sprintf("%s?access_token=%s", templateListURL, accessToken)
-		response []byte
-	)
-	if response, err = util.HTTPGet(uri); err != nil {
+	uri := fmt.Sprintf("%s?access_token=%s", templateListURL, accessToken)
+	var response []byte
+	response, err = util.HTTPGet(uri)
+	if err != nil {
 		return
 	}
 	var res resTemplateList
@@ -122,23 +121,22 @@ type resTemplateAdd struct {
 }
 
 // Add 添加模板.
-func (tpl *Template) Add(shortID string, keyNameList []string) (templateID string, err error) {
+func (tpl *Template) Add(shortID string) (templateID string, err error) {
 	var accessToken string
 	accessToken, err = tpl.GetAccessToken()
 	if err != nil {
 		return
 	}
-	var (
-		msg = struct {
-			ShortID     string   `json:"template_id_short"`
-			KeyNameList []string `json:"keyword_name_list"`
-		}{ShortID: shortID, KeyNameList: keyNameList}
-		uri      = fmt.Sprintf("%s?access_token=%s", templateAddURL, accessToken)
-		response []byte
-	)
-	if response, err = util.PostJSON(uri, msg); err != nil {
+	var msg = struct {
+		ShortID string `json:"template_id_short"`
+	}{ShortID: shortID}
+	uri := fmt.Sprintf("%s?access_token=%s", templateAddURL, accessToken)
+	var response []byte
+	response, err = util.PostJSON(uri, msg)
+	if err != nil {
 		return
 	}
+
 	var result resTemplateAdd
 	err = util.DecodeWithError(response, &result, "AddTemplate")
 	return result.TemplateID, err
@@ -151,14 +149,14 @@ func (tpl *Template) Delete(templateID string) (err error) {
 	if err != nil {
 		return
 	}
-	var (
-		msg = struct {
-			TemplateID string `json:"template_id"`
-		}{TemplateID: templateID}
-		uri      = fmt.Sprintf("%s?access_token=%s", templateDelURL, accessToken)
-		response []byte
-	)
-	if response, err = util.PostJSON(uri, msg); err != nil {
+	var msg = struct {
+		TemplateID string `json:"template_id"`
+	}{TemplateID: templateID}
+
+	uri := fmt.Sprintf("%s?access_token=%s", templateDelURL, accessToken)
+	var response []byte
+	response, err = util.PostJSON(uri, msg)
+	if err != nil {
 		return
 	}
 	return util.DecodeWithCommonError(response, "DeleteTemplate")

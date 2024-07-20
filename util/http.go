@@ -13,6 +13,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"path"
 
 	"golang.org/x/crypto/pkcs12"
 )
@@ -146,25 +147,43 @@ func PostJSONWithRespContentType(uri string, obj interface{}) ([]byte, string, e
 	return responseData, contentType, err
 }
 
-// PostFile 上传文件
-func PostFile(fieldName, filename, uri string) ([]byte, error) {
+// PostFile 支持流或文件形式上传
+func PostFile(fieldName string, data []byte, fileName string, directory string, uri string) ([]byte, error) {
+	var fileContent []byte
+	var isFile bool
+	// 判断
+	if len(data) == 0 && directory != "" {
+		fileName = path.Base(directory)
+		isFile = true
+	} else if len(data) > 0 && fileName != "" {
+		fileContent = data
+		isFile = false
+	} else {
+		return nil, fmt.Errorf("error parameter required streamdata=%v and filename=%v or only directory=%v", data, fileName, directory)
+	}
+
 	fields := []MultipartFormField{
 		{
-			IsFile:    true,
+			IsFile:    isFile,
 			Fieldname: fieldName,
-			Filename:  filename,
+			Value:     fileContent,
+			Filename:  fileName,
+			Directory: directory,
 		},
 	}
 	return PostMultipartForm(fields, uri)
 }
 
 // PostFileFromReader 上传文件，从 io.Reader 中读取
-func PostFileFromReader(filedName, fileName, uri string, reader io.Reader) ([]byte, error) {
+func PostFileFromReader(filedName, directory, uri string, reader io.Reader) ([]byte, error) {
+	// 获取文件名
+	fileName := path.Base(directory)
 	fields := []MultipartFormField{
 		{
 			IsFile:     true,
 			Fieldname:  filedName,
 			Filename:   fileName,
+			Directory:  directory,
 			FileReader: reader,
 		},
 	}
@@ -177,6 +196,7 @@ type MultipartFormField struct {
 	Fieldname  string
 	Value      []byte
 	Filename   string
+	Directory  string
 	FileReader io.Reader
 }
 
@@ -197,7 +217,7 @@ func PostMultipartForm(fields []MultipartFormField, uri string) (respBody []byte
 			}
 
 			if field.FileReader == nil {
-				fh, e := os.Open(field.Filename)
+				fh, e := os.Open(field.Directory)
 				if e != nil {
 					err = fmt.Errorf("error opening file , err=%v", e)
 					return
@@ -213,7 +233,7 @@ func PostMultipartForm(fields []MultipartFormField, uri string) (respBody []byte
 				}
 			}
 		} else {
-			partWriter, e := bodyWriter.CreateFormField(field.Fieldname)
+			partWriter, e := bodyWriter.CreateFormFile(field.Fieldname, field.Filename)
 			if e != nil {
 				err = e
 				return
