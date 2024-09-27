@@ -24,7 +24,7 @@ const (
 	SDKUnknownError           Error = "未知错误"
 )
 
-//Error 输出错误信息
+// Error 输出错误信息
 func (r Error) Error() string {
 	return reflect.ValueOf(r).String()
 }
