@@ -130,7 +130,9 @@ func (ak *StableAccessToken) GetAccessTokenContext(ctx context.Context) (accessT
 	// 先从cache中取
 	accessTokenCacheKey := fmt.Sprintf("%s_stable_access_token_%s", ak.cacheKeyPrefix, ak.appID)
 	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
-		return val.(string), nil
+		if accessToken = val.(string); accessToken != "" {
+			return
+		}
 	}
 
 	// cache失效，从微信服务器获取
