@@ -101,10 +101,11 @@ func (ak *DefaultAccessToken) GetAccessTokenContext(ctx context.Context) (access
 // 不强制更新access_token,可用于不同环境不同服务而不需要分布式锁以及公用缓存，避免access_token争抢
 // https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-access-token/getStableAccessToken.html
 type StableAccessToken struct {
-	appID          string
-	appSecret      string
-	cacheKeyPrefix string
-	cache          cache.Cache
+	appID           string
+	appSecret       string
+	cacheKeyPrefix  string
+	cache           cache.Cache
+	accessTokenLock *sync.Mutex
 }
 
 // NewStableAccessToken new StableAccessToken
@@ -113,10 +114,11 @@ func NewStableAccessToken(appID, appSecret, cacheKeyPrefix string, cache cache.C
 		panic("cache is need")
 	}
 	return &StableAccessToken{
-		appID:          appID,
-		appSecret:      appSecret,
-		cache:          cache,
-		cacheKeyPrefix: cacheKeyPrefix,
+		appID:           appID,
+		appSecret:       appSecret,
+		cache:           cache,
+		cacheKeyPrefix:  cacheKeyPrefix,
+		accessTokenLock: new(sync.Mutex),
 	}
 }
 
@@ -129,6 +131,17 @@ func (ak *StableAccessToken) GetAccessToken() (accessToken string, err error) {
 func (ak *StableAccessToken) GetAccessTokenContext(ctx context.Context) (accessToken string, err error) {
 	// 先从cache中取
 	accessTokenCacheKey := fmt.Sprintf("%s_stable_access_token_%s", ak.cacheKeyPrefix, ak.appID)
+	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
+		if accessToken = val.(string); accessToken != "" {
+			return
+		}
+	}
+
+	// 加上lock，是为了防止在并发获取token时，cache刚好失效，导致从微信服务器上获取到不同token
+	ak.accessTokenLock.Lock()
+	defer ak.accessTokenLock.Unlock()
+
+	// 双检，防止重复从微信服务器获取
 	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
 		if accessToken = val.(string); accessToken != "" {
 			return
