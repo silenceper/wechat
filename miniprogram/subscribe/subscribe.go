@@ -93,7 +93,7 @@ func (s *Subscribe) Send(msg *Message) (err error) {
 	return util.DecodeWithCommonError(response, "Send")
 }
 
-// Send 发送订阅消息
+// SendGetMsgID 发送订阅消息返回 msgid
 func (s *Subscribe) SendGetMsgID(msg *Message) (msgID int64, err error) {
 	var accessToken string
 	accessToken, err = s.GetAccessToken()
