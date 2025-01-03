@@ -189,7 +189,7 @@ func (ak *StableAccessToken) GetAccessTokenDirectly(ctx context.Context, forceRe
 type WorkAccessToken struct {
 	CorpID          string
 	CorpSecret      string
-	AgentID         string
+	AgentID         string // 可选，用于区分不同应用
 	cacheKeyPrefix  string
 	cache           cache.Cache
 	accessTokenLock *sync.Mutex
@@ -203,7 +203,7 @@ func NewWorkAccessToken(corpID, corpSecret, agentID, cacheKeyPrefix string, cach
 	return &WorkAccessToken{
 		CorpID:          corpID,
 		CorpSecret:      corpSecret,
-		AgentID:         agentID,
+		AgentID:         agentID, // agentID可以为空，兼容历史版本
 		cache:           cache,
 		cacheKeyPrefix:  cacheKeyPrefix,
 		accessTokenLock: new(sync.Mutex),
@@ -221,8 +221,18 @@ func (ak *WorkAccessToken) GetAccessTokenContext(ctx context.Context) (accessTok
 	ak.accessTokenLock.Lock()
 	defer ak.accessTokenLock.Unlock()
 
-	// 修改缓存key，加入agentID
-	accessTokenCacheKey := fmt.Sprintf("%s_access_token_%s_%s", ak.cacheKeyPrefix, ak.CorpID, ak.AgentID)
+	// 构建缓存key
+	var accessTokenCacheKey string
+	// 每个应用有独立的secret，获取到的access_token只能本应用使用，所以每个应用的access_token应该分开来获取
+	// API文档:https://developer.work.weixin.qq.com/document/path/91039
+	if ak.AgentID != "" {
+		// 如果设置了AgentID，使用新的key格式
+		accessTokenCacheKey = fmt.Sprintf("%s_access_token_%s_%s", ak.cacheKeyPrefix, ak.CorpID, ak.AgentID)
+	} else {
+		// 兼容历史版本的key格式
+		accessTokenCacheKey = fmt.Sprintf("%s_access_token_%s", ak.cacheKeyPrefix, ak.CorpID)
+	}
+
 	val := ak.cache.Get(accessTokenCacheKey)
 	if val != nil {
 		accessToken = val.(string)
