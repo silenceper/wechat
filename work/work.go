@@ -24,7 +24,7 @@ type Work struct {
 
 // NewWork init work
 func NewWork(cfg *config.Config) *Work {
-	defaultAkHandle := credential.NewWorkAccessToken(cfg.CorpID, cfg.CorpSecret, credential.CacheKeyWorkPrefix, cfg.Cache)
+	defaultAkHandle := credential.NewWorkAccessToken(cfg.CorpID, cfg.CorpSecret, cfg.AgentID, credential.CacheKeyWorkPrefix, cfg.Cache)
 	ctx := &context.Context{
 		Config:            cfg,
 		AccessTokenHandle: defaultAkHandle,

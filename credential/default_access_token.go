@@ -189,19 +189,21 @@ func (ak *StableAccessToken) GetAccessTokenDirectly(ctx context.Context, forceRe
 type WorkAccessToken struct {
 	CorpID          string
 	CorpSecret      string
+	AgentID         string
 	cacheKeyPrefix  string
 	cache           cache.Cache
 	accessTokenLock *sync.Mutex
 }
 
 // NewWorkAccessToken new WorkAccessToken
-func NewWorkAccessToken(corpID, corpSecret, cacheKeyPrefix string, cache cache.Cache) AccessTokenContextHandle {
+func NewWorkAccessToken(corpID, corpSecret, agentID, cacheKeyPrefix string, cache cache.Cache) AccessTokenContextHandle {
 	if cache == nil {
 		panic("cache the not exist")
 	}
 	return &WorkAccessToken{
 		CorpID:          corpID,
 		CorpSecret:      corpSecret,
+		AgentID:         agentID,
 		cache:           cache,
 		cacheKeyPrefix:  cacheKeyPrefix,
 		accessTokenLock: new(sync.Mutex),
@@ -218,7 +220,9 @@ func (ak *WorkAccessToken) GetAccessTokenContext(ctx context.Context) (accessTok
 	// 加上lock，是为了防止在并发获取token时，cache刚好失效，导致从微信服务器上获取到不同token
 	ak.accessTokenLock.Lock()
 	defer ak.accessTokenLock.Unlock()
-	accessTokenCacheKey := fmt.Sprintf("%s_access_token_%s", ak.cacheKeyPrefix, ak.CorpID)
+
+	// 修改缓存key，加入agentID
+	accessTokenCacheKey := fmt.Sprintf("%s_access_token_%s_%s", ak.cacheKeyPrefix, ak.CorpID, ak.AgentID)
 	val := ak.cache.Get(accessTokenCacheKey)
 	if val != nil {
 		accessToken = val.(string)
