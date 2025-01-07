@@ -7,7 +7,7 @@ type AccessTokenHandle interface {
 	GetAccessToken() (accessToken string, err error)
 }
 
-// AccessTokenCompatibleHandle 允许 AccessTokenHandle 兼容 AccessTokenContextHandle.
+// AccessTokenCompatibleHandle 同时实现 AccessTokenHandle 和 AccessTokenContextHandle
 type AccessTokenCompatibleHandle struct {
 	AccessTokenHandle
 }
