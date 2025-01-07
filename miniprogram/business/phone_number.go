@@ -1,6 +1,7 @@
 package business
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/silenceper/wechat/v2/util"
@@ -28,13 +29,18 @@ type PhoneInfo struct {
 
 // GetPhoneNumber code换取用户手机号。 每个code只能使用一次，code的有效期为5min
 func (business *Business) GetPhoneNumber(in *GetPhoneNumberRequest) (info PhoneInfo, err error) {
+	return business.GetPhoneNumberWithContext(context.Background(), in)
+}
+
+// GetPhoneNumberWithContext 利用context将code换取用户手机号。 每个code只能使用一次，code的有效期为5min
+func (business *Business) GetPhoneNumberWithContext(ctx context.Context, in *GetPhoneNumberRequest) (info PhoneInfo, err error) {
 	accessToken, err := business.GetAccessToken()
 	if err != nil {
 		return
 	}
 
 	uri := fmt.Sprintf(getPhoneNumberURL, accessToken)
-	response, err := util.PostJSON(uri, in)
+	response, err := util.PostJSONContext(ctx, uri, in)
 	if err != nil {
 		return
 	}
