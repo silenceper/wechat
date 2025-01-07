@@ -55,6 +55,11 @@ func (miniProgram *MiniProgram) SetAccessTokenHandle(accessTokenHandle credentia
 	}
 }
 
+// SetAccessTokenContextHandle 自定义 access_token 获取方式
+func (miniProgram *MiniProgram) SetAccessTokenContextHandle(accessTokenContextHandle credential.AccessTokenContextHandle) {
+	miniProgram.ctx.AccessTokenContextHandle = accessTokenContextHandle
+}
+
 // GetContext get Context
 func (miniProgram *MiniProgram) GetContext() *context.Context {
 	return miniProgram.ctx
