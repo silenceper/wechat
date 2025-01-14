@@ -49,12 +49,10 @@ func (js *Js) GetConfig(uri string) (config *Config, err error) {
 	if err != nil {
 		return
 	}
-
 	nonceStr := util.RandomStr(16)
 	timestamp := util.GetCurrTS()
 	str := fmt.Sprintf("jsapi_ticket=%s&noncestr=%s&timestamp=%d&url=%s", ticketStr, nonceStr, timestamp, uri)
 	sigStr := util.Signature(str)
-
 	config.AppID = js.AppID
 	config.NonceStr = nonceStr
 	config.Timestamp = timestamp
