@@ -1,8 +1,7 @@
 package jsapi
 
 import (
-	"strconv"
-
+	"fmt"
 	"github.com/silenceper/wechat/v2/credential"
 	"github.com/silenceper/wechat/v2/util"
 	"github.com/silenceper/wechat/v2/work/context"
@@ -49,7 +48,8 @@ func (js *Js) GetConfig(uri string) (config *Config, err error) {
 	}
 	config.NonceStr = util.RandomStr(16)
 	config.Timestamp = util.GetCurrTS()
-	config.Signature = util.Signature(ticketStr, config.NonceStr, strconv.FormatInt(config.Timestamp, 10), uri)
+	str := fmt.Sprintf("jsapi_ticket=%s&noncestr=%s&timestamp=%d&url=%s", ticketStr, config.NonceStr, config.Timestamp, uri)
+	config.Signature = util.Signature(str)
 	return
 }
 
@@ -68,6 +68,7 @@ func (js *Js) GetAgentConfig(uri string) (config *Config, err error) {
 	}
 	config.NonceStr = util.RandomStr(16)
 	config.Timestamp = util.GetCurrTS()
-	config.Signature = util.Signature(ticketStr, config.NonceStr, strconv.FormatInt(config.Timestamp, 10), uri)
+	str := fmt.Sprintf("jsapi_ticket=%s&noncestr=%s&timestamp=%d&url=%s", ticketStr, config.NonceStr, config.Timestamp, uri)
+	config.Signature = util.Signature(str)
 	return
 }
