@@ -195,6 +195,7 @@ type WorkAccessToken struct {
 	accessTokenLock *sync.Mutex
 }
 
+
 // NewWorkAccessToken new WorkAccessToken (保持向后兼容)
 func NewWorkAccessToken(corpID, corpSecret, agentID, cacheKeyPrefix string, cache cache.Cache) AccessTokenContextHandle {
 	// 调用新方法，保持兼容性
@@ -229,6 +230,7 @@ func (ak *WorkAccessToken) GetAccessTokenContext(ctx context.Context) (accessTok
 
 	// 构建缓存key
 	var accessTokenCacheKey string
+
 	if ak.AgentID != "" {
 		// 如果设置了AgentID，使用新的key格式
 		accessTokenCacheKey = fmt.Sprintf("%s_access_token_%s_%s", ak.cacheKeyPrefix, ak.CorpID, ak.AgentID)
