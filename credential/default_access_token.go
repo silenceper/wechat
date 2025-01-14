@@ -195,15 +195,21 @@ type WorkAccessToken struct {
 	accessTokenLock *sync.Mutex
 }
 
-// NewWorkAccessToken new WorkAccessToken
+// NewWorkAccessToken new WorkAccessToken (保持向后兼容)
 func NewWorkAccessToken(corpID, corpSecret, agentID, cacheKeyPrefix string, cache cache.Cache) AccessTokenContextHandle {
+	// 调用新方法，保持兼容性
+	return NewWorkAccessTokenWithAgentID(corpID, corpSecret, agentID, cacheKeyPrefix, cache)
+}
+
+// NewWorkAccessTokenWithAgentID new WorkAccessToken with agentID
+func NewWorkAccessTokenWithAgentID(corpID, corpSecret, agentID, cacheKeyPrefix string, cache cache.Cache) AccessTokenContextHandle {
 	if cache == nil {
-		panic("cache the not exist")
+		panic("cache is needed")
 	}
 	return &WorkAccessToken{
 		CorpID:          corpID,
 		CorpSecret:      corpSecret,
-		AgentID:         agentID, // agentID可以为空，兼容历史版本
+		AgentID:         agentID,
 		cache:           cache,
 		cacheKeyPrefix:  cacheKeyPrefix,
 		accessTokenLock: new(sync.Mutex),
@@ -223,8 +229,6 @@ func (ak *WorkAccessToken) GetAccessTokenContext(ctx context.Context) (accessTok
 
 	// 构建缓存key
 	var accessTokenCacheKey string
-	// 每个应用有独立的secret，获取到的access_token只能本应用使用，所以每个应用的access_token应该分开来获取
-	// API文档:https://developer.work.weixin.qq.com/document/path/91039
 	if ak.AgentID != "" {
 		// 如果设置了AgentID，使用新的key格式
 		accessTokenCacheKey = fmt.Sprintf("%s_access_token_%s_%s", ak.cacheKeyPrefix, ak.CorpID, ak.AgentID)
@@ -248,6 +252,9 @@ func (ak *WorkAccessToken) GetAccessTokenContext(ctx context.Context) (accessTok
 
 	expires := resAccessToken.ExpiresIn - 1500
 	err = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
+	if err != nil {
+		return
+	}
 
 	accessToken = resAccessToken.AccessToken
 	return
