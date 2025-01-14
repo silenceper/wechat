@@ -42,15 +42,22 @@ func NewMiniProgram(cfg *config.Config) *MiniProgram {
 		defaultAkHandle = credential.NewDefaultAccessToken(cfg.AppID, cfg.AppSecret, cacheKeyPrefix, cfg.Cache)
 	}
 	ctx := &context.Context{
-		Config:            cfg,
-		AccessTokenHandle: defaultAkHandle,
+		Config:                   cfg,
+		AccessTokenContextHandle: defaultAkHandle,
 	}
 	return &MiniProgram{ctx}
 }
 
 // SetAccessTokenHandle 自定义 access_token 获取方式
 func (miniProgram *MiniProgram) SetAccessTokenHandle(accessTokenHandle credential.AccessTokenHandle) {
-	miniProgram.ctx.AccessTokenHandle = accessTokenHandle
+	miniProgram.ctx.AccessTokenContextHandle = credential.AccessTokenCompatibleHandle{
+		AccessTokenHandle: accessTokenHandle,
+	}
+}
+
+// SetAccessTokenContextHandle 自定义 access_token 获取方式
+func (miniProgram *MiniProgram) SetAccessTokenContextHandle(accessTokenContextHandle credential.AccessTokenContextHandle) {
+	miniProgram.ctx.AccessTokenContextHandle = accessTokenContextHandle
 }
 
 // GetContext get Context
