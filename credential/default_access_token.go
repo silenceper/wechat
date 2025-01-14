@@ -195,7 +195,6 @@ type WorkAccessToken struct {
 	accessTokenLock *sync.Mutex
 }
 
-
 // NewWorkAccessToken new WorkAccessToken (保持向后兼容)
 func NewWorkAccessToken(corpID, corpSecret, agentID, cacheKeyPrefix string, cache cache.Cache) AccessTokenContextHandle {
 	// 调用新方法，保持兼容性
