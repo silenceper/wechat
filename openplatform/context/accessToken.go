@@ -225,6 +225,10 @@ func (ctx *Context) RefreshAuthrTokenContext(stdCtx context.Context, appid, refr
 	if err := cache.SetContext(stdCtx, ctx.Cache, authrTokenKey, ret.AccessToken, time.Second*time.Duration(ret.ExpiresIn-30)); err != nil {
 		return nil, err
 	}
+	refreshTokenKey := "authorizer_refresh_token_" + appid
+	if err := cache.SetContext(stdCtx, ctx.Cache, refreshTokenKey, ret.RefreshToken, time.Second*-1); err != nil {
+		return nil, err
+	}
 	return ret, nil
 }
 
@@ -238,8 +242,18 @@ func (ctx *Context) GetAuthrAccessTokenContext(stdCtx context.Context, appid str
 	authrTokenKey := "authorizer_access_token_" + appid
 	val := cache.GetContext(stdCtx, ctx.Cache, authrTokenKey)
 	if val == nil {
-		return "", fmt.Errorf("cannot get authorizer %s access token", appid)
+		refreshTokenKey := "authorizer_refresh_token_" + appid
+		val := cache.GetContext(stdCtx, ctx.Cache, refreshTokenKey)
+		if val == nil {
+			return "", fmt.Errorf("cannot get authorizer %s refresh token", appid)
+		}
+		token, err := ctx.RefreshAuthrToken(appid, val.(string))
+		if err != nil {
+			return "", err
+		}
+		return token.AccessToken, nil
 	}
+
 	return val.(string), nil
 }
 
