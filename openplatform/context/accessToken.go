@@ -226,7 +226,7 @@ func (ctx *Context) RefreshAuthrTokenContext(stdCtx context.Context, appid, refr
 		return nil, err
 	}
 	refreshTokenKey := "authorizer_refresh_token_" + appid
-	if err := cache.SetContext(stdCtx, ctx.Cache, refreshTokenKey, ret.RefreshToken, time.Second*-1); err != nil {
+	if err := cache.SetContext(stdCtx, ctx.Cache, refreshTokenKey, ret.RefreshToken, 10*365*24*60*60*time.Second); err != nil {
 		return nil, err
 	}
 	return ret, nil
