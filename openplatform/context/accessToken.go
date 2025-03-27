@@ -247,7 +247,7 @@ func (ctx *Context) GetAuthrAccessTokenContext(stdCtx context.Context, appid str
 		if val == nil {
 			return "", fmt.Errorf("cannot get authorizer %s refresh token", appid)
 		}
-		token, err := ctx.RefreshAuthrToken(appid, val.(string))
+		token, err := ctx.RefreshAuthrTokenContext(stdCtx, appid, val.(string))
 		if err != nil {
 			return "", err
 		}
