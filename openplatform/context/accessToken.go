@@ -20,6 +20,7 @@ const (
 	getComponentInfoURL     = "https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_info?component_access_token=%s"
 	componentLoginURL       = "https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid=%s&pre_auth_code=%s&redirect_uri=%s&auth_type=%d&biz_appid=%s"
 	bindComponentURL        = "https://mp.weixin.qq.com/safe/bindcomponent?action=bindcomponent&auth_type=%d&no_scan=1&component_appid=%s&pre_auth_code=%s&redirect_uri=%s&biz_appid=%s#wechat_redirect"
+	bindComponentURLV2      = "https://open.weixin.qq.com/wxaopen/safe/bindcomponent?action=bindcomponent&auth_type=%d&no_scan=1&component_appid=%s&pre_auth_code=%s&redirect_uri=%s&biz_appid=%s#wechat_redirect"
 	// TODO 获取授权方选项信息
 	// getComponentConfigURL = "https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_option?component_access_token=%s"
 	// TODO 获取已授权的账号信息
@@ -137,6 +138,20 @@ func (ctx *Context) GetBindComponentURL(redirectURI string, authType int, bizApp
 	return ctx.GetBindComponentURLContext(context.Background(), redirectURI, authType, bizAppID)
 }
 
+// GetBindComponentURLV2Context 获取新版本第三方公众号授权链接(链接跳转，适用移动端)
+func (ctx *Context) GetBindComponentURLV2Context(stdCtx context.Context, redirectURI string, authType int, bizAppID string) (string, error) {
+	code, err := ctx.GetPreCodeContext(stdCtx)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf(bindComponentURLV2, authType, ctx.AppID, code, url.QueryEscape(redirectURI), bizAppID), nil
+}
+
+// GetBindComponentURLV2 获取新版本第三方公众号授权链接(链接跳转，适用移动端)
+func (ctx *Context) GetBindComponentURLV2(redirectURI string, authType int, bizAppID string) (string, error) {
+	return ctx.GetBindComponentURLContext(context.Background(), redirectURI, authType, bizAppID)
+}
+
 // ID 微信返回接口中各种类型字段
 type ID struct {
 	ID int `json:"id"`
@@ -225,6 +240,10 @@ func (ctx *Context) RefreshAuthrTokenContext(stdCtx context.Context, appid, refr
 	if err := cache.SetContext(stdCtx, ctx.Cache, authrTokenKey, ret.AccessToken, time.Second*time.Duration(ret.ExpiresIn-30)); err != nil {
 		return nil, err
 	}
+	refreshTokenKey := "authorizer_refresh_token_" + appid
+	if err := cache.SetContext(stdCtx, ctx.Cache, refreshTokenKey, ret.RefreshToken, 10*365*24*60*60*time.Second); err != nil {
+		return nil, err
+	}
 	return ret, nil
 }
 
@@ -238,8 +257,18 @@ func (ctx *Context) GetAuthrAccessTokenContext(stdCtx context.Context, appid str
 	authrTokenKey := "authorizer_access_token_" + appid
 	val := cache.GetContext(stdCtx, ctx.Cache, authrTokenKey)
 	if val == nil {
-		return "", fmt.Errorf("cannot get authorizer %s access token", appid)
+		refreshTokenKey := "authorizer_refresh_token_" + appid
+		val := cache.GetContext(stdCtx, ctx.Cache, refreshTokenKey)
+		if val == nil {
+			return "", fmt.Errorf("cannot get authorizer %s refresh token", appid)
+		}
+		token, err := ctx.RefreshAuthrTokenContext(stdCtx, appid, val.(string))
+		if err != nil {
+			return "", err
+		}
+		return token.AccessToken, nil
 	}
+
 	return val.(string), nil
 }
 

@@ -12,6 +12,8 @@ const (
 	userSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/user/simplelist"
 	// userCreateURL 创建成员
 	userCreateURL = "https://qyapi.weixin.qq.com/cgi-bin/user/create?access_token=%s"
+	// userUpdateURL 更新成员
+	userUpdateURL = "https://qyapi.weixin.qq.com/cgi-bin/user/update?access_token=%s"
 	// userGetURL 读取成员
 	userGetURL = "https://qyapi.weixin.qq.com/cgi-bin/user/get"
 	// userDeleteURL 删除成员
@@ -152,6 +154,51 @@ func (r *Client) UserCreate(req *UserCreateRequest) (*UserCreateResponse, error)
 	result := &UserCreateResponse{}
 	err = util.DecodeWithError(response, result, "UserCreate")
 	return result, err
+}
+
+// UserUpdateRequest 更新成员请求
+type UserUpdateRequest struct {
+	UserID         string   `json:"userid"`
+	NewUserID      string   `json:"new_userid"`
+	Name           string   `json:"name"`
+	Alias          string   `json:"alias"`
+	Mobile         string   `json:"mobile"`
+	Department     []int    `json:"department"`
+	Order          []int    `json:"order"`
+	Position       string   `json:"position"`
+	Gender         int      `json:"gender"`
+	Email          string   `json:"email"`
+	BizMail        string   `json:"biz_mail"`
+	IsLeaderInDept []int    `json:"is_leader_in_dept"`
+	DirectLeader   []string `json:"direct_leader"`
+	Enable         int      `json:"enable"`
+	AvatarMediaid  string   `json:"avatar_mediaid"`
+	Telephone      string   `json:"telephone"`
+	Address        string   `json:"address"`
+	MainDepartment int      `json:"main_department"`
+	Extattr        struct {
+		Attrs []ExtraAttr `json:"attrs"`
+	} `json:"extattr"`
+	ToInvite         bool            `json:"to_invite"`
+	ExternalPosition string          `json:"external_position"`
+	ExternalProfile  ExternalProfile `json:"external_profile"`
+}
+
+// UserUpdate 更新成员
+// see https://developer.work.weixin.qq.com/document/path/90197
+func (r *Client) UserUpdate(req *UserUpdateRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(userUpdateURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "UserUpdate")
 }
 
 // UserGetResponse 获取部门成员响应

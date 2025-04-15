@@ -59,6 +59,30 @@ func (r *Client) UploadImg(filename string) (*UploadImgResponse, error) {
 	return result, err
 }
 
+// UploadImgFromReader 从 io.Reader 上传图片
+// @see https://developer.work.weixin.qq.com/document/path/90256
+func (r *Client) UploadImgFromReader(filename string, reader io.Reader) (*UploadImgResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var byteData []byte
+	byteData, err = io.ReadAll(reader)
+	if err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostFileByStream("media", filename, fmt.Sprintf(uploadImgURL, accessToken), byteData); err != nil {
+		return nil, err
+	}
+	result := &UploadImgResponse{}
+	err = util.DecodeWithError(response, result, "UploadImg")
+	return result, err
+}
+
 // UploadTempFile 上传临时素材
 // @see https://developer.work.weixin.qq.com/document/path/90253
 // @mediaType 媒体文件类型，分别有图片（image）、语音（voice）、视频（video），普通文件（file）
@@ -166,5 +190,13 @@ func (r *Client) GetTempFile(mediaID string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// 检查响应是否为错误信息
+	err = util.DecodeWithCommonError(response, "GetTempFile")
+	if err != nil {
+		return nil, err
+	}
+
+	// 如果不是错误响应，则返回原始数据
 	return response, nil
 }

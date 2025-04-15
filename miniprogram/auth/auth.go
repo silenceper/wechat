@@ -81,7 +81,7 @@ func (auth *Auth) CheckEncryptedDataContext(ctx context2.Context, encryptedMsgHa
 	var (
 		at string
 	)
-	if at, err = auth.GetAccessToken(); err != nil {
+	if at, err = auth.GetAccessTokenContext(ctx); err != nil {
 		return
 	}
 
@@ -120,7 +120,7 @@ func (auth *Auth) GetPhoneNumberContext(ctx context2.Context, code string) (*Get
 		at  string
 		err error
 	)
-	if at, err = auth.GetAccessToken(); err != nil {
+	if at, err = auth.GetAccessTokenContext(ctx); err != nil {
 		return nil, err
 	}
 	body := map[string]interface{}{

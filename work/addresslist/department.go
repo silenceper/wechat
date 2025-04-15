@@ -9,12 +9,16 @@ import (
 const (
 	// departmentCreateURL 创建部门
 	departmentCreateURL = "https://qyapi.weixin.qq.com/cgi-bin/department/create?access_token=%s"
+	// departmentUpdateURL 更新部门
+	departmentUpdateURL = "https://qyapi.weixin.qq.com/cgi-bin/department/update?access_token=%s"
+	// departmentDeleteURL 删除部门
+	departmentDeleteURL = "https://qyapi.weixin.qq.com/cgi-bin/department/delete?access_token=%s&id=%d"
 	// departmentSimpleListURL 获取子部门ID列表
 	departmentSimpleListURL = "https://qyapi.weixin.qq.com/cgi-bin/department/simplelist?access_token=%s&id=%d"
 	// departmentListURL 获取部门列表
 	departmentListURL     = "https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=%s"
 	departmentListByIDURL = "https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=%s&id=%d"
-	// departmentGetURL 获取单个部门详情 https://qyapi.weixin.qq.com/cgi-bin/department/get?access_token=ACCESS_TOKEN&id=ID
+	// departmentGetURL 获取单个部门详情
 	departmentGetURL = "https://qyapi.weixin.qq.com/cgi-bin/department/get?access_token=%s&id=%d"
 )
 
@@ -83,6 +87,49 @@ func (r *Client) DepartmentCreate(req *DepartmentCreateRequest) (*DepartmentCrea
 	result := &DepartmentCreateResponse{}
 	err = util.DecodeWithError(response, result, "DepartmentCreate")
 	return result, err
+}
+
+// DepartmentUpdateRequest 更新部门请求
+type DepartmentUpdateRequest struct {
+	ID       int    `json:"id"`
+	Name     string `json:"name,omitempty"`
+	NameEn   string `json:"name_en,omitempty"`
+	ParentID int    `json:"parentid,omitempty"`
+	Order    int    `json:"order,omitempty"`
+}
+
+// DepartmentUpdate 更新部门
+// see https://developer.work.weixin.qq.com/document/path/90206
+func (r *Client) DepartmentUpdate(req *DepartmentUpdateRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(departmentUpdateURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "DepartmentUpdate")
+}
+
+// DepartmentDelete 删除部门
+// @see https://developer.work.weixin.qq.com/document/path/90207
+func (r *Client) DepartmentDelete(departmentID int) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.HTTPGet(fmt.Sprintf(departmentDeleteURL, accessToken, departmentID)); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "DepartmentDelete")
 }
 
 // DepartmentSimpleList 获取子部门ID列表
