@@ -169,6 +169,7 @@ type UserUpdateRequest struct {
 	Gender         int      `json:"gender"`
 	Email          string   `json:"email"`
 	BizMail        string   `json:"biz_mail"`
+	BizMailAlias   string   `json:"biz_mail_alias"`
 	IsLeaderInDept []int    `json:"is_leader_in_dept"`
 	DirectLeader   []string `json:"direct_leader"`
 	Enable         int      `json:"enable"`
