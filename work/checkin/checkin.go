@@ -140,6 +140,7 @@ type OptionGroupRule struct {
 	SyncOutCheckin         bool                         `json:"sync_out_checkin,omitempty"`
 	BukaRemind             OptionGroupBukaRemind        `json:"buka_remind,omitempty"`
 	BukaRestriction        int64                        `json:"buka_restriction,omitempty"`
+	CheckinMethodType      int64                        `json:"checkin_method_type,omitempty"`
 	SpanDayTime            int64                        `json:"span_day_time,omitempty"`
 	StandardWorkDuration   int64                        `json:"standard_work_duration,omitempty"`
 }
