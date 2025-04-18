@@ -33,6 +33,7 @@ type AccountAddSchema struct {
 }
 
 // AccountAdd 添加客服账号
+// see https://developer.work.weixin.qq.com/document/path/94662
 func (r *Client) AccountAdd(options AccountAddOptions) (info AccountAddSchema, err error) {
 	var (
 		accessToken string
@@ -59,6 +60,7 @@ type AccountDelOptions struct {
 }
 
 // AccountDel 删除客服账号
+// see https://developer.work.weixin.qq.com/document/path/94663
 func (r *Client) AccountDel(options AccountDelOptions) (info util.CommonError, err error) {
 	var (
 		accessToken string
@@ -86,7 +88,8 @@ type AccountUpdateOptions struct {
 	MediaID  string `json:"media_id"`  // 客服头像临时素材。可以调用上传临时素材接口获取, 不多于128个字节
 }
 
-// AccountUpdate 修复客服账号
+// AccountUpdate 修改客服账号
+// see https://developer.work.weixin.qq.com/document/path/94664
 func (r *Client) AccountUpdate(options AccountUpdateOptions) (info util.CommonError, err error) {
 	var (
 		accessToken string
@@ -109,9 +112,10 @@ func (r *Client) AccountUpdate(options AccountUpdateOptions) (info util.CommonEr
 
 // AccountInfoSchema 客服详情
 type AccountInfoSchema struct {
-	OpenKFID string `json:"open_kfid"` // 客服帐号ID
-	Name     string `json:"name"`      // 客服帐号名称
-	Avatar   string `json:"avatar"`    // 客服头像URL
+	OpenKFID        string `json:"open_kfid"`        // 客服帐号ID
+	Name            string `json:"name"`             // 客服帐号名称
+	Avatar          string `json:"avatar"`           // 客服头像URL
+	ManagePrivilege bool   `json:"manage_privilege"` // 当前调用接口的应用身份，是否有该客服账号的管理权限（编辑客服账号信息、分配会话和收发消息）
 }
 
 // AccountListSchema 获取客服账号列表响应内容
@@ -141,6 +145,31 @@ func (r *Client) AccountList() (info AccountListSchema, err error) {
 	return info, nil
 }
 
+// AccountPagingRequest 分页获取客服账号列表请求
+type AccountPagingRequest struct {
+	Offset int `json:"offset"`
+	Limit  int `json:"limit"`
+}
+
+// AccountPaging 分页获取客服账号列表
+// see https://developer.work.weixin.qq.com/document/path/94661
+func (r *Client) AccountPaging(req *AccountPagingRequest) (*AccountListSchema, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.ctx.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(accountListAddr, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &AccountListSchema{}
+	err = util.DecodeWithError(response, result, "AccountPaging")
+	return result, err
+}
+
 // AddContactWayOptions 获取客服账号链接
 // 1.若scene非空，返回的客服链接开发者可拼接scene_param=SCENE_PARAM参数使用，用户进入会话事件会将SCENE_PARAM原样返回。其中SCENE_PARAM需要urlencode，且长度不能超过128字节。
 // 如 https://work.weixin.qq.com/kf/kfcbf8f8d07ac7215f?enc_scene=ENCGFSDF567DF&scene_param=a%3D1%26b%3D2
@@ -158,6 +187,7 @@ type AddContactWaySchema struct {
 }
 
 // AddContactWay 获取客服账号链接
+// see https://developer.work.weixin.qq.com/document/path/94665
 func (r *Client) AddContactWay(options AddContactWayOptions) (info AddContactWaySchema, err error) {
 	var (
 		accessToken string

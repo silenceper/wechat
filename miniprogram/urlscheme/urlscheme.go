@@ -54,6 +54,7 @@ type USParams struct {
 	ExpireType     TExpireType `json:"expire_type"`
 	ExpireTime     int64       `json:"expire_time"`
 	ExpireInterval int         `json:"expire_interval"`
+	IsExpire       bool        `json:"is_expire,omitempty"`
 }
 
 // USResult 返回的结果

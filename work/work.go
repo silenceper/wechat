@@ -9,6 +9,7 @@ import (
 	"github.com/silenceper/wechat/v2/work/context"
 	"github.com/silenceper/wechat/v2/work/externalcontact"
 	"github.com/silenceper/wechat/v2/work/invoice"
+	"github.com/silenceper/wechat/v2/work/jsapi"
 	"github.com/silenceper/wechat/v2/work/kf"
 	"github.com/silenceper/wechat/v2/work/material"
 	"github.com/silenceper/wechat/v2/work/message"
@@ -24,7 +25,7 @@ type Work struct {
 
 // NewWork init work
 func NewWork(cfg *config.Config) *Work {
-	defaultAkHandle := credential.NewWorkAccessToken(cfg.CorpID, cfg.CorpSecret, credential.CacheKeyWorkPrefix, cfg.Cache)
+	defaultAkHandle := credential.NewWorkAccessToken(cfg.CorpID, cfg.CorpSecret, cfg.AgentID, credential.CacheKeyWorkPrefix, cfg.Cache)
 	ctx := &context.Context{
 		Config:            cfg,
 		AccessTokenHandle: defaultAkHandle,
@@ -50,6 +51,11 @@ func (wk *Work) GetMsgAudit() (*msgaudit.Client, error) {
 // GetKF get kf
 func (wk *Work) GetKF() (*kf.Client, error) {
 	return kf.NewClient(wk.ctx.Config)
+}
+
+// JsSdk get JsSdk
+func (wk *Work) JsSdk() *jsapi.Js {
+	return jsapi.NewJs(wk.ctx)
 }
 
 // GetExternalContact get external_contact

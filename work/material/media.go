@@ -14,6 +14,8 @@ const (
 	uploadTempFile = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s"
 	// uploadAttachment 上传附件资源
 	uploadAttachment = "https://qyapi.weixin.qq.com/cgi-bin/media/upload_attachment?access_token=%s&media_type=%s&attachment_type=%d"
+	// getTempFile 获取临时素材
+	getTempFile = "https://qyapi.weixin.qq.com/cgi-bin/media/get?access_token=%s&media_id=%s"
 )
 
 // UploadImgResponse 上传图片响应
@@ -50,6 +52,30 @@ func (r *Client) UploadImg(filename string) (*UploadImgResponse, error) {
 	}
 	var response []byte
 	if response, err = util.PostFile("media", filename, fmt.Sprintf(uploadImgURL, accessToken)); err != nil {
+		return nil, err
+	}
+	result := &UploadImgResponse{}
+	err = util.DecodeWithError(response, result, "UploadImg")
+	return result, err
+}
+
+// UploadImgFromReader 从 io.Reader 上传图片
+// @see https://developer.work.weixin.qq.com/document/path/90256
+func (r *Client) UploadImgFromReader(filename string, reader io.Reader) (*UploadImgResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var byteData []byte
+	byteData, err = io.ReadAll(reader)
+	if err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostFileByStream("media", filename, fmt.Sprintf(uploadImgURL, accessToken), byteData); err != nil {
 		return nil, err
 	}
 	result := &UploadImgResponse{}
@@ -147,4 +173,30 @@ func (r *Client) UploadAttachmentFromReader(filename, mediaType string, reader i
 	result := &UploadAttachmentResponse{}
 	err = util.DecodeWithError(response, result, "UploadAttachment")
 	return result, err
+}
+
+// GetTempFile 获取临时素材
+// @see https://developer.work.weixin.qq.com/document/path/90254
+func (r *Client) GetTempFile(mediaID string) ([]byte, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	url := fmt.Sprintf(getTempFile, accessToken, mediaID)
+	response, err := util.HTTPGet(url)
+	if err != nil {
+		return nil, err
+	}
+
+	// 检查响应是否为错误信息
+	err = util.DecodeWithCommonError(response, "GetTempFile")
+	if err != nil {
+		return nil, err
+	}
+
+	// 如果不是错误响应，则返回原始数据
+	return response, nil
 }
