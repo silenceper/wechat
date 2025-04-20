@@ -1,6 +1,7 @@
 package js
 
 import (
+	context2 "context"
 	"fmt"
 
 	"github.com/silenceper/wechat/v2/credential"
@@ -13,6 +14,7 @@ import (
 type Js struct {
 	*context.Context
 	credential.JsTicketHandle
+	credential.JsTicketContextHandle
 }
 
 // NewJs init
@@ -32,14 +34,19 @@ func (js *Js) SetJsTicketHandle(ticketHandle credential.JsTicketHandle) {
 // GetConfig 第三方平台 - 获取jssdk需要的配置参数
 // uri 为当前网页地址
 func (js *Js) GetConfig(uri, appid string) (config *officialJs.Config, err error) {
+	return js.GetConfigContext(context2.Background(), uri, appid)
+}
+
+// GetConfigContext 新方法，允许传入上下文，避免协程泄漏
+func (js *Js) GetConfigContext(ctx context2.Context, uri, appid string) (config *officialJs.Config, err error) {
 	config = new(officialJs.Config)
 	var accessToken string
-	accessToken, err = js.GetAccessToken()
+	accessToken, err = js.GetAccessTokenContext(ctx)
 	if err != nil {
 		return
 	}
 	var ticketStr string
-	ticketStr, err = js.GetTicket(accessToken)
+	ticketStr, err = js.GetTicketContext(ctx, accessToken)
 	if err != nil {
 		return
 	}

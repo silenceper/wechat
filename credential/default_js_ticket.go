@@ -1,6 +1,7 @@
 package credential
 
 import (
+	context2 "context"
 	"encoding/json"
 	"fmt"
 	"sync"
@@ -42,6 +43,16 @@ type ResTicket struct {
 
 // GetTicket 获取jsapi_ticket
 func (js *DefaultJsTicket) GetTicket(accessToken string) (ticketStr string, err error) {
+	return js.GetTicketContext(context2.Background(), accessToken)
+}
+
+// GetTicketFromServer 从服务器中获取ticket
+func GetTicketFromServer(accessToken string) (ticket ResTicket, err error) {
+	return GetTicketFromServerContext(context2.Background(), accessToken)
+}
+
+// GetTicketContext 获取jsapi_ticket
+func (js *DefaultJsTicket) GetTicketContext(ctx context2.Context, accessToken string) (ticketStr string, err error) {
 	// 先从cache中取
 	jsAPITicketCacheKey := fmt.Sprintf("%s_jsapi_ticket_%s", js.cacheKeyPrefix, js.appID)
 	if val := js.cache.Get(jsAPITicketCacheKey); val != nil {
@@ -57,7 +68,7 @@ func (js *DefaultJsTicket) GetTicket(accessToken string) (ticketStr string, err 
 	}
 
 	var ticket ResTicket
-	ticket, err = GetTicketFromServer(accessToken)
+	ticket, err = GetTicketFromServerContext(ctx, accessToken)
 	if err != nil {
 		return
 	}
@@ -67,11 +78,11 @@ func (js *DefaultJsTicket) GetTicket(accessToken string) (ticketStr string, err 
 	return
 }
 
-// GetTicketFromServer 从服务器中获取ticket
-func GetTicketFromServer(accessToken string) (ticket ResTicket, err error) {
+// GetTicketFromServerContext 从服务器中获取ticket
+func GetTicketFromServerContext(ctx context2.Context, accessToken string) (ticket ResTicket, err error) {
 	var response []byte
 	url := fmt.Sprintf(getTicketURL, accessToken)
-	response, err = util.HTTPGet(url)
+	response, err = util.HTTPGetContext(ctx, url)
 	if err != nil {
 		return
 	}
