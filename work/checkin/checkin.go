@@ -21,6 +21,8 @@ const (
 	clearOptionURL = "https://qyapi.weixin.qq.com/cgi-bin/checkin/clear_checkin_option_array_field?access_token=%s"
 	// delOptionURL 删除打卡规则
 	delOptionURL = "https://qyapi.weixin.qq.com/cgi-bin/checkin/del_checkin_option?access_token=%s"
+	// addRecordURL 添加打卡记录
+	addRecordURL = "https://qyapi.weixin.qq.com/cgi-bin/checkin/add_checkin_record?access_token=%s"
 )
 
 // SetScheduleListRequest 为打卡人员排班请求
@@ -385,4 +387,42 @@ func (r *Client) DelOption(req *DelOptionRequest) error {
 		return err
 	}
 	return util.DecodeWithCommonError(response, "DelOption")
+}
+
+// AddRecordRequest 添加打卡记录请求
+type AddRecordRequest struct {
+	Records []Record `json:"records"`
+}
+
+// Record 打卡记录
+type Record struct {
+	UserID         string   `json:"userid"`
+	CheckinTime    int64    `json:"checkin_time"`
+	LocationTitle  string   `json:"location_title"`
+	LocationDetail string   `json:"location_detail"`
+	MediaIDS       []string `json:"mediaids"`
+	Notes          string   `json:"notes"`
+	DeviceType     int      `json:"device_type"`
+	Lat            int64    `json:"lat"`
+	Lng            int64    `json:"lng"`
+	DeviceDetail   string   `json:"device_detail"`
+	WifiName       string   `json:"wifiname"`
+	WifiMac        string   `json:"wifimac"`
+}
+
+// AddRecord 添加打卡记录
+// see https://developer.work.weixin.qq.com/document/path/99647
+func (r *Client) AddRecord(req *AddRecordRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(addRecordURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "AddRecord")
 }
