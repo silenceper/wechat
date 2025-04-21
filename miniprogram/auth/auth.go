@@ -278,6 +278,7 @@ type GetUserEncryptKeyResponse struct {
 	KeyInfoList []KeyInfo `json:"key_info_list"`
 }
 
+// KeyInfo 用户最近三次的加密key
 type KeyInfo struct {
 	EncryptKey string `json:"encrypt_key"`
 	Version    int64  `json:"version"`
