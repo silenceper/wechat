@@ -81,103 +81,59 @@ func (rt *contextCheckingRoundTripper) RoundTrip(req *http.Request) (*http.Respo
 	}
 }
 
+// setupJsInstance 初始化 Js 实例和 HTTP 客户端
+func setupJsInstance(t *testing.T, ctx context2.Context, key, val interface{}) (*Js, func()) {
+	cfg := &config.Config{
+		AppID:     "test-app-id",
+		AppSecret: "test-app-secret",
+		Cache:     cache.NewMemory(),
+	}
+	cacheKey := fmt.Sprintf("%s_jsapi_ticket_%s", credential.CacheKeyOfficialAccountPrefix, cfg.AppID)
+	if err := cfg.Cache.Delete(cacheKey); err != nil {
+		t.Fatalf("清除缓存失败: %v", err)
+	}
+	fmt.Println("清除 jsapi_ticket 的缓存:", cacheKey)
+
+	ctxHandle := &context.Context{Config: cfg, AccessTokenHandle: &mockAccessTokenHandle{}}
+	jsInstance := NewJs(ctxHandle, cfg.AppID)
+	jsInstance.SetJsTicketHandle(credential.NewDefaultJsTicket(cfg.AppID, credential.CacheKeyOfficialAccountPrefix, cfg.Cache))
+
+	originalClient := util.DefaultHTTPClient
+	util.DefaultHTTPClient = &http.Client{
+		Transport: &contextCheckingRoundTripper{originalCtx: ctx, t: t, key: key, expectedVal: val},
+	}
+	return jsInstance, func() { util.DefaultHTTPClient = originalClient }
+}
+
 func TestGetConfigContext(t *testing.T) {
-	// 子测试：验证上下文传递
 	t.Run("ContextPassing", func(t *testing.T) {
-		// 创建测试 context，添加特定的键值对
 		ctxKey := "testKey111"
 		ctxValue := "testValue222"
 		ctx := context2.WithValue(context2.Background(), ctxKey, ctxValue)
 		fmt.Printf("创建的测试上下文: %p, 添加的键值对: %v=%v\n", ctx, ctxKey, ctxValue)
 
-		// 创建 Js 实例
-		cfg := &config.Config{
-			AppID:     "test-app-id",
-			AppSecret: "test-app-secret",
-			Cache:     cache.NewMemory(),
-		}
-		// 清除缓存，确保触发 HTTP 请求
-		cacheKey := fmt.Sprintf("%s_jsapi_ticket_%s", credential.CacheKeyOfficialAccountPrefix, cfg.AppID)
-		if err := cfg.Cache.Delete(cacheKey); err != nil {
-			t.Fatalf("清除缓存失败 PREFACE: %v", err)
-		}
-		fmt.Println("清除 jsapi_ticket 的缓存:", cacheKey)
-
-		ctxHandle := &context.Context{
-			Config:            cfg,
-			AccessTokenHandle: &mockAccessTokenHandle{},
-		}
-		jsInstance := NewJs(ctxHandle, cfg.AppID)
-		// 使用 DefaultJsTicket 触发 HTTP 请求
-		jsInstance.SetJsTicketHandle(credential.NewDefaultJsTicket(cfg.AppID, credential.CacheKeyOfficialAccountPrefix, cfg.Cache))
-
-		// 创建自定义 HTTP 客户端
-		originalClient := util.DefaultHTTPClient
-		defer func() { util.DefaultHTTPClient = originalClient }()
-		util.DefaultHTTPClient = &http.Client{
-			Transport: &contextCheckingRoundTripper{
-				originalCtx: ctx,
-				t:           t,
-				key:         ctxKey,
-				expectedVal: ctxValue,
-			},
-		}
-
-		// 调用 GetConfigContext
+		jsInstance, cleanup := setupJsInstance(t, ctx, ctxKey, ctxValue)
+		defer cleanup()
 		fmt.Println("调用 GetConfigContext")
-		config2, err := jsInstance.GetConfigContext(ctx, "https://example.com", cfg.AppID)
+		config2, err := jsInstance.GetConfigContext(ctx, "https://www.baidu.com", "test-app-id")
 		if err != nil {
 			t.Fatalf("GetConfigContext 失败: %v", err)
 		}
-
-		// 验证返回的 config 是否正确
-		if config2.AppID != cfg.AppID {
-			t.Errorf("预期 AppID 为 %s，实际为 %s", cfg.AppID, config2.AppID)
+		if config2.AppID != "test-app-id" {
+			t.Errorf("预期 AppID 为 %s，实际为 %s", "test-app-id", config2.AppID)
 		}
 	})
 
-	// 子测试：验证上下文取消
 	t.Run("ContextCancellation", func(t *testing.T) {
-		// 创建可取消的 context
 		ctx, cancel := context2.WithCancel(context2.Background())
 		defer cancel()
 
-		// 创建 Js 实例
-		cfg := &config.Config{
-			AppID:     "test-app-id",
-			AppSecret: "test-app-secret",
-			Cache:     cache.NewMemory(),
-		}
-		cacheKey := fmt.Sprintf("%s_jsapi_ticket_%s", credential.CacheKeyOfficialAccountPrefix, cfg.AppID)
-		if err := cfg.Cache.Delete(cacheKey); err != nil {
-			t.Fatalf("清除缓存失败: %v", err)
-		}
+		jsInstance, cleanup := setupJsInstance(t, ctx, nil, nil)
+		defer cleanup()
 
-		ctxHandle := &context.Context{
-			Config:            cfg,
-			AccessTokenHandle: &mockAccessTokenHandle{},
-		}
-		jsInstance := NewJs(ctxHandle, cfg.AppID)
-		jsInstance.SetJsTicketHandle(credential.NewDefaultJsTicket(cfg.AppID, credential.CacheKeyOfficialAccountPrefix, cfg.Cache))
-
-		// 创建自定义 HTTP 客户端，模拟延迟以测试取消
-		originalClient := util.DefaultHTTPClient
-		defer func() { util.DefaultHTTPClient = originalClient }()
-		util.DefaultHTTPClient = &http.Client{
-			Transport: &contextCheckingRoundTripper{
-				originalCtx: ctx,
-				t:           t,
-				key:         nil, // 不检查键值对
-				expectedVal: nil,
-			},
-		}
-
-		// 立即取消上下文
 		cancel()
-
-		// 调用 GetConfigContext
 		fmt.Println("调用 GetConfigContext（已取消上下文）")
-		_, err := jsInstance.GetConfigContext(ctx, "https://example.com", cfg.AppID)
+		_, err := jsInstance.GetConfigContext(ctx, "https://www.baidu.com", "test-app-id")
 		if err == nil {
 			t.Error("预期上下文取消错误，但 GetConfigContext 未返回错误")
 		} else if !errors.Is(err, context2.Canceled) {
