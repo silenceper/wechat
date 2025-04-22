@@ -13,7 +13,6 @@ import (
 type Js struct {
 	*context.Context
 	credential.JsTicketHandle
-	credential.JsTicketContextHandle
 }
 
 // Config 返回给用户jssdk配置信息
@@ -47,19 +46,34 @@ func (js *Js) GetConfig(uri string) (config *Config, err error) {
 // GetConfigContext  新方法，允许传入上下文，避免协程泄漏
 func (js *Js) GetConfigContext(ctx context2.Context, uri string) (config *Config, err error) {
 	var accessToken string
-	accessToken, err = js.GetAccessTokenContext(ctx)
+	// 类型断言，如果断言成功，调用安全的 GetAccessTokenContext 方法
+	if ctxHandle, ok := js.Context.AccessTokenHandle.(credential.AccessTokenContextHandle); ok {
+		accessToken, err = ctxHandle.GetAccessTokenContext(ctx)
+	} else {
+		// 如果没有实现 AccessTokenContextHandle 接口，调用旧的 GetAccessToken 方法
+		accessToken, err = js.Context.GetAccessToken()
+	}
 	if err != nil {
 		return
 	}
+
 	var ticketStr string
-	ticketStr, err = js.GetTicketContext(ctx, accessToken)
+	// 类型断言 jsTicket
+	if ticketCtxHandle, ok := js.JsTicketHandle.(credential.JsTicketContextHandle); ok {
+		ticketStr, err = ticketCtxHandle.GetTicketContext(ctx, accessToken)
+	} else {
+		// 如果没有实现 JsTicketContextHandle 接口，调用旧的 GetTicket 方法
+		ticketStr, err = js.GetTicket(accessToken)
+	}
 	if err != nil {
 		return
 	}
+
 	nonceStr := util.RandomStr(16)
 	timestamp := util.GetCurrTS()
 	str := fmt.Sprintf("jsapi_ticket=%s&noncestr=%s&timestamp=%d&url=%s", ticketStr, nonceStr, timestamp, uri)
 	sigStr := util.Signature(str)
+
 	config = new(Config)
 	config.AppID = js.AppID
 	config.NonceStr = nonceStr

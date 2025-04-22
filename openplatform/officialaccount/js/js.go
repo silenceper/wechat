@@ -14,7 +14,6 @@ import (
 type Js struct {
 	*context.Context
 	credential.JsTicketHandle
-	credential.JsTicketContextHandle
 }
 
 // NewJs init
@@ -39,14 +38,26 @@ func (js *Js) GetConfig(uri, appid string) (config *officialJs.Config, err error
 
 // GetConfigContext 新方法，允许传入上下文，避免协程泄漏
 func (js *Js) GetConfigContext(ctx context2.Context, uri, appid string) (config *officialJs.Config, err error) {
-	config = new(officialJs.Config)
 	var accessToken string
-	accessToken, err = js.GetAccessTokenContext(ctx)
+	// 类型断言，如果断言成功，调用安全的 GetAccessTokenContext 方法
+	if ctxHandle, ok := js.Context.AccessTokenHandle.(credential.AccessTokenContextHandle); ok {
+		accessToken, err = ctxHandle.GetAccessTokenContext(ctx)
+	} else {
+		// 如果没有实现 AccessTokenContextHandle 接口，调用旧的 GetAccessToken 方法
+		accessToken, err = js.Context.GetAccessToken()
+	}
 	if err != nil {
 		return
 	}
+
 	var ticketStr string
-	ticketStr, err = js.GetTicketContext(ctx, accessToken)
+	// 类型断言 jsTicket
+	if ticketCtxHandle, ok := js.JsTicketHandle.(credential.JsTicketContextHandle); ok {
+		ticketStr, err = ticketCtxHandle.GetTicketContext(ctx, accessToken)
+	} else {
+		// 如果没有实现 JsTicketContextHandle 接口，调用旧的 GetTicket 方法
+		ticketStr, err = js.GetTicket(accessToken)
+	}
 	if err != nil {
 		return
 	}
@@ -56,6 +67,7 @@ func (js *Js) GetConfigContext(ctx context2.Context, uri, appid string) (config 
 	str := fmt.Sprintf("jsapi_ticket=%s&noncestr=%s&timestamp=%d&url=%s", ticketStr, nonceStr, timestamp, uri)
 	sigStr := util.Signature(str)
 
+	config = new(officialJs.Config)
 	config.AppID = appid
 	config.NonceStr = nonceStr
 	config.Timestamp = timestamp
