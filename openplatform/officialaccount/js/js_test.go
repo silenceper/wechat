@@ -41,21 +41,21 @@ func (rt *contextCheckingRoundTripper) RoundTrip(req *http.Request) (*http.Respo
 	reqCtx := req.Context()
 
 	// 打印 context 比较结果
-	fmt.Printf("比较上下文的内存地址:\n")
+	rt.t.Logf("比较上下文的内存地址:\n")
 	if reqCtx == rt.originalCtx {
-		fmt.Printf("上下文具有相同的内存地址。原始上下文: %p, 请求上下文: %p\n", rt.originalCtx, reqCtx)
+		rt.t.Logf("上下文具有相同的内存地址。原始上下文: %p, 请求上下文: %p\n", rt.originalCtx, reqCtx)
 	} else {
-		fmt.Printf("上下文具有不同的内存地址。原始上下文: %p, 请求上下文: %p\n", rt.originalCtx, reqCtx)
+		rt.t.Logf("上下文具有不同的内存地址。原始上下文: %p, 请求上下文: %p\n", rt.originalCtx, reqCtx)
 	}
 
 	// 检查 context 中的键值对
 	if rt.key != nil {
 		value := reqCtx.Value(rt.key)
-		fmt.Printf("检查请求上下文中的键 %v:\n", rt.key)
+		rt.t.Logf("检查请求上下文中的键 %v:\n", rt.key)
 		if value != rt.expectedVal {
 			rt.t.Errorf("上下文键 %v 的值不匹配: 预期 %v, 实际 %v\n", rt.key, rt.expectedVal, value)
 		} else {
-			fmt.Printf("上下文键 %v 的值匹配: 预期 %v, 实际 %v\n", rt.key, rt.expectedVal, value)
+			rt.t.Logf("上下文键 %v 的值匹配: 预期 %v, 实际 %v\n", rt.key, rt.expectedVal, value)
 		}
 	}
 
@@ -95,7 +95,7 @@ func setupJsInstance(t *testing.T, ctx context2.Context, key, val interface{}) (
 	if err := cfg.Cache.Delete(cacheKey); err != nil {
 		t.Fatalf("清除缓存失败: %v", err)
 	}
-	fmt.Println("清除 jsapi_ticket 的缓存:", cacheKey)
+	t.Log("清除 jsapi_ticket 的缓存:", cacheKey)
 
 	ctxHandle := &context.Context{Config: cfg, AccessTokenHandle: &mockAccessTokenHandle{}}
 	jsInstance := NewJs(ctxHandle, cfg.AppID)
@@ -114,11 +114,11 @@ func TestGetConfigContext(t *testing.T) {
 		ctxKey := contextKey("testKey111") // 使用自定义类型 contextKey
 		ctxValue := "testValue222"
 		ctx := context2.WithValue(context2.Background(), ctxKey, ctxValue)
-		fmt.Printf("创建的测试上下文: %p, 添加的键值对: %v=%v\n", ctx, ctxKey, ctxValue)
+		t.Logf("创建的测试上下文: %p, 添加的键值对: %v=%v\n", ctx, ctxKey, ctxValue)
 
 		jsInstance, cleanup := setupJsInstance(t, ctx, ctxKey, ctxValue)
 		defer cleanup()
-		fmt.Println("调用 GetConfigContext")
+		t.Log("调用 GetConfigContext")
 		config2, err := jsInstance.GetConfigContext(ctx, "https://www.baidu.com", "test-app-id")
 		if err != nil {
 			t.Fatalf("GetConfigContext 失败: %v", err)
@@ -136,7 +136,7 @@ func TestGetConfigContext(t *testing.T) {
 		defer cleanup()
 
 		cancel()
-		fmt.Println("调用 GetConfigContext（已取消上下文）")
+		t.Log("调用 GetConfigContext（已取消上下文）")
 		_, err := jsInstance.GetConfigContext(ctx, "https://www.baidu.com", "test-app-id")
 		if err == nil {
 			t.Error("预期上下文取消错误，但 GetConfigContext 未返回错误")
