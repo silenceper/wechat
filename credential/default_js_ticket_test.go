@@ -3,9 +3,11 @@ package credential
 import (
 	"context"
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"gopkg.in/h2non/gock.v1"
 	"testing"
+
+	"gopkg.in/h2non/gock.v1"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // TestGetTicketFromServerContext 测试 GetTicketFromServerContext 函数

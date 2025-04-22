@@ -81,6 +81,9 @@ func (rt *contextCheckingRoundTripper) RoundTrip(req *http.Request) (*http.Respo
 	}
 }
 
+// contextKey 定义自定义上下文键类型，避免使用内置 string 类型
+type contextKey string
+
 // setupJsInstance 初始化 Js 实例和 HTTP 客户端
 func setupJsInstance(t *testing.T, ctx context2.Context, key, val interface{}) (*Js, func()) {
 	cfg := &config.Config{
@@ -105,9 +108,10 @@ func setupJsInstance(t *testing.T, ctx context2.Context, key, val interface{}) (
 	return jsInstance, func() { util.DefaultHTTPClient = originalClient }
 }
 
+// TestGetConfigContext 测试GetConfigContext的上下文传递和取消行为。
 func TestGetConfigContext(t *testing.T) {
 	t.Run("ContextPassing", func(t *testing.T) {
-		ctxKey := "testKey111"
+		ctxKey := contextKey("testKey111") // 使用自定义类型 contextKey
 		ctxValue := "testValue222"
 		ctx := context2.WithValue(context2.Background(), ctxKey, ctxValue)
 		fmt.Printf("创建的测试上下文: %p, 添加的键值对: %v=%v\n", ctx, ctxKey, ctxValue)
