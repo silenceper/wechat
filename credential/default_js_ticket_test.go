@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"gopkg.in/h2non/gock.v1"
-
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/h2non/gock.v1"
 )
 
 // TestGetTicketFromServerContext 测试 GetTicketFromServerContext 函数
