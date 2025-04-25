@@ -166,6 +166,7 @@ func PostFile(fieldName, filePath, uri string) ([]byte, error) {
 			IsFile:    true,
 			Fieldname: fieldName,
 			FilePath:  filePath,
+			Filename:  filePath,
 		},
 	}
 	return PostMultipartForm(fields, uri)
