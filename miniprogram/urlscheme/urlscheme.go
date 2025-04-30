@@ -17,7 +17,12 @@ func NewURLScheme(ctx *context.Context) *URLScheme {
 	return &URLScheme{Context: ctx}
 }
 
-const generateURL = "https://api.weixin.qq.com/wxa/generatescheme"
+const (
+	// generateURL 获取加密scheme码
+	generateURL = "https://api.weixin.qq.com/wxa/generatescheme"
+	// generateNFCURL 获取 NFC 的小程序 scheme
+	generateNFCURL = "https://api.weixin.qq.com/wxa/generatenfcscheme?access_token=%s"
+)
 
 // TExpireType 失效类型 (指定时间戳/指定间隔)
 type TExpireType int
@@ -50,11 +55,13 @@ type JumpWxa struct {
 // USParams 请求参数
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/url-scheme/urlscheme.generate.html#请求参数
 type USParams struct {
-	JumpWxa        *JumpWxa    `json:"jump_wxa"`
-	ExpireType     TExpireType `json:"expire_type"`
-	ExpireTime     int64       `json:"expire_time"`
-	ExpireInterval int         `json:"expire_interval"`
+	JumpWxa        *JumpWxa    `json:"jump_wxa,omitempty"`
+	ExpireType     TExpireType `json:"expire_type,omitempty"`
+	ExpireTime     int64       `json:"expire_time,omitempty"`
+	ExpireInterval int         `json:"expire_interval,omitempty"`
 	IsExpire       bool        `json:"is_expire,omitempty"`
+	ModelID        string      `json:"model_id,omitempty"`
+	Sn             string      `json:"sn,omitempty"`
 }
 
 // USResult 返回的结果
@@ -80,4 +87,23 @@ func (u *URLScheme) Generate(params *USParams) (string, error) {
 	var resp USResult
 	err = util.DecodeWithError(response, &resp, "URLScheme.Generate")
 	return resp.OpenLink, err
+}
+
+// GenerateNFC 获取 NFC 的小程序 scheme
+// see https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/qrcode-link/url-scheme/generateNFCScheme.html
+func (u *URLScheme) GenerateNFC(params *USParams) (string, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = u.GetAccessToken(); err != nil {
+		return "", err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(generateNFCURL, accessToken), params); err != nil {
+		return "", err
+	}
+	result := &USResult{}
+	err = util.DecodeWithError(response, result, "URLScheme.GenerateNFC")
+	return result.OpenLink, err
 }
