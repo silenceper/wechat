@@ -10,7 +10,7 @@ const queryURL = "https://api.weixin.qq.com/wxa/query_urllink?access_token=%s"
 
 // ULQueryRequest 查询加密URLLink请求
 type ULQueryRequest struct {
-	UrlLink   string `json:"url_link"`
+	URLLink   string `json:"url_link"`
 	QueryType int    `json:"query_type"`
 }
 
@@ -45,7 +45,7 @@ type QuotaInfo struct {
 
 // Query 查询小程序 url_link 配置。
 func (u *URLLink) Query(urlLink string) (*ULQueryResult, error) {
-	return u.QueryWithType(&ULQueryRequest{UrlLink: urlLink})
+	return u.QueryWithType(&ULQueryRequest{URLLink: urlLink})
 }
 
 // QueryWithType 查询加密URLLink
