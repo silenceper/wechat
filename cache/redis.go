@@ -17,14 +17,14 @@ type Redis struct {
 
 // RedisOpts redis 连接属性
 type RedisOpts struct {
-	Host        string `yml:"host"         json:"host"`
-	Username    string `yaml:"username"		 json:"username"`
-	Password    string `yml:"password"     json:"password"`
-	Database    int    `yml:"database"     json:"database"`
-	MaxIdle     int    `yml:"max_idle"     json:"max_idle"`
-	MaxActive   int    `yml:"max_active"   json:"max_active"`
+	Host        string `yml:"host" json:"host"`
+	Username    string `yaml:"username" json:"username"`
+	Password    string `yml:"password" json:"password"`
+	Database    int    `yml:"database" json:"database"`
+	MaxIdle     int    `yml:"max_idle" json:"max_idle"`
+	MaxActive   int    `yml:"max_active" json:"max_active"`
 	IdleTimeout int    `yml:"idle_timeout" json:"idle_timeout"` // second
-	UseTLS      bool   `yml:"user_tls"     json:"user_tls"`     // 是否使用TLS
+	UseTLS      bool   `yml:"user_tls" json:"user_tls"`     // 是否使用TLS
 }
 
 // NewRedis 实例化
