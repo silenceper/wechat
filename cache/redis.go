@@ -24,7 +24,7 @@ type RedisOpts struct {
 	MaxIdle     int    `yml:"max_idle" json:"max_idle"`
 	MaxActive   int    `yml:"max_active" json:"max_active"`
 	IdleTimeout int    `yml:"idle_timeout" json:"idle_timeout"` // second
-	UseTLS      bool   `yml:"user_tls" json:"user_tls"`     // 是否使用TLS
+	UseTLS      bool   `yml:"use_tls" json:"use_tls"`     // 是否使用TLS
 }
 
 // NewRedis 实例化
