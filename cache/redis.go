@@ -2,6 +2,8 @@ package cache
 
 import (
 	"context"
+	"crypto/tls"
+	"net"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -15,25 +17,38 @@ type Redis struct {
 
 // RedisOpts redis 连接属性
 type RedisOpts struct {
-	Host        string `yml:"host" json:"host"`
-	Username    string `yaml:"username" json:"username"`
-	Password    string `yml:"password" json:"password"`
-	Database    int    `yml:"database" json:"database"`
-	MaxIdle     int    `yml:"max_idle" json:"max_idle"`
-	MaxActive   int    `yml:"max_active" json:"max_active"`
+	Host        string `yml:"host"         json:"host"`
+	Username    string `yaml:"username"		 json:"username"`
+	Password    string `yml:"password"     json:"password"`
+	Database    int    `yml:"database"     json:"database"`
+	MaxIdle     int    `yml:"max_idle"     json:"max_idle"`
+	MaxActive   int    `yml:"max_active"   json:"max_active"`
 	IdleTimeout int    `yml:"idle_timeout" json:"idle_timeout"` // second
+	UseTLS      bool   `yml:"user_tls"     json:"user_tls"`     // 是否使用TLS
 }
 
 // NewRedis 实例化
 func NewRedis(ctx context.Context, opts *RedisOpts) *Redis {
-	conn := redis.NewUniversalClient(&redis.UniversalOptions{
+	uniOpt := &redis.UniversalOptions{
 		Addrs:        []string{opts.Host},
 		DB:           opts.Database,
 		Username:     opts.Username,
 		Password:     opts.Password,
 		IdleTimeout:  time.Second * time.Duration(opts.IdleTimeout),
 		MinIdleConns: opts.MaxIdle,
-	})
+	}
+
+	if opts.UseTLS {
+		h, _, err := net.SplitHostPort(opts.Host)
+		if err != nil {
+			h = opts.Host
+		}
+		uniOpt.TLSConfig = &tls.Config{
+			ServerName: h,
+		}
+	}
+
+	conn := redis.NewUniversalClient(uniOpt)
 	return &Redis{ctx: ctx, conn: conn}
 }
 
