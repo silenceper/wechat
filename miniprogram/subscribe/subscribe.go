@@ -351,8 +351,8 @@ type SetUserNotifyRequest struct {
 	OpenID      string `json:"openid"`
 	NotifyType  int64  `json:"notify_type"`
 	NotifyCode  string `json:"notify_code"`
-	ContentJson string `json:"content_json"`
-	CheckJson   string `json:"check_json,omitempty"`
+	ContentJSON string `json:"content_json"`
+	CheckJSON   string `json:"check_json,omitempty"`
 }
 
 // SetUserNotify 激活与更新服务卡片
@@ -377,7 +377,7 @@ type SetUserNotifyExtRequest struct {
 	OpenID     string `json:"openid"`
 	NotifyType int64  `json:"notify_type"`
 	NotifyCode string `json:"notify_code"`
-	ExtJson    string `json:"ext_json"`
+	ExtJSON    string `json:"ext_json"`
 }
 
 // SetUserNotifyExt 更新服务卡片扩展信息
@@ -413,7 +413,7 @@ type GetUserNotifyResponse struct {
 // NotifyInfo 卡片状态
 type NotifyInfo struct {
 	NotifyType     int64  `json:"notify_type"`
-	ContentJson    string `json:"content_json"`
+	ContentJSON    string `json:"content_json"`
 	CodeState      int64  `json:"code_state"`
 	CodeExpireTime int64  `json:"code_expire_time"`
 }
