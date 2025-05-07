@@ -29,7 +29,7 @@ const (
 	// getPubTemplateKeyWordsByIDURL 获取关键词列表
 	getPubTemplateKeyWordsByIDURL = "https://api.weixin.qq.com/wxaapi/newtmpl/getpubtemplatekeywords?access_token=%s&tid=%s"
 	// getPubTemplateTitleListURL 获取所属类目下的公共模板
-	getPubTemplateTitleListURL = "https://api.weixin.qq.com/wxaapi/newtmpl/getpubtemplatekeywords?access_token=%s&ids=%s&start=%d&limit=%d"
+	getPubTemplateTitleListURL = "https://api.weixin.qq.com/wxaapi/newtmpl/getpubtemplatetitles?access_token=%s&ids=%s&start=%d&limit=%d"
 	// setUserNotifyURL 激活与更新服务卡片
 	setUserNotifyURL = "https://api.weixin.qq.com/wxa/set_user_notify?access_token=%s"
 	// setUserNotifyExtURL 更新服务卡片扩展信息
