@@ -369,7 +369,7 @@ type PerformanceDataTableLineField struct {
 
 // GetPerformanceData 获取小程序性能数据
 // see https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/data-analysis/others/getPerformanceData.html
-func (analysis *Analysis) GetPerformanceData(req *GetPerformanceDataRequest) (res *GetPerformanceDataResponse, err error) {
+func (analysis *Analysis) GetPerformanceData(req *GetPerformanceDataRequest) (res GetPerformanceDataResponse, err error) {
 	var accessToken string
 	if accessToken, err = analysis.GetAccessToken(); err != nil {
 		return
