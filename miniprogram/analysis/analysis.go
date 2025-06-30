@@ -31,7 +31,7 @@ const (
 	// 访问页面
 	getAnalysisVisitPageURL = "https://api.weixin.qq.com/datacube/getweanalysisappidvisitpage?access_token=%s"
 	// 获取小程序性能数据
-	getPerformanceDataURL = "https://api.weixin.qq.com/wxa/business/performance/boot?access_token=%s "
+	getPerformanceDataURL = "https://api.weixin.qq.com/wxa/business/performance/boot?access_token=%s"
 )
 
 // Analysis analyis 数据分析
