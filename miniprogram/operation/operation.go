@@ -49,7 +49,7 @@ type GetDomainInfoResponse struct {
 	WsRequestDomain []string `json:"wsrequestdomain"`
 	UploadDomain    []string `json:"uploaddomain"`
 	DownloadDomain  []string `json:"downloaddomain"`
-	UdpDomain       []string `json:"udpdomain"`
+	UDPDomain       []string `json:"udpdomain"`
 	BizDomain       []string `json:"bizdomain"`
 }
 
