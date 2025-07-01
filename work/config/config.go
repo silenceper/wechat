@@ -2,7 +2,7 @@
 package config
 
 import (
-	"github.com/linyken/wechat/v2/cache"
+	"github.com/silenceper/wechat/v2/cache"
 )
 
 // Config for 企业微信

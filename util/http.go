@@ -24,7 +24,7 @@ var uriModifier URIModifier
 
 // DefaultHTTPClient 默认httpClient
 var DefaultHTTPClient = &http.Client{
-    Transport: http.DefaultTransport,
+	Transport: http.DefaultTransport,
 }
 
 // SetURIModifier 设置URI修改器

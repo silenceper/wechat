@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/linyken/wechat/v2/pay/config"
-	"github.com/linyken/wechat/v2/util"
+	"github.com/silenceper/wechat/v2/pay/config"
+	"github.com/silenceper/wechat/v2/util"
 )
 
 // redpacketGateway 发放红包接口

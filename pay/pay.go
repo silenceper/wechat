@@ -1,12 +1,12 @@
 package pay
 
 import (
-	"github.com/linyken/wechat/v2/pay/config"
-	"github.com/linyken/wechat/v2/pay/notify"
-	"github.com/linyken/wechat/v2/pay/order"
-	"github.com/linyken/wechat/v2/pay/redpacket"
-	"github.com/linyken/wechat/v2/pay/refund"
-	"github.com/linyken/wechat/v2/pay/transfer"
+	"github.com/silenceper/wechat/v2/pay/config"
+	"github.com/silenceper/wechat/v2/pay/notify"
+	"github.com/silenceper/wechat/v2/pay/order"
+	"github.com/silenceper/wechat/v2/pay/redpacket"
+	"github.com/silenceper/wechat/v2/pay/refund"
+	"github.com/silenceper/wechat/v2/pay/transfer"
 )
 
 // Pay 微信支付相关API

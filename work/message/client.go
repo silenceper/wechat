@@ -2,7 +2,7 @@
 package message
 
 import (
-	"github.com/linyken/wechat/v2/work/context"
+	"github.com/silenceper/wechat/v2/work/context"
 )
 
 // Client 消息推送接口实例

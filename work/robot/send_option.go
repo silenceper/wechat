@@ -1,6 +1,6 @@
 package robot
 
-import "github.com/linyken/wechat/v2/util"
+import "github.com/silenceper/wechat/v2/util"
 
 // WebhookSendResponse 机器人发送群组消息响应
 type WebhookSendResponse struct {

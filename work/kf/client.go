@@ -1,10 +1,10 @@
 package kf
 
 import (
-	"github.com/linyken/wechat/v2/cache"
-	"github.com/linyken/wechat/v2/credential"
-	"github.com/linyken/wechat/v2/work/config"
-	"github.com/linyken/wechat/v2/work/context"
+	"github.com/silenceper/wechat/v2/cache"
+	"github.com/silenceper/wechat/v2/credential"
+	"github.com/silenceper/wechat/v2/work/config"
+	"github.com/silenceper/wechat/v2/work/context"
 )
 
 // Client 微信客服实例

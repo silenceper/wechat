@@ -7,7 +7,7 @@ package msgaudit
 import (
 	"fmt"
 
-	"github.com/linyken/wechat/v2/work/config"
+	"github.com/silenceper/wechat/v2/work/config"
 )
 
 // Client 会话存档

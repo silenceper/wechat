@@ -3,8 +3,8 @@ package basic
 import (
 	"fmt"
 
-	"github.com/linyken/wechat/v2/officialaccount/context"
-	"github.com/linyken/wechat/v2/util"
+	"github.com/silenceper/wechat/v2/officialaccount/context"
+	"github.com/silenceper/wechat/v2/util"
 )
 
 var (

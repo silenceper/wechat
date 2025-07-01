@@ -1,7 +1,7 @@
 package addresslist
 
 import (
-	"github.com/linyken/wechat/v2/work/context"
+	"github.com/silenceper/wechat/v2/work/context"
 )
 
 // Client 通讯录管理接口实例

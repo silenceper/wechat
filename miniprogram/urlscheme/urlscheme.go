@@ -3,8 +3,8 @@ package urlscheme
 import (
 	"fmt"
 
-	"github.com/linyken/wechat/v2/miniprogram/context"
-	"github.com/linyken/wechat/v2/util"
+	"github.com/silenceper/wechat/v2/miniprogram/context"
+	"github.com/silenceper/wechat/v2/util"
 )
 
 // URLScheme 小程序 URL Scheme

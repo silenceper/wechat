@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/linyken/wechat/v2/util"
+	"github.com/silenceper/wechat/v2/util"
 )
 
 // AdSlot 广告位类型
