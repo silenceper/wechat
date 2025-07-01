@@ -31,4 +31,4 @@ if err != nil {
 }
 ```
 
-更多使用方法参考[PKG.DEV](https://pkg.go.dev/github.com/silenceper/wechat/v2/miniprogram/tcb)
+更多使用方法参考[PKG.DEV](https://pkg.go.dev/github.com/linyken/wechat/v2/miniprogram/tcb)

@@ -1,6 +1,6 @@
 package account
 
-import "github.com/silenceper/wechat/v2/openplatform/context"
+import "github.com/linyken/wechat/v2/openplatform/context"
 
 // Account 开放平台帐号管理
 // TODO 实现方法

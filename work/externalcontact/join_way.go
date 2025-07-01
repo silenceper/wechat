@@ -3,7 +3,7 @@ package externalcontact
 import (
 	"fmt"
 
-	"github.com/silenceper/wechat/v2/util"
+	"github.com/linyken/wechat/v2/util"
 )
 
 // groupChatURL 客户群
