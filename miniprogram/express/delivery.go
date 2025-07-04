@@ -18,7 +18,7 @@ const (
 	openMsgUpdateFollowWaybillGoodsURL = "https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/update_follow_waybill_goods?access_token=%s"
 
 	// 获取运力id列表
-	openMsgGetDeliveryList = "https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/get_delivery_list?access_token=%s"
+	openMsgGetDeliveryListURL = "https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/get_delivery_list?access_token=%s"
 )
 
 // FollowWaybill 传运单
@@ -82,7 +82,7 @@ func (express *Express) GetDeliveryList(ctx context.Context) (res GetDeliveryLis
 		return
 	}
 
-	uri := fmt.Sprintf(openMsgGetDeliveryList, accessToken)
+	uri := fmt.Sprintf(openMsgGetDeliveryListURL, accessToken)
 	response, err := util.PostJSONContext(ctx, uri, map[string]interface{}{})
 	if err != nil {
 		return
@@ -113,7 +113,7 @@ type FollowWaybillGoodsInfo struct {
 // FollowWaybillGoodsInfoItem 商品信息详情
 type FollowWaybillGoodsInfoItem struct {
 	GoodsName   string `json:"goods_name"`           // 必选，商品名称(最大长度为utf-8编码下的60个字符）
-	GoodsImgUrl string `json:"goods_img_url"`        // 必选，商品图片url
+	GoodsImgURL string `json:"goods_img_url"`        // 必选，商品图片url
 	GoodsDesc   string `json:"goods_desc,omitempty"` // 商品详情描述，不传默认取“商品名称”值，最多40汉字
 }
 
@@ -165,18 +165,18 @@ type FlowWaybillDeliveryInfo struct {
 type WaybillStatus int
 
 const (
-	// 运单不存在或者未揽收
+	// WaybillStatusNotExist 运单不存在或者未揽收
 	WaybillStatusNotExist WaybillStatus = iota
-	// 已揽件
+	// WaybillStatusPicked 已揽件
 	WaybillStatusPicked
-	// 运输中
+	// WaybillStatusTransporting 运输中
 	WaybillStatusTransporting
-	// 派件中
+	// WaybillStatusDispatching 派件中
 	WaybillStatusDispatching
-	// 已签收
+	// WaybillStatusSigned 已签收
 	WaybillStatusSigned
-	// 异常
+	// WaybillStatusException 异常
 	WaybillStatusException
-	// 代签收
-	WaybillStatusWaitingSign
+	// WaybillStatusSignedByOthers 代签收
+	WaybillStatusSignedByOthers
 )
