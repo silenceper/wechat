@@ -110,6 +110,11 @@ type FollowWaybillGoodsInfo struct {
 	DetailList []FollowWaybillGoodsInfoItem `json:"detail_list"`
 }
 
+// FollowWaybillShopInfo 商品信息
+type FollowWaybillShopInfo struct {
+	GoodsInfo FollowWaybillGoodsInfo `json:"goods_info"` // 商品信息
+}
+
 // FollowWaybillGoodsInfoItem 商品信息详情
 type FollowWaybillGoodsInfoItem struct {
 	GoodsName   string `json:"goods_name"`           // 必选，商品名称(最大长度为utf-8编码下的60个字符）
@@ -132,7 +137,7 @@ type QueryFollowTraceRequest struct {
 type QueryFollowTraceResponse struct {
 	util.CommonError
 	WaybillInfo  FlowWaybillInfo         `json:"waybill_info"`  // 运单信息
-	ShopInfo     FollowWaybillGoodsInfo  `json:"shop_info"`     // 商品信息
+	ShopInfo     FollowWaybillShopInfo   `json:"shop_info"`     // 商品信息
 	DeliveryInfo FlowWaybillDeliveryInfo `json:"delivery_info"` // 运力信息
 }
 
