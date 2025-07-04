@@ -10,6 +10,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/content"
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
+	"github.com/silenceper/wechat/v2/miniprogram/express"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
 	"github.com/silenceper/wechat/v2/miniprogram/minidrama"
 	"github.com/silenceper/wechat/v2/miniprogram/order"
@@ -178,4 +179,9 @@ func (miniProgram *MiniProgram) GetRedPacketCover() *redpacketcover.RedPacketCov
 // GetUpdatableMessage 小程序动态消息
 func (miniProgram *MiniProgram) GetUpdatableMessage() *message.UpdatableMessage {
 	return message.NewUpdatableMessage(miniProgram.ctx)
+}
+
+// GetExpress 微信物流服务
+func (miniProgram *MiniProgram) GetExpress() *express.Express {
+	return express.NewExpress(miniProgram.ctx)
 }
