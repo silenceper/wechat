@@ -22,6 +22,7 @@ const (
 )
 
 // FollowWaybill 传运单
+// https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/express/business/express_open_msg.html#_4-1%E3%80%81%E4%BC%A0%E8%BF%90%E5%8D%95%E6%8E%A5%E5%8F%A3-follow-waybill
 func (express *Express) FollowWaybill(ctx context.Context, in *FollowWaybillRequest) (res FollowWaybillResponse, err error) {
 	accessToken, err := express.GetAccessToken()
 	if err != nil {
@@ -40,6 +41,7 @@ func (express *Express) FollowWaybill(ctx context.Context, in *FollowWaybillRequ
 }
 
 // QueryFollowTrace 查询运单详情信息
+// https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/express/business/express_open_msg.html#_4-2%E3%80%81%E6%9F%A5%E8%BF%90%E5%8D%95%E6%8E%A5%E5%8F%A3-query-follow-trace
 func (express *Express) QueryFollowTrace(ctx context.Context, in *QueryFollowTraceRequest) (res QueryFollowTraceResponse, err error) {
 	accessToken, err := express.GetAccessToken()
 	if err != nil {
@@ -58,6 +60,7 @@ func (express *Express) QueryFollowTrace(ctx context.Context, in *QueryFollowTra
 }
 
 // UpdateFollowWaybillGoods 更新物品信息
+// https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/express/business/express_open_msg.html#_4-3%E3%80%81%E6%9B%B4%E6%96%B0%E7%89%A9%E5%93%81%E4%BF%A1%E6%81%AF%E6%8E%A5%E5%8F%A3-update-follow-waybill-goods
 func (express *Express) UpdateFollowWaybillGoods(ctx context.Context, in *UpdateFollowWaybillGoodsRequest) (err error) {
 	accessToken, err := express.GetAccessToken()
 	if err != nil {
@@ -76,6 +79,7 @@ func (express *Express) UpdateFollowWaybillGoods(ctx context.Context, in *Update
 }
 
 // GetDeliveryList 获取运力id列表
+// https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/express/business/express_open_msg.html#_4-4%E8%8E%B7%E5%8F%96%E8%BF%90%E5%8A%9Bid%E5%88%97%E8%A1%A8get-delivery-list
 func (express *Express) GetDeliveryList(ctx context.Context) (res GetDeliveryListResponse, err error) {
 	accessToken, err := express.GetAccessToken()
 	if err != nil {
