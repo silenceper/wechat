@@ -185,6 +185,7 @@ func (miniProgram *MiniProgram) GetUpdatableMessage() *message.UpdatableMessage 
 // GetOperation 小程序运维中心
 func (miniProgram *MiniProgram) GetOperation() *operation.Operation {
 	return operation.NewOperation(miniProgram.ctx)
+}
 
 // GetExpress 微信物流服务
 func (miniProgram *MiniProgram) GetExpress() *express.Express {
