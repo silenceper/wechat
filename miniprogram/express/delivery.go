@@ -49,7 +49,7 @@ func (express *Express) TraceWaybill(ctx context.Context, in *TraceWaybillReques
 	return
 }
 
-// QueryTraceTrace 查询运单详情信息
+// QueryTrace 查询运单详情信息
 // https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/express/business/express_search.html#_2-%E6%8E%A5%E5%8F%A3%E5%88%97%E8%A1%A8
 func (express *Express) QueryTrace(ctx context.Context, in *QueryTraceRequest) (res QueryTraceResponse, err error) {
 	accessToken, err := express.GetAccessToken()
