@@ -8,10 +8,19 @@ import (
 )
 
 const (
-	// 传运单接口
+	// 传运单接口，商户使用此接口向微信提供某交易单号对应的运单号。微信后台会跟踪运单的状态变化
+	openMsgTraceWaybillURL = "https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/trace_waybill?access_token=%s"
+
+	// 查询运单接口，商户在调用完trace_waybill接口后，可以使用本接口查询到对应运单的详情信息
+	openMsgQueryTraceURL = "https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/query_trace?access_token=%s"
+
+	// 更新物流信息，更新物品信息
+	openMsgUpdateWaybillGoodsURL = "https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/update_waybill_goods?access_token=%s"
+
+	// 传运单接口，商户使用此接口向微信提供某交易单号对应的运单号。微信后台会跟踪运单的状态变化，在关键物流节点给下单用户推送消息通知
 	openMsgFollowWaybillURL = "https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/follow_waybill?access_token=%s"
 
-	// 查运单接口
+	// 查运单接口，商户在调用完follow_waybill接口后，可以使用本接口查询到对应运单的详情信息
 	openMsgQueryFollowTraceURL = "https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/query_follow_trace?access_token=%s"
 
 	// 更新物品信息接口
@@ -20,6 +29,63 @@ const (
 	// 获取运力id列表
 	openMsgGetDeliveryListURL = "https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/get_delivery_list?access_token=%s"
 )
+
+// TraceWaybill 传运单
+// https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/express/business/express_search.html#_2-%E6%8E%A5%E5%8F%A3%E5%88%97%E8%A1%A8
+func (express *Express) TraceWaybill(ctx context.Context, in *TraceWaybillRequest) (res TraceWaybillResponse, err error) {
+	accessToken, err := express.GetAccessToken()
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf(openMsgTraceWaybillURL, accessToken)
+	response, err := util.PostJSONContext(ctx, uri, in)
+	if err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &res, "TraceWaybill")
+	return
+}
+
+// QueryTraceTrace 查询运单详情信息
+// https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/express/business/express_search.html#_2-%E6%8E%A5%E5%8F%A3%E5%88%97%E8%A1%A8
+func (express *Express) QueryTrace(ctx context.Context, in *QueryTraceRequest) (res QueryTraceResponse, err error) {
+	accessToken, err := express.GetAccessToken()
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf(openMsgQueryTraceURL, accessToken)
+	response, err := util.PostJSONContext(ctx, uri, in)
+	if err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &res, "QueryTrace")
+	return
+}
+
+// UpdateWaybillGoods 更新物品信息
+// https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/express/business/express_search.html#_2-%E6%8E%A5%E5%8F%A3%E5%88%97%E8%A1%A8
+func (express *Express) UpdateWaybillGoods(ctx context.Context, in *UpdateWaybillGoodsRequest) (err error) {
+	accessToken, err := express.GetAccessToken()
+	if err != nil {
+		return
+	}
+
+	uri := fmt.Sprintf(openMsgUpdateWaybillGoodsURL, accessToken)
+	response, err := util.PostJSONContext(ctx, uri, in)
+	if err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithCommonError(response, "UpdateWaybillGoods")
+	return
+}
 
 // FollowWaybill 传运单
 // https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/industry/express/business/express_open_msg.html#_4-1%E3%80%81%E4%BC%A0%E8%BF%90%E5%8D%95%E6%8E%A5%E5%8F%A3-follow-waybill
@@ -95,6 +161,44 @@ func (express *Express) GetDeliveryList(ctx context.Context) (res GetDeliveryLis
 	// 使用通用方法返回错误
 	err = util.DecodeWithError(response, &res, "GetDeliveryList")
 	return
+}
+
+// TraceWaybillRequest 传运单接口请求参数
+type TraceWaybillRequest struct {
+	GoodsInfo       FollowWaybillGoodsInfo `json:"goods_info"`        // 必选，商品信息
+	Openid          string                 `json:"openid"`            // 必选，用户openid
+	SenderPhone     string                 `json:"sender_phone"`      // 寄件人手机号
+	ReceiverPhone   string                 `json:"receiver_phone"`    // 必选，收件人手机号，部分运力需要用户手机号作为查单依据
+	DeliveryID      string                 `json:"delivery_id"`       // 运力id（运单号所属运力公司id）
+	WaybillID       string                 `json:"waybill_id"`        // 必选，运单号
+	TransID         string                 `json:"trans_id"`          // 必选，交易单号（微信支付生成的交易单号，一般以420开头）
+	OrderDetailPath string                 `json:"order_detail_path"` // 订单详情页地址
+
+}
+
+// TraceWaybillResponse 传运单接口返回参数
+type TraceWaybillResponse struct {
+	util.CommonError
+	WaybillToken string `json:"waybill_token"` // 查询id
+}
+
+// QueryTraceRequest 查询运单详情接口请求参数
+type QueryTraceRequest struct {
+	WaybillToken string `json:"waybill_token"` // 必选，查询id
+}
+
+// QueryTraceResponse 查询运单详情接口返回参数
+type QueryTraceResponse struct {
+	util.CommonError
+	WaybillInfo  FlowWaybillInfo         `json:"waybill_info"`  // 运单信息
+	ShopInfo     FollowWaybillShopInfo   `json:"shop_info"`     // 商品信息
+	DeliveryInfo FlowWaybillDeliveryInfo `json:"delivery_info"` // 运力信息
+}
+
+// UpdateWaybillGoodsRequest 更新物品信息接口请求参数
+type UpdateWaybillGoodsRequest struct {
+	WaybillToken string                 `json:"waybill_token"` // 必选，查询id
+	GoodsInfo    FollowWaybillGoodsInfo `json:"goods_info"`    // 必选，商品信息
 }
 
 // FollowWaybillRequest 传运单接口请求参数
