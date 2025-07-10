@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	// 传运单接口，商户使用此接口向微信提供某交易单号对应的运单号。微信后台会跟踪运单的状态变化
+  // 传运单接口，商户使用此接口向微信提供某交易单号对应的运单号。微信后台会跟踪运单的状态变化
 	openMsgTraceWaybillURL = "https://api.weixin.qq.com/cgi-bin/express/delivery/open_msg/trace_waybill?access_token=%s"
 
 	// 查询运单接口，商户在调用完trace_waybill接口后，可以使用本接口查询到对应运单的详情信息
