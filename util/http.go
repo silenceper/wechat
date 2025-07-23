@@ -291,7 +291,14 @@ func httpWithTLS(rootCa, key string) (*http.Client, error) {
 	config := &tls.Config{
 		Certificates: []tls.Certificate{cert},
 	}
-	trans := (DefaultHTTPClient.Transport.(*http.Transport)).Clone()
+
+	var baseTransport http.RoundTripper
+	if DefaultHTTPClient.Transport != nil {
+		baseTransport = DefaultHTTPClient.Transport
+	} else {
+		baseTransport = http.DefaultTransport
+	}
+	trans := baseTransport.(*http.Transport).Clone()
 	trans.TLSClientConfig = config
 	trans.DisableCompression = true
 	client = &http.Client{Transport: trans}
