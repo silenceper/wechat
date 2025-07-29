@@ -1,7 +1,7 @@
 # WeChat SDK for Go
 
 ![Go](https://github.com/silenceper/wechat/actions/workflows/go.yml/badge.svg?branch=v2)
-[![Go Report Card](https://goreportcard.com/badge/github.com/silenceper/wechat)](https://goreportcard.com/report/github.com/silenceper/wechat)
+[![Go Report Card](https://goreportcard.com/badge/github.com/silenceper/wechat/v2)](https://goreportcard.com/report/github.com/silenceper/wechat/v2)
 [![pkg](https://img.shields.io/badge/dev-reference-007d9c?logo=go&logoColor=white&style=flat)](https://pkg.go.dev/github.com/silenceper/wechat/v2?tab=doc)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/silenceper/wechat?sort=semver)
 
