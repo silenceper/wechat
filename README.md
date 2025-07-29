@@ -77,7 +77,7 @@ server.Send()
 
 ## 感谢以下贡献者
 
-<a href="https://github.com/silenceper/wechat/graphs/contributors"><img src="https://opencollective.com/gowechat/contributors.svg?width=890" /></a>
+<a href="https://opencollective.com/gowechat"><img src="https://opencollective.com/gowechat/contributors.svg?width=890" /></a>
 
 
 ## 作者公众号
