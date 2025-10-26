@@ -294,16 +294,14 @@ func httpWithTLS(rootCa, key string) (*http.Client, error) {
 
 	// 安全地获取 *http.Transport
 	var trans *http.Transport
+	// 尝试从 DefaultHTTPClient 获取 Transport，如果失败则使用默认值
 	if DefaultHTTPClient.Transport != nil {
-		// 尝试类型断言，如果不是 *http.Transport 则使用默认值
 		if t, ok := DefaultHTTPClient.Transport.(*http.Transport); ok {
 			trans = t.Clone()
-		} else {
-			// Transport 不是 *http.Transport 类型，使用默认值
-			trans = http.DefaultTransport.(*http.Transport).Clone()
 		}
-	} else {
-		// Transport 是 nil，使用默认值
+	}
+	// 如果无法获取有效的 Transport，使用默认值
+	if trans == nil {
 		trans = http.DefaultTransport.(*http.Transport).Clone()
 	}
 
