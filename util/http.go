@@ -292,13 +292,21 @@ func httpWithTLS(rootCa, key string) (*http.Client, error) {
 		Certificates: []tls.Certificate{cert},
 	}
 
-	var baseTransport http.RoundTripper
+	// 安全地获取 *http.Transport
+	var trans *http.Transport
 	if DefaultHTTPClient.Transport != nil {
-		baseTransport = DefaultHTTPClient.Transport
+		// 尝试类型断言，如果不是 *http.Transport 则使用默认值
+		if t, ok := DefaultHTTPClient.Transport.(*http.Transport); ok {
+			trans = t.Clone()
+		} else {
+			// Transport 不是 *http.Transport 类型，使用默认值
+			trans = http.DefaultTransport.(*http.Transport).Clone()
+		}
 	} else {
-		baseTransport = http.DefaultTransport
+		// Transport 是 nil，使用默认值
+		trans = http.DefaultTransport.(*http.Transport).Clone()
 	}
-	trans := baseTransport.(*http.Transport).Clone()
+
 	trans.TLSClientConfig = config
 	trans.DisableCompression = true
 	client = &http.Client{Transport: trans}
