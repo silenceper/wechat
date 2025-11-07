@@ -6,7 +6,13 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
-const queryURL = "https://api.weixin.qq.com/wxa/query_urllink"
+const queryURL = "https://api.weixin.qq.com/wxa/query_urllink?access_token=%s"
+
+// ULQueryRequest 查询加密URLLink请求
+type ULQueryRequest struct {
+	URLLink   string `json:"url_link"`
+	QueryType int    `json:"query_type"`
+}
 
 // ULQueryResult 返回的结果
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/url-link/urllink.query.html 返回值
@@ -28,25 +34,35 @@ type ULQueryResult struct {
 			ResourceAppid string `json:"resource_appid"`
 		} `json:"cloud_base"`
 	} `json:"url_link_info"`
-	VisitOpenid string `json:"visit_openid"`
+	VisitOpenid string    `json:"visit_openid"`
+	QuotaInfo   QuotaInfo `json:"quota_info"`
+}
+
+// QuotaInfo quota 配置
+type QuotaInfo struct {
+	RemainVisitQuota int64 `json:"remain_visit_quota"`
 }
 
 // Query 查询小程序 url_link 配置。
 func (u *URLLink) Query(urlLink string) (*ULQueryResult, error) {
-	accessToken, err := u.GetAccessToken()
-	if err != nil {
-		return nil, err
-	}
+	return u.QueryWithType(&ULQueryRequest{URLLink: urlLink})
+}
 
-	uri := fmt.Sprintf("%s?access_token=%s", queryURL, accessToken)
-	response, err := util.PostJSON(uri, map[string]string{"url_link": urlLink})
-	if err != nil {
+// QueryWithType 查询加密URLLink
+// see https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/qrcode-link/url-link/queryUrlLink.html
+func (u *URLLink) QueryWithType(req *ULQueryRequest) (*ULQueryResult, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = u.GetAccessToken(); err != nil {
 		return nil, err
 	}
-	var resp ULQueryResult
-	err = util.DecodeWithError(response, &resp, "URLLink.Query")
-	if err != nil {
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(queryURL, accessToken), req); err != nil {
 		return nil, err
 	}
-	return &resp, nil
+	result := &ULQueryResult{}
+	err = util.DecodeWithError(response, result, "URLLink.Query")
+	return result, err
 }

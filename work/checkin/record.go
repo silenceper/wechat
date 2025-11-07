@@ -173,9 +173,15 @@ type (
 
 	// OtInfo 加班信息
 	OtInfo struct {
-		OtStatus          int64    `json:"ot_status"`
-		OtDuration        int64    `json:"ot_duration"`
-		ExceptionDuration []uint64 `json:"exception_duration"`
+		OtStatus              int64    `json:"ot_status"`
+		OtDuration            int64    `json:"ot_duration"`
+		ExceptionDuration     []uint64 `json:"exception_duration"`
+		WorkdayOverAsVacation int64    `json:"workday_over_as_vacation"`
+		WorkdayOverAsMoney    int64    `json:"workday_over_as_money"`
+		RestdayOverAsVacation int64    `json:"restday_over_as_vacation"`
+		RestdayOverAsMoney    int64    `json:"restday_over_as_money"`
+		HolidayOverAsVacation int64    `json:"holiday_over_as_vacation"`
+		HolidayOverAsMoney    int64    `json:"holiday_over_as_money"`
 	}
 )
 
@@ -237,13 +243,20 @@ type (
 		RegularDays     int64 `json:"regular_days"`
 		RegularWorkSec  int64 `json:"regular_work_sec"`
 		StandardWorkSec int64 `json:"standard_work_sec"`
+		RestDays        int64 `json:"rest_days"`
 	}
 
 	// OverWorkInfo 加班情况
 	OverWorkInfo struct {
-		WorkdayOverSec int64 `json:"workday_over_sec"`
-		HolidayOverSec int64 `json:"holidays_over_sec"`
-		RestDayOverSec int64 `json:"restdays_over_sec"`
+		WorkdayOverSec         int64 `json:"workday_over_sec"`
+		HolidayOverSec         int64 `json:"holidays_over_sec"`
+		RestDayOverSec         int64 `json:"restdays_over_sec"`
+		WorkdaysOverAsVacation int64 `json:"workdays_over_as_vacation"`
+		WorkdaysOverAsMoney    int64 `json:"workdays_over_as_money"`
+		RestdaysOverAsVacation int64 `json:"restdays_over_as_vacation"`
+		RestdaysOverAsMoney    int64 `json:"restdays_over_as_money"`
+		HolidaysOverAsVacation int64 `json:"holidays_over_as_vacation"`
+		HolidaysOverAsMoney    int64 `json:"holidays_over_as_money"`
 	}
 )
 
@@ -304,6 +317,10 @@ type CorpOptionGroup struct {
 	BukaRestriction        int64              `json:"buka_restriction"`
 	ScheduleList           []ScheduleList     `json:"schedulelist"`
 	OffWorkIntervalTime    int64              `json:"offwork_interval_time"`
+	SpanDayTime            int64              `json:"span_day_time"`
+	StandardWorkDuration   int64              `json:"standard_work_duration"`
+	OpenSpCheckin          bool               `json:"open_sp_checkin"`
+	CheckinMethodType      int64              `json:"checkin_method_type"`
 }
 
 // GroupCheckinDate 打卡时间，当规则类型为排班时没有意义
@@ -505,6 +522,7 @@ type OptionInfo struct {
 type OptionGroup struct {
 	GroupType              int64               `json:"grouptype"`
 	GroupID                int64               `json:"groupid"`
+	OpenSpCheckin          bool                `json:"open_sp_checkin"`
 	GroupName              string              `json:"groupname"`
 	CheckinDate            []OptionCheckinDate `json:"checkindate"`
 	SpeWorkdays            []SpeWorkdays       `json:"spe_workdays"`
@@ -518,6 +536,10 @@ type OptionGroup struct {
 	LocInfos               []LocInfos          `json:"loc_infos"`
 	ScheduleList           []ScheduleList      `json:"schedulelist"`
 	BukaRestriction        int64               `json:"buka_restriction"`
+	SpanDayTime            int64               `json:"span_day_time"`
+	StandardWorkDuration   int64               `json:"standard_work_duration"`
+	OffWorkIntervalTime    int64               `json:"offwork_interval_time"`
+	CheckinMethodType      int64               `json:"checkin_method_type"`
 }
 
 // OptionCheckinDate 打卡时间配置

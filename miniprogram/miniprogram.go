@@ -10,8 +10,10 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/content"
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
+	"github.com/silenceper/wechat/v2/miniprogram/express"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
 	"github.com/silenceper/wechat/v2/miniprogram/minidrama"
+	"github.com/silenceper/wechat/v2/miniprogram/operation"
 	"github.com/silenceper/wechat/v2/miniprogram/order"
 	"github.com/silenceper/wechat/v2/miniprogram/privacy"
 	"github.com/silenceper/wechat/v2/miniprogram/qrcode"
@@ -34,17 +36,30 @@ type MiniProgram struct {
 
 // NewMiniProgram 实例化小程序 API
 func NewMiniProgram(cfg *config.Config) *MiniProgram {
-	defaultAkHandle := credential.NewDefaultAccessToken(cfg.AppID, cfg.AppSecret, credential.CacheKeyMiniProgramPrefix, cfg.Cache)
+	var defaultAkHandle credential.AccessTokenContextHandle
+	const cacheKeyPrefix = credential.CacheKeyMiniProgramPrefix
+	if cfg.UseStableAK {
+		defaultAkHandle = credential.NewStableAccessToken(cfg.AppID, cfg.AppSecret, cacheKeyPrefix, cfg.Cache)
+	} else {
+		defaultAkHandle = credential.NewDefaultAccessToken(cfg.AppID, cfg.AppSecret, cacheKeyPrefix, cfg.Cache)
+	}
 	ctx := &context.Context{
-		Config:            cfg,
-		AccessTokenHandle: defaultAkHandle,
+		Config:                   cfg,
+		AccessTokenContextHandle: defaultAkHandle,
 	}
 	return &MiniProgram{ctx}
 }
 
 // SetAccessTokenHandle 自定义 access_token 获取方式
 func (miniProgram *MiniProgram) SetAccessTokenHandle(accessTokenHandle credential.AccessTokenHandle) {
-	miniProgram.ctx.AccessTokenHandle = accessTokenHandle
+	miniProgram.ctx.AccessTokenContextHandle = credential.AccessTokenCompatibleHandle{
+		AccessTokenHandle: accessTokenHandle,
+	}
+}
+
+// SetAccessTokenContextHandle 自定义 access_token 获取方式
+func (miniProgram *MiniProgram) SetAccessTokenContextHandle(accessTokenContextHandle credential.AccessTokenContextHandle) {
+	miniProgram.ctx.AccessTokenContextHandle = accessTokenContextHandle
 }
 
 // GetContext get Context
@@ -165,4 +180,14 @@ func (miniProgram *MiniProgram) GetRedPacketCover() *redpacketcover.RedPacketCov
 // GetUpdatableMessage 小程序动态消息
 func (miniProgram *MiniProgram) GetUpdatableMessage() *message.UpdatableMessage {
 	return message.NewUpdatableMessage(miniProgram.ctx)
+}
+
+// GetOperation 小程序运维中心
+func (miniProgram *MiniProgram) GetOperation() *operation.Operation {
+	return operation.NewOperation(miniProgram.ctx)
+}
+
+// GetExpress 微信物流服务
+func (miniProgram *MiniProgram) GetExpress() *express.Express {
+	return express.NewExpress(miniProgram.ctx)
 }

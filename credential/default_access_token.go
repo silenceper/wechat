@@ -101,10 +101,11 @@ func (ak *DefaultAccessToken) GetAccessTokenContext(ctx context.Context) (access
 // 不强制更新access_token,可用于不同环境不同服务而不需要分布式锁以及公用缓存，避免access_token争抢
 // https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-access-token/getStableAccessToken.html
 type StableAccessToken struct {
-	appID          string
-	appSecret      string
-	cacheKeyPrefix string
-	cache          cache.Cache
+	appID           string
+	appSecret       string
+	cacheKeyPrefix  string
+	cache           cache.Cache
+	accessTokenLock *sync.Mutex
 }
 
 // NewStableAccessToken new StableAccessToken
@@ -113,10 +114,11 @@ func NewStableAccessToken(appID, appSecret, cacheKeyPrefix string, cache cache.C
 		panic("cache is need")
 	}
 	return &StableAccessToken{
-		appID:          appID,
-		appSecret:      appSecret,
-		cache:          cache,
-		cacheKeyPrefix: cacheKeyPrefix,
+		appID:           appID,
+		appSecret:       appSecret,
+		cache:           cache,
+		cacheKeyPrefix:  cacheKeyPrefix,
+		accessTokenLock: new(sync.Mutex),
 	}
 }
 
@@ -130,7 +132,20 @@ func (ak *StableAccessToken) GetAccessTokenContext(ctx context.Context) (accessT
 	// 先从cache中取
 	accessTokenCacheKey := fmt.Sprintf("%s_stable_access_token_%s", ak.cacheKeyPrefix, ak.appID)
 	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
-		return val.(string), nil
+		if accessToken = val.(string); accessToken != "" {
+			return
+		}
+	}
+
+	// 加上lock，是为了防止在并发获取token时，cache刚好失效，导致从微信服务器上获取到不同token
+	ak.accessTokenLock.Lock()
+	defer ak.accessTokenLock.Unlock()
+
+	// 双检，防止重复从微信服务器获取
+	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
+		if accessToken = val.(string); accessToken != "" {
+			return
+		}
 	}
 
 	// cache失效，从微信服务器获取
@@ -174,19 +189,27 @@ func (ak *StableAccessToken) GetAccessTokenDirectly(ctx context.Context, forceRe
 type WorkAccessToken struct {
 	CorpID          string
 	CorpSecret      string
+	AgentID         string // 可选，用于区分不同应用
 	cacheKeyPrefix  string
 	cache           cache.Cache
 	accessTokenLock *sync.Mutex
 }
 
-// NewWorkAccessToken new WorkAccessToken
-func NewWorkAccessToken(corpID, corpSecret, cacheKeyPrefix string, cache cache.Cache) AccessTokenContextHandle {
+// NewWorkAccessToken new WorkAccessToken (保持向后兼容)
+func NewWorkAccessToken(corpID, corpSecret, agentID, cacheKeyPrefix string, cache cache.Cache) AccessTokenContextHandle {
+	// 调用新方法，保持兼容性
+	return NewWorkAccessTokenWithAgentID(corpID, corpSecret, agentID, cacheKeyPrefix, cache)
+}
+
+// NewWorkAccessTokenWithAgentID new WorkAccessToken with agentID
+func NewWorkAccessTokenWithAgentID(corpID, corpSecret, agentID, cacheKeyPrefix string, cache cache.Cache) AccessTokenContextHandle {
 	if cache == nil {
-		panic("cache the not exist")
+		panic("cache is needed")
 	}
 	return &WorkAccessToken{
 		CorpID:          corpID,
 		CorpSecret:      corpSecret,
+		AgentID:         agentID,
 		cache:           cache,
 		cacheKeyPrefix:  cacheKeyPrefix,
 		accessTokenLock: new(sync.Mutex),
@@ -203,7 +226,18 @@ func (ak *WorkAccessToken) GetAccessTokenContext(ctx context.Context) (accessTok
 	// 加上lock，是为了防止在并发获取token时，cache刚好失效，导致从微信服务器上获取到不同token
 	ak.accessTokenLock.Lock()
 	defer ak.accessTokenLock.Unlock()
-	accessTokenCacheKey := fmt.Sprintf("%s_access_token_%s", ak.cacheKeyPrefix, ak.CorpID)
+
+	// 构建缓存key
+	var accessTokenCacheKey string
+
+	if ak.AgentID != "" {
+		// 如果设置了AgentID，使用新的key格式
+		accessTokenCacheKey = fmt.Sprintf("%s_access_token_%s_%s", ak.cacheKeyPrefix, ak.CorpID, ak.AgentID)
+	} else {
+		// 兼容历史版本的key格式
+		accessTokenCacheKey = fmt.Sprintf("%s_access_token_%s", ak.cacheKeyPrefix, ak.CorpID)
+	}
+
 	val := ak.cache.Get(accessTokenCacheKey)
 	if val != nil {
 		accessToken = val.(string)
@@ -219,6 +253,9 @@ func (ak *WorkAccessToken) GetAccessTokenContext(ctx context.Context) (accessTok
 
 	expires := resAccessToken.ExpiresIn - 1500
 	err = ak.cache.Set(accessTokenCacheKey, resAccessToken.AccessToken, time.Duration(expires)*time.Second)
+	if err != nil {
+		return
+	}
 
 	accessToken = resAccessToken.AccessToken
 	return

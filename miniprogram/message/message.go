@@ -556,7 +556,7 @@ type SubscribeMsgSentEvent struct {
 type SubscribeMsgSentList struct {
 	TemplateID  string `xml:"TemplateId" json:"TemplateId"`
 	MsgID       string `xml:"MsgID" json:"MsgID"`
-	ErrorCode   int    `xml:"ErrorCode" json:"ErrorCode"`
+	ErrorCode   string `xml:"ErrorCode" json:"ErrorCode"`
 	ErrorStatus string `xml:"ErrorStatus" json:"ErrorStatus"`
 }
 

@@ -68,3 +68,18 @@ func DecodeWithError(response []byte, obj interface{}, apiName string) error {
 	}
 	return nil
 }
+
+// HandleFileResponse 通用处理微信等接口返回：有时 JSON 错误，有时文件内容
+func HandleFileResponse(response []byte, apiName string) ([]byte, error) {
+	var commErr CommonError
+	if err := json.Unmarshal(response, &commErr); err == nil {
+		// 能解析成 JSON，判断是否为错误
+		if commErr.ErrCode != 0 {
+			commErr.apiName = apiName
+			return nil, &commErr
+		}
+		// 能解析成 JSON 且没错误码，极少情况（比如微信返回的业务数据是 JSON 但无 errcode 字段），可根据需要调整
+	}
+	// 不能解析成 JSON，或没错误码，直接返回原始内容
+	return response, nil
+}

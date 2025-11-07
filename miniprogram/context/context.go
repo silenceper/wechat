@@ -8,5 +8,5 @@ import (
 // Context struct
 type Context struct {
 	*config.Config
-	credential.AccessTokenHandle
+	credential.AccessTokenContextHandle
 }

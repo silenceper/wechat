@@ -23,6 +23,8 @@ const (
 	customerAcquisitionQuotaURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_acquisition_quota?access_token=%s"
 	// customerAcquisitionStatistic 查询链接使用详情
 	customerAcquisitionStatisticURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_acquisition/statistic?access_token=%s"
+	// customerAcquisitionGetChatInfo 获取成员多次收消息详情
+	customerAcquisitionGetChatInfoURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_acquisition/get_chat_info?access_token=%s"
 )
 
 type (
@@ -306,5 +308,44 @@ func (r *Client) CustomerAcquisitionStatistic(req *CustomerAcquisitionStatisticR
 	}
 	result := &CustomerAcquisitionStatisticResponse{}
 	err = util.DecodeWithError(response, result, "CustomerAcquisitionStatistic")
+	return result, err
+}
+
+type (
+	// GetChatInfoRequest 获取成员多次收消息详情请求
+	GetChatInfoRequest struct {
+		ChatKey string `json:"chat_key"`
+	}
+	// GetChatInfoResponse 获取成员多次收消息详情响应
+	GetChatInfoResponse struct {
+		util.CommonError
+		UserID         string   `json:"userid"`
+		ExternalUserID string   `json:"external_userid"`
+		ChatInfo       ChatInfo `json:"chat_info"`
+	}
+	// ChatInfo 聊天信息
+	ChatInfo struct {
+		RecvMsgCnt int64  `json:"recv_msg_cnt"` // 成员收到的此客户的消息次数
+		LinkID     string `json:"link_id"`      // 成员添加客户的获客链接id
+		State      string `json:"state"`        // 成员添加客户的state
+	}
+)
+
+// GetChatInfo 获取成员多次收消息详情
+// see https://developer.work.weixin.qq.com/document/path/100130
+func (r *Client) GetChatInfo(req *GetChatInfoRequest) (*GetChatInfoResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(customerAcquisitionGetChatInfoURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &GetChatInfoResponse{}
+	err = util.DecodeWithError(response, result, "GetChatInfo")
 	return result, err
 }

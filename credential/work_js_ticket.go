@@ -10,24 +10,37 @@ import (
 	"github.com/silenceper/wechat/v2/util"
 )
 
-//获取ticket的url  https://developer.work.weixin.qq.com/document/path/90506
-const getQyWxTicketURL = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=%s"
-const getQyAppTicketURL = "https://qyapi.weixin.qq.com/cgi-bin/ticket/get?access_token=%s&type=agent_config"
+// TicketType ticket类型
+type TicketType int
 
-//WorkJsTicket 默认获取js ticket方法
+const (
+	// TicketTypeCorpJs 企业jsapi ticket
+	TicketTypeCorpJs TicketType = iota
+	// TicketTypeAgentJs 应用jsapi ticket
+	TicketTypeAgentJs
+)
+
+// 企业微信相关的 ticket URL
+const (
+	// 企业微信 jsapi ticket
+	getWorkJsTicketURL = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=%s"
+	// 企业微信应用 jsapi ticket
+	getWorkAgentJsTicketURL = "https://qyapi.weixin.qq.com/cgi-bin/ticket/get?access_token=%s&type=agent_config"
+)
+
+// WorkJsTicket 企业微信js ticket获取
 type WorkJsTicket struct {
-	appID          string
-	agentID        string
-	cacheKeyPrefix string
-	cache          cache.Cache
-	//jsAPITicket 读写锁 同一个AppID一个
+	corpID          string
+	agentID         string
+	cacheKeyPrefix  string
+	cache           cache.Cache
 	jsAPITicketLock *sync.Mutex
 }
 
-//NewWorkJsTicket new
-func NewWorkJsTicket(appID string, agentID string, cacheKeyPrefix string, cache cache.Cache) JsTicketHandle {
+// NewWorkJsTicket new WorkJsTicket
+func NewWorkJsTicket(corpID, agentID, cacheKeyPrefix string, cache cache.Cache) *WorkJsTicket {
 	return &WorkJsTicket{
-		appID:           appID,
+		corpID:          corpID,
 		agentID:         agentID,
 		cache:           cache,
 		cacheKeyPrefix:  cacheKeyPrefix,
@@ -35,11 +48,24 @@ func NewWorkJsTicket(appID string, agentID string, cacheKeyPrefix string, cache 
 	}
 }
 
-//GetTicket 获取企业微信jsapi_ticket
-func (js *WorkJsTicket) GetTicket(accessToken string) (ticketStr string, err error) {
-	//先从cache中取
-	jsAPITicketCacheKey := fmt.Sprintf("%s_jsapi_ticket_%s", js.cacheKeyPrefix, js.appID)
-	if val := js.cache.Get(jsAPITicketCacheKey); val != nil {
+// GetTicket 根据类型获取相应的jsapi_ticket
+func (js *WorkJsTicket) GetTicket(accessToken string, ticketType TicketType) (ticketStr string, err error) {
+	var cacheKey string
+	switch ticketType {
+	case TicketTypeCorpJs:
+		cacheKey = fmt.Sprintf("%s_corp_jsapi_ticket_%s", js.cacheKeyPrefix, js.corpID)
+	case TicketTypeAgentJs:
+		if js.agentID == "" {
+			err = fmt.Errorf("agentID is empty")
+			return
+		}
+		cacheKey = fmt.Sprintf("%s_agent_jsapi_ticket_%s_%s", js.cacheKeyPrefix, js.corpID, js.agentID)
+	default:
+		err = fmt.Errorf("unsupported ticket type: %v", ticketType)
+		return
+	}
+
+	if val := js.cache.Get(cacheKey); val != nil {
 		return val.(string), nil
 	}
 
@@ -47,28 +73,35 @@ func (js *WorkJsTicket) GetTicket(accessToken string) (ticketStr string, err err
 	defer js.jsAPITicketLock.Unlock()
 
 	// 双检，防止重复从微信服务器获取
-	if val := js.cache.Get(jsAPITicketCacheKey); val != nil {
+	if val := js.cache.Get(cacheKey); val != nil {
 		return val.(string), nil
 	}
 
 	var ticket ResTicket
-	ticket, err = GetQyWxTicketFromServer(accessToken, js.agentID != "")
+	ticket, err = js.getTicketFromServer(accessToken, ticketType)
 	if err != nil {
 		return
 	}
 	expires := ticket.ExpiresIn - 1500
-	err = js.cache.Set(jsAPITicketCacheKey, ticket.Ticket, time.Duration(expires)*time.Second)
+	err = js.cache.Set(cacheKey, ticket.Ticket, time.Duration(expires)*time.Second)
 	ticketStr = ticket.Ticket
 	return
 }
 
-//GetQyWxTicketFromServer 从企业微信服务器中获取ticket
-func GetQyWxTicketFromServer(accessToken string, isApp bool) (ticket ResTicket, err error) {
-	var response []byte
-	url := fmt.Sprintf(getQyWxTicketURL, accessToken)
-	if isApp {
-		url = fmt.Sprintf(getQyAppTicketURL, accessToken)
+// getTicketFromServer 从服务器中获取ticket
+func (js *WorkJsTicket) getTicketFromServer(accessToken string, ticketType TicketType) (ticket ResTicket, err error) {
+	var url string
+	switch ticketType {
+	case TicketTypeCorpJs:
+		url = fmt.Sprintf(getWorkJsTicketURL, accessToken)
+	case TicketTypeAgentJs:
+		url = fmt.Sprintf(getWorkAgentJsTicketURL, accessToken)
+	default:
+		err = fmt.Errorf("unsupported ticket type: %v", ticketType)
+		return
 	}
+
+	var response []byte
 	response, err = util.HTTPGet(url)
 	if err != nil {
 		return
