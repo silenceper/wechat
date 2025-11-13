@@ -158,18 +158,20 @@ func (r *Client) UserCreate(req *UserCreateRequest) (*UserCreateResponse, error)
 
 // UserUpdateRequest 更新成员请求
 type UserUpdateRequest struct {
-	UserID         string   `json:"userid"`
-	NewUserID      string   `json:"new_userid"`
-	Name           string   `json:"name"`
-	Alias          string   `json:"alias"`
-	Mobile         string   `json:"mobile"`
-	Department     []int    `json:"department"`
-	Order          []int    `json:"order"`
-	Position       string   `json:"position"`
-	Gender         int      `json:"gender"`
-	Email          string   `json:"email"`
-	BizMail        string   `json:"biz_mail"`
-	BizMailAlias   string   `json:"biz_mail_alias"`
+	UserID       string `json:"userid"`
+	NewUserID    string `json:"new_userid"`
+	Name         string `json:"name"`
+	Alias        string `json:"alias"`
+	Mobile       string `json:"mobile"`
+	Department   []int  `json:"department"`
+	Order        []int  `json:"order"`
+	Position     string `json:"position"`
+	Gender       int    `json:"gender"`
+	Email        string `json:"email"`
+	BizMail      string `json:"biz_mail"`
+	BizMailAlias struct {
+		Item []string `json:"item"`
+	} `json:"biz_mail_alias"`
 	IsLeaderInDept []int    `json:"is_leader_in_dept"`
 	DirectLeader   []string `json:"direct_leader"`
 	Enable         int      `json:"enable"`
