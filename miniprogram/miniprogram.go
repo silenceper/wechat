@@ -13,6 +13,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/express"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
 	"github.com/silenceper/wechat/v2/miniprogram/minidrama"
+	"github.com/silenceper/wechat/v2/miniprogram/ocr"
 	"github.com/silenceper/wechat/v2/miniprogram/operation"
 	"github.com/silenceper/wechat/v2/miniprogram/order"
 	"github.com/silenceper/wechat/v2/miniprogram/privacy"
@@ -190,4 +191,9 @@ func (miniProgram *MiniProgram) GetOperation() *operation.Operation {
 // GetExpress 微信物流服务
 func (miniProgram *MiniProgram) GetExpress() *express.Express {
 	return express.NewExpress(miniProgram.ctx)
+}
+
+// GetOCR OCR接口
+func (miniProgram *MiniProgram) GetOCR() *ocr.OCR {
+	return ocr.NewOCR(miniProgram.ctx)
 }
