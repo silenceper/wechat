@@ -138,16 +138,11 @@ type commonItem struct {
 	Text     string   `json:"text"`
 }
 
-// ResPlateNumber 车牌号返回结果
-type ResPlateNumber struct {
-	util.CommonError
-
-	Number string `json:"number"`
-}
-
 // NewOCR 实例
 func NewOCR(c *context.Context) *OCR {
-	return &OCR{c}
+	ocr := new(OCR)
+	ocr.Context = c
+	return ocr
 }
 
 // IDCard 身份证OCR识别接口
