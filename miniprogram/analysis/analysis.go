@@ -34,7 +34,7 @@ const (
 	getPerformanceDataURL = "https://api.weixin.qq.com/wxa/business/performance/boot?access_token=%s"
 )
 
-// Analysis analyis 数据分析
+// Analysis analysis 数据分析
 type Analysis struct {
 	*context.Context
 }
