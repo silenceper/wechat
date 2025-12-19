@@ -36,6 +36,7 @@ func NewRedis(ctx context.Context, opts *RedisOpts) *Redis {
 		Password:     opts.Password,
 		IdleTimeout:  time.Second * time.Duration(opts.IdleTimeout),
 		MinIdleConns: opts.MaxIdle,
+		PoolSize:     opts.MaxActive,
 	}
 
 	if opts.UseTLS {
