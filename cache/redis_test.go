@@ -18,7 +18,16 @@ func TestRedis(t *testing.T) {
 		timeoutDuration = time.Second
 		ctx             = context.Background()
 		opts            = &RedisOpts{
-			Host: server.Addr(),
+			Host:         server.Addr(),
+			Password:     "",
+			Database:     0,
+			PoolSize:     10,
+			MinIdleConns: 5,
+			DialTimeout:  5,
+			ReadTimeout:  5,
+			WriteTimeout: 5,
+			PoolTimeout:  5,
+			IdleTimeout:  300,
 		}
 		redis = NewRedis(ctx, opts)
 		val   = "silenceper"
