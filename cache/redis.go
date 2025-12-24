@@ -65,10 +65,9 @@ func NewRedis(ctx context.Context, opts *RedisOpts) *Redis {
 		} else if seconds == -1 {
 			// 当 seconds 为 -1 时，表示禁用超时：按 go-redis 约定，将超时时间设置为负值（如 -1ns）代表「无超时」
 			*target = -1
-		} else if seconds == 0 {
-			// 当 seconds 为 0 时，使用 go-redis 的默认超时配置：
-			// 不修改 target，保持其零值（0），由 go-redis 解释为“使用默认值”
 		}
+		// 当 seconds 为 0 时，使用 go-redis 的默认超时配置：
+		// 不修改 target，保持其零值（0），由 go-redis 解释为“使用默认值”
 	}
 
 	applyTimeout(opts.DialTimeout, &uniOpt.DialTimeout)
