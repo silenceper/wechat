@@ -77,6 +77,8 @@ type (
 		ExpiresIn     int                `json:"expires_in"`
 		ChatExpiresIn int                `json:"chat_expires_in"`
 		UnionID       string             `json:"unionid"`
+		IsExclusive   bool               `json:"is_exclusive"`
+		MarkSource    bool               `json:"mark_source"`
 		Conclusions   ConclusionsRequest `json:"conclusions"`
 	}
 	// AddContactWayResponse 配置客户联系「联系我」方式响应
@@ -132,6 +134,7 @@ type (
 		ExpiresIn     int                 `json:"expires_in"`
 		ChatExpiresIn int                 `json:"chat_expires_in"`
 		UnionID       string              `json:"unionid"`
+		MarkSource    bool                `json:"mark_source"`
 		Conclusions   ConclusionsResponse `json:"conclusions"`
 	}
 )
@@ -168,6 +171,7 @@ type (
 		ExpiresIn     int                `json:"expires_in"`
 		ChatExpiresIn int                `json:"chat_expires_in"`
 		UnionID       string             `json:"unionid"`
+		MarkSource    bool               `json:"mark_source"`
 		Conclusions   ConclusionsRequest `json:"conclusions"`
 	}
 	// UpdateContactWayResponse 更新企业已配置的「联系我」方式响应
