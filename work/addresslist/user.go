@@ -24,6 +24,10 @@ const (
 	convertToOpenIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/convert_to_openid"
 	// convertToUserIDURL openID转userID
 	convertToUserIDURL = "https://qyapi.weixin.qq.com/cgi-bin/user/convert_to_userid"
+	// userBatchDeleteURL 批量删除成员
+	userBatchDeleteURL = "https://qyapi.weixin.qq.com/cgi-bin/user/batchdelete?access_token=%s"
+	// userAuthSuccURL 登录二次验证
+	userAuthSuccURL = "https://qyapi.weixin.qq.com/cgi-bin/user/authsucc?access_token=%s&userid=%s"
 )
 
 type (
@@ -446,4 +450,43 @@ func (r *Client) ConvertToUserID(openID string) (string, error) {
 	result := &convertToUserIDResponse{}
 	err = util.DecodeWithError(response, result, "ConvertToUserID")
 	return result.UserID, err
+}
+
+// UserBatchDeleteRequest 批量删除成员请求
+type UserBatchDeleteRequest struct {
+	UseridList []string `json:"useridlist"`
+}
+
+// UserBatchDelete 批量删除成员
+// see https://developer.work.weixin.qq.com/document/path/90199
+func (r *Client) UserBatchDelete(req *UserBatchDeleteRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(userBatchDeleteURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "UserBatchDelete")
+}
+
+// UserAuthSucc 登录二次验证
+// @see https://developer.work.weixin.qq.com/document/path/90203
+func (r *Client) UserAuthSucc(userID string) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.HTTPGet(fmt.Sprintf(userAuthSuccURL, accessToken, userID)); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "UserAuthSucc")
 }
