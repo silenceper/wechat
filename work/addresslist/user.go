@@ -28,6 +28,10 @@ const (
 	userBatchDeleteURL = "https://qyapi.weixin.qq.com/cgi-bin/user/batchdelete?access_token=%s"
 	// userAuthSuccURL 登录二次验证
 	userAuthSuccURL = "https://qyapi.weixin.qq.com/cgi-bin/user/authsucc?access_token=%s&userid=%s"
+	// batchInviteURL 邀请成员
+	batchInviteURL = "https://qyapi.weixin.qq.com/cgi-bin/batch/invite?access_token=%s"
+	// getJoinQrcodeURL 获取加入企业二维码
+	getJoinQrcodeURL = "https://qyapi.weixin.qq.com/cgi-bin/corp/get_join_qrcode"
 )
 
 type (
@@ -489,4 +493,74 @@ func (r *Client) UserAuthSucc(userID string) error {
 		return err
 	}
 	return util.DecodeWithCommonError(response, "UserAuthSucc")
+}
+
+// BatchInviteRequest 邀请成员请求
+type BatchInviteRequest struct {
+	User  []string `json:"user"`
+	Party []int    `json:"party"`
+	Tag   []int    `json:"tag"`
+}
+
+// BatchInviteResponse 邀请成员响应
+type BatchInviteResponse struct {
+	util.CommonError
+	InvalidUser  []string `json:"invaliduser"`
+	InvalidParty []int    `json:"invalidparty"`
+	InvalidTag   []int    `json:"invalidtag"`
+}
+
+// BatchInvite 邀请成员
+// see https://developer.work.weixin.qq.com/document/path/90975
+func (r *Client) BatchInvite(req *BatchInviteRequest) (*BatchInviteResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(batchInviteURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &BatchInviteResponse{}
+	err = util.DecodeWithError(response, result, "BatchInvite")
+	return result, err
+}
+
+// GetJoinQrcodeRequest 获取加入企业二维码请求
+type GetJoinQrcodeRequest struct {
+	SizeType int `json:"size_type"`
+}
+
+// GetJoinQrcodeResponse 获取加入企业二维码响应
+type GetJoinQrcodeResponse struct {
+	util.CommonError
+	JoinQrcode string `json:"join_qrcode"`
+}
+
+// GetJoinQrcode 获取加入企业二维码
+// see https://developer.work.weixin.qq.com/document/path/91714
+func (r *Client) GetJoinQrcode(req *GetJoinQrcodeRequest) (*GetJoinQrcodeResponse, error) {
+	var (
+		accessToken string
+		err         error
+		apiUrl      string
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	if req.SizeType > 0 {
+		apiUrl = fmt.Sprintf("%s?access_token=%s&size_type=%d", getJoinQrcodeURL, accessToken, req.SizeType)
+	} else {
+		apiUrl = fmt.Sprintf("%s?access_token=%s", getJoinQrcodeURL, accessToken)
+	}
+	var response []byte
+	if response, err = util.HTTPGet(apiUrl); err != nil {
+		return nil, err
+	}
+	result := &GetJoinQrcodeResponse{}
+	err = util.DecodeWithError(response, result, "GetJoinQrcode")
+	return result, err
 }
