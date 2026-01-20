@@ -30,6 +30,8 @@ const (
 	getAnalysisVisitDistributionURL = "https://api.weixin.qq.com/datacube/getweanalysisappidvisitdistribution?access_token=%s"
 	// 访问页面
 	getAnalysisVisitPageURL = "https://api.weixin.qq.com/datacube/getweanalysisappidvisitpage?access_token=%s"
+	// 获取小程序性能数据
+	getPerformanceDataURL = "https://api.weixin.qq.com/wxa/business/performance/boot?access_token=%s"
 )
 
 // Analysis analyis 数据分析
@@ -313,5 +315,69 @@ func (analysis *Analysis) GetAnalysisVisitPage(beginDate, endDate string) (resul
 		err = fmt.Errorf("GetAnalysisVisitPage error : errcode=%v , errmsg=%v", result.ErrCode, result.ErrMsg)
 		return
 	}
+	return
+}
+
+// GetPerformanceDataRequest 获取小程序性能数据请求
+type GetPerformanceDataRequest struct {
+	Module string                  `json:"module"`
+	Time   PerformanceDataTime     `json:"time"`
+	Params []PerformanceDataParams `json:"params"`
+}
+
+// PerformanceDataTime 获取小程序性能数据开始和结束日期
+type PerformanceDataTime struct {
+	BeginTimestamp int64 `json:"begin_timestamp"`
+	EndTimestamp   int64 `json:"end_timestamp"`
+}
+
+// PerformanceDataParams 获取小程序性能数据查询条件
+type PerformanceDataParams struct {
+	Field string `json:"field"`
+	Value string `json:"value"`
+}
+
+// GetPerformanceDataResponse 获取小程序性能数据响应
+type GetPerformanceDataResponse struct {
+	util.CommonError
+	Body PerformanceDataBody `json:"body"`
+}
+
+// PerformanceDataBody 性能数据
+type PerformanceDataBody struct {
+	Tables []PerformanceDataTable `json:"tables"`
+	Count  int64                  `json:"count"`
+}
+
+// PerformanceDataTable 数据数组
+type PerformanceDataTable struct {
+	ID    string                     `json:"id"`
+	Lines []PerformanceDataTableLine `json:"lines"`
+	Zh    string                     `json:"zh"`
+}
+
+// PerformanceDataTableLine 按时间排列的性能数据
+type PerformanceDataTableLine struct {
+	Fields []PerformanceDataTableLineField `json:"fields"`
+}
+
+// PerformanceDataTableLineField 单天的性能数据
+type PerformanceDataTableLineField struct {
+	RefDate string `json:"refdate"`
+	Value   string `json:"value"`
+}
+
+// GetPerformanceData 获取小程序性能数据
+// see https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/data-analysis/others/getPerformanceData.html
+func (analysis *Analysis) GetPerformanceData(req *GetPerformanceDataRequest) (res GetPerformanceDataResponse, err error) {
+	var accessToken string
+	if accessToken, err = analysis.GetAccessToken(); err != nil {
+		return
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(getPerformanceDataURL, accessToken), req); err != nil {
+		return
+	}
+	err = util.DecodeWithError(response, &res, "GetPerformanceData")
 	return
 }

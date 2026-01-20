@@ -21,6 +21,8 @@ const (
 	clearOptionURL = "https://qyapi.weixin.qq.com/cgi-bin/checkin/clear_checkin_option_array_field?access_token=%s"
 	// delOptionURL 删除打卡规则
 	delOptionURL = "https://qyapi.weixin.qq.com/cgi-bin/checkin/del_checkin_option?access_token=%s"
+	// addRecordURL 添加打卡记录
+	addRecordURL = "https://qyapi.weixin.qq.com/cgi-bin/checkin/add_checkin_record?access_token=%s"
 )
 
 // SetScheduleListRequest 为打卡人员排班请求
@@ -140,6 +142,7 @@ type OptionGroupRule struct {
 	SyncOutCheckin         bool                         `json:"sync_out_checkin,omitempty"`
 	BukaRemind             OptionGroupBukaRemind        `json:"buka_remind,omitempty"`
 	BukaRestriction        int64                        `json:"buka_restriction,omitempty"`
+	CheckinMethodType      int64                        `json:"checkin_method_type,omitempty"`
 	SpanDayTime            int64                        `json:"span_day_time,omitempty"`
 	StandardWorkDuration   int64                        `json:"standard_work_duration,omitempty"`
 }
@@ -155,24 +158,32 @@ type OptionGroupRuleCheckinDate struct {
 	MaxAllowArriveEarly int64                        `json:"max_allow_arrive_early"`
 	MaxAllowArriveLate  int64                        `json:"max_allow_arrive_late"`
 	LateRule            OptionGroupLateRule          `json:"late_rule"`
+	Biweekly            OptionGroupBiweekly          `json:"biweekly,omitempty"`
 }
 
 // OptionGroupRuleCheckinTime 工作日上下班打卡时间信息
 type OptionGroupRuleCheckinTime struct {
-	TimeID             int64 `json:"time_id"`
-	WorkSec            int64 `json:"work_sec"`
-	OffWorkSec         int64 `json:"off_work_sec"`
-	RemindWorkSec      int64 `json:"remind_work_sec"`
-	RemindOffWorkSec   int64 `json:"remind_off_work_sec"`
-	AllowRest          bool  `json:"allow_rest"`
-	RestBeginTime      int64 `json:"rest_begin_time"`
-	RestEndTime        int64 `json:"rest_end_time"`
-	EarliestWorkSec    int64 `json:"earliest_work_sec"`
-	LatestWorkSec      int64 `json:"latest_work_sec"`
-	EarliestOffWorkSec int64 `json:"earliest_off_work_sec"`
-	LatestOffWorkSec   int64 `json:"latest_off_work_sec"`
-	NoNeedCheckOn      bool  `json:"no_need_checkon"`
-	NoNeedCheckOff     bool  `json:"no_need_checkoff"`
+	TimeID             int64                      `json:"time_id"`
+	WorkSec            int64                      `json:"work_sec"`
+	OffWorkSec         int64                      `json:"off_work_sec"`
+	RemindWorkSec      int64                      `json:"remind_work_sec"`
+	RemindOffWorkSec   int64                      `json:"remind_off_work_sec"`
+	AllowRest          bool                       `json:"allow_rest"`
+	RestBeginTime      int64                      `json:"rest_begin_time"`
+	RestEndTime        int64                      `json:"rest_end_time"`
+	EarliestWorkSec    int64                      `json:"earliest_work_sec"`
+	LatestWorkSec      int64                      `json:"latest_work_sec"`
+	EarliestOffWorkSec int64                      `json:"earliest_off_work_sec"`
+	LatestOffWorkSec   int64                      `json:"latest_off_work_sec"`
+	NoNeedCheckOn      bool                       `json:"no_need_checkon"`
+	NoNeedCheckOff     bool                       `json:"no_need_checkoff"`
+	RestTimes          []OptionGroupRuleRestTimes `json:"rest_times,omitempty"`
+}
+
+// OptionGroupRuleRestTimes 多组休息时间
+type OptionGroupRuleRestTimes struct {
+	RestBeginTime int64 `json:"rest_begin_time,omitempty"`
+	RestEndTime   int64 `json:"rest_end_time,omitempty"`
 }
 
 // OptionGroupLateRule 晚走晚到时间规则信息
@@ -187,6 +198,13 @@ type OptionGroupLateRule struct {
 type OptionGroupTimeRule struct {
 	OffWorkAfterTime int64 `json:"offwork_after_time"`
 	OnWorkFlexTime   int64 `json:"onwork_flex_time"`
+}
+
+// OptionGroupBiweekly 大小周规则
+type OptionGroupBiweekly struct {
+	EnableWeekdayRecurrence bool    `json:"enable_weekday_recurrence"`
+	OddWorkdays             []int64 `json:"odd_workdays"`
+	EvenWorkdays            []int64 `json:"even_workdays"`
 }
 
 // OptionGroupSpeWorkdays 特殊工作日
@@ -384,4 +402,42 @@ func (r *Client) DelOption(req *DelOptionRequest) error {
 		return err
 	}
 	return util.DecodeWithCommonError(response, "DelOption")
+}
+
+// AddRecordRequest 添加打卡记录请求
+type AddRecordRequest struct {
+	Records []Record `json:"records"`
+}
+
+// Record 打卡记录
+type Record struct {
+	UserID         string   `json:"userid"`
+	CheckinTime    int64    `json:"checkin_time"`
+	LocationTitle  string   `json:"location_title"`
+	LocationDetail string   `json:"location_detail"`
+	MediaIDS       []string `json:"mediaids"`
+	Notes          string   `json:"notes"`
+	DeviceType     int      `json:"device_type"`
+	Lat            int64    `json:"lat"`
+	Lng            int64    `json:"lng"`
+	DeviceDetail   string   `json:"device_detail"`
+	WifiName       string   `json:"wifiname"`
+	WifiMac        string   `json:"wifimac"`
+}
+
+// AddRecord 添加打卡记录
+// see https://developer.work.weixin.qq.com/document/path/99647
+func (r *Client) AddRecord(req *AddRecordRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(addRecordURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "AddRecord")
 }

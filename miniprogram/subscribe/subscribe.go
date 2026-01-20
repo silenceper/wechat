@@ -12,22 +12,30 @@ const (
 	// 发送订阅消息
 	// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.send.html
 	subscribeSendURL = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send"
-
 	// 获取当前帐号下的个人模板列表
 	// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getTemplateList.html
 	getTemplateURL = "https://api.weixin.qq.com/wxaapi/newtmpl/gettemplate"
-
 	// 添加订阅模板
 	// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.addTemplate.html
 	addTemplateURL = "https://api.weixin.qq.com/wxaapi/newtmpl/addtemplate"
-
 	// 删除私有模板
 	// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.deleteTemplate.html
 	delTemplateURL = "https://api.weixin.qq.com/wxaapi/newtmpl/deltemplate"
-
 	// 统一服务消息
 	// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/uniform-message/uniformMessage.send.html
 	uniformMessageSend = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send"
+	// getCategoryURL 获取类目
+	getCategoryURL = "https://api.weixin.qq.com/wxaapi/newtmpl/getcategory?access_token=%s"
+	// getPubTemplateKeyWordsByIDURL 获取关键词列表
+	getPubTemplateKeyWordsByIDURL = "https://api.weixin.qq.com/wxaapi/newtmpl/getpubtemplatekeywords?access_token=%s&tid=%s"
+	// getPubTemplateTitleListURL 获取所属类目下的公共模板
+	getPubTemplateTitleListURL = "https://api.weixin.qq.com/wxaapi/newtmpl/getpubtemplatetitles?access_token=%s&ids=%s&start=%d&limit=%d"
+	// setUserNotifyURL 激活与更新服务卡片
+	setUserNotifyURL = "https://api.weixin.qq.com/wxa/set_user_notify?access_token=%s"
+	// setUserNotifyExtURL 更新服务卡片扩展信息
+	setUserNotifyExtURL = "https://api.weixin.qq.com/wxa/set_user_notifyext?access_token=%s"
+	// getUserNotifyURL 查询服务卡片状态
+	getUserNotifyURL = "https://api.weixin.qq.com/wxa/get_user_notify?access_token=%s"
 )
 
 // Subscribe 订阅消息
@@ -58,11 +66,18 @@ type DataItem struct {
 
 // TemplateItem template item
 type TemplateItem struct {
-	PriTmplID string `json:"priTmplId"`
-	Title     string `json:"title"`
-	Content   string `json:"content"`
-	Example   string `json:"example"`
-	Type      int64  `json:"type"`
+	PriTmplID            string             `json:"priTmplId"`
+	Title                string             `json:"title"`
+	Content              string             `json:"content"`
+	Example              string             `json:"example"`
+	Type                 int64              `json:"type"`
+	KeywordEnumValueList []KeywordEnumValue `json:"keywordEnumValueList"`
+}
+
+// KeywordEnumValue 枚举参数值范围
+type KeywordEnumValue struct {
+	EnumValueList []string `json:"enumValueList"`
+	KeywordCode   string   `json:"keywordCode"`
 }
 
 // TemplateList template list
@@ -223,4 +238,201 @@ func (s *Subscribe) Delete(templateID string) (err error) {
 		return
 	}
 	return util.DecodeWithCommonError(response, "DeleteSubscribe")
+}
+
+// GetCategoryResponse 获取类目响应
+type GetCategoryResponse struct {
+	util.CommonError
+	Data []Category `json:"data"`
+}
+
+// Category 类目
+type Category struct {
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
+}
+
+// GetCategory 获取类目
+// see https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-message-management/subscribe-message/getCategory.html
+func (s *Subscribe) GetCategory() ([]Category, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = s.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.HTTPGet(fmt.Sprintf(getCategoryURL, accessToken)); err != nil {
+		return nil, err
+	}
+	result := &GetCategoryResponse{}
+	err = util.DecodeWithError(response, result, "GetCategory")
+	return result.Data, err
+}
+
+// GetPubTemplateKeywordsByIDResponse 获取关键词列表响应
+type GetPubTemplateKeywordsByIDResponse struct {
+	util.CommonError
+	Count int64                 `json:"count"`
+	Data  []PubTemplateKeywords `json:"data"`
+}
+
+// PubTemplateKeywords 关键词
+type PubTemplateKeywords struct {
+	KID     int64  `json:"kid"`
+	Name    string `json:"name"`
+	Example string `json:"example"`
+	Rule    string `json:"rule"`
+}
+
+// GetPubTemplateKeywordsByID 获取关键词列表
+// see https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-message-management/subscribe-message/getPubTemplateKeyWordsById.html
+func (s *Subscribe) GetPubTemplateKeywordsByID(tid string) (*GetPubTemplateKeywordsByIDResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = s.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.HTTPGet(fmt.Sprintf(getPubTemplateKeyWordsByIDURL, accessToken, tid)); err != nil {
+		return nil, err
+	}
+	result := &GetPubTemplateKeywordsByIDResponse{}
+	err = util.DecodeWithError(response, result, "GetPubTemplateKeywordsByID")
+	return result, err
+}
+
+// GetPubTemplateTitleListRequest 获取所属类目下的公共模板请求
+type GetPubTemplateTitleListRequest struct {
+	Start int64
+	Limit int64
+	IDs   string
+}
+
+// GetPubTemplateTitleListResponse 获取所属类目下的公共模板响应
+type GetPubTemplateTitleListResponse struct {
+	util.CommonError
+	Count int64              `json:"count"`
+	Data  []PubTemplateTitle `json:"data"`
+}
+
+// PubTemplateTitle 模板标题
+type PubTemplateTitle struct {
+	Type       int64  `json:"type"`
+	TID        string `json:"tid"`
+	Title      string `json:"title"`
+	CategoryID string `json:"categoryId"`
+}
+
+// GetPubTemplateTitleList 获取所属类目下的公共模板
+// see https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-message-management/subscribe-message/getPubTemplateTitleList.html
+func (s *Subscribe) GetPubTemplateTitleList(req *GetPubTemplateTitleListRequest) (*GetPubTemplateTitleListResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = s.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.HTTPGet(fmt.Sprintf(getPubTemplateTitleListURL, accessToken, req.IDs, req.Start, req.Limit)); err != nil {
+		return nil, err
+	}
+	result := &GetPubTemplateTitleListResponse{}
+	err = util.DecodeWithError(response, result, "GetPubTemplateTitleList")
+	return result, err
+}
+
+// SetUserNotifyRequest 激活与更新服务卡片请求
+type SetUserNotifyRequest struct {
+	OpenID      string `json:"openid"`
+	NotifyType  int64  `json:"notify_type"`
+	NotifyCode  string `json:"notify_code"`
+	ContentJSON string `json:"content_json"`
+	CheckJSON   string `json:"check_json,omitempty"`
+}
+
+// SetUserNotify 激活与更新服务卡片
+// see https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-message-management/subscribe-message/setUserNotify.html
+func (s *Subscribe) SetUserNotify(req *SetUserNotifyRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = s.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(setUserNotifyURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "SetUserNotify")
+}
+
+// SetUserNotifyExtRequest 更新服务卡片扩展信息请求
+type SetUserNotifyExtRequest struct {
+	OpenID     string `json:"openid"`
+	NotifyType int64  `json:"notify_type"`
+	NotifyCode string `json:"notify_code"`
+	ExtJSON    string `json:"ext_json"`
+}
+
+// SetUserNotifyExt 更新服务卡片扩展信息
+// see https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-message-management/subscribe-message/setUserNotifyExt.html
+func (s *Subscribe) SetUserNotifyExt(req *SetUserNotifyExtRequest) error {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = s.GetAccessToken(); err != nil {
+		return err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(setUserNotifyExtURL, accessToken), req); err != nil {
+		return err
+	}
+	return util.DecodeWithCommonError(response, "SetUserNotifyExt")
+}
+
+// GetUserNotifyRequest 查询服务卡片状态请求
+type GetUserNotifyRequest struct {
+	OpenID     string `json:"openid"`
+	NotifyType int64  `json:"notify_type"`
+	NotifyCode string `json:"notify_code"`
+}
+
+// GetUserNotifyResponse 查询服务卡片状态响应
+type GetUserNotifyResponse struct {
+	util.CommonError
+	NotifyInfo NotifyInfo `json:"notify_info"`
+}
+
+// NotifyInfo 卡片状态
+type NotifyInfo struct {
+	NotifyType     int64  `json:"notify_type"`
+	ContentJSON    string `json:"content_json"`
+	CodeState      int64  `json:"code_state"`
+	CodeExpireTime int64  `json:"code_expire_time"`
+}
+
+// GetUserNotify 查询服务卡片状态
+// see https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-message-management/subscribe-message/getUserNotify.html
+func (s *Subscribe) GetUserNotify(req *GetUserNotifyRequest) (*GetUserNotifyResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = s.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(getUserNotifyURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &GetUserNotifyResponse{}
+	err = util.DecodeWithError(response, result, "GetUserNotify")
+	return result, err
 }

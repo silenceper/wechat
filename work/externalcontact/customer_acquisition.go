@@ -23,6 +23,10 @@ const (
 	customerAcquisitionQuotaURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_acquisition_quota?access_token=%s"
 	// customerAcquisitionStatistic 查询链接使用详情
 	customerAcquisitionStatisticURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_acquisition/statistic?access_token=%s"
+	// customerAcquisitionGetChatInfo 获取成员多次收消息详情
+	customerAcquisitionGetChatInfoURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_acquisition/get_chat_info?access_token=%s"
+	// customerAcquisitionGetPermitURL 获取客户可建联成员
+	customerAcquisitionGetPermitURL = "https://qyapi.weixin.qq.com/cgi-bin/externalcontact/customer_acquisition_app/get_permit?access_token=%s"
 )
 
 type (
@@ -66,9 +70,10 @@ type (
 	// GetCustomerAcquisitionResponse 获取获客链接详情响应
 	GetCustomerAcquisitionResponse struct {
 		util.CommonError
-		Link       Link                     `json:"link"`
-		Range      CustomerAcquisitionRange `json:"range"`
-		SkipVerify bool                     `json:"skip_verify"`
+		Link           Link                     `json:"link"`
+		Range          CustomerAcquisitionRange `json:"range"`
+		PriorityOption CustomerPriorityOption   `json:"priority_option"`
+		SkipVerify     bool                     `json:"skip_verify"`
 	}
 	// Link 获客链接
 	Link struct {
@@ -76,12 +81,20 @@ type (
 		LinkName   string `json:"link_name"`
 		URL        string `json:"url"`
 		CreateTime int64  `json:"create_time"`
+		SkipVerify bool   `json:"skip_verify"`
+		MarkSource bool   `json:"mark_source"`
 	}
 
 	// CustomerAcquisitionRange 该获客链接使用范围
 	CustomerAcquisitionRange struct {
 		UserList       []string `json:"user_list"`
 		DepartmentList []int64  `json:"department_list"`
+	}
+
+	// CustomerPriorityOption 该获客链接的优先选项
+	CustomerPriorityOption struct {
+		PriorityType       int      `json:"priority_type"`
+		PriorityUseridList []string `json:"priority_userid_list"`
 	}
 )
 
@@ -107,9 +120,11 @@ func (r *Client) GetCustomerAcquisition(req *GetCustomerAcquisitionRequest) (*Ge
 type (
 	// CreateCustomerAcquisitionLinkRequest 创建获客链接请求
 	CreateCustomerAcquisitionLinkRequest struct {
-		LinkName   string                   `json:"link_name"`
-		Range      CustomerAcquisitionRange `json:"range"`
-		SkipVerify bool                     `json:"skip_verify"`
+		LinkName       string                   `json:"link_name"`
+		Range          CustomerAcquisitionRange `json:"range"`
+		SkipVerify     bool                     `json:"skip_verify"`
+		PriorityOption CustomerPriorityOption   `json:"priority_option"`
+		MarkSource     bool                     `json:"mark_source"`
 	}
 	// CreateCustomerAcquisitionLinkResponse 创建获客链接响应
 	CreateCustomerAcquisitionLinkResponse struct {
@@ -140,10 +155,12 @@ func (r *Client) CreateCustomerAcquisitionLink(req *CreateCustomerAcquisitionLin
 type (
 	// UpdateCustomerAcquisitionLinkRequest 编辑获客链接请求
 	UpdateCustomerAcquisitionLinkRequest struct {
-		LinkID     string                   `json:"link_id"`
-		LinkName   string                   `json:"link_name"`
-		Range      CustomerAcquisitionRange `json:"range"`
-		SkipVerify bool                     `json:"skip_verify"`
+		LinkID         string                   `json:"link_id"`
+		LinkName       string                   `json:"link_name"`
+		Range          CustomerAcquisitionRange `json:"range"`
+		SkipVerify     bool                     `json:"skip_verify"`
+		PriorityOption CustomerPriorityOption   `json:"priority_option"`
+		MarkSource     bool                     `json:"mark_source"`
 	}
 	// UpdateCustomerAcquisitionLinkResponse 编辑获客链接响应
 	UpdateCustomerAcquisitionLinkResponse struct {
@@ -306,5 +323,71 @@ func (r *Client) CustomerAcquisitionStatistic(req *CustomerAcquisitionStatisticR
 	}
 	result := &CustomerAcquisitionStatisticResponse{}
 	err = util.DecodeWithError(response, result, "CustomerAcquisitionStatistic")
+	return result, err
+}
+
+type (
+	// GetChatInfoRequest 获取成员多次收消息详情请求
+	GetChatInfoRequest struct {
+		ChatKey string `json:"chat_key"`
+	}
+	// GetChatInfoResponse 获取成员多次收消息详情响应
+	GetChatInfoResponse struct {
+		util.CommonError
+		UserID         string   `json:"userid"`
+		ExternalUserID string   `json:"external_userid"`
+		ChatInfo       ChatInfo `json:"chat_info"`
+	}
+	// ChatInfo 聊天信息
+	ChatInfo struct {
+		RecvMsgCnt int64  `json:"recv_msg_cnt"` // 成员收到的此客户的消息次数
+		LinkID     string `json:"link_id"`      // 成员添加客户的获客链接id
+		State      string `json:"state"`        // 成员添加客户的state
+	}
+)
+
+// GetChatInfo 获取成员多次收消息详情
+// see https://developer.work.weixin.qq.com/document/path/100130
+func (r *Client) GetChatInfo(req *GetChatInfoRequest) (*GetChatInfoResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(customerAcquisitionGetChatInfoURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &GetChatInfoResponse{}
+	err = util.DecodeWithError(response, result, "GetChatInfo")
+	return result, err
+}
+
+// GetPermitResponse 获取客户可建联成员响应
+type GetPermitResponse struct {
+	util.CommonError
+	UserList       []string `json:"user_list"`
+	DepartmentList []int    `json:"department_list"`
+	TagList        []int    `json:"tag_list"`
+}
+
+// GetPermit 获取客户可建联成员
+// see https://developer.work.weixin.qq.com/document/path/101146
+func (r *Client) GetPermit() (*GetPermitResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.HTTPGet(fmt.Sprintf(customerAcquisitionGetPermitURL, accessToken)); err != nil {
+		return nil, err
+	}
+	result := &GetPermitResponse{}
+	err = util.DecodeWithError(response, result, "CustomerAcquisitionGetPermit")
 	return result, err
 }

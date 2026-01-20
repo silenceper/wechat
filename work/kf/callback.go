@@ -8,10 +8,10 @@ import (
 
 // SignatureOptions 微信服务器验证参数
 type SignatureOptions struct {
-	Signature string `form:"msg_signature"`
-	TimeStamp string `form:"timestamp"`
-	Nonce     string `form:"nonce"`
-	EchoStr   string `form:"echostr"`
+	Signature string `form:"msg_signature" json:"msg_signature"`
+	TimeStamp string `form:"timestamp" json:"timestamp"`
+	Nonce     string `form:"nonce" json:"nonce"`
+	EchoStr   string `form:"echostr" json:"echostr"`
 }
 
 // VerifyURL 验证请求参数是否合法并返回解密后的消息内容
