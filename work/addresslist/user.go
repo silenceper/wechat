@@ -546,18 +546,18 @@ func (r *Client) GetJoinQrcode(req *GetJoinQrcodeRequest) (*GetJoinQrcodeRespons
 	var (
 		accessToken string
 		err         error
-		apiUrl      string
+		apiURL      string
 	)
 	if accessToken, err = r.GetAccessToken(); err != nil {
 		return nil, err
 	}
 	if req.SizeType > 0 {
-		apiUrl = fmt.Sprintf("%s?access_token=%s&size_type=%d", getJoinQrcodeURL, accessToken, req.SizeType)
+		apiURL = fmt.Sprintf("%s?access_token=%s&size_type=%d", getJoinQrcodeURL, accessToken, req.SizeType)
 	} else {
-		apiUrl = fmt.Sprintf("%s?access_token=%s", getJoinQrcodeURL, accessToken)
+		apiURL = fmt.Sprintf("%s?access_token=%s", getJoinQrcodeURL, accessToken)
 	}
 	var response []byte
-	if response, err = util.HTTPGet(apiUrl); err != nil {
+	if response, err = util.HTTPGet(apiURL); err != nil {
 		return nil, err
 	}
 	result := &GetJoinQrcodeResponse{}
