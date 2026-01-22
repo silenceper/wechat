@@ -32,6 +32,10 @@ const (
 	batchInviteURL = "https://qyapi.weixin.qq.com/cgi-bin/batch/invite?access_token=%s"
 	// getJoinQrcodeURL 获取加入企业二维码
 	getJoinQrcodeURL = "https://qyapi.weixin.qq.com/cgi-bin/corp/get_join_qrcode"
+	// getUseridURL 手机号获取userid
+	getUseridURL = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserid?access_token=%s"
+	// getUseridByEmailURL 邮箱获取userid
+	getUseridByEmailURL = "https://qyapi.weixin.qq.com/cgi-bin/user/get_userid_by_email?access_token=%s"
 )
 
 type (
@@ -562,5 +566,60 @@ func (r *Client) GetJoinQrcode(req *GetJoinQrcodeRequest) (*GetJoinQrcodeRespons
 	}
 	result := &GetJoinQrcodeResponse{}
 	err = util.DecodeWithError(response, result, "GetJoinQrcode")
+	return result, err
+}
+
+// GetUseridRequest 手机号获取userid请求
+type GetUseridRequest struct {
+	Mobile string `json:"mobile"`
+}
+
+// GetUseridResponse 获取userid响应
+type GetUseridResponse struct {
+	util.CommonError
+	Userid string `json:"userid"`
+}
+
+// GetUserid 手机号获取userid
+// see https://developer.work.weixin.qq.com/document/path/95402
+func (r *Client) GetUserid(req *GetUseridRequest) (*GetUseridResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(getUseridURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &GetUseridResponse{}
+	err = util.DecodeWithError(response, result, "GetUserid")
+	return result, err
+}
+
+// GetUseridByEmailRequest 邮箱获取userid请求
+type GetUseridByEmailRequest struct {
+	Email     string `json:"email"`
+	EmailType int    `json:"email_type,omitempty"`
+}
+
+// GetUseridByEmail 邮箱获取userid
+// see https://developer.work.weixin.qq.com/document/path/95895
+func (r *Client) GetUseridByEmail(req *GetUseridByEmailRequest) (*GetUseridResponse, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = r.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(getUseridByEmailURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &GetUseridResponse{}
+	err = util.DecodeWithError(response, result, "GetUseridByEmail")
 	return result, err
 }
