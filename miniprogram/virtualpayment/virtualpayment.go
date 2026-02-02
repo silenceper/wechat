@@ -38,404 +38,114 @@ func (s *VirtualPayment) SetSessionKey(sessionKey string) {
 
 // QueryUserBalance 查询虚拟支付余额
 func (s *VirtualPayment) QueryUserBalance(ctx context.Context, in *QueryUserBalanceRequest) (out QueryUserBalanceResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:    queryUserBalance,
-			Content: string(jsonByte),
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "QueryUserBalance")
+	err = s.postRequest(ctx, queryUserBalance, in, &out, "QueryUserBalance")
 	return
 }
 
 // CurrencyPay currency pay 扣减代币（一般用于代币支付）
 func (s *VirtualPayment) CurrencyPay(ctx context.Context, in *CurrencyPayRequest) (out CurrencyPayResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:    currencyPay,
-			Content: string(jsonByte),
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "CurrencyPay")
+	err = s.postRequest(ctx, currencyPay, in, &out, "CurrencyPay")
 	return
 }
 
 // QueryOrder 查询创建的订单（现金单，非代币单）
 func (s *VirtualPayment) QueryOrder(ctx context.Context, in *QueryOrderRequest) (out QueryOrderResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:      queryOrder,
-			Signature: EmptyString,
-			Content:   string(jsonByte),
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "QueryOrder")
+	err = s.postRequest(ctx, queryOrder, in, &out, "QueryOrder")
 	return
 }
 
 // CancelCurrencyPay 取消订单 代币支付退款 (currency_pay 接口的逆操作)
 func (s *VirtualPayment) CancelCurrencyPay(ctx context.Context, in *CancelCurrencyPayRequest) (out CancelCurrencyPayResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:    cancelCurrencyPay,
-			Content: string(jsonByte),
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "CancelCurrencyPay")
+	err = s.postRequest(ctx, cancelCurrencyPay, in, &out, "CancelCurrencyPay")
 	return
 }
 
 // NotifyProvideGoods 通知发货
 // 通知已经发货完成（只能通知现金单）,正常通过 xpay_goods_deliver_notify 消息推送返回成功就不需要调用这个 api 接口。这个接口用于异常情况推送不成功时手动将单改成已发货状态
 func (s *VirtualPayment) NotifyProvideGoods(ctx context.Context, in *NotifyProvideGoodsRequest) (out NotifyProvideGoodsResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:      notifyProvideGoods,
-			Content:   string(jsonByte),
-			Signature: EmptyString,
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "NotifyProvideGoods")
+	err = s.postRequest(ctx, notifyProvideGoods, in, &out, "NotifyProvideGoods")
 	return
 }
 
 // PresentCurrency 代币赠送接口，由于目前不支付按单号查赠送单的功能，所以当需要赠送的时候可以一直重试到返回 0 或者返回 268490004（重复操作）为止
 func (s *VirtualPayment) PresentCurrency(ctx context.Context, in *PresentCurrencyRequest) (out PresentCurrencyResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:      presentCurrency,
-			Content:   string(jsonByte),
-			Signature: EmptyString,
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "PresentCurrency")
+	err = s.postRequest(ctx, presentCurrency, in, &out, "PresentCurrency")
 	return
 }
 
 // DownloadBill 下载订单交易账单
 func (s *VirtualPayment) DownloadBill(ctx context.Context, in *DownloadBillRequest) (out DownloadBillResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:      downloadBill,
-			Content:   string(jsonByte),
-			Signature: EmptyString,
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "DownloadBill")
+	err = s.postRequest(ctx, downloadBill, in, &out, "DownloadBill")
 	return
 }
 
 // RefundOrder 退款 对使用 jsapi 接口下的单进行退款
 func (s *VirtualPayment) RefundOrder(ctx context.Context, in *RefundOrderRequest) (out RefundOrderResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:      refundOrder,
-			Content:   string(jsonByte),
-			Signature: EmptyString,
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "RefundOrder")
+	err = s.postRequest(ctx, refundOrder, in, &out, "RefundOrder")
 	return
 }
 
 // CreateWithdrawOrder 创建提现单
 func (s *VirtualPayment) CreateWithdrawOrder(ctx context.Context, in *CreateWithdrawOrderRequest) (out CreateWithdrawOrderResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:      createWithdrawOrder,
-			Content:   string(jsonByte),
-			Signature: EmptyString,
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "CreateWithdrawOrder")
+	err = s.postRequest(ctx, createWithdrawOrder, in, &out, "CreateWithdrawOrder")
 	return
 }
 
 // QueryWithdrawOrder 查询提现单
 func (s *VirtualPayment) QueryWithdrawOrder(ctx context.Context, in *QueryWithdrawOrderRequest) (out QueryWithdrawOrderResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:      queryWithdrawOrder,
-			Content:   string(jsonByte),
-			Signature: EmptyString,
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "QueryWithdrawOrder")
+	err = s.postRequest(ctx, queryWithdrawOrder, in, &out, "QueryWithdrawOrder")
 	return
 }
 
 // StartUploadGoods 开始上传商品
 func (s *VirtualPayment) StartUploadGoods(ctx context.Context, in *StartUploadGoodsRequest) (out StartUploadGoodsResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:      startUploadGoods,
-			Content:   string(jsonByte),
-			Signature: EmptyString,
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "StartUploadGoods")
+	err = s.postRequest(ctx, startUploadGoods, in, &out, "StartUploadGoods")
 	return
 }
 
 // QueryUploadGoods 查询上传商品
 func (s *VirtualPayment) QueryUploadGoods(ctx context.Context, in *QueryUploadGoodsRequest) (out QueryUploadGoodsResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:      queryUploadGoods,
-			Content:   string(jsonByte),
-			Signature: EmptyString,
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "QueryUploadGoods")
+	err = s.postRequest(ctx, queryUploadGoods, in, &out, "QueryUploadGoods")
 	return
 }
 
 // StartPublishGoods 开始发布商品
 func (s *VirtualPayment) StartPublishGoods(ctx context.Context, in *StartPublishGoodsRequest) (out StartPublishGoodsResponse, err error) {
-	var jsonByte []byte
-	if jsonByte, err = json.Marshal(in); err != nil {
-		return
-	}
-
-	var (
-		params = URLParams{
-			Path:      startPublishGoods,
-			Content:   string(jsonByte),
-			Signature: EmptyString,
-		}
-		address string
-	)
-	if address, err = s.requestAddress(params); err != nil {
-		return
-	}
-
-	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "StartPublishGoods")
+	err = s.postRequest(ctx, startPublishGoods, in, &out, "StartPublishGoods")
 	return
 }
 
 // QueryPublishGoods 查询发布商品
 func (s *VirtualPayment) QueryPublishGoods(ctx context.Context, in *QueryPublishGoodsRequest) (out QueryPublishGoodsResponse, err error) {
+	err = s.postRequest(ctx, queryPublishGoods, in, &out, "QueryPublishGoods")
+	return
+}
+
+// postRequest common post request
+func (s *VirtualPayment) postRequest(ctx context.Context, path string, in, out interface{}, apiName string) (err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
 	}
 
-	var (
-		params = URLParams{
-			Path:      queryPublishGoods,
-			Content:   string(jsonByte),
-			Signature: EmptyString,
-		}
-		address string
-	)
+	params := URLParams{
+		Path:    path,
+		Content: string(jsonByte),
+	}
+	var address string
 	if address, err = s.requestAddress(params); err != nil {
 		return
 	}
 
+	header := map[string]string{
+		"Content-Type": "application/json;charset=utf-8",
+	}
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = util.HTTPPostContext(ctx, address, jsonByte, header); err != nil {
 		return
 	}
-
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "QueryPublishGoods")
+	err = util.DecodeWithError(response, out, apiName)
 	return
 }
 
@@ -476,23 +186,11 @@ func (s *VirtualPayment) PaySignature(url, data string) (paySign, signature stri
 // requestURL .组合 URL
 func (s *VirtualPayment) requestAddress(params URLParams) (url string, err error) {
 	switch params.Path {
-	case queryUserBalance:
-	case currencyPay:
-	case cancelCurrencyPay:
+	case queryUserBalance, currencyPay, cancelCurrencyPay:
 		if params.PaySign, params.Signature, err = s.PaySignature(params.Path, params.Content); err != nil {
 			return
 		}
-	case queryOrder:
-	case notifyProvideGoods:
-	case presentCurrency:
-	case downloadBill:
-	case refundOrder:
-	case createWithdrawOrder:
-	case queryWithdrawOrder:
-	case startUploadGoods:
-	case queryUploadGoods:
-	case startPublishGoods:
-	case queryPublishGoods:
+	case queryOrder, notifyProvideGoods, presentCurrency, downloadBill, refundOrder, createWithdrawOrder, queryWithdrawOrder, startUploadGoods, queryUploadGoods, startPublishGoods, queryPublishGoods:
 		if params.PaySign, err = s.PaySign(params.Path, params.Content); err != nil {
 			return
 		}
