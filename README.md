@@ -6,7 +6,6 @@
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/silenceper/wechat?sort=semver)
 ![star](https://gitcode.com/silenceper/wechat/star/badge.svg)
 
-
 使用Golang开发的微信SDK，简单、易用。
 
 ## 文档 && 例子
@@ -59,6 +58,54 @@ server.Send()
 
 ```
 
+## 缓存配置
+
+SDK 通过 `cache.Cache` 接口存储 access_token 等凭证，内置以下实现：
+
+| 实现                               | 说明                                                   |
+| ---------------------------------- | ------------------------------------------------------ |
+| `cache.NewMemory()`                | 内存缓存（默认）                                       |
+| `cache.NewMemcache(server...)`     | Memcache                                               |
+| `cache.NewRedis(ctx, opts)`        | 内置 Redis（使用 go-redis/v8，自动创建连接）           |
+| `cache.NewRedisAdapter(ctx, conn)` | Redis 适配器（复用已有 go-redis v8/v9 连接，**推荐**） |
+
+### 内置 Redis
+
+`cache.NewRedis` 会根据 `RedisOpts` 自动创建 go-redis v8 连接，适用于没有现成 Redis 客户端的场景：
+
+```go
+redisCache := cache.NewRedis(context.Background(), &cache.RedisOpts{
+    Host:     "localhost:6379",
+    Password: "",
+    Database: 0,
+})
+cfg := &offConfig.Config{
+    AppID:     "xxx",
+    AppSecret: "xxx",
+    Token:     "xxx",
+    Cache:     redisCache,
+}
+```
+
+### Redis 适配器
+
+如果你的项目中已经有 go-redis 实例，可以直接通过适配器复用，无需重复创建连接。
+适配器自动识别 go-redis 版本（v8/v9），使用统一的 `cache.NewRedisAdapter` 即可：
+
+**go-redis v8/v9：**
+
+```go
+cfg := &offConfig.Config{
+    AppID:     "xxx",
+    AppSecret: "xxx",
+    Token:     "xxx",
+    // 直接传入已有的 go-redis 客户端实例（以 rdb 为例）
+    Cache:     cache.NewRedisAdapter(context.Background(), rdb),
+}
+```
+
+适配器接受 `redis.Cmdable` 接口，兼容 `*redis.Client`、`*redis.ClusterClient`、`redis.UniversalClient` 等所有客户端类型。
+
 ## 目录说明
 
 - officialaccount: 微信公众号API
@@ -76,11 +123,9 @@ server.Send()
 - 提交issue，描述需要贡献的内容
 - 完成更改后，提交PR
 
-
 ## 感谢以下贡献者
 
 <a href="https://opencollective.com/gowechat"><img src="https://opencollective.com/gowechat/contributors.svg?width=890" /></a>
-
 
 ## 作者公众号
 
