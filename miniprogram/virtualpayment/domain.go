@@ -454,6 +454,33 @@ type AsyncXPayRefundNotifyResponse struct {
 	util.CommonError
 }
 
+// AsyncXPaySubscribeIosRefundQueryNotifyRequest iOS Apple 支付退款问询消息
+// 文档：https://developers.weixin.qq.com/miniprogram/dev/platform-capabilities/business-capabilities/virtual-payment/ios.html
+type AsyncXPaySubscribeIosRefundQueryNotifyRequest struct {
+	ToUserName   string `json:"ToUserName"`   // 小程序的原始 ID
+	FromUserName string `json:"FromUserName"` // 发送方帐号
+	CreateTime   int    `json:"CreateTime"`   // 消息发送时间
+	MsgType      string `json:"MsgType"`      // 消息类型，此时固定为 event
+	Event        string `json:"Event"`        // 事件类型，此时固定为 xpay_subscribe_ios_refund_query_notify
+
+	RefundTime          string `json:"refund_time"`           // 问询时间，Unix 时间戳
+	OrderTime           string `json:"order_time"`            // 该笔退款的订单时间，Unix 时间戳
+	ChannelBill         string `json:"channel_bill"`          // Apple 支付票据号
+	BundleID            string `json:"bundleid"`              // 应用的 Apple bundleid
+	ProductID           string `json:"product_id"`            // 道具 id
+	PCount              string `json:"p_count"`               // 道具/代币数量
+	RefundRequestReason string `json:"refund_request_reason"` // 用户请求退款的原因
+	ProvideStatus       string `json:"provide_status"`        // 发货状态，0：未发货 1：已发货 2：发货中
+	PayOrderID          string `json:"pay_order_id"`          // 退款对应支付订单号
+}
+
+// AsyncXPaySubscribeIosRefundQueryNotifyResponse iOS Apple 支付退款问询应答
+type AsyncXPaySubscribeIosRefundQueryNotifyResponse struct {
+	ResultCode int32  `json:"result_code"` // 结果码，0-放过，建议退款；1-拦截，拒绝退款
+	ResultInfo string `json:"result_info"` // 结果描述
+	Evidence   string `json:"evidence"`    // 决策凭据，必填，用于退款审计
+}
+
 // AsyncXPayComplaintNotifyRequest 异步通知用户投诉推送，请求参数
 type AsyncXPayComplaintNotifyRequest struct {
 	ToUserName      string `json:"ToUserName"`      // 小程序的原始 ID
