@@ -700,7 +700,7 @@ type DownloadAdverFundsOrderResponse struct {
 // ComplaintOrderInfo 投诉关联订单信息
 type ComplaintOrderInfo struct {
 	TransactionID string `json:"transaction_id"` // 微信支付交易单号
-	MchOrderNO    string `json:"mch_order_no"`   // 商户订单号
+	MchOrderNo    string `json:"mch_order_no"`   // 商户订单号
 	RefundID      string `json:"refund_id"`      // 退款订单号
 }
 

@@ -53,8 +53,8 @@ const (
 	BillGeneratingError ErrCode = 268490011
 	// BatchTaskRunningError 错误码 268490012、批量任务运行中，请等待完成后才能再次运行
 	BatchTaskRunningError ErrCode = 268490012
-	// RefundVerifedOrderError 错误码 268490013、禁止对核销状态的单进行退款
-	RefundVerifedOrderError ErrCode = 268490013
+	// RefundVerifiedOrderError 错误码 268490013、禁止对核销状态的单进行退款
+	RefundVerifiedOrderError ErrCode = 268490013
 	// RefundInProgressError 错误码 268490014、退款操作进行中，稍后可以使用相同参数重试
 	RefundInProgressError ErrCode = 268490014
 	// FrequencyLimitError 错误码 268490015、频率限制
