@@ -969,40 +969,17 @@ func (s *VirtualPayment) PaySignature(url, data string) (paySign, signature stri
 // requestURL .组合 URL
 func (s *VirtualPayment) requestAddress(params URLParams) (url string, err error) {
 	switch params.Path {
-	case queryUserBalance:
-	case currencyPay:
-	case cancelCurrencyPay:
+	case queryUserBalance, currencyPay, cancelCurrencyPay:
 		if params.PaySign, params.Signature, err = s.PaySignature(params.Path, params.Content); err != nil {
 			return
 		}
-	case queryOrder:
-	case notifyProvideGoods:
-	case presentCurrency:
-	case downloadBill:
-	case refundOrder:
-	case createWithdrawOrder:
-	case queryWithdrawOrder:
-	case startUploadGoods:
-	case queryUploadGoods:
-	case startPublishGoods:
-	case queryPublishGoods:
-	case startDownloadOrder:
-	case queryDownloadOrder:
-	case queryBizBalance:
-	case queryTransferAccount:
-	case queryAdverFunds:
-	case createFundsBill:
-	case bindTransferAccount:
-	case queryFundsBill:
-	case queryRecoverBill:
-	case downloadAdverFundsOrder:
-	case getComplaintList:
-	case getComplaintDetail:
-	case getNegotiationHistory:
-	case responseComplaint:
-	case completeComplaint:
-	case uploadVPFile:
-	case getUploadFileSign:
+	case queryOrder, notifyProvideGoods, presentCurrency, downloadBill, refundOrder,
+		createWithdrawOrder, queryWithdrawOrder, startUploadGoods, queryUploadGoods,
+		startPublishGoods, queryPublishGoods, startDownloadOrder, queryDownloadOrder,
+		queryBizBalance, queryTransferAccount, queryAdverFunds, createFundsBill,
+		bindTransferAccount, queryFundsBill, queryRecoverBill, downloadAdverFundsOrder,
+		getComplaintList, getComplaintDetail, getNegotiationHistory, responseComplaint,
+		completeComplaint, uploadVPFile, getUploadFileSign:
 		if params.PaySign, err = s.PaySign(params.Path, params.Content); err != nil {
 			return
 		}

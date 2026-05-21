@@ -209,14 +209,10 @@ func (receiver *PushReceiver) getEvent(dataType string, eventType EventType, dec
 		return &pushData, err
 	case EventTypeXpayRefundNotify:
 		// 退款推送事件
-		var pushData PushDataXpayRefundNotify
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataXpayRefundNotify{})
 	case EventTypeXpayComplaintNotify:
 		// 用户投诉推送事件
-		var pushData PushDataXpayComplaintNotify
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataXpayComplaintNotify{})
 	case EventSubscribePopup:
 		// 用户操作订阅通知弹窗事件推送
 		return receiver.unmarshalSubscribePopup(dataType, decryptMsg)
@@ -237,6 +233,12 @@ func (receiver *PushReceiver) unmarshal(dataType string, decryptMsg []byte, push
 		return xml.Unmarshal(decryptMsg, pushData)
 	}
 	return json.Unmarshal(decryptMsg, pushData)
+}
+
+// unmarshalPushData unmarshal push data helper
+func (receiver *PushReceiver) unmarshalPushData(dataType string, decryptMsg []byte, pushData interface{}) (PushData, error) {
+	err := receiver.unmarshal(dataType, decryptMsg, pushData)
+	return pushData, err
 }
 
 // unmarshalSubscribePopup
@@ -603,31 +605,31 @@ type XpayTeamInfo struct {
 // PushDataXpayRefundNotify 退款推送
 type PushDataXpayRefundNotify struct {
 	CommonPushData
-	OpenID                   string       `json:"OpenId" xml:"OpenId"`                               // 用户 openid
-	WxRefundID               string       `json:"WxRefundId" xml:"WxRefundId"`                       // 微信退款单号
-	MchRefundID              string       `json:"MchRefundId" xml:"MchRefundId"`                     // 商户退款单号
-	WxOrderID                string       `json:"WxOrderId" xml:"WxOrderId"`                         // 退款单对应支付单的微信单号
-	MchOrderID               string       `json:"MchOrderId" xml:"MchOrderId"`                       // 退款单对应支付单的商户单号
-	RefundFee                int          `json:"RefundFee" xml:"RefundFee"`                         // 退款金额，单位分
-	RetCode                  int          `json:"RetCode" xml:"RetCode"`                             // 退款结果，0 为成功
-	RetMsg                   string       `json:"RetMsg" xml:"RetMsg"`                               // 退款结果详情
-	RefundStartTimestamp     int64        `json:"RefundStartTimestamp" xml:"RefundStartTimestamp"`   // 开始退款时间，秒级时间戳
-	RefundSuccTimestamp      int64        `json:"RefundSuccTimestamp" xml:"RefundSuccTimestamp"`     // 结束退款时间，秒级时间戳
+	OpenID                   string       `json:"OpenId" xml:"OpenId"`                                     // 用户 openid
+	WxRefundID               string       `json:"WxRefundId" xml:"WxRefundId"`                             // 微信退款单号
+	MchRefundID              string       `json:"MchRefundId" xml:"MchRefundId"`                           // 商户退款单号
+	WxOrderID                string       `json:"WxOrderId" xml:"WxOrderId"`                               // 退款单对应支付单的微信单号
+	MchOrderID               string       `json:"MchOrderId" xml:"MchOrderId"`                             // 退款单对应支付单的商户单号
+	RefundFee                int          `json:"RefundFee" xml:"RefundFee"`                               // 退款金额，单位分
+	RetCode                  int          `json:"RetCode" xml:"RetCode"`                                   // 退款结果，0 为成功
+	RetMsg                   string       `json:"RetMsg" xml:"RetMsg"`                                     // 退款结果详情
+	RefundStartTimestamp     int64        `json:"RefundStartTimestamp" xml:"RefundStartTimestamp"`         // 开始退款时间，秒级时间戳
+	RefundSuccTimestamp      int64        `json:"RefundSuccTimestamp" xml:"RefundSuccTimestamp"`           // 结束退款时间，秒级时间戳
 	WxpayRefundTransactionID string       `json:"WxpayRefundTransactionId" xml:"WxpayRefundTransactionId"` // 退款单的微信支付单号
-	RetryTimes               int          `json:"RetryTimes" xml:"RetryTimes"`                       // 重试次数，从 0 开始
-	TeamInfo                 XpayTeamInfo `json:"TeamInfo" xml:"TeamInfo"`                           // 拼团信息
+	RetryTimes               int          `json:"RetryTimes" xml:"RetryTimes"`                             // 重试次数，从 0 开始
+	TeamInfo                 XpayTeamInfo `json:"TeamInfo" xml:"TeamInfo"`                                 // 拼团信息
 }
 
 // PushDataXpayComplaintNotify 用户投诉推送
 type PushDataXpayComplaintNotify struct {
 	CommonPushData
-	OpenID          string `json:"OpenId" xml:"OpenId"`                               // 用户 openid
-	WxOrderID       string `json:"WxOrderId" xml:"WxOrderId"`                         // 微信单号
-	MchOrderID      string `json:"MchOrderId" xml:"MchOrderId"`                       // 商户单号
-	TransactionID   string `json:"TransactionId" xml:"TransactionId"`                 // 微信支付交易单号
-	ComplaintID     string `json:"ComplaintId" xml:"ComplaintId"`                     // 投诉单号
-	ComplaintDetail string `json:"ComplaintDetail" xml:"ComplaintDetail"`             // 投诉详情
-	ComplaintTime   int64  `json:"ComplaintTime" xml:"ComplaintTime"`                 // 投诉时间，秒级时间戳
-	RetryTimes      int    `json:"RetryTimes" xml:"RetryTimes"`                       // 重试次数，从 0 开始
-	RequestID       string `json:"RequestId" xml:"RequestId"`                         // 请求编号
+	OpenID          string `json:"OpenId" xml:"OpenId"`                   // 用户 openid
+	WxOrderID       string `json:"WxOrderId" xml:"WxOrderId"`             // 微信单号
+	MchOrderID      string `json:"MchOrderId" xml:"MchOrderId"`           // 商户单号
+	TransactionID   string `json:"TransactionId" xml:"TransactionId"`     // 微信支付交易单号
+	ComplaintID     string `json:"ComplaintId" xml:"ComplaintId"`         // 投诉单号
+	ComplaintDetail string `json:"ComplaintDetail" xml:"ComplaintDetail"` // 投诉详情
+	ComplaintTime   int64  `json:"ComplaintTime" xml:"ComplaintTime"`     // 投诉时间，秒级时间戳
+	RetryTimes      int    `json:"RetryTimes" xml:"RetryTimes"`           // 重试次数，从 0 开始
+	RequestID       string `json:"RequestId" xml:"RequestId"`             // 请求编号
 }
