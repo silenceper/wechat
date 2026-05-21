@@ -439,6 +439,499 @@ func (s *VirtualPayment) QueryPublishGoods(ctx context.Context, in *QueryPublish
 	return
 }
 
+// StartDownloadOrder 发起下载小程序订单明细任务
+func (s *VirtualPayment) StartDownloadOrder(ctx context.Context, in *StartDownloadOrderRequest) (out StartDownloadOrderResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      startDownloadOrder,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "StartDownloadOrder")
+	return
+}
+
+// QueryDownloadOrder 查询下载订单任务结果
+func (s *VirtualPayment) QueryDownloadOrder(ctx context.Context, in *QueryDownloadOrderRequest) (out QueryDownloadOrderResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      queryDownloadOrder,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "QueryDownloadOrder")
+	return
+}
+
+// QueryBizBalance 查询商家账户可提现余额
+func (s *VirtualPayment) QueryBizBalance(ctx context.Context, in *QueryBizBalanceRequest) (out QueryBizBalanceResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      queryBizBalance,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "QueryBizBalance")
+	return
+}
+
+// QueryTransferAccount 查询广告金充值账户
+func (s *VirtualPayment) QueryTransferAccount(ctx context.Context, in *QueryTransferAccountRequest) (out QueryTransferAccountResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      queryTransferAccount,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "QueryTransferAccount")
+	return
+}
+
+// QueryAdverFunds 查询广告金发放记录
+func (s *VirtualPayment) QueryAdverFunds(ctx context.Context, in *QueryAdverFundsRequest) (out QueryAdverFundsResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      queryAdverFunds,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "QueryAdverFunds")
+	return
+}
+
+// CreateFundsBill 充值广告金
+func (s *VirtualPayment) CreateFundsBill(ctx context.Context, in *CreateFundsBillRequest) (out CreateFundsBillResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      createFundsBill,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "CreateFundsBill")
+	return
+}
+
+// BindTransferAccount 绑定广告金充值账户
+func (s *VirtualPayment) BindTransferAccount(ctx context.Context, in *BindTransferAccountRequest) (out BindTransferAccountResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      bindTransferAccount,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "BindTransferAccount")
+	return
+}
+
+// QueryFundsBill 查询广告金充值记录
+func (s *VirtualPayment) QueryFundsBill(ctx context.Context, in *QueryFundsBillRequest) (out QueryFundsBillResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      queryFundsBill,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "QueryFundsBill")
+	return
+}
+
+// QueryRecoverBill 查询广告金回收记录
+func (s *VirtualPayment) QueryRecoverBill(ctx context.Context, in *QueryRecoverBillRequest) (out QueryRecoverBillResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      queryRecoverBill,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "QueryRecoverBill")
+	return
+}
+
+// DownloadAdverFundsOrder 下载广告金对应的商户订单信息
+func (s *VirtualPayment) DownloadAdverFundsOrder(ctx context.Context, in *DownloadAdverFundsOrderRequest) (out DownloadAdverFundsOrderResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      downloadAdverFundsOrder,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "DownloadAdverFundsOrder")
+	return
+}
+
+// GetComplaintList 获取投诉列表
+func (s *VirtualPayment) GetComplaintList(ctx context.Context, in *GetComplaintListRequest) (out GetComplaintListResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      getComplaintList,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "GetComplaintList")
+	return
+}
+
+// GetComplaintDetail 获取投诉详情
+func (s *VirtualPayment) GetComplaintDetail(ctx context.Context, in *GetComplaintDetailRequest) (out GetComplaintDetailResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      getComplaintDetail,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "GetComplaintDetail")
+	return
+}
+
+// GetNegotiationHistory 获取协商历史
+func (s *VirtualPayment) GetNegotiationHistory(ctx context.Context, in *GetNegotiationHistoryRequest) (out GetNegotiationHistoryResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      getNegotiationHistory,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "GetNegotiationHistory")
+	return
+}
+
+// ResponseComplaint 回复用户
+func (s *VirtualPayment) ResponseComplaint(ctx context.Context, in *ResponseComplaintRequest) (out ResponseComplaintResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      responseComplaint,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "ResponseComplaint")
+	return
+}
+
+// CompleteComplaint 完成投诉处理
+func (s *VirtualPayment) CompleteComplaint(ctx context.Context, in *CompleteComplaintRequest) (out CompleteComplaintResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      completeComplaint,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "CompleteComplaint")
+	return
+}
+
+// UploadVPFile 上传媒体文件
+func (s *VirtualPayment) UploadVPFile(ctx context.Context, in *UploadVPFileRequest) (out UploadVPFileResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      uploadVPFile,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "UploadVPFile")
+	return
+}
+
+// GetUploadFileSign 获取微信支付反馈投诉图片的签名头部
+func (s *VirtualPayment) GetUploadFileSign(ctx context.Context, in *GetUploadFileSignRequest) (out GetUploadFileSignResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      getUploadFileSign,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "GetUploadFileSign")
+	return
+}
+
 // hmacSha256 hmac sha256
 func (s *VirtualPayment) hmacSha256(key, data string) string {
 	h := hmac.New(sha256.New, []byte(key))
@@ -493,6 +986,23 @@ func (s *VirtualPayment) requestAddress(params URLParams) (url string, err error
 	case queryUploadGoods:
 	case startPublishGoods:
 	case queryPublishGoods:
+	case startDownloadOrder:
+	case queryDownloadOrder:
+	case queryBizBalance:
+	case queryTransferAccount:
+	case queryAdverFunds:
+	case createFundsBill:
+	case bindTransferAccount:
+	case queryFundsBill:
+	case queryRecoverBill:
+	case downloadAdverFundsOrder:
+	case getComplaintList:
+	case getComplaintDetail:
+	case getNegotiationHistory:
+	case responseComplaint:
+	case completeComplaint:
+	case uploadVPFile:
+	case getUploadFileSign:
 		if params.PaySign, err = s.PaySign(params.Path, params.Content); err != nil {
 			return
 		}
