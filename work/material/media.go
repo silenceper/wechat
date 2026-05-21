@@ -191,12 +191,6 @@ func (r *Client) GetTempFile(mediaID string) ([]byte, error) {
 		return nil, err
 	}
 
-	// 检查响应是否为错误信息
-	err = util.DecodeWithCommonError(response, "GetTempFile")
-	if err != nil {
-		return nil, err
-	}
-
-	// 如果不是错误响应，则返回原始数据
-	return response, nil
+	// 检查响应是否为错误信息，如果不是错误响应，则返回原始数据
+	return util.HandleFileResponse(response, "GetTempFile")
 }

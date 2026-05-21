@@ -14,7 +14,8 @@ const (
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/url-scheme/urlscheme.query.html#参数
 type QueryScheme struct {
 	// 小程序 scheme 码
-	Scheme string `json:"scheme"`
+	Scheme    string `json:"scheme"`
+	QueryType int    `json:"query_type"`
 }
 
 // SchemeInfo scheme 配置
@@ -33,34 +34,47 @@ type SchemeInfo struct {
 	EnvVersion EnvVersion `json:"env_version"`
 }
 
-// resQueryScheme 返回结构体
+// QuotaInfo quota 配置
+type QuotaInfo struct {
+	RemainVisitQuota int64 `json:"remain_visit_quota"`
+}
+
+// ResQueryScheme 返回结构体
 // https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/url-scheme/urlscheme.query.html#参数
-type resQueryScheme struct {
+type ResQueryScheme struct {
 	// 通用错误
 	util.CommonError
 	// scheme 配置
 	SchemeInfo SchemeInfo `json:"scheme_info"`
 	// 访问该链接的openid，没有用户访问过则为空字符串
-	VisitOpenid string `json:"visit_openid"`
+	VisitOpenid string    `json:"visit_openid"`
+	QuotaInfo   QuotaInfo `json:"quota_info"`
 }
 
 // QueryScheme 查询小程序 scheme 码
 func (u *URLScheme) QueryScheme(querySchemeParams QueryScheme) (schemeInfo SchemeInfo, visitOpenid string, err error) {
-	var accessToken string
-	accessToken, err = u.GetAccessToken()
+	res, err := u.QuerySchemeWithRes(querySchemeParams)
 	if err != nil {
 		return
 	}
-
-	urlStr := fmt.Sprintf(querySchemeURL, accessToken)
-	var response []byte
-	response, err = util.PostJSON(urlStr, querySchemeParams)
-	if err != nil {
-		return
-	}
-
-	// 使用通用方法返回错误
-	var res resQueryScheme
-	err = util.DecodeWithError(response, &res, "QueryScheme")
 	return res.SchemeInfo, res.VisitOpenid, err
+}
+
+// QuerySchemeWithRes 查询scheme码
+// see https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/qrcode-link/url-scheme/queryScheme.html
+func (u *URLScheme) QuerySchemeWithRes(req QueryScheme) (*ResQueryScheme, error) {
+	var (
+		accessToken string
+		err         error
+	)
+	if accessToken, err = u.GetAccessToken(); err != nil {
+		return nil, err
+	}
+	var response []byte
+	if response, err = util.PostJSON(fmt.Sprintf(querySchemeURL, accessToken), req); err != nil {
+		return nil, err
+	}
+	result := &ResQueryScheme{}
+	err = util.DecodeWithError(response, result, "QueryScheme")
+	return result, err
 }
