@@ -448,6 +448,7 @@ type PushDataXpayGoodsDeliverNotify struct {
 	Env           int           `json:"Env" xml:"Env"`                     // ，环境配置 0：现网环境（也叫正式环境）1：沙箱环境
 	WeChatPayInfo WeChatPayInfo `json:"WeChatPayInfo" xml:"WeChatPayInfo"` // 微信支付信息 非微信支付渠道可能没有
 	GoodsInfo     GoodsInfo     `json:"GoodsInfo" xml:"GoodsInfo"`         // 道具参数信息
+	TeamInfo      XpayTeamInfo  `json:"TeamInfo" xml:"TeamInfo"`           // 拼团信息
 }
 
 // WeChatPayInfo 微信支付信息
