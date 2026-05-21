@@ -212,8 +212,7 @@ func (receiver *PushReceiver) getEvent(dataType string, eventType EventType, dec
 	case EventTypeXpayRefundNotify:
 		// 退款推送事件
 		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataXpayRefundNotify{})
-	case EventTypeXpaySubscribeIosRefundQueryNotify:
-		// iOS Apple 支付退款问询事件
+	case EventTypeXpaySubscribeIosRefundQueryNotify: // iOS Apple 支付退款问询事件
 		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataXpaySubscribeIosRefundQueryNotify{})
 	case EventTypeXpayComplaintNotify:
 		// 用户投诉推送事件
