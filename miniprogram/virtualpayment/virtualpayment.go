@@ -55,7 +55,7 @@ func (s *VirtualPayment) QueryUserBalance(ctx context.Context, in *QueryUserBala
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -83,7 +83,7 @@ func (s *VirtualPayment) CurrencyPay(ctx context.Context, in *CurrencyPayRequest
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -111,7 +111,7 @@ func (s *VirtualPayment) QueryOrder(ctx context.Context, in *QueryOrderRequest) 
 		return
 	}
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -139,7 +139,7 @@ func (s *VirtualPayment) CancelCurrencyPay(ctx context.Context, in *CancelCurren
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -169,7 +169,7 @@ func (s *VirtualPayment) NotifyProvideGoods(ctx context.Context, in *NotifyProvi
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -198,7 +198,7 @@ func (s *VirtualPayment) PresentCurrency(ctx context.Context, in *PresentCurrenc
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -227,7 +227,7 @@ func (s *VirtualPayment) DownloadBill(ctx context.Context, in *DownloadBillReque
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -256,7 +256,7 @@ func (s *VirtualPayment) RefundOrder(ctx context.Context, in *RefundOrderRequest
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -285,7 +285,7 @@ func (s *VirtualPayment) CreateWithdrawOrder(ctx context.Context, in *CreateWith
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -314,7 +314,7 @@ func (s *VirtualPayment) QueryWithdrawOrder(ctx context.Context, in *QueryWithdr
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -343,7 +343,7 @@ func (s *VirtualPayment) StartUploadGoods(ctx context.Context, in *StartUploadGo
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -372,7 +372,7 @@ func (s *VirtualPayment) QueryUploadGoods(ctx context.Context, in *QueryUploadGo
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -401,7 +401,7 @@ func (s *VirtualPayment) StartPublishGoods(ctx context.Context, in *StartPublish
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -430,7 +430,7 @@ func (s *VirtualPayment) QueryPublishGoods(ctx context.Context, in *QueryPublish
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -459,7 +459,7 @@ func (s *VirtualPayment) StartDownloadOrder(ctx context.Context, in *StartDownlo
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -488,7 +488,7 @@ func (s *VirtualPayment) QueryDownloadOrder(ctx context.Context, in *QueryDownlo
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -517,7 +517,7 @@ func (s *VirtualPayment) QueryBizBalance(ctx context.Context, in *QueryBizBalanc
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -546,7 +546,7 @@ func (s *VirtualPayment) QueryTransferAccount(ctx context.Context, in *QueryTran
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -575,7 +575,7 @@ func (s *VirtualPayment) QueryAdverFunds(ctx context.Context, in *QueryAdverFund
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -604,7 +604,7 @@ func (s *VirtualPayment) CreateFundsBill(ctx context.Context, in *CreateFundsBil
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -633,7 +633,7 @@ func (s *VirtualPayment) BindTransferAccount(ctx context.Context, in *BindTransf
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -662,7 +662,7 @@ func (s *VirtualPayment) QueryFundsBill(ctx context.Context, in *QueryFundsBillR
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -691,7 +691,7 @@ func (s *VirtualPayment) QueryRecoverBill(ctx context.Context, in *QueryRecoverB
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -720,7 +720,7 @@ func (s *VirtualPayment) DownloadAdverFundsOrder(ctx context.Context, in *Downlo
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -749,7 +749,7 @@ func (s *VirtualPayment) GetComplaintList(ctx context.Context, in *GetComplaintL
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -778,7 +778,7 @@ func (s *VirtualPayment) GetComplaintDetail(ctx context.Context, in *GetComplain
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -807,7 +807,7 @@ func (s *VirtualPayment) GetNegotiationHistory(ctx context.Context, in *GetNegot
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -836,7 +836,7 @@ func (s *VirtualPayment) ResponseComplaint(ctx context.Context, in *ResponseComp
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -865,7 +865,7 @@ func (s *VirtualPayment) CompleteComplaint(ctx context.Context, in *CompleteComp
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -894,7 +894,7 @@ func (s *VirtualPayment) UploadVPFile(ctx context.Context, in *UploadVPFileReque
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -923,7 +923,7 @@ func (s *VirtualPayment) GetUploadFileSign(ctx context.Context, in *GetUploadFil
 	}
 
 	var response []byte
-	if response, err = util.PostJSONContext(ctx, address, in); err != nil {
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
 		return
 	}
 
@@ -937,6 +937,13 @@ func (s *VirtualPayment) hmacSha256(key, data string) string {
 	h := hmac.New(sha256.New, []byte(key))
 	h.Write([]byte(data))
 	return hex.EncodeToString(h.Sum(nil))
+}
+
+// postJSONBytesContext POST JSON bytes with context
+func postJSONBytesContext(ctx context.Context, address string, jsonByte []byte) ([]byte, error) {
+	return util.HTTPPostContext(ctx, address, jsonByte, map[string]string{
+		"Content-Type": "application/json;charset=utf-8",
+	})
 }
 
 // PaySign pay sign
