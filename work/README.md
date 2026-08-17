@@ -21,7 +21,7 @@ wc := work.NewWork(&config.Config{
 meetingClient := wc.GetMeeting()
 
 //创建预约会议
-resp, err := meetingClient.MeetingCreate(&meeting.MeetingCreateRequest{
+resp, err := meetingClient.MeetingCreate(&meeting.CreateRequest{
     AdminUserID:     "zhangsan",
     Title:           "新建会议",
     MeetingStart:    1600000000,
@@ -40,12 +40,12 @@ resp, err := meetingClient.MeetingCreate(&meeting.MeetingCreateRequest{
 })
 
 //获取会议详情
-info, err := meetingClient.MeetingGetInfo(&meeting.MeetingGetInfoRequest{
+info, err := meetingClient.MeetingGetInfo(&meeting.GetInfoRequest{
     MeetingID: "XXXXXXXXX",
 })
 
 //取消预约会议
-err = meetingClient.MeetingCancel(&meeting.MeetingCancelRequest{
+err = meetingClient.MeetingCancel(&meeting.CancelRequest{
     MeetingID: "XXXXXXXXX",
 })
 ```

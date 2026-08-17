@@ -20,8 +20,8 @@ const (
 )
 
 type (
-	// MeetingCreateRequest 创建预约会议请求
-	MeetingCreateRequest struct {
+	// CreateRequest 创建预约会议请求
+	CreateRequest struct {
 		AdminUserID     string     `json:"admin_userid"`
 		Title           string     `json:"title"`
 		MeetingStart    uint32     `json:"meeting_start,omitempty"`
@@ -36,8 +36,8 @@ type (
 		Reminders       *Reminders `json:"reminders,omitempty"`
 	}
 
-	// MeetingCreateResponse 创建预约会议响应
-	MeetingCreateResponse struct {
+	// CreateResponse 创建预约会议响应
+	CreateResponse struct {
 		util.CommonError
 		MeetingID   string   `json:"meetingid"`
 		ExcessUsers []string `json:"excess_users"`
@@ -45,8 +45,8 @@ type (
 		MeetingLink string   `json:"meeting_link"`
 	}
 
-	// MeetingUpdateRequest 修改预约会议请求
-	MeetingUpdateRequest struct {
+	// UpdateRequest 修改预约会议请求
+	UpdateRequest struct {
 		MeetingID       string     `json:"meetingid"`
 		Title           string     `json:"title,omitempty"`
 		MeetingStart    uint32     `json:"meeting_start,omitempty"`
@@ -59,27 +59,27 @@ type (
 		Reminders       *Reminders `json:"reminders,omitempty"`
 	}
 
-	// MeetingUpdateResponse 修改预约会议响应
-	MeetingUpdateResponse struct {
+	// UpdateResponse 修改预约会议响应
+	UpdateResponse struct {
 		util.CommonError
 		ExcessUsers []string `json:"excess_users"`
 	}
 
-	// MeetingCancelRequest 取消预约会议请求
-	MeetingCancelRequest struct {
+	// CancelRequest 取消预约会议请求
+	CancelRequest struct {
 		MeetingID    string `json:"meetingid"`
 		SubMeetingID string `json:"sub_meetingid,omitempty"`
 	}
 
-	// MeetingGetInfoRequest 获取会议详情请求
-	MeetingGetInfoRequest struct {
+	// GetInfoRequest 获取会议详情请求
+	GetInfoRequest struct {
 		MeetingID    string `json:"meetingid,omitempty"`
 		MeetingCode  string `json:"meeting_code,omitempty"`
 		SubMeetingID string `json:"sub_meetingid,omitempty"`
 	}
 
-	// MeetingGetInfoResponse 获取会议详情响应
-	MeetingGetInfoResponse struct {
+	// GetInfoResponse 获取会议详情响应
+	GetInfoResponse struct {
 		util.CommonError
 		AdminUserID         string           `json:"admin_userid"`
 		Title               string           `json:"title"`
@@ -124,7 +124,7 @@ type (
 
 // MeetingCreate 创建预约会议
 // see https://developer.work.weixin.qq.com/document/path/98148
-func (r *Client) MeetingCreate(req *MeetingCreateRequest) (*MeetingCreateResponse, error) {
+func (r *Client) MeetingCreate(req *CreateRequest) (*CreateResponse, error) {
 	var (
 		accessToken string
 		err         error
@@ -136,14 +136,14 @@ func (r *Client) MeetingCreate(req *MeetingCreateRequest) (*MeetingCreateRespons
 	if response, err = util.PostJSON(fmt.Sprintf(meetingCreateURL, accessToken), req); err != nil {
 		return nil, err
 	}
-	result := &MeetingCreateResponse{}
+	result := &CreateResponse{}
 	err = util.DecodeWithError(response, result, "MeetingCreate")
 	return result, err
 }
 
 // MeetingUpdate 修改预约会议
 // see https://developer.work.weixin.qq.com/document/path/98154
-func (r *Client) MeetingUpdate(req *MeetingUpdateRequest) (*MeetingUpdateResponse, error) {
+func (r *Client) MeetingUpdate(req *UpdateRequest) (*UpdateResponse, error) {
 	var (
 		accessToken string
 		err         error
@@ -155,14 +155,14 @@ func (r *Client) MeetingUpdate(req *MeetingUpdateRequest) (*MeetingUpdateRespons
 	if response, err = util.PostJSON(fmt.Sprintf(meetingUpdateURL, accessToken), req); err != nil {
 		return nil, err
 	}
-	result := &MeetingUpdateResponse{}
+	result := &UpdateResponse{}
 	err = util.DecodeWithError(response, result, "MeetingUpdate")
 	return result, err
 }
 
 // MeetingCancel 取消预约会议
 // see https://developer.work.weixin.qq.com/document/path/98153
-func (r *Client) MeetingCancel(req *MeetingCancelRequest) error {
+func (r *Client) MeetingCancel(req *CancelRequest) error {
 	var (
 		accessToken string
 		err         error
@@ -179,7 +179,7 @@ func (r *Client) MeetingCancel(req *MeetingCancelRequest) error {
 
 // MeetingGetInfo 获取会议详情
 // see https://developer.work.weixin.qq.com/document/path/98149
-func (r *Client) MeetingGetInfo(req *MeetingGetInfoRequest) (*MeetingGetInfoResponse, error) {
+func (r *Client) MeetingGetInfo(req *GetInfoRequest) (*GetInfoResponse, error) {
 	var (
 		accessToken string
 		err         error
@@ -191,7 +191,7 @@ func (r *Client) MeetingGetInfo(req *MeetingGetInfoRequest) (*MeetingGetInfoResp
 	if response, err = util.PostJSON(fmt.Sprintf(meetingGetInfoURL, accessToken), req); err != nil {
 		return nil, err
 	}
-	result := &MeetingGetInfoResponse{}
+	result := &GetInfoResponse{}
 	err = util.DecodeWithError(response, result, "MeetingGetInfo")
 	return result, err
 }

@@ -67,12 +67,12 @@ type Reminders struct {
 
 // Attendees 会议成员
 type Attendees struct {
-	Member          []*MeetingMember   `json:"member"`
+	Member          []*Member          `json:"member"`
 	TmpExternalUser []*TmpExternalUser `json:"tmp_external_user"`
 }
 
-// MeetingMember 企业内部成员
-type MeetingMember struct {
+// Member 企业内部成员
+type Member struct {
 	UserID         string `json:"userid"`
 	Status         uint32 `json:"status"`
 	FirstJoinTime  uint32 `json:"first_join_time"`
