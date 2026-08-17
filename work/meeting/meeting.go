@@ -26,8 +26,8 @@ type (
 		Title           string     `json:"title"`
 		MeetingStart    uint32     `json:"meeting_start,omitempty"`
 		MeetingDuration uint32     `json:"meeting_duration,omitempty"`
-		Description     string     `json:"description,omitempty"`
-		Location        string     `json:"location,omitempty"`
+		Description     string     `json:"description"`
+		Location        string     `json:"location"`
 		AgentID         uint32     `json:"agentid,omitempty"`
 		Invitees        *Invitees  `json:"invitees,omitempty"`
 		Guests          []*Guest   `json:"guests,omitempty"`

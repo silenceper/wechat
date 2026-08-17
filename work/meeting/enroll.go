@@ -27,9 +27,9 @@ type (
 	// EnrollSetConfigRequest 修改会议报名配置请求
 	EnrollSetConfigRequest struct {
 		MeetingID                    string            `json:"meetingid"`
-		ApproveType                  int32             `json:"approve_type,omitempty"`
-		IsCollectQuestion            int32             `json:"is_collect_question,omitempty"`
-		QuestionList                 []*EnrollQuestion `json:"question_list,omitempty"`
+		ApproveType                  int32             `json:"approve_type"`
+		IsCollectQuestion            int32             `json:"is_collect_question"`
+		QuestionList                 []*EnrollQuestion `json:"question_list"`
 		NoRegistrationNeededForStaff *bool             `json:"no_registration_needed_for_staff,omitempty"`
 	}
 

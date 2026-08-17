@@ -24,10 +24,10 @@ type RingUsers struct {
 
 // Settings 会议配置
 type Settings struct {
-	Password                  string     `json:"password,omitempty"`
-	EnableWaitingRoom         *bool      `json:"enable_waiting_room,omitempty"`
-	AllowEnterBeforeHost      *bool      `json:"allow_enter_before_host,omitempty"`
-	EnableEnterMute           uint32     `json:"enable_enter_mute,omitempty"`
+	Password                  string     `json:"password"`
+	EnableWaitingRoom         *bool      `json:"enable_waiting_room"`
+	AllowEnterBeforeHost      *bool      `json:"allow_enter_before_host"`
+	EnableEnterMute           uint32     `json:"enable_enter_mute"`
 	AllowUnmuteSelf           *bool      `json:"allow_unmute_self,omitempty"`
 	MuteAll                   *bool      `json:"mute_all,omitempty"`
 	AllowExternalUser         *bool      `json:"allow_external_user,omitempty"`
