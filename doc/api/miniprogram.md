@@ -48,3 +48,12 @@ TODO
 | :----------------: | -------- | :------------------- | ---------- | ------------------------------------------ |
 | 获取用户的安全等级 | POST     | /wxa/getuserriskrank | YES        | (riskControl *RiskControl) GetUserRiskRank |
 
+
+## 学生身份
+
+[官方文档](https://developers.weixin.qq.com/miniprogram/dev/server/API/student/api_quickcheckstudentidentity.html)
+
+|       名称       | 请求方式 | URL                             | 是否已实现 | 使用方法                                        |
+| :--------------: | -------- | :------------------------------ | ---------- | ----------------------------------------------- |
+| 快速获取学生身份 | POST     | /intp/quickcheckstudentidentity | YES        | (student *Student) QuickCheckStudentIdentity    |
+

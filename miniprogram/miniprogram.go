@@ -11,6 +11,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/context"
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/express"
+	"github.com/silenceper/wechat/v2/miniprogram/generic"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
 	"github.com/silenceper/wechat/v2/miniprogram/minidrama"
 	"github.com/silenceper/wechat/v2/miniprogram/ocr"
@@ -22,6 +23,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/riskcontrol"
 	"github.com/silenceper/wechat/v2/miniprogram/security"
 	"github.com/silenceper/wechat/v2/miniprogram/shortlink"
+	"github.com/silenceper/wechat/v2/miniprogram/student"
 	"github.com/silenceper/wechat/v2/miniprogram/subscribe"
 	"github.com/silenceper/wechat/v2/miniprogram/tcb"
 	"github.com/silenceper/wechat/v2/miniprogram/urllink"
@@ -201,4 +203,14 @@ func (miniProgram *MiniProgram) GetOCR() *ocr.OCR {
 // GetIntracity 同城配送接口
 func (miniProgram *MiniProgram) GetIntracity() *express.Express {
 	return express.NewExpress(miniProgram.ctx)
+}
+
+// GetStudent 学生身份核验接口
+func (miniProgram *MiniProgram) GetStudent() *student.Student {
+	return student.NewStudent(miniProgram.ctx)
+}
+
+// GetGeneric 通用 API 调用，用于访问 SDK 尚未封装的接口
+func (miniProgram *MiniProgram) GetGeneric() *generic.Generic {
+	return generic.NewGeneric(miniProgram.ctx)
 }
