@@ -12,6 +12,7 @@ import (
 	"github.com/silenceper/wechat/v2/work/jsapi"
 	"github.com/silenceper/wechat/v2/work/kf"
 	"github.com/silenceper/wechat/v2/work/material"
+	"github.com/silenceper/wechat/v2/work/meeting"
 	"github.com/silenceper/wechat/v2/work/message"
 	"github.com/silenceper/wechat/v2/work/msgaudit"
 	"github.com/silenceper/wechat/v2/work/oauth"
@@ -96,4 +97,9 @@ func (wk *Work) GetInvoice() *invoice.Client {
 // GetCheckin 获取打卡接口实例
 func (wk *Work) GetCheckin() *checkin.Client {
 	return checkin.NewClient(wk.ctx)
+}
+
+// GetMeeting 获取会议接口实例
+func (wk *Work) GetMeeting() *meeting.Client {
+	return meeting.NewClient(wk.ctx)
 }
