@@ -146,8 +146,8 @@ type OrderItem struct {
 	WxPayOrderID   string      `json:"wxpay_order_id"`   // 微信支付交易单号，为用户微信支付详情页面上的交易单号
 	SettTime       int64       `json:"sett_time"`        // 结算时间的秒级时间戳，大于0表示结算成功
 	SettState      int         `json:"sett_state"`       // 结算状态 0-未开始结算 1-结算中 2-结算成功 3-待结算（与0相同）
-	PlatformFeeFen int64       `json:"platform_fee_fen"` // 虚拟支付技术服务费，单位为分；sett_state = 2 时返回
-	CpsFeeFen      int64       `json:"cps_fee_fen"`      // 公众号、视频号平台的 cps 服务费，单位为分；sett_state = 2 时返回
+	PlatformFeeFen int         `json:"platform_fee_fen"` // 虚拟支付技术服务费，单位为分；sett_state = 2 时返回
+	CpsFeeFen      int         `json:"cps_fee_fen"`      // 公众号、视频号平台的 cps 服务费，单位为分；sett_state = 2 时返回
 }
 
 // QueryOrderResponse 查询创建的订单（现金单，非代币单）响应参数
@@ -190,7 +190,7 @@ type NotifyProvideGoodsResponse struct {
 
 // PresentCurrencyRequest 赠送代币，请求参数
 // 代币赠送接口，由于目前不支付按单号查赠送单的功能，所以当需要赠送的时候可以一直重试到返回 0 或者返回 268490004（重复操作）为止
-// 1. 需要用户态签名与支付签名
+// 1. 使用支付签名
 // POST，请求参数为 json 字符串，Content-Type 为 application/json
 type PresentCurrencyRequest struct {
 	CommonRequest
@@ -738,7 +738,7 @@ type DownloadAdverFundsOrderResponse struct {
 type ComplaintOrderInfo struct {
 	TransactionID string `json:"transaction_id"`   // 投诉单关联的微信支付交易单号
 	OutTradeNo    string `json:"out_trade_no"`     // 渠道单号，query_order 接口返回的 channel_order_id
-	Amount        int64  `json:"amount"`           // 订单金额，单位（分）
+	Amount        int    `json:"amount"`           // 订单金额，单位（分）
 	WxaOutTradeNo string `json:"wxa_out_trade_no"` // 商户单号，商家在拉起支付时传的单号
 	WxOrderID     string `json:"wx_order_id"`      // 小程序侧单号
 }
@@ -771,7 +771,7 @@ type ComplaintItem struct {
 	ComplaintMediaList    []*ComplaintMedia            `json:"complaint_media_list"`    // 用户上传的投诉相关资料，包括图片凭证等
 	ProblemDescription    string                       `json:"problem_description"`     // 用户发起投诉前选择的 faq 标题
 	ProblemType           string                       `json:"problem_type"`            // 问题类型 REFUND-申请退款 SERVICE_NOT_WORK-服务权益未生效 OTHERS-其他类型
-	ApplyRefundAmount     int64                        `json:"apply_refund_amount"`     // 问题类型为申请退款时有值，单位分
+	ApplyRefundAmount     int                          `json:"apply_refund_amount"`     // 问题类型为申请退款时有值，单位分
 	UserTagList           []string                     `json:"user_tag_list"`           // 用户标签列表 TRUSTED-满足极速退款条件 HIGH_RISK-高风险投诉
 	ServiceOrderInfo      []*ComplaintServiceOrderInfo `json:"service_order_info"`      // 投诉单关联服务单信息
 }
@@ -904,7 +904,7 @@ type QuerySubscribeContractResponse struct {
 // SendSubscribePrePaymentRequest 预通知扣款，请求参数
 type SendSubscribePrePaymentRequest struct {
 	OpenID          string `json:"openid"`            // 用户的openid
-	DeductPrice     int64  `json:"deduct_price"`      // 金额/分，属于 [100，道具价格]
+	DeductPrice     int    `json:"deduct_price"`      // 金额/分，属于 [100，道具价格]
 	ProductID       string `json:"product_id"`        // 道具 id，需为订阅制道具
 	OutContractCode string `json:"out_contract_code"` // 签约时传入的协议号
 }
@@ -920,11 +920,11 @@ type SendSubscribePrePaymentResponse struct {
 type SubmitSubscribePayOrderRequest struct {
 	OpenID       string `json:"openid"`        // 用户的openid
 	OfferID      string `json:"offer_id"`      // 在米大师侧申请的应用 id, mp-支付基础配置中的 offerid
-	BuyQuantity  int64  `json:"buy_quantity"`  // 购买数量，填：1
+	BuyQuantity  int    `json:"buy_quantity"`  // 购买数量，填：1
 	Env          Env    `json:"env,omitempty"` // 环境配置, 0 正式环境, 仅支持正式环境
 	CurrencyType string `json:"currency_type"` // 币种，填：CNY
 	ProductID    string `json:"product_id"`    // 订阅道具ID
-	DeductPrice  int64  `json:"deduct_price"`  // 扣款金额(分), 属于 [1，道具价格]
+	DeductPrice  int    `json:"deduct_price"`  // 扣款金额(分), 属于 [1，道具价格]
 	OrderID      string `json:"order_id"`      // 业务订单号，每个订单号只能使用一次，8-32 个字符
 	Attach       string `json:"attach"`        // 透传数据, 发货通知时会透传给开发者
 }
