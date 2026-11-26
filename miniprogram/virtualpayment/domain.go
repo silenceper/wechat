@@ -921,7 +921,7 @@ type SubmitSubscribePayOrderRequest struct {
 	OpenID       string `json:"openid"`        // 用户的openid
 	OfferID      string `json:"offer_id"`      // 在米大师侧申请的应用 id, mp-支付基础配置中的 offerid
 	BuyQuantity  int    `json:"buy_quantity"`  // 购买数量，填：1
-	Env          Env    `json:"env,omitempty"` // 环境配置, 0 正式环境, 仅支持正式环境
+	Env          Env    `json:"env"`           // 环境配置, 0 正式环境, 仅支持正式环境
 	CurrencyType string `json:"currency_type"` // 币种，填：CNY
 	ProductID    string `json:"product_id"`    // 订阅道具ID
 	DeductPrice  int    `json:"deduct_price"`  // 扣款金额(分), 属于 [1，道具价格]
@@ -971,18 +971,18 @@ type DownloadIosSettlementBillResponse struct {
 
 // RecoverySpecification 被管控原因及解脱路径
 type RecoverySpecification struct {
-	LimitationCaseID         string `json:"limitation_case_id"`         // 该条管控原因对应的单据号，可与管控流水通知中的 business_code 关联
-	LimitationReasonType     string `json:"limitation_reason_type"`     // 该条管控原因所属的类型
-	LimitationReason         string `json:"limitation_reason"`          // 该条管控原因的简要描述
-	LimitationReasonDescribe string `json:"limitation_reason_describe"` // 该条管控原因的进一步说明，便于开发者理解为何被管控
-	RelateLimitations        string `json:"relate_limitations"`         // 该条管控原因下具体受影响的能力列表
-	OtherRelateLimitations   string `json:"other_relate_limitations"`   // 该条原因下未被标准枚举覆盖的管控能力补充说明
-	RecoverWay               string `json:"recover_way"`                // 微信支付建议的处理路径，据此去微信支付商户平台进一步处理
-	RecoverWayParam          string `json:"recover_way_param"`          // 解脱路径对应的补充参数，例如尽调单号、申诉单号、有权机关信息或经营类型确认单号
-	RecoverHelpURL           string `json:"recover_help_url"`           // 微信支付提供的进一步说明页面
-	LimitationActionType     string `json:"limitation_action_type"`     // 该条管控原因对应的管控生效方式
-	LimitationStartDate      string `json:"limitation_start_date"`      // 处置方式为延迟管控时返回的预计开始时间
-	LimitationDate           string `json:"limitation_date"`            // 该条管控原因实际生效的时间
+	LimitationCaseID         string   `json:"limitation_case_id"`         // 该条管控原因对应的单据号，可与管控流水通知中的 business_code 关联
+	LimitationReasonType     string   `json:"limitation_reason_type"`     // 该条管控原因所属的类型
+	LimitationReason         string   `json:"limitation_reason"`          // 该条管控原因的简要描述
+	LimitationReasonDescribe string   `json:"limitation_reason_describe"` // 该条管控原因的进一步说明，便于开发者理解为何被管控
+	RelateLimitations        []string `json:"relate_limitations"`         // 该条管控原因下具体受影响的能力列表
+	OtherRelateLimitations   string   `json:"other_relate_limitations"`   // 该条原因下未被标准枚举覆盖的管控能力补充说明
+	RecoverWay               string   `json:"recover_way"`                // 微信支付建议的处理路径，据此去微信支付商户平台进一步处理
+	RecoverWayParam          string   `json:"recover_way_param"`          // 解脱路径对应的补充参数，例如尽调单号、申诉单号、有权机关信息或经营类型确认单号
+	RecoverHelpURL           string   `json:"recover_help_url"`           // 微信支付提供的进一步说明页面
+	LimitationActionType     string   `json:"limitation_action_type"`     // 该条管控原因对应的管控生效方式
+	LimitationStartDate      string   `json:"limitation_start_date"`      // 处置方式为延迟管控时返回的预计开始时间
+	LimitationDate           string   `json:"limitation_date"`            // 该条管控原因实际生效的时间
 }
 
 // QueryPunishmentReasonsRequest 商户被管控原因查询，请求参数（无请求参数）
