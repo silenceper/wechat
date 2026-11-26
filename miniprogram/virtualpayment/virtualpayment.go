@@ -1107,10 +1107,10 @@ func (s *VirtualPayment) QueryPunishmentReasons(ctx context.Context, in *QueryPu
 	return
 }
 
-// QueryOrderIdByIosOrder 查询苹果订单对应单号
+// QueryOrderIDByIosOrder 查询苹果订单对应单号
 // 通过用户侧 Apple 支付凭证号（ios_order_id）查询对应的商家交易单号及订单信息
 // 此能力受苹果服务的限制，不可请求过于频繁，请勿写轮询逻辑，也勿一次大批量调用
-func (s *VirtualPayment) QueryOrderIdByIosOrder(ctx context.Context, in *QueryOrderIdByIosOrderRequest) (out QueryOrderIdByIosOrderResponse, err error) {
+func (s *VirtualPayment) QueryOrderIDByIosOrder(ctx context.Context, in *QueryOrderIDByIosOrderRequest) (out QueryOrderIDByIosOrderResponse, err error) {
 	var jsonByte []byte
 	if jsonByte, err = json.Marshal(in); err != nil {
 		return
@@ -1118,7 +1118,7 @@ func (s *VirtualPayment) QueryOrderIdByIosOrder(ctx context.Context, in *QueryOr
 
 	var (
 		params = URLParams{
-			Path:      queryOrderIdByIosOrder,
+			Path:      queryOrderIDByIosOrder,
 			Content:   string(jsonByte),
 			Signature: EmptyString,
 		}
@@ -1134,7 +1134,7 @@ func (s *VirtualPayment) QueryOrderIdByIosOrder(ctx context.Context, in *QueryOr
 	}
 
 	// 使用通用方法返回错误
-	err = util.DecodeWithError(response, &out, "QueryOrderIdByIosOrder")
+	err = util.DecodeWithError(response, &out, "QueryOrderIDByIosOrder")
 	return
 }
 
@@ -1195,7 +1195,7 @@ func (s *VirtualPayment) requestAddress(params URLParams) (url string, err error
 		completeComplaint, uploadVPFile, getUploadFileSign,
 		querySubscribeContract, sendSubscribePrePayment, submitSubscribePayOrder,
 		cancelSubscribeContract, downloadIosSettlementBill, queryPunishmentReasons,
-		queryOrderIdByIosOrder:
+		queryOrderIDByIosOrder:
 		if params.PaySign, err = s.PaySign(params.Path, params.Content); err != nil {
 			return
 		}

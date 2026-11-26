@@ -1012,14 +1012,14 @@ type IosOrderInfo struct {
 	PaidCurrency          string `json:"paid_currency"`           // 实付币种
 }
 
-// QueryOrderIdByIosOrderRequest 查询苹果订单对应单号，请求参数
+// QueryOrderIDByIosOrderRequest 查询苹果订单对应单号，请求参数
 // 通过用户侧 Apple 支付凭证号（ios_order_id）查询对应的商家交易单号及订单信息
-type QueryOrderIdByIosOrderRequest struct {
+type QueryOrderIDByIosOrderRequest struct {
 	IosOrderID string `json:"ios_order_id"` // ios 订单侧订单号（Apple 支付凭证号）
 }
 
-// QueryOrderIdByIosOrderResponse 查询苹果订单对应单号 响应参数
-type QueryOrderIdByIosOrderResponse struct {
+// QueryOrderIDByIosOrderResponse 查询苹果订单对应单号 响应参数
+type QueryOrderIDByIosOrderResponse struct {
 	util.CommonError
 	OrderInfoList []*IosOrderInfo `json:"order_info_list"` // 查询到的订单列表，可能为空数组
 }

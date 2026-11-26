@@ -217,8 +217,8 @@ const (
 	// queryPunishmentReasons 商户被管控原因查询
 	queryPunishmentReasons = "/xpay/query_punishment_reasons"
 
-	// queryOrderIdByIosOrder 查询苹果订单对应单号
-	queryOrderIdByIosOrder = "/xpay/query_order_id_by_ios_order"
+	// queryOrderIDByIosOrder 查询苹果订单对应单号
+	queryOrderIDByIosOrder = "/xpay/query_order_id_by_ios_order"
 )
 
 const (

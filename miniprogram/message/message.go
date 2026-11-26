@@ -168,49 +168,31 @@ func (receiver *PushReceiver) getEvent(dataType string, eventType EventType, dec
 	switch eventType {
 	case EventTypeTradeManageRemindAccessAPI:
 		// 提醒接入发货信息管理服务 API
-		var pushData PushDataRemindAccessAPI
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataRemindAccessAPI{})
 	case EventTypeTradeManageRemindShipping:
 		// 提醒需要上传发货信息
-		var pushData PushDataRemindShipping
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataRemindShipping{})
 	case EventTypeTradeManageOrderSettlement:
 		// 订单将要结算或已经结算
-		var pushData PushDataOrderSettlement
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataOrderSettlement{})
 	case EventTypeWxaMediaCheck:
 		// 媒体内容安全异步审查结果通知
-		var pushData MediaCheckAsyncData
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &MediaCheckAsyncData{})
 	case EventTypeAddExpressPath:
 		// 运单轨迹更新
-		var pushData PushDataAddExpressPath
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataAddExpressPath{})
 	case EventTypeSecvodUpload:
 		// 短剧媒资上传完成
-		var pushData PushDataSecVodUpload
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataSecVodUpload{})
 	case EventTypeSecvodAudit:
 		// 短剧媒资审核状态
-		var pushData PushDataSecVodAudit
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataSecVodAudit{})
 	case EventTypeXpayGoodsDeliverNotify:
 		// 道具发货推送事件
-		var pushData PushDataXpayGoodsDeliverNotify
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataXpayGoodsDeliverNotify{})
 	case EventTypeXpayCoinPayNotify:
 		// 代币支付推送事件
-		var pushData PushDataXpayCoinPayNotify
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataXpayCoinPayNotify{})
 	case EventTypeXpayRefundNotify:
 		// 退款推送事件
 		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataXpayRefundNotify{})
