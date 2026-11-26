@@ -78,13 +78,13 @@ type QueryUserBalanceRequest struct {
 // QueryUserBalanceResponse 查询虚拟支付余额 响应参数
 type QueryUserBalanceResponse struct {
 	util.CommonError
-	Balance        int `json:"balance"`         // 代币总余额，包括有价和赠送部分
-	PresentBalance int `json:"present_balance"` // 赠送账户的代币余额
-	SumSave        int `json:"sum_save"`        // 累计有价货币充值数量
-	SumPresent     int `json:"sum_present"`     // 累计赠送无价货币数量
-	SumBalance     int `json:"sum_balance"`     // 历史总增加的代币金额
-	SumCost        int `json:"sum_cost"`        // 历史总消耗代币金额
-	FirstSaveFlag  int `json:"first_save_flag"` // 是否满足首充活动标记。0:不满足。1:满足
+	Balance        int  `json:"balance"`         // 代币总余额，包括有价和赠送部分
+	PresentBalance int  `json:"present_balance"` // 赠送账户的代币余额
+	SumSave        int  `json:"sum_save"`        // 累计有价货币充值数量
+	SumPresent     int  `json:"sum_present"`     // 累计赠送无价货币数量
+	SumBalance     int  `json:"sum_balance"`     // 历史总增加的代币金额
+	SumCost        int  `json:"sum_cost"`        // 历史总消耗代币金额
+	FirstSaveFlag  bool `json:"first_save_flag"` // 是否满足首充活动标记
 }
 
 // CurrencyPayRequest 扣减代币（一般用于代币支付）
@@ -92,12 +92,11 @@ type QueryUserBalanceResponse struct {
 // POST，请求参数为 json 字符串，Content-Type 为 application/json
 type CurrencyPayRequest struct {
 	CommonRequest
-	UserIP     string `json:"user_ip"`     // 用户 ip，例如：1.1.1.1
-	Amount     int    `json:"amount"`      // 支付的代币数量
-	OrderID    string `json:"order_id"`    // 商户订单号，需要保证唯一性
-	PayItem    string `json:"payitem"`     // 物品信息。记录到账户流水中。如:[{"productid":"物品 id", "unit_price": 单价，"quantity": 数量}]
-	Remark     string `json:"remark"`      // 备注信息。需要在账单中展示
-	DeviceType string `json:"device_type"` // 平台类型 1-安卓 2-苹果
+	UserIP  string `json:"user_ip"`  // 用户 ip，例如：1.1.1.1
+	Amount  int    `json:"amount"`   // 支付的代币数量
+	OrderID string `json:"order_id"` // 商户订单号，需要保证唯一性
+	PayItem string `json:"payitem"`  // 物品信息。记录到账户流水中。如:[{"productid":"物品 id", "unit_price": 单价，"quantity": 数量}]
+	Remark  string `json:"remark"`   // 备注信息。需要在账单中展示
 }
 
 // PayItem 物品信息
@@ -145,6 +144,10 @@ type OrderItem struct {
 	WxOrderID      string      `json:"wx_order_id"`      // 微信内部单号
 	ChannelOrderID string      `json:"channel_order_id"` // 渠道订单号，为用户微信支付详情页面上的商户单号
 	WxPayOrderID   string      `json:"wxpay_order_id"`   // 微信支付交易单号，为用户微信支付详情页面上的交易单号
+	SettTime       int64       `json:"sett_time"`        // 结算时间的秒级时间戳，大于0表示结算成功
+	SettState      int         `json:"sett_state"`       // 结算状态 0-未开始结算 1-结算中 2-结算成功 3-待结算（与0相同）
+	PlatformFeeFen int64       `json:"platform_fee_fen"` // 虚拟支付技术服务费，单位为分；sett_state = 2 时返回
+	CpsFeeFen      int64       `json:"cps_fee_fen"`      // 公众号、视频号平台的 cps 服务费，单位为分；sett_state = 2 时返回
 }
 
 // QueryOrderResponse 查询创建的订单（现金单，非代币单）响应参数
@@ -162,7 +165,6 @@ type CancelCurrencyPayRequest struct {
 	PayOrderID string `json:"pay_order_id"` // 支付单号 代币支付 (调用 currency_pay 接口时) 时传的 order_id
 	OrderID    string `json:"order_id"`     // 本次退款单的单号
 	Amount     int    `json:"amount"`       // 退款金额
-	DeviceType int    `json:"device_type"`  // 平台类型 1-安卓 2-苹果
 }
 
 // CancelCurrencyPayResponse 取消订单（现金单，非代币单）响应参数
@@ -192,9 +194,8 @@ type NotifyProvideGoodsResponse struct {
 // POST，请求参数为 json 字符串，Content-Type 为 application/json
 type PresentCurrencyRequest struct {
 	CommonRequest
-	OrderID    string `json:"order_id"`    // 赠送单号，商户订单号，需要保证唯一性
-	Amount     int    `json:"amount"`      // 赠送的代币数量
-	DeviceType string `json:"device_type"` // 平台类型 1-安卓 2-苹果
+	OrderID string `json:"order_id"` // 赠送单号，商户订单号，需要保证唯一性
+	Amount  int    `json:"amount"`   // 赠送的代币数量
 }
 
 // PresentCurrencyResponse 赠送代币响应参数
@@ -210,8 +211,8 @@ type PresentCurrencyResponse struct {
 // 1. 使用支付签名
 // POST，请求参数为 json 字符串，Content-Type 为 application/json
 type DownloadBillRequest struct {
-	BeginDs string `json:"begin_ds"` // 账单开始日期，格式为 yyyymmdd 起始时间（如 20230801）
-	EndDs   string `json:"end_ds"`   // 账单结束日期，格式为 yyyymmdd 结束时间（如 20230801）
+	BeginDs int64 `json:"begin_ds"` // 账单开始日期，格式为 yyyymmdd 起始时间（如 20230801）
+	EndDs   int64 `json:"end_ds"`   // 账单结束日期，格式为 yyyymmdd 结束时间（如 20230801）
 }
 
 // DownloadBillResponse 下载账单响应参数
@@ -226,14 +227,14 @@ type DownloadBillResponse struct {
 // POST，请求参数为 json 字符串，Content-Type 为 application/json
 type RefundOrderRequest struct {
 	CommonRequest
-	OrderID       string `json:"order_id"`        // 商户订单号，需要保证唯一性
-	WxOrderID     string `json:"wx_order_id"`     // 微信内部单号 (与 order_id 二选一)
-	RefundOrderID string `json:"refund_order_id"` // 退款单号，本次退款时需要传的单号，长度为 [8,32]，字符只允许使用字母、数字、'_'、'-'
-	LeftFee       int    `json:"left_fee"`        // 退款金额，单位：分 当前单剩余可退金额，单位分，可以通过调用 query_order 接口查到
-	RefundFee     int    `json:"refund_fee"`      // 退款金额，单位：分 需要 (0,left_fee] 之间
-	BizMeta       string `json:"biz_meta"`        // 商家自定义数据，传入后可在 query_order 接口查询时原样返回，长度需要 [0,1024]
-	RefundReason  string `json:"refund_reason"`   // 退款原因，当前仅支持以下值 0-暂无描述 1-产品问题，影响使用或效果不佳 2-售后问题，无法满足需求 3-意愿问题，用户主动退款 4-价格问题 5:其他原因
-	ReqFrom       string `json:"req_from"`        // 退款来源，当前仅支持以下值 1-人工客服退款，即用户电话给客服，由客服发起退款流程 2-用户自己发起退款流程 3-其它
+	OrderID       string `json:"order_id,omitempty"`    // 商户订单号，下单时的单号，与 wx_order_id 二选一
+	WxOrderID     string `json:"wx_order_id,omitempty"` // 微信内部单号 (与 order_id 二选一)
+	RefundOrderID string `json:"refund_order_id"`       // 退款单号，本次退款时需要传的单号，长度为 [8,32]，字符只允许使用字母、数字、'_'、'-'
+	LeftFee       int    `json:"left_fee"`              // 退款金额，单位：分 当前单剩余可退金额，单位分，可以通过调用 query_order 接口查到
+	RefundFee     int    `json:"refund_fee"`            // 退款金额，单位：分 需要 (0,left_fee] 之间
+	BizMeta       string `json:"biz_meta"`              // 商家自定义数据，传入后可在 query_order 接口查询时原样返回，长度需要 [0,1024]
+	RefundReason  string `json:"refund_reason"`         // 退款原因，当前仅支持以下值 0-暂无描述 1-产品问题，影响使用或效果不佳 2-售后问题，无法满足需求 3-意愿问题，用户主动退款 4-价格问题 5:其他原因
+	ReqFrom       string `json:"req_from"`              // 退款来源，当前仅支持以下值 1-人工客服退款，即用户电话给客服，由客服发起退款流程 2-用户自己发起退款流程 3-其它
 }
 
 // RefundOrderResponse 退款响应参数
@@ -273,12 +274,12 @@ type QueryWithdrawOrderRequest struct {
 type QueryWithdrawOrderResponse struct {
 	util.CommonError
 	WithdrawNO               string `json:"withdraw_no"`                // 提现单单号
-	Status                   int    `json:"status"`                     // 提现单的微信侧单号 1-创建成功，提现中 2-提现成功 3-提现失败
+	Status                   int    `json:"status"`                     // 提现状态 1-创建成功，提现中 2-提现成功 3-提现失败
 	WithdrawAmount           string `json:"withdraw_amount"`            // 提现的金额，单位元，例如提现 1 分钱请使用 0.01
 	WxWithdrawNo             string `json:"wx_withdraw_no"`             // 提现单的微信侧单号
-	WithdrawSuccessTimestamp int64  `json:"withdraw_success_timestamp"` // 提现单成功的秒级时间戳，unix 秒级时间戳
+	WithdrawSuccessTimestamp string `json:"withdraw_success_timestamp"` // 提现单成功的秒级时间戳
 	CreateTime               string `json:"create_time"`                // 提现单创建时间
-	FailReason               string `json:"failReason"`                 // 提现失败的原因
+	FailReason               string `json:"fail_reason"`                // 提现失败的原因
 }
 
 // StartUploadGoodsRequest 启动批量上传道具任务，请求参数
@@ -506,29 +507,38 @@ type AsyncXPayComplaintNotifyResponse struct {
 
 // ==================== 下载订单 ====================
 
-// StartDownloadOrderRequest 发起下载小程序订单明细任务，请求参数
+// StartDownloadOrderRequest 发起下载订单任务，请求参数
+// 成功后用 query_download_order 接口查询结果
 type StartDownloadOrderRequest struct {
-	Env     Env    `json:"env"`      // 环境 0-正式环境 1-沙箱环境
-	BeginDs string `json:"begin_ds"` // 账单开始日期，格式为 yyyymmdd
-	EndDs   string `json:"end_ds"`   // 账单结束日期，格式为 yyyymmdd
+	BeginDs      int64  `json:"begin_ds"`                // 开始日期，格式 YYYYMMDD
+	EndDs        int64  `json:"end_ds"`                  // 结束日期，格式 YYYYMMDD，与 begin_ds 间隔不超过 31 天
+	OrderType    int    `json:"order_type"`              // 订单类型 1-代币交易订单 2-道具直购交易订单 3-会员订阅订单 4-退款订单
+	OrderInfo    string `json:"order_info,omitempty"`    // 订单信息搜索关键字，支持按交易单号/商户单号/用户ID 模糊匹配
+	IsProvided   *bool  `json:"is_provided,omitempty"`   // 发货状态，order_type 为 2(道具) 或 3(会员订阅) 时必须传入；true-已发货 false-未发货；不传默认 true
+	RefundStatus *int   `json:"refund_status,omitempty"` // 退款状态筛选，仅 order_type=4(退款订单) 时有效；0-全部 2-已退款 4-退款中 5-退款失败；不传默认 0
+	Env          Env    `json:"env"`                     // 环境标识 0-现网 1-沙箱（用于基类签名校验）
+	PayChannel   int    `json:"pay_channel"`             // 支付渠道 1-普通虚拟支付 2-苹果IAP
 }
 
-// StartDownloadOrderResponse 发起下载小程序订单明细任务 响应参数
+// StartDownloadOrderResponse 发起下载订单任务 响应参数
 type StartDownloadOrderResponse struct {
 	util.CommonError
+	TaskID string `json:"task_id"` // 下载任务 ID，用于后续查询下载结果
 }
 
 // QueryDownloadOrderRequest 查询下载订单任务结果，请求参数
 type QueryDownloadOrderRequest struct {
-	Env     Env    `json:"env"`      // 环境 0-正式环境 1-沙箱环境
-	BeginDs string `json:"begin_ds"` // 账单开始日期，格式为 yyyymmdd
-	EndDs   string `json:"end_ds"`   // 账单结束日期，格式为 yyyymmdd
+	TaskID string `json:"task_id"` // 下载任务 ID，由 start_download_order 接口返回
+	Env    Env    `json:"env"`     // 环境标识 0-现网 1-沙箱（用于基类签名校验）
 }
 
 // QueryDownloadOrderResponse 查询下载订单任务结果 响应参数
 type QueryDownloadOrderResponse struct {
 	util.CommonError
-	URL string `json:"url"` // 订单下载地址
+	TaskID      string `json:"task_id"`      // 下载任务 ID，与请求参数对应
+	Status      int    `json:"status"`       // 任务状态 0-初始化 1-运行中 2-成功 3-失败
+	DownloadURL string `json:"download_url"` // 下载文件 URL，仅 status=2(成功) 时有值
+	ExpireAt    int64  `json:"expire_at"`    // URL 过期时间（Unix 秒级时间戳）
 }
 
 // ==================== 资金管理 ====================
@@ -726,31 +736,44 @@ type DownloadAdverFundsOrderResponse struct {
 
 // ComplaintOrderInfo 投诉关联订单信息
 type ComplaintOrderInfo struct {
-	TransactionID string `json:"transaction_id"` // 微信支付交易单号
-	MchOrderNo    string `json:"mch_order_no"`   // 商户订单号
-	RefundID      string `json:"refund_id"`      // 退款订单号
+	TransactionID string `json:"transaction_id"`   // 投诉单关联的微信支付交易单号
+	OutTradeNo    string `json:"out_trade_no"`     // 渠道单号，query_order 接口返回的 channel_order_id
+	Amount        int64  `json:"amount"`           // 订单金额，单位（分）
+	WxaOutTradeNo string `json:"wxa_out_trade_no"` // 商户单号，商家在拉起支付时传的单号
+	WxOrderID     string `json:"wx_order_id"`      // 小程序侧单号
 }
 
 // ComplaintMedia 投诉媒体信息
 type ComplaintMedia struct {
-	MediaType int      `json:"media_type"` // 媒体类型
-	MediaURL  string   `json:"media_url"`  // 媒体 URL
-	MediaTags []string `json:"media_tags"` // 媒体标签
+	MediaType string   `json:"media_type"` // 媒体文件对应的业务类型 USER_COMPLAINT_IMAGE-用户提交投诉时上传的图片凭证 OPERATION_IMAGE-用户、商户、微信支付客服在协商解决投诉时上传的图片凭证
+	MediaURL  []string `json:"media_url"`  // 媒体文件请求 url 列表
+}
+
+// ComplaintServiceOrderInfo 投诉单关联服务单信息
+type ComplaintServiceOrderInfo struct {
+	OrderID    string `json:"order_id"`     // 微信支付服务订单号
+	OutOrderNo string `json:"out_order_no"` // 商户系统内部服务订单号（不是交易单号）
+	State      string `json:"state"`        // 用户发起投诉时的服务单状态 DOING-进行中 REVOKED-已取消 WAITPAY-待支付 DONE-已完成
 }
 
 // ComplaintItem 投诉详情
 type ComplaintItem struct {
-	ComplaintID           string                `json:"complaint_id"`            // 投诉单号
-	ComplaintTime         string                `json:"complaint_time"`          // 投诉时间
-	ComplaintDetail       string                `json:"complaint_detail"`        // 投诉内容
-	ComplaintState        string                `json:"complaint_state"`         // 投诉状态 PENDING/PROCESSING/PROCESSED
-	PayerPhone            string                `json:"payer_phone"`             // 投诉人联系方式
-	PayerOpenID           string                `json:"payer_openid"`            // 投诉人 OpenID
-	ComplaintOrderInfo    []*ComplaintOrderInfo `json:"complaint_order_info"`    // 关联订单信息
-	ComplaintFullRefunded bool                  `json:"complaint_full_refunded"` // 是否全部退款
-	IncomingUserResponse  bool                  `json:"incoming_user_response"`  // 是否有待处理的用户消息
-	UserComplaintTimes    int                   `json:"user_complaint_times"`    // 用户投诉次数
-	ComplaintMediaList    []*ComplaintMedia     `json:"complaint_media_list"`    // 用户上传的证据
+	ComplaintID           string                       `json:"complaint_id"`            // 投诉单号
+	ComplaintTime         string                       `json:"complaint_time"`          // 投诉时间 格式为yyyy-mm-dd'T'HH:MM:ssXXX，其中XXX为时区偏移
+	ComplaintDetail       string                       `json:"complaint_detail"`        // 投诉内容
+	ComplaintState        string                       `json:"complaint_state"`         // 投诉状态 PENDING-待处理 PROCESSING-处理中 PROCESSED-已处理完成
+	PayerPhone            string                       `json:"payer_phone"`             // 投诉人联系方式
+	PayerOpenID           string                       `json:"payer_openid"`            // 投诉人在商户AppID下的唯一标识
+	ComplaintOrderInfo    []*ComplaintOrderInfo        `json:"complaint_order_info"`    // 关联订单信息
+	ComplaintFullRefunded bool                         `json:"complaint_full_refunded"` // 投诉单下所有订单是否已全部全额退款
+	IncomingUserResponse  bool                         `json:"incoming_user_response"`  // 投诉单是否有待回复的用户留言
+	UserComplaintTimes    int                          `json:"user_complaint_times"`    // 用户投诉次数，首次发起投诉记为1次
+	ComplaintMediaList    []*ComplaintMedia            `json:"complaint_media_list"`    // 用户上传的投诉相关资料，包括图片凭证等
+	ProblemDescription    string                       `json:"problem_description"`     // 用户发起投诉前选择的 faq 标题
+	ProblemType           string                       `json:"problem_type"`            // 问题类型 REFUND-申请退款 SERVICE_NOT_WORK-服务权益未生效 OTHERS-其他类型
+	ApplyRefundAmount     int64                        `json:"apply_refund_amount"`     // 问题类型为申请退款时有值，单位分
+	UserTagList           []string                     `json:"user_tag_list"`           // 用户标签列表 TRUSTED-满足极速退款条件 HIGH_RISK-高风险投诉
+	ServiceOrderInfo      []*ComplaintServiceOrderInfo `json:"service_order_info"`      // 投诉单关联服务单信息
 }
 
 // GetComplaintListRequest 获取投诉列表，请求参数
@@ -857,6 +880,148 @@ type GetUploadFileSignResponse struct {
 	util.CommonError
 	Sign   string `json:"sign"`    // Authorization 头部值
 	CosURL string `json:"cos_url"` // 当 convert_cos=true 时返回的 COS URL，有效期 30 分钟
+}
+
+// ==================== 订阅签约扣款 ====================
+
+// AuthorizationState 签约状态
+// SIGNED-签约生效中 TERMINATED-生效的签约协议已被解约(终态，该协议无法再次签约，可更换协议号再发起签约) UNBINDUSER-从未签约过
+type AuthorizationState string
+
+// QuerySubscribeContractRequest 查询签约关系，请求参数
+type QuerySubscribeContractRequest struct {
+	OpenID          string `json:"openid"`            // 用户的openid
+	ProductID       string `json:"product_id"`        // 道具 id，需为订阅制道具
+	OutContractCode string `json:"out_contract_code"` // 签约时传入的协议号
+}
+
+// QuerySubscribeContractResponse 查询签约关系 响应参数
+type QuerySubscribeContractResponse struct {
+	util.CommonError
+	AuthorizationState AuthorizationState `json:"authorization_state"` // 签约状态
+}
+
+// SendSubscribePrePaymentRequest 预通知扣款，请求参数
+type SendSubscribePrePaymentRequest struct {
+	OpenID          string `json:"openid"`            // 用户的openid
+	DeductPrice     int64  `json:"deduct_price"`      // 金额/分，属于 [100，道具价格]
+	ProductID       string `json:"product_id"`        // 道具 id，需为订阅制道具
+	OutContractCode string `json:"out_contract_code"` // 签约时传入的协议号
+}
+
+// SendSubscribePrePaymentResponse 预通知扣款 响应参数
+type SendSubscribePrePaymentResponse struct {
+	util.CommonError
+}
+
+// SubmitSubscribePayOrderRequest 发起订阅扣款，请求参数
+// 受理后扣款，返回成功仅代表受理成功，不代表扣款成功。扣款成功后再通过 xpay_goods_deliver_notify 通知
+// 受理成功后如通知/查询到扣款失败，可在【t日～t+6日】发起重试，同一用户、同一道具，一个小时内仅可以重试一次
+type SubmitSubscribePayOrderRequest struct {
+	OpenID       string `json:"openid"`        // 用户的openid
+	OfferID      string `json:"offer_id"`      // 在米大师侧申请的应用 id, mp-支付基础配置中的 offerid
+	BuyQuantity  int64  `json:"buy_quantity"`  // 购买数量，填：1
+	Env          Env    `json:"env,omitempty"` // 环境配置, 0 正式环境, 仅支持正式环境
+	CurrencyType string `json:"currency_type"` // 币种，填：CNY
+	ProductID    string `json:"product_id"`    // 订阅道具ID
+	DeductPrice  int64  `json:"deduct_price"`  // 扣款金额(分), 属于 [1，道具价格]
+	OrderID      string `json:"order_id"`      // 业务订单号，每个订单号只能使用一次，8-32 个字符
+	Attach       string `json:"attach"`        // 透传数据, 发货通知时会透传给开发者
+}
+
+// SubmitSubscribePayOrderResponse 发起订阅扣款 响应参数
+type SubmitSubscribePayOrderResponse struct {
+	util.CommonError
+}
+
+// CancelSubscribeContractRequest 商家解约，请求参数
+type CancelSubscribeContractRequest struct {
+	OpenID            string `json:"openid"`             // 用户的openid
+	TerminationReason string `json:"termination_reason"` // 解约原因
+	ProductID         string `json:"product_id"`         // 道具 id，需为订阅制道具
+	OutContractCode   string `json:"out_contract_code"`  // 签约时传入的协议号
+}
+
+// CancelSubscribeContractResponse 商家解约 响应参数
+type CancelSubscribeContractResponse struct {
+	util.CommonError
+}
+
+// ==================== iOS 月结账单 ====================
+
+// IosSettlementBill iOS 结算单
+type IosSettlementBill struct {
+	Month   string `json:"month"`    // 月份，格式 YYYYMM
+	BillURL string `json:"bill_url"` // 账单下载链接，及时使用，一定时间后失效
+}
+
+// DownloadIosSettlementBillRequest 下载虚拟支付 ios 月结账单，请求参数
+type DownloadIosSettlementBillRequest struct {
+	StartMonth string `json:"start_month"` // 开始月份，格式 YYYYMM
+	EndMonth   string `json:"end_month"`   // 结束月份，格式 YYYYMM
+}
+
+// DownloadIosSettlementBillResponse 下载虚拟支付 ios 月结账单 响应参数
+type DownloadIosSettlementBillResponse struct {
+	util.CommonError
+	BillList []*IosSettlementBill `json:"bill_list"` // 结算单列表
+}
+
+// ==================== 商户管控 ====================
+
+// RecoverySpecification 被管控原因及解脱路径
+type RecoverySpecification struct {
+	LimitationCaseID         string `json:"limitation_case_id"`         // 该条管控原因对应的单据号，可与管控流水通知中的 business_code 关联
+	LimitationReasonType     string `json:"limitation_reason_type"`     // 该条管控原因所属的类型
+	LimitationReason         string `json:"limitation_reason"`          // 该条管控原因的简要描述
+	LimitationReasonDescribe string `json:"limitation_reason_describe"` // 该条管控原因的进一步说明，便于开发者理解为何被管控
+	RelateLimitations        string `json:"relate_limitations"`         // 该条管控原因下具体受影响的能力列表
+	OtherRelateLimitations   string `json:"other_relate_limitations"`   // 该条原因下未被标准枚举覆盖的管控能力补充说明
+	RecoverWay               string `json:"recover_way"`                // 微信支付建议的处理路径，据此去微信支付商户平台进一步处理
+	RecoverWayParam          string `json:"recover_way_param"`          // 解脱路径对应的补充参数，例如尽调单号、申诉单号、有权机关信息或经营类型确认单号
+	RecoverHelpURL           string `json:"recover_help_url"`           // 微信支付提供的进一步说明页面
+	LimitationActionType     string `json:"limitation_action_type"`     // 该条管控原因对应的管控生效方式
+	LimitationStartDate      string `json:"limitation_start_date"`      // 处置方式为延迟管控时返回的预计开始时间
+	LimitationDate           string `json:"limitation_date"`            // 该条管控原因实际生效的时间
+}
+
+// QueryPunishmentReasonsRequest 商户被管控原因查询，请求参数（无请求参数）
+type QueryPunishmentReasonsRequest struct{}
+
+// QueryPunishmentReasonsResponse 商户被管控原因查询 响应参数
+type QueryPunishmentReasonsResponse struct {
+	util.CommonError
+	AppID                  string                   `json:"appid"`                   // 小程序 AppID
+	NickName               string                   `json:"nickname"`                // 小程序昵称
+	MerchantCode           string                   `json:"merchant_code"`           // 微信支付商户号
+	LimitedFunctions       []string                 `json:"limited_functions"`       // 商户被管控能力列表
+	OtherLimitedFunctions  string                   `json:"other_limited_functions"` // 商户其他被管控能力描述
+	RecoverySpecifications []*RecoverySpecification `json:"recovery_specifications"` // 被管控原因及解脱路径列表
+}
+
+// ==================== 苹果订单查询 ====================
+
+// IosOrderInfo 苹果订单对应的订单信息
+type IosOrderInfo struct {
+	OutTradeNo            string `json:"out_trade_no"`            // 商家订单号
+	TransactionID         string `json:"transaction_id"`          // 平台交易单号
+	WebOrderLineItemID    string `json:"web_order_line_item_id"`  // 苹果订阅支付单号（可选）
+	OriginalTransactionID string `json:"original_transaction_id"` // 原始平台交易单号
+	PaidTime              string `json:"paid_time"`               // 支付时间，秒级时间戳
+	PaidFee               string `json:"paid_fee"`                // 实付金额，单位为分
+	PaidCurrency          string `json:"paid_currency"`           // 实付币种
+}
+
+// QueryOrderIdByIosOrderRequest 查询苹果订单对应单号，请求参数
+// 通过用户侧 Apple 支付凭证号（ios_order_id）查询对应的商家交易单号及订单信息
+type QueryOrderIdByIosOrderRequest struct {
+	IosOrderID string `json:"ios_order_id"` // ios 订单侧订单号（Apple 支付凭证号）
+}
+
+// QueryOrderIdByIosOrderResponse 查询苹果订单对应单号 响应参数
+type QueryOrderIdByIosOrderResponse struct {
+	util.CommonError
+	OrderInfoList []*IosOrderInfo `json:"order_info_list"` // 查询到的订单列表，可能为空数组
 }
 
 // URLParams url parameter

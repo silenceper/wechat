@@ -88,12 +88,18 @@ const (
 	OrderStatusDelivering OrderStatus = 3
 	// OrderStatusDelivered 订单状态 当前状态 4-订单已发货
 	OrderStatusDelivered OrderStatus = 4
-	// OrderStatusRefunded 订单状态 当前状态 5-订单已经退款
+	// OrderStatusRefunded 订单状态 当前状态 5-订单已经退款（商户侧扣款完成）
 	OrderStatusRefunded OrderStatus = 5
 	// OrderStatusClosed 订单状态 当前状态  6-订单已经关闭（不可再使用）
 	OrderStatusClosed OrderStatus = 6
 	// OrderStatusRefundFailed 订单状态 当前状态 7-订单退款失败
 	OrderStatusRefundFailed OrderStatus = 7
+	// OrderStatusRefundUserReceived 订单状态 当前状态 8-订单退款：用户侧收款完成
+	OrderStatusRefundUserReceived OrderStatus = 8
+	// OrderStatusAdFundRecovered 订单状态 当前状态 9-回收广告金完成
+	OrderStatusAdFundRecovered OrderStatus = 9
+	// OrderStatusProfitShareRolledBack 订单状态 当前状态 10-分账回退完成
+	OrderStatusProfitShareRolledBack OrderStatus = 10
 )
 
 const (
@@ -192,6 +198,27 @@ const (
 
 	// getUploadFileSign 获取微信支付反馈投诉图片的签名头部
 	getUploadFileSign = "/xpay/get_upload_file_sign"
+
+	// querySubscribeContract 查询签约关系
+	querySubscribeContract = "/xpay/query_subscribe_contract"
+
+	// sendSubscribePrePayment 预通知扣款
+	sendSubscribePrePayment = "/xpay/send_subscribe_pre_payment"
+
+	// submitSubscribePayOrder 发起订阅扣款
+	submitSubscribePayOrder = "/xpay/submit_subscribe_pay_order"
+
+	// cancelSubscribeContract 商家解约
+	cancelSubscribeContract = "/xpay/cancel_subscribe_contract"
+
+	// downloadIosSettlementBill 下载虚拟支付 ios 月结账单
+	downloadIosSettlementBill = "/xpay/download_ios_settlement_bill"
+
+	// queryPunishmentReasons 商户被管控原因查询
+	queryPunishmentReasons = "/xpay/query_punishment_reasons"
+
+	// queryOrderIdByIosOrder 查询苹果订单对应单号
+	queryOrderIdByIosOrder = "/xpay/query_order_id_by_ios_order"
 )
 
 const (

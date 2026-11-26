@@ -932,6 +932,212 @@ func (s *VirtualPayment) GetUploadFileSign(ctx context.Context, in *GetUploadFil
 	return
 }
 
+// QuerySubscribeContract 查询签约关系
+func (s *VirtualPayment) QuerySubscribeContract(ctx context.Context, in *QuerySubscribeContractRequest) (out QuerySubscribeContractResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      querySubscribeContract,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "QuerySubscribeContract")
+	return
+}
+
+// SendSubscribePrePayment 预通知扣款
+func (s *VirtualPayment) SendSubscribePrePayment(ctx context.Context, in *SendSubscribePrePaymentRequest) (out SendSubscribePrePaymentResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      sendSubscribePrePayment,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "SendSubscribePrePayment")
+	return
+}
+
+// SubmitSubscribePayOrder 发起订阅扣款
+// 受理后扣款，返回成功仅代表受理成功，不代表扣款成功。扣款成功后再通过 xpay_goods_deliver_notify 通知
+func (s *VirtualPayment) SubmitSubscribePayOrder(ctx context.Context, in *SubmitSubscribePayOrderRequest) (out SubmitSubscribePayOrderResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      submitSubscribePayOrder,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "SubmitSubscribePayOrder")
+	return
+}
+
+// CancelSubscribeContract 商家解约
+func (s *VirtualPayment) CancelSubscribeContract(ctx context.Context, in *CancelSubscribeContractRequest) (out CancelSubscribeContractResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      cancelSubscribeContract,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "CancelSubscribeContract")
+	return
+}
+
+// DownloadIosSettlementBill 下载虚拟支付 ios 月结账单
+func (s *VirtualPayment) DownloadIosSettlementBill(ctx context.Context, in *DownloadIosSettlementBillRequest) (out DownloadIosSettlementBillResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      downloadIosSettlementBill,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "DownloadIosSettlementBill")
+	return
+}
+
+// QueryPunishmentReasons 商户被管控原因查询
+func (s *VirtualPayment) QueryPunishmentReasons(ctx context.Context, in *QueryPunishmentReasonsRequest) (out QueryPunishmentReasonsResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      queryPunishmentReasons,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "QueryPunishmentReasons")
+	return
+}
+
+// QueryOrderIdByIosOrder 查询苹果订单对应单号
+// 通过用户侧 Apple 支付凭证号（ios_order_id）查询对应的商家交易单号及订单信息
+// 此能力受苹果服务的限制，不可请求过于频繁，请勿写轮询逻辑，也勿一次大批量调用
+func (s *VirtualPayment) QueryOrderIdByIosOrder(ctx context.Context, in *QueryOrderIdByIosOrderRequest) (out QueryOrderIdByIosOrderResponse, err error) {
+	var jsonByte []byte
+	if jsonByte, err = json.Marshal(in); err != nil {
+		return
+	}
+
+	var (
+		params = URLParams{
+			Path:      queryOrderIdByIosOrder,
+			Content:   string(jsonByte),
+			Signature: EmptyString,
+		}
+		address string
+	)
+	if address, err = s.requestAddress(params); err != nil {
+		return
+	}
+
+	var response []byte
+	if response, err = postJSONBytesContext(ctx, address, jsonByte); err != nil {
+		return
+	}
+
+	// 使用通用方法返回错误
+	err = util.DecodeWithError(response, &out, "QueryOrderIdByIosOrder")
+	return
+}
+
 // hmacSha256 hmac sha256
 func (s *VirtualPayment) hmacSha256(key, data string) string {
 	h := hmac.New(sha256.New, []byte(key))
@@ -986,7 +1192,10 @@ func (s *VirtualPayment) requestAddress(params URLParams) (url string, err error
 		queryBizBalance, queryTransferAccount, queryAdverFunds, createFundsBill,
 		bindTransferAccount, queryFundsBill, queryRecoverBill, downloadAdverFundsOrder,
 		getComplaintList, getComplaintDetail, getNegotiationHistory, responseComplaint,
-		completeComplaint, uploadVPFile, getUploadFileSign:
+		completeComplaint, uploadVPFile, getUploadFileSign,
+		querySubscribeContract, sendSubscribePrePayment, submitSubscribePayOrder,
+		cancelSubscribeContract, downloadIosSettlementBill, queryPunishmentReasons,
+		queryOrderIdByIosOrder:
 		if params.PaySign, err = s.PaySign(params.Path, params.Content); err != nil {
 			return
 		}
