@@ -28,3 +28,6 @@ vendor
 .idea/
 example/*
 /test
+
+# git worktrees (isolated feature workspaces)
+.worktrees/

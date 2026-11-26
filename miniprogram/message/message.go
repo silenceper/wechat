@@ -47,6 +47,8 @@ const (
 	EventTypeXpaySubscribeIosRefundQueryNotify EventType = "xpay_subscribe_ios_refund_query_notify"
 	// EventTypeXpayComplaintNotify 用户投诉推送事件
 	EventTypeXpayComplaintNotify EventType = "xpay_complaint_notify"
+	// EventTypeXpayWxpayCallbackNotify 微信支付风控事件通知
+	EventTypeXpayWxpayCallbackNotify EventType = "xpay_wxpay_callback_notify"
 	// EventSubscribePopup 用户操作订阅通知弹窗事件推送，用户在图文等场景内订阅通知的操作
 	EventSubscribePopup EventType = "subscribe_msg_popup_event"
 	// EventSubscribeMsgChange 用户管理订阅通知，用户在服务通知管理页面做通知管理时的操作
@@ -166,49 +168,31 @@ func (receiver *PushReceiver) getEvent(dataType string, eventType EventType, dec
 	switch eventType {
 	case EventTypeTradeManageRemindAccessAPI:
 		// 提醒接入发货信息管理服务 API
-		var pushData PushDataRemindAccessAPI
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataRemindAccessAPI{})
 	case EventTypeTradeManageRemindShipping:
 		// 提醒需要上传发货信息
-		var pushData PushDataRemindShipping
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataRemindShipping{})
 	case EventTypeTradeManageOrderSettlement:
 		// 订单将要结算或已经结算
-		var pushData PushDataOrderSettlement
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataOrderSettlement{})
 	case EventTypeWxaMediaCheck:
 		// 媒体内容安全异步审查结果通知
-		var pushData MediaCheckAsyncData
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &MediaCheckAsyncData{})
 	case EventTypeAddExpressPath:
 		// 运单轨迹更新
-		var pushData PushDataAddExpressPath
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataAddExpressPath{})
 	case EventTypeSecvodUpload:
 		// 短剧媒资上传完成
-		var pushData PushDataSecVodUpload
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataSecVodUpload{})
 	case EventTypeSecvodAudit:
 		// 短剧媒资审核状态
-		var pushData PushDataSecVodAudit
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataSecVodAudit{})
 	case EventTypeXpayGoodsDeliverNotify:
 		// 道具发货推送事件
-		var pushData PushDataXpayGoodsDeliverNotify
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataXpayGoodsDeliverNotify{})
 	case EventTypeXpayCoinPayNotify:
 		// 代币支付推送事件
-		var pushData PushDataXpayCoinPayNotify
-		err := receiver.unmarshal(dataType, decryptMsg, &pushData)
-		return &pushData, err
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataXpayCoinPayNotify{})
 	case EventTypeXpayRefundNotify:
 		// 退款推送事件
 		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataXpayRefundNotify{})
@@ -217,6 +201,9 @@ func (receiver *PushReceiver) getEvent(dataType string, eventType EventType, dec
 	case EventTypeXpayComplaintNotify:
 		// 用户投诉推送事件
 		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataXpayComplaintNotify{})
+	case EventTypeXpayWxpayCallbackNotify:
+		// 微信支付风控事件通知
+		return receiver.unmarshalPushData(dataType, decryptMsg, &PushDataXpayWxpayCallbackNotify{})
 	case EventSubscribePopup:
 		// 用户操作订阅通知弹窗事件推送
 		return receiver.unmarshalSubscribePopup(dataType, decryptMsg)
@@ -659,4 +646,20 @@ type PushDataXpayComplaintNotify struct {
 	ComplaintTime   int64  `json:"ComplaintTime" xml:"ComplaintTime"`     // 投诉时间，秒级时间戳
 	RetryTimes      int    `json:"RetryTimes" xml:"RetryTimes"`           // 重试次数，从 0 开始
 	RequestID       string `json:"RequestId" xml:"RequestId"`             // 请求编号
+}
+
+// PushDataXpayWxpayCallbackNotify 微信支付风控事件通知
+// 发生尽职调查或管控流水等风控事件时推送
+type PushDataXpayWxpayCallbackNotify struct {
+	CommonPushData
+	AppID               string `json:"AppId" xml:"AppId"`                             // 小程序 AppID
+	NickName            string `json:"NickName" xml:"NickName"`                       // 小程序昵称
+	MerchantCode        string `json:"MerchantCode" xml:"MerchantCode"`               // 微信支付商户号
+	MerchantCompanyName string `json:"MerchantCompanyName" xml:"MerchantCompanyName"` // 商户全称
+	BusinessTime        string `json:"BusinessTime" xml:"BusinessTime"`               // 业务发生时间，格式：2026-07-03T12:47:13+08:00
+	BusinessCode        string `json:"BusinessCode" xml:"BusinessCode"`               // 业务单据号
+	BusinessState       string `json:"BusinessState" xml:"BusinessState"`             // 业务状态枚举
+	Remark              string `json:"Remark" xml:"Remark"`                           // 备注说明
+	EventType           string `json:"EventType" xml:"EventType"`                     // 通知类型 due_diligence-尽职调查 punishment-管控流水
+	RetryTimes          int    `json:"RetryTimes" xml:"RetryTimes"`                   // 重试次数，从 0 开始。重试间隔为 2 4 8 16...最多 15 次
 }

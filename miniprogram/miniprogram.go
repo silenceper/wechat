@@ -12,6 +12,7 @@ import (
 	"github.com/silenceper/wechat/v2/miniprogram/encryptor"
 	"github.com/silenceper/wechat/v2/miniprogram/express"
 	"github.com/silenceper/wechat/v2/miniprogram/generic"
+	"github.com/silenceper/wechat/v2/miniprogram/laboruse"
 	"github.com/silenceper/wechat/v2/miniprogram/message"
 	"github.com/silenceper/wechat/v2/miniprogram/minidrama"
 	"github.com/silenceper/wechat/v2/miniprogram/ocr"
@@ -213,4 +214,9 @@ func (miniProgram *MiniProgram) GetStudent() *student.Student {
 // GetGeneric 通用 API 调用，用于访问 SDK 尚未封装的接口
 func (miniProgram *MiniProgram) GetGeneric() *generic.Generic {
 	return generic.NewGeneric(miniProgram.ctx)
+}
+
+// GetLaborUse 用工关系接口
+func (miniProgram *MiniProgram) GetLaborUse() *laboruse.LaborUse {
+	return laboruse.NewLaborUse(miniProgram.ctx)
 }
