@@ -57,3 +57,13 @@ TODO
 | :--------------: | -------- | :------------------------------ | ---------- | ----------------------------------------------- |
 | 快速获取学生身份 | POST     | /intp/quickcheckstudentidentity | YES        | (student *Student) QuickCheckStudentIdentity    |
 
+
+## 用工关系
+
+[官方文档](https://developers.weixin.qq.com/miniprogram/dev/server/API/laboruse/)
+
+|       名称       | 请求方式 | URL                                                 | 是否已实现 | 使用方法                                          |
+| :--------------: | -------- | :-------------------------------------------------- | ---------- | ------------------------------------------------- |
+|   推送用工消息   | POST     | /cgi-bin/message/wxopen/employeerelationmsg/send   | YES        | (labor \*LaborUse) SendEmployeeRelationMsg        |
+|   解绑用工关系   | POST     | /wxa/business/unbinduserb2cauthinfo                | YES        | (labor \*LaborUse) UnbindUserB2CAuthInfo          |
+
